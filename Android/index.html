@@ -203,35 +203,9 @@
   .lock-ratio { display: flex; align-items: center; gap: 6px; margin-top: 10px; cursor: pointer; font-size: 13px; color: var(--text); user-select: none; }
   .lock-ratio input { width: 14px; height: 14px; cursor: pointer; accent-color: var(--accent); }
 
-  .shape-btn.disabled, .tool-btn.disabled,
-  .mode-btn.disabled, .lock-ratio.disabled {
-    opacity: 1 !important;
-    pointer-events: none;
-    cursor: not-allowed;
-    filter: grayscale(1);
-    background: #2a2f37 !important;
-    border-color: #353c46 !important;
-    color: #5b636e !important;
-    box-shadow: none !important;
-  }
-  /* 斜纹底纹，进一步与正常按钮区分 */
-  .shape-btn.disabled, .tool-btn.disabled,
-  .mode-btn.disabled, .lock-ratio.disabled {
-    background-image: repeating-linear-gradient(45deg,
-      rgba(255,255,255,0.03) 0 6px, transparent 6px 12px) !important;
-  }
-  /* 框选/全选（view-btn 药丸按钮）的明确灰态，与未点击的正常药丸按钮区分 */
-  .view-btn.disabled {
-    opacity: 1 !important;
-    pointer-events: none;
-    cursor: not-allowed;
-    filter: grayscale(1);
-    background: #2a2f37 !important;
-    color: #5b636e !important;
-    font-weight: 500 !important;
-    background-image: repeating-linear-gradient(45deg,
-      rgba(255,255,255,0.04) 0 6px, transparent 6px 12px) !important;
-  }
+  .shape-btn.disabled, .tool-btn.disabled { opacity: 0.35; pointer-events: none; filter: grayscale(0.6); }
+  .mode-btn.disabled, .lock-ratio.disabled { opacity: 0.35; pointer-events: none; filter: grayscale(0.6); }
+  .view-btn.disabled { opacity: 0.35; pointer-events: none; filter: grayscale(0.6); }
 
   .color-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
   .color-dot { width: 100%; aspect-ratio: 1; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all .15s; }
