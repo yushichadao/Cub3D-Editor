@@ -919,40 +919,57 @@
 }
 .touch-device #manual-modal .manual-card,
 .touch-device #guide-modal .manual-card {
-  width:100vw; height:100vh; height:100dvh; max-width:none; border-radius:0; border:none;
+  position:relative; width:100vw; height:100vh; height:100dvh; max-width:none; border-radius:0; border:none;
   display:flex; flex-direction:column; overflow:hidden; overscroll-behavior-x:contain; padding-top:env(safe-area-inset-top);
 }
-.touch-device .manual-bar { padding:10px 12px; position:relative; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.touch-device .manual-bar { padding:10px 12px; position:relative; z-index:70; display:flex; align-items:center; justify-content:space-between; gap:8px; }
 .touch-device .manual-bar-actions { display:flex !important; gap:6px; }
-/* 手机版顶部栏：保留目录/便签/关闭，隐藏缩放与复制（这些在底部栏已有） */
+/* 手机版顶部栏：仅保留标题与关闭，目录/便签/缩放/复制均移至底部栏 */
+.touch-device #manual-toc-toggle,
+.touch-device #manual-toggle-note,
 .touch-device #manual-zoom-out,
 .touch-device #manual-zoom-in,
 .touch-device #manual-copy-all { display:none; }
 .touch-device .manual-bar .manual-btn { padding:5px 10px; font-size:13px; flex:0 0 auto; }
 .touch-device .manual-bar-title { font-size:15px; }
-.touch-device .manual-body { flex-direction:column; }
+.touch-device .manual-body { position:relative; overflow:hidden; flex-direction:column; }
 .touch-device .manual-read { width:100%; min-height:0; }
 .touch-device .manual-toc {
-  position:fixed; top:0; bottom:0; left:0; width:84vw; max-width:340px; flex-shrink:0;
-  background:var(--bg-panel-solid); border-right:1px solid var(--border);
-  transform:translateX(-100%); transition:transform .25s ease; z-index:60;
-  display:flex; flex-direction:column; padding-top:0;
+  position:absolute; top:0; bottom:0; left:0; width:84vw; max-width:340px; flex-shrink:0;
+  background:var(--bg-panel); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-right:1px solid var(--border); border-top-right-radius:var(--radius); border-bottom-right-radius:var(--radius);
+  box-shadow:4px 0 24px rgba(0,0,0,.35);
+  transform:translateX(-100%); transition:transform .28s cubic-bezier(.22,.61,.36,1); z-index:60;
+  display:flex; flex-direction:column; padding-top:0; overflow-y:auto;
 }
 .touch-device .manual-toc.open { transform:translateX(0); }
-.touch-device .manual-toc a { white-space:normal; padding:8px 12px; }
+.touch-device .manual-toc a { white-space:normal; padding:9px 14px; margin:1px 8px; border-radius:8px; overflow:visible; line-height:1.5; text-overflow:clip; }
+.manual-doc a.md-jump { user-select:none; -webkit-user-select:none; cursor:pointer; }
+.touch-device .manual-toc a:hover { color:var(--text); background:var(--control-bg); }
+.touch-device .manual-toc a.lvl2 { padding-left:26px; }
+.touch-device .manual-toc a.lvl3 { padding-left:40px; font-size:12px; }
 .touch-device .manual-toc a.active { color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, transparent); font-weight:600; }
-.manual-toc-head { display:none; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; font-weight:600; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg-panel-solid); }
+.manual-toc-head { display:none; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; font-weight:600; font-size:14px; color:var(--text); border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg-panel-solid); }
 .touch-device .manual-toc-head { display:flex; }
-.manual-toc-close { border:none; background:transparent; color:var(--text-dim); font-size:16px; line-height:1; cursor:pointer; padding:4px 8px; border-radius:6px; }
-.manual-toc-close:hover { background:var(--control-bg); color:var(--text); }
+.manual-toc-head > span { position:relative; padding-left:11px; }
+.manual-toc-head > span::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:14px; border-radius:2px; background:linear-gradient(180deg, var(--accent), var(--accent-2)); }
+.manual-toc-close { border:1px solid var(--border); background:var(--control-bg); color:var(--text-dim); font-size:15px; line-height:1; cursor:pointer; padding:5px 9px; border-radius:7px; transition:all .15s; }
+.manual-toc-close:hover { background:color-mix(in srgb, var(--accent) 14%, transparent); border-color:var(--accent); color:var(--text); }
 .touch-device .manual-note {
-  position:fixed; top:0; right:0; bottom:0; width:88vw; max-width:360px;
-  background:var(--bg-panel-solid); z-index:60; transform:translateX(100%);
-  transition:transform .25s ease; display:flex; padding-top:60px;
+  position:absolute; top:0; right:0; bottom:0; width:88vw; max-width:360px;
+  background:var(--bg-panel); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-left:1px solid var(--border); border-top-left-radius:var(--radius); border-bottom-left-radius:var(--radius);
+  box-shadow:-4px 0 24px rgba(0,0,0,.35); z-index:60; transform:translateX(100%);
+  transition:transform .28s cubic-bezier(.22,.61,.36,1); display:flex; flex-direction:column; padding-top:0; overflow-y:auto;
 }
+.touch-device .manual-note-head { padding:12px 14px; font-size:14px; flex-shrink:0; }
+.touch-device .manual-note-head > span { position:relative; padding-left:11px; }
+.touch-device .manual-note-head > span::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:14px; border-radius:2px; background:linear-gradient(180deg, var(--accent), var(--accent-2)); }
+.touch-device #manual-note-close { border:1px solid var(--border); background:var(--control-bg); color:var(--text-dim); font-size:15px; line-height:1; cursor:pointer; padding:5px 9px; border-radius:7px; transition:all .15s; }
+.touch-device #manual-note-close:hover { background:color-mix(in srgb, var(--accent) 14%, transparent); border-color:var(--accent); color:var(--text); }
 .touch-device .manual-note.open { transform:translateX(0); }
 .touch-device .manual-drawer-mask {
-  position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:55;
+  position:absolute; inset:0; background:var(--modal-mask); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); z-index:55;
   opacity:0; pointer-events:none; transition:opacity .25s ease;
 }
 .touch-device .manual-drawer-mask.open { opacity:1; pointer-events:auto; }
@@ -986,7 +1003,7 @@
 .touch-device .guide-doc .kbd-key { white-space:normal !important; overflow-wrap:anywhere !important; word-break:break-word !important; overflow:visible !important; }
 .touch-device .manual-float.float-bottom { left:0 !important; right:0 !important; top:auto !important; bottom:0 !important; transform:none !important; justify-content:center; border-radius:0; padding:10px calc(10px + env(safe-area-inset-bottom)); gap:12px; background:var(--bg-panel-solid); border-top:1px solid var(--border); }
 .touch-device .manual-bottombar {
-  display:flex; align-items:stretch; justify-content:space-around; gap:2px;
+  position:relative; z-index:70; display:flex; align-items:stretch; justify-content:space-around; gap:2px;
   padding:6px 4px calc(6px + env(safe-area-inset-bottom)); background:var(--bg-panel-solid);
   border-top:1px solid var(--border); flex-shrink:0;
 }
