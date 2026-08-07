@@ -1,0 +1,20 @@
+{
+  "id": "parametric-python",
+  "name": "参数化造型（Python）",
+  "version": "1.0.0",
+  "author": "内置示例",
+  "description": "演示用 Python 编写插件：螺旋楼梯、正弦波场、球面点阵、场景导出报告。需要本机具备 Python 3，可在「运行时与库」中安装或指定路径。",
+  "language": "python",
+  "entry": "main.py",
+  "commands": [
+    { "id": "spiral", "title": "螺旋楼梯" },
+    { "id": "wave", "title": "正弦波场" },
+    { "id": "sphere_points", "title": "球面点阵" },
+    { "id": "report", "title": "导出场景报告" }
+  ],
+  "runtime": {
+    "requires": "python>=3.8",
+    "packages": []
+  },
+  "permissions": ["scene:write", "fs:write"]
+}

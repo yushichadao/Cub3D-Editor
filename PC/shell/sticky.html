@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>便签</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: transparent; overflow: hidden; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    display: flex; flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 34px rgba(0,0,0,.45);
+    border: 1px solid rgba(255,255,255,.14);
+  }
+
+  .bar {
+    -webkit-app-region: drag;
+    height: 34px; flex-shrink: 0;
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 6px 0 12px;
+    background: rgba(0,0,0,.22);
+    color: #fff; font-size: 12.5px;
+    user-select: none;
+  }
+  .bar .t { flex: 1; opacity: .9; letter-spacing: .5px; }
+  .bar button {
+    -webkit-app-region: no-drag;
+    width: 24px; height: 24px;
+    border: 0; border-radius: 6px;
+    background: transparent; color: #fff;
+    cursor: pointer; font-size: 13px; opacity: .75;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bar button:hover { background: rgba(255,255,255,.2); opacity: 1; }
+  .bar button.close:hover { background: #e81123; }
+
+  textarea {
+    flex: 1;
+    border: 0; outline: 0; resize: none;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14px; line-height: 1.75;
+    background: transparent;
+    color: #2a2a2a;
+  }
+  textarea::placeholder { color: rgba(0,0,0,.32); }
+
+  .foot {
+    -webkit-app-region: drag;
+    height: 26px; flex-shrink: 0;
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 10px;
+    background: rgba(0,0,0,.1);
+    font-size: 11px; color: rgba(0,0,0,.5);
+  }
+  .foot .sp { flex: 1; }
+  .swatch {
+    -webkit-app-region: no-drag;
+    width: 13px; height: 13px; border-radius: 50%;
+    cursor: pointer; border: 1px solid rgba(0,0,0,.2);
+  }
+  .swatch.on { box-shadow: 0 0 0 2px rgba(0,0,0,.35); }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <span class="t">便签</span>
+    <button id="top" title="取消置顶">📌</button>
+    <button id="close" class="close" title="关闭">✕</button>
+  </div>
+  <textarea id="txt" placeholder="随手记点什么…"></textarea>
+  <div class="foot">
+    <span id="stat">未保存</span>
+    <span class="sp"></span>
+    <span class="swatch" data-c="#fff5b8" style="background:#fff5b8"></span>
+    <span class="swatch" data-c="#d7f7c8" style="background:#d7f7c8"></span>
+    <span class="swatch" data-c="#cfe8ff" style="background:#cfe8ff"></span>
+    <span class="swatch" data-c="#ffd9e2" style="background:#ffd9e2"></span>
+    <span class="swatch" data-c="#e6e0ff" style="background:#e6e0ff"></span>
+  </div>
+
+<script>
+(function () {
+  'use strict';
+  var D = window.desktop;
+  var id = new URLSearchParams(location.search).get('id') || 'default';
+  var KEY = 'cube3d.sticky.' + id;
+
+  var txt = document.getElementById('txt');
+  var stat = document.getElementById('stat');
+  var pinned = true;
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return { text: '', color: '#fff5b8' };
+      var o = JSON.parse(raw);
+      return { text: o.text || '', color: o.color || '#fff5b8' };
+    } catch (_) { return { text: '', color: '#fff5b8' }; }
+  }
+
+  var data = load();
+  txt.value = data.text;
+  applyColor(data.color);
+
+  function applyColor(c) {
+    data.color = c;
+    document.body.style.background = c;
+    document.querySelectorAll('.swatch').forEach(function (s) {
+      s.classList.toggle('on', s.getAttribute('data-c') === c);
+    });
+  }
+
+  var saveTimer = null;
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      data.text = txt.value;
+      localStorage.setItem(KEY, JSON.stringify(data));
+      stat.textContent = '已保存 ' + new Date().toLocaleTimeString();
+      if (D && D.sticky) D.sticky.sync({ id: id, text: data.text, color: data.color });
+    }, 350);
+  }
+
+  txt.addEventListener('input', save);
+  document.querySelectorAll('.swatch').forEach(function (s) {
+    s.addEventListener('click', function () { applyColor(s.getAttribute('data-c')); save(); });
+  });
+
+  document.getElementById('close').addEventListener('click', function () {
+    data.text = txt.value;
+    localStorage.setItem(KEY, JSON.stringify(data));
+    if (D && D.sticky) D.sticky.close(id); else window.close();
+  });
+
+  document.getElementById('top').addEventListener('click', function (e) {
+    pinned = !pinned;
+    e.target.style.opacity = pinned ? '.75' : '.3';
+    e.target.title = pinned ? '取消置顶' : '置顶';
+  });
+
+  txt.focus();
+})();
+</script>
+</body>
+</html>

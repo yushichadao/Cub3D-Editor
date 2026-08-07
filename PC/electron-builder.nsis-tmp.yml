@@ -1,0 +1,71 @@
+appId: com.yushichadao.cube3d
+productName: 立方三维设计工坊
+copyright: Copyright © 2026 Yushichadao. All Rights Reserved.
+
+directories:
+  output: dist-nsis
+  buildResources: build
+
+files:
+  - index.html
+  - server.js
+  - package.json
+  - LICENSE
+  - README.md
+  - three/**/*
+  - language/**/*
+  - docs/**/*
+  - shell/**/*
+  - electron/**/*
+  - "!**/.userdata/**"
+  - "!dist/**"
+  - "!scripts/**"
+
+asar: true
+asarUnpack:
+  - electron/plugin-sdk/**
+
+extraResources:
+  - from: plugins
+    to: plugins
+    filter: ["**/*"]
+  - from: langpacks
+    to: langpacks
+    filter: ["**/*"]
+  - from: build/icon.ico
+    to: build/icon.ico
+
+compression: maximum
+removePackageScripts: true
+buildDependenciesFromSource: false
+
+win:
+  icon: build/icon.ico
+  executableName: cube3d-studio
+  target:
+    - target: nsis
+      arch: [x64]
+  requestedExecutionLevel: asInvoker
+  fileAssociations:
+    - ext: l3d
+      name: 立方场景文件
+      description: 立方三维设计工坊场景文件
+      icon: build/icon.ico
+      role: Editor
+
+nsis:
+  artifactName: Cube3D-Studio-Setup-${version}-x64.${ext}
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  displayLanguageSelector: false
+  deleteAppDataOnUninstall: false
+  installerSidebar: build/installer-sidebar.bmp
+  uninstallerSidebar: build/installer-sidebar.bmp
+  include: build/installer.nsh
+
+publish: null

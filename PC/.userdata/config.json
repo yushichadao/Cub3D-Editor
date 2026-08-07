@@ -1,0 +1,30 @@
+{
+  "window": {
+    "width": 1442,
+    "height": 905,
+    "x": 133,
+    "y": 59,
+    "maximized": false
+  },
+  "ui": {
+    "theme": "neon",
+    "lang": "zh-CN",
+    "frameless": true,
+    "mica": true,
+    "zoom": 1
+  },
+  "editor": {
+    "autosaveEnabled": true,
+    "autosaveInterval": 120,
+    "restoreLastSession": true
+  },
+  "recentFiles": [],
+  "plugins": {
+    "enabled": {},
+    "autoStart": {}
+  },
+  "runtimes": {
+    "custom": {}
+  },
+  "offlineMode": false
+}

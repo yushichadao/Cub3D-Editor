@@ -1,0 +1,30 @@
+{
+  "name": "3d-editor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "立方 · 三维设计工坊 — 3D/2D 场景编辑器（Web + Android APK）",
+  "scripts": {
+    "predev": "node ../sync-shared.mjs",
+    "prestart": "node ../sync-shared.mjs",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build:www": "node scripts/build-www.mjs",
+    "sync": "npm run build:www && cap sync android",
+    "apk:debug": "npm run sync && node scripts/build-apk.mjs debug",
+    "apk:release": "npm run sync && node scripts/build-apk.mjs release",
+    "keystore": "node scripts/gen-keystore.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.2",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/filesystem": "^6.0.2",
+    "@capacitor/preferences": "^6.0.3",
+    "@capacitor/share": "^6.0.3",
+    "@capacitor/splash-screen": "^6.0.3",
+    "@capacitor/status-bar": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0"
+  }
+}

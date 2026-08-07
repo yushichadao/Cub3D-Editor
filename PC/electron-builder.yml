@@ -1,0 +1,82 @@
+appId: com.yushichadao.cube3d
+productName: 立方三维设计工坊
+copyright: Copyright © 2026 Yushichadao. All Rights Reserved.
+
+directories:
+  output: dist
+  buildResources: build
+
+# 打进 asar 的应用本体
+files:
+  - index.html
+  - server.js
+  - package.json
+  - LICENSE
+  - README.md
+  - three/**/*
+  - language/**/*
+  - docs/**/*
+  - shell/**/*
+  - electron/**/*
+  - "!**/.userdata/**"
+  - "!dist/**"
+  - "!scripts/**"
+
+# 需要被外部进程（Python / 其它语言解释器）直接读取的文件不能留在 asar 内
+asar: true
+asarUnpack:
+  - electron/plugin-sdk/**
+
+# 内置插件与语言包放在 resources 下，用户可直接查看、复制、修改
+extraResources:
+  - from: plugins
+    to: plugins
+    filter: ["**/*"]
+  - from: langpacks
+    to: langpacks
+    filter: ["**/*"]
+  - from: build/icon.ico
+    to: build/icon.ico
+
+compression: maximum
+removePackageScripts: true
+buildDependenciesFromSource: false
+
+win:
+  icon: build/icon.ico
+  executableName: cube3d-studio
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+  requestedExecutionLevel: asInvoker
+  fileAssociations:
+    - ext: l3d
+      name: 立方场景文件
+      description: 立方三维设计工坊场景文件
+      icon: build/icon.ico
+      role: Editor
+
+portable:
+  artifactName: Cube3D-Studio-Portable-${version}-x64.${ext}
+  requestExecutionLevel: user
+  unicode: true
+
+nsis:
+  artifactName: Cube3D-Studio-Setup-${version}-x64.${ext}
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  displayLanguageSelector: false
+  deleteAppDataOnUninstall: false
+  installerSidebar: build/installer-sidebar.bmp
+  uninstallerSidebar: build/installer-sidebar.bmp
+  include: build/installer.nsh
+
+# 完全离线：不生成也不检查任何更新源
+publish: null

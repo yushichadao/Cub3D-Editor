@@ -1,0 +1,12 @@
+{
+  "name": "3d-editor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "3D/2D 场景编辑器 - 画笔/橡皮/对象变换",
+  "scripts": {
+    "predev": "node ../sync-shared.mjs",
+    "prestart": "node ../sync-shared.mjs",
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}

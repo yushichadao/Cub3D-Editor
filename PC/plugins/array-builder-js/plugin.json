@@ -1,0 +1,16 @@
+{
+  "id": "array-builder-js",
+  "name": "阵列生成器（JavaScript）",
+  "version": "1.0.0",
+  "author": "内置示例",
+  "description": "演示用 JavaScript 编写插件：一键生成网格阵列、彩虹塔与环形阵列。JavaScript 运行时已内置，无需任何安装即可运行。",
+  "language": "javascript",
+  "entry": "main.js",
+  "commands": [
+    { "id": "grid", "title": "生成网格阵列" },
+    { "id": "tower", "title": "生成彩虹塔" },
+    { "id": "ring", "title": "生成环形阵列" },
+    { "id": "stats", "title": "统计场景对象" }
+  ],
+  "permissions": ["scene:write"]
+}

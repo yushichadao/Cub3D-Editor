@@ -1,0 +1,37 @@
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 日志
+*.log
+
+# 编辑器临时文件
+*.swp
+*.swo
+*~
+
+# 本地服务器（开发用，无需部署）
+server.js
+server.ps1
+server.err
+
+# ===== Node / Capacitor =====
+node_modules/
+www/
+
+# ===== Android 构建产物 =====
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/app/release/
+android/app/debug/
+android/capacitor-cordova-android-plugins/
+dist/
+
+# ===== 签名密钥（绝不入库）=====
+*.keystore
+*.jks
+keystore.properties

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">立方3D</string>
+    <string name="title_activity_main">立方3D</string>
+    <string name="package_name">com.lifang.editor3d</string>
+    <string name="custom_url_scheme">com.lifang.editor3d</string>
+</resources>

@@ -1,0 +1,49 @@
+# ===== 系统 / 编辑器 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+*.log
+.codebuddy/
+
+# ===== Node 依赖（体积大，由各端 install 生成）=====
+node_modules/
+**/node_modules/
+
+# ===== 各端构建产物 / 打包输出 =====
+dist/
+**/dist/
+dist-build/
+**/dist-build/
+www/
+**/www/
+build/
+**/build/
+android/.gradle/
+android/.idea/
+android/app/release/
+android/app/debug/
+android/local.properties
+android/capacitor-cordova-android-plugins/
+
+# ===== 签名密钥（绝不入库）=====
+*.keystore
+*.jks
+keystore.properties
+
+# ===== 同步生成的产物（由 sync-shared.mjs 在构建时再生）=====
+# 注意：shared/ 下的源文件（docs/infra/scripts/three/language）是单一源，需入库；
+#       各端从 shared 同步出来的副本由 predev/prestart/prepack/predist 钩子生成，无需入库。
+# 此处仅排除同步脚本本身的临时产物（如有）。
+
+# ===== Vercel / 平台缓存 =====
+.vercel/
+
+# ===== 测试产物 / 个人工具配置 =====
+.playwright-cli/
+.trae/
+.idea/
+
+# ===== 各端平台专属 IDE 配置（可选保留，这里排除以避免噪音）=====
+.vscode/

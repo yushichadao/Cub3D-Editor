@@ -1,0 +1,192 @@
+package com.lifang.editor3d;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
+
+import androidx.activity.OnBackPressedCallback;
+
+import com.getcapacitor.BridgeActivity;
+
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * 返回键触发统一方案（兼容安卓 7 ~ 16）：
+ *  - 物理返回键  → WebView.setOnKeyListener（视图层最早拦截）
+ *  - 预测返回手势（API33+）→ OnBackInvokedCallback（系统专用通道）
+ *  - 传统返回（API<33）→ OnBackPressedCallback
+ * 三者统一调用 onBack() → JS: window.__nativeBackPressed()
+ */
+public class MainActivity extends BridgeActivity {
+
+    private static final int SAVE_REQUEST = 9001;
+    private String pendingJson = null;
+    private String pendingCb = null;
+    private WebView cachedWebView = null;
+    private long lastBackMs = 0;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setup();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setup();
+    }
+
+    // ---- 统一初始化：注入桥 + 注册返回键通道 ----
+    private void setup() {
+        WebView wv = getWebView();
+        if (wv != null) {
+            try {
+                wv.addJavascriptInterface(new SaverBridge(), "AndroidSaver");
+                wv.addJavascriptInterface(new ExitBridge(), "AndroidExit");
+                // 视图层拦截物理返回键（最早、最可靠）
+                wv.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK
+                            && event.getAction() == KeyEvent.ACTION_UP) {
+                        onBack();
+                        return true; // 消费，避免继续向上传递
+                    }
+                    return false;
+                });
+            } catch (Exception e) {
+                android.util.Log.e("Editor3D", "setup webview failed", e);
+            }
+        }
+        registerBackInvoked();
+    }
+
+    // ---- 返回键：API33+ 预测手势通道 ----
+    private void registerBackInvoked() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    new OnBackInvokedCallback() {
+                        @Override
+                        public void onBackInvoked() {
+                            onBack();
+                        }
+                    });
+        } else {
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    onBack();
+                }
+            });
+        }
+    }
+
+    // ---- WebView 引用：多层兜底 ----
+    private WebView getWebView() {
+        if (cachedWebView != null && cachedWebView.getParent() != null) return cachedWebView;
+        try {
+            WebView wv = getBridge().getWebView();
+            if (wv != null) { cachedWebView = wv; return wv; }
+        } catch (Exception ignored) {}
+        if (cachedWebView != null) return cachedWebView;
+        View root = getWindow().getDecorView().findViewById(android.R.id.content);
+        WebView found = findWebView(root);
+        if (found != null) { cachedWebView = found; return found; }
+        return null;
+    }
+
+    private WebView findWebView(View v) {
+        if (v instanceof WebView) return (WebView) v;
+        if (v instanceof ViewGroup) {
+            ViewGroup g = (ViewGroup) v;
+            for (int i = 0; i < g.getChildCount(); i++) {
+                WebView w = findWebView(g.getChildAt(i));
+                if (w != null) return w;
+            }
+        }
+        return null;
+    }
+
+    // ---- 统一返回入口（带去抖，防止手势+物理键重复触发） ----
+    private void onBack() {
+        long now = System.currentTimeMillis();
+        if (now - lastBackMs < 400) return;
+        lastBackMs = now;
+        android.util.Log.d("Editor3D", "onBack fired");
+        WebView wv = getWebView();
+        if (wv == null) {
+            finish(); // 最后兜底：直接退出
+            return;
+        }
+        wv.post(() -> wv.evaluateJavascript(
+                "window.__nativeBackPressed&&window.__nativeBackPressed()", null));
+    }
+
+    // ---- JS 桥：保存 / 退出 ----
+
+    private class ExitBridge {
+        @JavascriptInterface
+        public void finish() {
+            runOnUiThread(() -> MainActivity.this.finish());
+        }
+    }
+
+    private class SaverBridge {
+        @JavascriptInterface
+        public void save(final String json, final String filename, final String callbackId) {
+            final Activity activity = MainActivity.this;
+            activity.runOnUiThread(() -> {
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("application/json");
+                intent.putExtra(Intent.EXTRA_TITLE, filename);
+                pendingJson = json;
+                pendingCb = callbackId;
+                activity.startActivityForResult(intent, SAVE_REQUEST);
+            });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SAVE_REQUEST) {
+            final String cb = pendingCb;
+            final String json = pendingJson;
+            pendingCb = null;
+            pendingJson = null;
+            WebView wv = getWebView();
+            if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                Uri uri = data.getData();
+                boolean ok = false;
+                try {
+                    OutputStream os = getContentResolver().openOutputStream(uri);
+                    if (os != null) {
+                        os.write(json.getBytes(StandardCharsets.UTF_8));
+                        os.close();
+                        ok = true;
+                    }
+                } catch (Exception e) {
+                    ok = false;
+                }
+                final boolean saved = ok;
+                final String js = "if(window.__androidSaverResult)window.__androidSaverResult('" + cb + "'," + (saved ? "true" : "false") + ");";
+                if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
+            } else {
+                final String js = "if(window.__androidSaverResult)window.__androidSaverResult('" + cb + "',false);";
+                if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+}
