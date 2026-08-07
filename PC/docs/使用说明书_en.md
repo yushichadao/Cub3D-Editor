@@ -32,81 +32,81 @@
 ## Full Table of Contents
 
 **Part 1 · Getting Started (zero to beginner)**
-- Ch1 Re-meeting "3D": Starting from a Photo
-- Ch2 Preparing the Tool: Opening This Tool
-- Ch3 The Whole Interface: The Five Areas in Front of You
-- Ch4 Coordinate System: The Three Lines Labeled X / Y / Z on the Page
-- Ch5 Let's Build: Your First 3D Work
-- Ch6 Export & Share: Screenshots, Scene Export, and Backups
+- [Ch1 Re-meeting "3D": Starting from a Photo](jump:Ch1 Re-meeting "3D": Starting from a Photo)
+- [Ch2 Preparing the Tool: Opening This Tool](jump:Ch2 Preparing the Tool: Opening This Tool)
+- [Ch3 The Whole Interface: The Five Areas in Front of You](jump:Ch3 The Whole Interface: The Five Areas in Front of You)
+- [Ch4 Coordinate System: The Three Lines Labeled X / Y / Z on the Page](jump:Ch4 Coordinate System: The Three Lines Labeled X / Y / Z on the Page)
+- [Ch5 Let's Build: Your First 3D Work](jump:Ch5 Let's Build: Your First 3D Work)
+- [Ch6 Export & Share: Screenshots, Scene Export, and Backups](jump:Ch6 Export & Share: Screenshots, Scene Export, and Backups)
 
 **Part 2 · Operation Basics**
-- Ch7 The Art of Selecting Objects: Single, Multi, and Box Select
-- Ch8 The Transform Trio: Translate, Rotate, Scale
-- Ch9 Transform Modes and the Uniform Scale Lock
-- Ch10 Undo and History: The Confidence to Experiment
+- [Ch7 The Art of Selecting Objects: Single, Multi, and Box Select](jump:Ch7 The Art of Selecting Objects: Single, Multi, and Box Select)
+- [Ch8 The Transform Trio: Translate, Rotate, Scale](jump:Ch8 The Transform Trio: Translate, Rotate, Scale)
+- [Ch9 Transform Modes and the Uniform Scale Lock](jump:Ch9 Transform Modes and the Uniform Scale Lock)
+- [Ch10 Undo and History: The Confidence to Experiment](jump:Ch10 Undo and History: The Confidence to Experiment)
 
 **Part 3 · The Universe of Shapes**
-- Ch11 3D Shapes Overview (how to classify the 20 types)
-- Ch12 2D Shapes Overview (the 20 types and the "sticker" mindset)
-- Ch13 Parameters of Every 3D Shape (1): Basic Solids
-- Ch14 Parameters of Every 3D Shape (2): Special Shapes
-- Ch15 "Standing" vs "Lying": The Essential 3D/2D Difference
+- [Ch11 3D Shapes Overview (how to classify the 20 types)](jump:Ch11 3D Shapes Overview (how to classify the 20 types))
+- [Ch12 2D Shapes Overview (the 20 types and the "sticker" mindset)](jump:Ch12 2D Shapes Overview (the 20 types and the "sticker" mindset))
+- [Ch13 Parameters of Every 3D Shape (1): Basic Solids](jump:Ch13 Parameters of Every 3D Shape (1): Basic Solids)
+- [Ch14 Parameters of Every 3D Shape (2): Special Shapes](jump:Ch14 Parameters of Every 3D Shape (2): Special Shapes)
+- [Ch15 "Standing" vs "Lying": The Essential 3D/2D Difference](jump:Ch15 "Standing" vs "Lying": The Essential 3D/2D Difference)
 
 **Part 4 · Color & Material**
-- Ch16 Color Basics
-- Ch17 27 Preset Colors
-- Ch18 Custom Color Picking
-- Ch19 12 Patterns
-- Ch20 Uploading Image Textures, Opacity & Wireframe
+- [Ch16 Color Basics](jump:Ch16 Color Basics)
+- [Ch17 27 Preset Colors](jump:Ch17 27 Preset Colors)
+- [Ch18 Custom Color Picking](jump:Ch18 Custom Color Picking)
+- [Ch19 12 Patterns](jump:Ch19 12 Patterns)
+- [Ch20 Uploading Image Textures, Opacity & Wireframe](jump:Ch20 Uploading Image Textures, Opacity & Wireframe)
 
 **Part 5 · Text & Image**
-- Ch21 Adding Text: Let the Scene Speak
-- Ch22 Font, Size, Weight, Vertical/Horizontal
-- Ch23 Image Object: Bringing Photos into the 3D World
+- [Ch21 Adding Text: Let the Scene Speak](jump:Ch21 Adding Text: Let the Scene Speak)
+- [Ch22 Font, Size, Weight, Vertical/Horizontal](jump:Ch22 Font, Size, Weight, Vertical/Horizontal)
+- [Ch23 Image Object: Bringing Photos into the 3D World](jump:Ch23 Image Object: Bringing Photos into the 3D World)
 
 **Part 6 · Pen & Eraser**
-- Ch24 2D Brush: Drawing Lines on the Ground
-- Ch25 3D Brush and the Reference Plane
-- Ch26 Eraser: Whole vs Partial
+- [Ch24 2D Brush: Drawing Lines on the Ground](jump:Ch24 2D Brush: Drawing Lines on the Ground)
+- [Ch25 3D Brush and the Reference Plane](jump:Ch25 3D Brush and the Reference Plane)
+- [Ch26 Eraser: Whole vs Partial](jump:Ch26 Eraser: Whole vs Partial)
 
 **Part 7 · View & Observation**
-- Ch27 Seven Preset Views: See the World from Another Angle
-- Ch28 Locking the View, Hiding Aids, and Fullscreen
+- [Ch27 Seven Preset Views: See the World from Another Angle](jump:Ch27 Seven Preset Views: See the World from Another Angle)
+- [Ch28 Locking the View, Hiding Aids, and Fullscreen](jump:Ch28 Locking the View, Hiding Aids, and Fullscreen)
 
 **Part 8 · Efficiency**
-- Ch29 Why Learn Shortcuts: The Compound Interest of Efficiency
-- Ch30 Mouse & Gesture Operations: for both desktop and mobile
-- Ch31 Single Keys & Shift Combos
-- Ch32 Slider/Input & Ctrl Combos
+- [Ch29 Why Learn Shortcuts: The Compound Interest of Efficiency](jump:Ch29 Why Learn Shortcuts: The Compound Interest of Efficiency)
+- [Ch30 Mouse & Gesture Operations: for both desktop and mobile](jump:Ch30 Mouse & Gesture Operations: for both desktop and mobile)
+- [Ch31 Single Keys & Shift Combos](jump:Ch31 Single Keys & Shift Combos)
+- [Ch32 Slider/Input & Ctrl Combos](jump:Ch32 Slider/Input & Ctrl Combos)
 
 **Part 9 · Transform**
-- Ch33 First Transform Controls: Three "Gripping Tools"
-- Ch34 Translate Mode: Drag Objects with the Arrow
-- Ch35 Rotate Mode: Rings Decide Which Axis to Spin Around
-- Ch36 Scale Mode: Square Handles and the Uniform Switch
+- [Ch33 First Transform Controls: Three "Gripping Tools"](jump:Ch33 First Transform Controls: Three "Gripping Tools")
+- [Ch34 Translate Mode: Drag Objects with the Arrow](jump:Ch34 Translate Mode: Drag Objects with the Arrow)
+- [Ch35 Rotate Mode: Rings Decide Which Axis to Spin Around](jump:Ch35 Rotate Mode: Rings Decide Which Axis to Spin Around)
+- [Ch36 Scale Mode: Square Handles and the Uniform Switch](jump:Ch36 Scale Mode: Square Handles and the Uniform Switch)
 
 **Part 10 · Crowds**
-- Ch37 Selecting a Group: Understanding "Selection Sets"
-- Ch38 Moving a Group: The Master Pivot of Multi-select
-- Ch39 Mass Production: Copy, Clone, and Arrays
-- Ch40 Export & Share: Taking Work Off-screen
+- [Ch37 Selecting a Group: Understanding "Selection Sets"](jump:Ch37 Selecting a Group: Understanding "Selection Sets")
+- [Ch38 Moving a Group: The Master Pivot of Multi-select](jump:Ch38 Moving a Group: The Master Pivot of Multi-select)
+- [Ch39 Mass Production: Copy, Clone, and Arrays](jump:Ch39 Mass Production: Copy, Clone, and Arrays)
+- [Ch40 Export & Share: Taking Work Off-screen](jump:Ch40 Export & Share: Taking Work Off-screen)
 
 **Part 11 · Practice**
-- Ch41 Project 1: Build a Small House
-- Ch42 Project 2: Make a 3D Text Slogan
-- Ch43 Project 3: Design a Logo / Icon
-- Ch44 Project 4: Comprehensive Scene "My Little Courtyard"
+- [Ch41 Project 1: Build a Small House](jump:Ch41 Project 1: Build a Small House)
+- [Ch42 Project 2: Make a 3D Text Slogan](jump:Ch42 Project 2: Make a 3D Text Slogan)
+- [Ch43 Project 3: Design a Logo / Icon](jump:Ch43 Project 3: Design a Logo / Icon)
+- [Ch44 Project 4: Comprehensive Scene "My Little Courtyard"](jump:Ch44 Project 4: Comprehensive Scene "My Little Courtyard")
 
 **Part 12 · Troubleshooting & Appendix**
-- Ch45 FAQ Troubleshooting
-- Ch46 Glossary (Chinese–English)
-- Ch47 Quick Shortcut Reference
-- Ch48 Shape · Pattern · Color Index
+- [Ch45 FAQ Troubleshooting](jump:Ch45 FAQ Troubleshooting)
+- [Ch46 Glossary (Chinese–English)](jump:Ch46 Glossary (Chinese–English))
+- [Ch47 Quick Shortcut Reference](jump:Ch47 Quick Shortcut Reference)
+- [Ch48 Shape · Pattern · Color Index](jump:Ch48 Shape · Pattern · Color Index)
 
 **Part 13 · Sticky Notes & Multilingual**
-- Ch49 Take Notes While Reading: Sticky Notes in the Manual
-- Ch50 Floating Sticky Windows: Pin a Note on Screen
-- Ch51 Multilingual: the Manual Also "Speaks" Your Language
+- [Ch49 Take Notes While Reading: Sticky Notes in the Manual](jump:Ch49 Take Notes While Reading: Sticky Notes in the Manual)
+- [Ch50 Floating Sticky Windows: Pin a Note on Screen](jump:Ch50 Floating Sticky Windows: Pin a Note on Screen)
+- [Ch51 Multilingual: the Manual Also "Speaks" Your Language](jump:Ch51 Multilingual: the Manual Also "Speaks" Your Language)
 
 ---
 
@@ -1205,7 +1205,7 @@ The top bar has two switches: "Axes" and "Grid surface".
 
 ### 28.3 Fullscreen
 
-Click the top bar or press **F11** for fullscreen — the canvas fills the screen for immersive observation. **Esc** exits (in fullscreen, Esc first leaves fullscreen, a second press deselects).
+Click the top bar or press **F11** for fullscreen — the canvas fills the screen for immersive observation. Fullscreen is toggled by **F11** or the top-bar "Fullscreen" button; pressing **Esc** only closes controls / deselects and does **not** exit fullscreen.
 
 ### 28.4 A practical combo
 
@@ -1311,7 +1311,7 @@ Keyboard shortcuts follow one core rule: **check whether an object is selected**
 | `W` / `S` | Rotate Y CW/CCW | Orbit up / down |
 | `E` / `Q` | Rotate X CW/CCW | — |
 | `+` / `-` | Scale up/down 5% | — |
-| `Esc` | Cancel | Exit Fullscreen |
+| `Esc` | Cancel | Close controls |
 | `F11` | Fullscreen / Exit fullscreen | (same as left) |
 | `Del` / `Backspace` | Delete selected objects | — |
 
@@ -2318,7 +2318,7 @@ A vocabulary list for quick lookup. Entries with `*` are terms specific to this 
 | `W` / `S` | Rotate Y CW/CCW | Orbit up / down |
 | `E` / `Q` | Rotate X CW/CCW | — |
 | `+` / `-` | Scale up/down 5% | — |
-| `Esc` | Cancel | Exit Fullscreen |
+| `Esc` | Cancel | Close controls |
 | `F11` | Fullscreen / Exit fullscreen | (same as left) |
 | `Del` / `Backspace` | Delete selected objects | — |
 
@@ -2511,9 +2511,9 @@ Both the interface and the manual support four languages:
 | Language | Interface | Manual |
 | --- | --- | --- |
 | Simplified Chinese | ✅ | ✅ |
+| Traditional Chinese | ✅ | ✅ |
 | English | ✅ | ✅ |
 | Japanese | ✅ | ✅ |
-| Traditional Chinese | ✅ | ✅ |
 
 How to switch: choose a language in Settings; the interface text and the manual body switch to that language **together**. The manual's multilingual content lives in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`.
 

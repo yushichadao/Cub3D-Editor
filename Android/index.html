@@ -937,7 +937,7 @@
 .touch-device .manual-toc {
   position:absolute; top:0; bottom:0; left:0; width:84vw; max-width:340px; flex-shrink:0;
   background:var(--bg-panel); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  border-right:1px solid var(--border); border-top-right-radius:var(--radius); border-bottom-right-radius:var(--radius);
+  border-right:1px solid var(--border);
   box-shadow:4px 0 24px rgba(0,0,0,.35);
   transform:translateX(-100%); transition:transform .28s cubic-bezier(.22,.61,.36,1); z-index:60;
   display:flex; flex-direction:column; padding-top:0; overflow-y:auto;
@@ -958,7 +958,7 @@
 .touch-device .manual-note {
   position:absolute; top:0; right:0; bottom:0; width:88vw; max-width:360px;
   background:var(--bg-panel); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  border-left:1px solid var(--border); border-top-left-radius:var(--radius); border-bottom-left-radius:var(--radius);
+  border-left:1px solid var(--border);
   box-shadow:-4px 0 24px rgba(0,0,0,.35); z-index:60; transform:translateX(100%);
   transition:transform .28s cubic-bezier(.22,.61,.36,1); display:flex; flex-direction:column; padding-top:0; overflow-y:auto;
 }
@@ -969,7 +969,7 @@
 .touch-device #manual-note-close:hover { background:color-mix(in srgb, var(--accent) 14%, transparent); border-color:var(--accent); color:var(--text); }
 .touch-device .manual-note.open { transform:translateX(0); }
 .touch-device .manual-drawer-mask {
-  position:absolute; inset:0; background:var(--modal-mask); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); z-index:55;
+  display:block; position:absolute; inset:0; background:transparent; z-index:55;
   opacity:0; pointer-events:none; transition:opacity .25s ease;
 }
 .touch-device .manual-drawer-mask.open { opacity:1; pointer-events:auto; }
@@ -1003,7 +1003,7 @@
 .touch-device .guide-doc .kbd-key { white-space:normal !important; overflow-wrap:anywhere !important; word-break:break-word !important; overflow:visible !important; }
 .touch-device .manual-float.float-bottom { left:0 !important; right:0 !important; top:auto !important; bottom:0 !important; transform:none !important; justify-content:center; border-radius:0; padding:10px calc(10px + env(safe-area-inset-bottom)); gap:12px; background:var(--bg-panel-solid); border-top:1px solid var(--border); }
 .touch-device .manual-bottombar {
-  position:relative; z-index:70; display:flex; align-items:stretch; justify-content:space-around; gap:2px;
+  display:flex; align-items:stretch; justify-content:space-around; gap:2px;
   padding:6px 4px calc(6px + env(safe-area-inset-bottom)); background:var(--bg-panel-solid);
   border-top:1px solid var(--border); flex-shrink:0;
 }
@@ -1449,9 +1449,9 @@
           <td data-i18n="kbdUnselRotY">视角上/下旋转</td>
         </tr>
         <tr>
-          <td><span class="kbd-key">Shift</span> + 长按左键</td>
-          <td data-i18n="kbdSelLine">约束直线（绘制时约束为水平 / 垂直 / 45°）</td>
+          <td><span class="kbd-key">长按左键</span></td>
           <td>—</td>
+          <td data-i18n="kbdSelLine">画笔约束直线模式（绘制时笔迹约束为水平 / 垂直 / 45°）</td>
         </tr>
         <tr>
           <td><span class="kbd-key">E</span> / <span class="kbd-key">Q</span></td>
@@ -1830,7 +1830,7 @@ kbdShiftRot:'旋转90°', kbdShiftRotUnselView:'视角旋转90°',
 kbdShiftScaleSel:'放大×2/缩小×0.5', kbdShiftClickSel:'加选对象（点选）',
 kbdSliderInc:'增/减', kbdSliderCursor:'移动光标', kbdSliderSign:'输入正/负号', kbdSliderScroll:'向上/下滚动右栏',
 kbdSliderPgSel:'大幅增/减',
- kbdFuncEscSel:'取消操作', kbdFuncEscUnsel:'退出全屏', kbdFuncF11:'全屏/退出全屏', kbdFuncDel:'删除选中对象',
+ kbdFuncEscSel:'取消操作', kbdFuncEscUnsel:'关闭控件', kbdFuncF11:'全屏/退出全屏', kbdFuncDel:'删除选中对象',
  kbdCtrlA:'全选', kbdCtrlN:'新建场景', kbdCtrlO:'导入场景', kbdCtrlS:'导出场景', kbdCtrlP:'截图导出图像',
  kbdCtrlZ:'撤销', kbdCtrlY:'重做', kbdCtrlC:'复制', kbdCtrlV:'粘贴', kbdCtrlD:'克隆', kbdCtrlDel:'清空场景',
  // Toast 消息模板（{0}{1}{2}为占位符，会被替换）

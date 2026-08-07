@@ -109,7 +109,7 @@ window.__packs['zh-TW'] = {
   kbdShiftScaleSel:'縮放 ×2 / ×0.5', kbdShiftClickSel:'加入選取（點選）',
   kbdSliderInc:'增加/減少', kbdSliderCursor:'移動游標', kbdSliderSign:'輸入正負號 (+/−)', kbdSliderScroll:'向上/下捲動右側面板',
   kbdSliderPgSel:'大步上/下',
-  kbdFuncEscSel:'取消操作', kbdFuncEscUnsel:'退出全螢幕', kbdFuncF11:'全螢幕 / 退出全螢幕', kbdFuncDel:'刪除選取物件',
+  kbdFuncEscSel:'取消操作', kbdFuncEscUnsel:'關閉控件', kbdFuncF11:'全螢幕 / 退出全螢幕', kbdFuncDel:'刪除選取物件',
   kbdCtrlA:'全選', kbdCtrlN:'新建場景', kbdCtrlO:'匯入場景', kbdCtrlS:'匯出場景', kbdCtrlP:'截圖',
   kbdCtrlZ:'復原', kbdCtrlY:'重做', kbdCtrlC:'複製', kbdCtrlV:'貼上', kbdCtrlD:'原地複製', kbdCtrlDel:'清除場景',
 
@@ -140,7 +140,7 @@ window.__packs['zh-TW'] = {
   // Tooltips
   titleNew:'新增場景 (Ctrl+N)', titleImport:'匯入場景 JSON (Ctrl+O)', titleExport:'匯出場景 JSON (Ctrl+S)', titleShot:'匯出影像 PNG (Ctrl+P)',
   titleUndo:'復原 (Ctrl+Z)', titleRedo:'重做 (Ctrl+Y)', titleCopy:'複製 (Ctrl+C)', titlePaste:'貼上 (Ctrl+V)', titleDup:'原地複製 (Ctrl+D)', titleClear:'清除場景（Ctrl+Del/Backspace）',
-  titleAxes:'切換座標軸顯示', titleGrid:'切換網格面顯示', titleSettings:'設定', titleFS:'全螢幕 (F11 / Esc)',
+  titleAxes:'切換座標軸顯示', titleGrid:'切換網格面顯示', titleSettings:'設定', titleFS:'全螢幕 (F11)',
   titleTranslate:'平移模式', titleRotate:'旋轉模式', titleScale:'縮放模式',
   titleBBToggle:'展開/收起視角切換', titleBoxSelect:'框選模式：單指拖曳框選物件', titleSelectAll:'全選所有物件',
   titleEyedropper:'使用螢幕取色器', titleSettingsClose:'關閉',

@@ -110,7 +110,7 @@ window.__packs['ja'] = {
   kbdShiftScaleSel:'スケール×2 / ×0.5', kbdShiftClickSel:'選択に追加（タップ選択）',
   kbdSliderInc:'増加/減少', kbdSliderCursor:'カーソル移動', kbdSliderSign:'符号入力 (+/−)', kbdSliderScroll:'右パネルを上/下にスクロール',
   kbdSliderPgSel:'大きいステップで増減',
-  kbdFuncEscSel:'操作をキャンセル', kbdFuncEscUnsel:'全画面終了', kbdFuncF11:'全画面 / 全画面終了', kbdFuncDel:'選択オブジェクトを削除',
+  kbdFuncEscSel:'操作をキャンセル', kbdFuncEscUnsel:'コントロールを閉じる', kbdFuncF11:'全画面 / 全画面終了', kbdFuncDel:'選択オブジェクトを削除',
   kbdCtrlA:'すべて選択', kbdCtrlN:'新規シーン', kbdCtrlO:'シーン読込', kbdCtrlS:'シーン書出', kbdCtrlP:'スクリーンショット',
   kbdCtrlZ:'元に戻す', kbdCtrlY:'やり直し', kbdCtrlC:'コピー', kbdCtrlV:'貼り付け', kbdCtrlD:'複製', kbdCtrlDel:'シーンクリア',
 
@@ -141,7 +141,7 @@ window.__packs['ja'] = {
   // Tooltips
   titleNew:'新規シーン (Ctrl+N)', titleImport:'シーン読込 (Ctrl+O)', titleExport:'シーン書出 (Ctrl+S)', titleShot:'スクリーンショット (Ctrl+P)',
   titleUndo:'元に戻す (Ctrl+Z)', titleRedo:'やり直し (Ctrl+Y)', titleCopy:'コピー (Ctrl+C)', titlePaste:'貼り付け (Ctrl+V)', titleDup:'複製 (Ctrl+D)', titleClear:'シーンクリア (Ctrl+Del/Backspace)',
-  titleAxes:'座標軸の表示切替', titleGrid:'グリッドの表示切替', titleSettings:'設定', titleFS:'全画面 (F11 / Esc)',
+  titleAxes:'座標軸の表示切替', titleGrid:'グリッドの表示切替', titleSettings:'設定', titleFS:'全画面 (F11)',
   titleTranslate:'移動モード', titleRotate:'回転モード', titleScale:'スケールモード',
   titleBBToggle:'視点切替の表示/非表示', titleBoxSelect:'範囲選択モード: ドラッグで選択', titleSelectAll:'すべてのオブジェクトを選択',
   titleEyedropper:'スクリーンから色を取得', titleSettingsClose:'閉じる',

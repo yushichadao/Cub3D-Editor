@@ -108,7 +108,7 @@ window.__packs['en'] = {
   kbdShiftScaleSel:'Scale ×2 / ×0.5', kbdShiftClickSel:'Add to selection (click)',
   kbdSliderInc:'Increase/Decrease', kbdSliderCursor:'Move cursor', kbdSliderSign:'Input sign (+/−)', kbdSliderScroll:'Scroll right panel up/down',
   kbdSliderPgSel:'Large step up/down',
-  kbdFuncEscSel:'Cancel', kbdFuncEscUnsel:'Exit Fullscreen', kbdFuncF11:'Fullscreen / Exit fullscreen', kbdFuncDel:'Delete selected objects',
+  kbdFuncEscSel:'Cancel', kbdFuncEscUnsel:'Close controls', kbdFuncF11:'Fullscreen / Exit fullscreen', kbdFuncDel:'Delete selected objects',
   kbdCtrlA:'Select All', kbdCtrlN:'New Scene', kbdCtrlO:'Import Scene', kbdCtrlS:'Export Scene', kbdCtrlP:'Screenshot',
   kbdCtrlZ:'Undo', kbdCtrlY:'Redo', kbdCtrlC:'Copy', kbdCtrlV:'Paste', kbdCtrlD:'Clone', kbdCtrlDel:'Clear Scene',
 
@@ -139,7 +139,7 @@ window.__packs['en'] = {
   // Tooltips
   titleNew:'New Scene (Ctrl+N)', titleImport:'Import Scene (Ctrl+O)', titleExport:'Export Scene (Ctrl+S)', titleShot:'Screenshot (Ctrl+P)',
   titleUndo:'Undo (Ctrl+Z)', titleRedo:'Redo (Ctrl+Y)', titleCopy:'Copy (Ctrl+C)', titlePaste:'Paste (Ctrl+V)', titleDup:'Duplicate (Ctrl+D)', titleClear:'Clear Scene (Ctrl+Del/Backspace)',
-  titleAxes:'Toggle Axes', titleGrid:'Toggle Grid', titleSettings:'Settings', titleFS:'Fullscreen (F11 / Esc)',
+  titleAxes:'Toggle Axes', titleGrid:'Toggle Grid', titleSettings:'Settings', titleFS:'Fullscreen (F11)',
   titleTranslate:'Translate Mode', titleRotate:'Rotate Mode', titleScale:'Scale Mode',
   titleBBToggle:'Show / Hide View Controls', titleBoxSelect:'Box Select: Drag to Select Objects', titleSelectAll:'Select All Objects',
   titleEyedropper:'Pick Color from Screen', titleSettingsClose:'Close',
