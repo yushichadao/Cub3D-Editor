@@ -104,7 +104,7 @@ function template() {
         { label: '插件开发指南', click: () => send('help.pluginGuide') },
         { type: 'separator' },
         { label: '关于', click: () => send('help.about') },
-        { label: 'GitHub 仓库', click: () => shell.openExternal('https://github.com/yushichadao/3d-editor') }
+        { label: 'GitHub 仓库', click: () => shell.openExternal('https://github.com/yushichadao/Cub3D-Editor') }
       ]
     }
   ];
