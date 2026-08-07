@@ -18,8 +18,8 @@
 | Scope | Covers all features of the web editor (interface, shapes, color, transform, text, brush, eraser, views, shortcuts, files, advanced & practical) |
 | Coordinate convention | This book **always uses the axis labels actually shown on the web page** (page labels: X = blue = front/back, Y = red = left/right, Z = green = height, Z points up). The internal implementation differs from the page labels; ordinary readers need not care |
 | Reading advice | Read the first four Parts in order; the remaining eight Parts can be consulted on demand. Be sure to do the "Think" and "Practice" at the end of every chapter |
-| Online address | https://yushichadao.github.io/3d-editor/ (open the page and start practicing) |
-| Project repo | https://github.com/yushichadao/3d-editor (source code and this document are both here) |
+| Online address | https://yushichadao.github.io/Cub3D-Editor/ (open the page and start practicing) |
+| Project repo | https://github.com/yushichadao/Cub3D-Editor (source code and this document are both here) |
 
 **Notation**
 - 💡 Tip: time-saving experience
@@ -158,7 +158,7 @@ Traditional 3D software like Blender or Maya is powerful, but its installer is h
 
 This tool is a web app deployed online; **no installation, no source download** — just open the public URL below in any browser:
 
-> 🌐 **Online address**: https://yushichadao.github.io/3d-editor/
+> 🌐 **Online address**: https://yushichadao.github.io/Cub3D-Editor/
 
 Copy the URL into your browser's address bar and press Enter to enter the main screen. Phone, tablet, or computer — anything with internet and a browser works.
 

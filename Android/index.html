@@ -41,21 +41,21 @@
     user-select: none;
   }
   /* 文字选择高亮：跟随主题，暗色下不再刺眼；统一外观避免"不一样大" */
-  ::selection { background: color-mix(in srgb, var(--accent) 42%, var(--control-bg)); color: var(--text); }
-  ::-moz-selection { background: color-mix(in srgb, var(--accent) 42%, var(--control-bg)); color: var(--text); }
+  ::selection { background: color-mix(in srgb, var(--accent) 30%, var(--control-bg)); color: var(--text); }
+  ::-moz-selection { background: color-mix(in srgb, var(--accent) 30%, var(--control-bg)); color: var(--text); }
   /* 选中文字在内侧描边，弱化原生白框观感 */
   .manual-doc ::selection,
   .guide-doc ::selection,
   .manual-note-text ::selection,
   .sticky-area ::selection {
-    background: color-mix(in srgb, var(--accent) 45%, var(--control-bg));
+    background: color-mix(in srgb, var(--accent) 32%, var(--control-bg));
     color: var(--text);
   }
   .manual-doc ::-moz-selection,
   .guide-doc ::-moz-selection,
   .manual-note-text ::-moz-selection,
   .sticky-area ::-moz-selection {
-    background: color-mix(in srgb, var(--accent) 45%, var(--control-bg));
+    background: color-mix(in srgb, var(--accent) 32%, var(--control-bg));
     color: var(--text);
   }
 
@@ -802,15 +802,20 @@
 .md-block.hl { background: color-mix(in srgb, var(--warn) 16%, transparent); }
 .md-block.flash { animation: mdFlash 1.2s ease-out; }
 @keyframes mdFlash { 0%{background:color-mix(in srgb,var(--accent) 28%,transparent);} 100%{background:transparent;} }
-.manual-doc mark.md-hl { background: var(--warn); color:#1a1a1a; border-radius:3px; padding:0 1px; }
-  .manual-doc mark.search-hit { background:#4ea1ff; color:#fff; border-radius:3px; padding:0 1px; }
-  .manual-doc mark.search-hit.cur { background:#ff8c1a; color:#fff; outline:2px solid #ff8c1a; }
+.manual-doc mark.md-hl { background: color-mix(in srgb, var(--warn) 85%, transparent); color:#1a1a1a; border-radius:3px; padding:0 1px; position:relative; z-index:1; }
+  .manual-doc mark.search-hit { background: color-mix(in srgb, var(--accent-2) 60%, transparent); color:var(--text); border-radius:3px; padding:0 1px; position:relative; z-index:2; }
+  .manual-doc mark.search-hit.cur { background: var(--accent-2); color:#fff; }
   .manual-doc mark.search-hit.flash { animation: searchFlash 1.4s ease-out; }
-  @keyframes searchFlash { 0%{background:#ff8c1a;} 20%{background:#4ea1ff;} 40%{background:#ff8c1a;} 60%{background:#4ea1ff;} 80%{background:#ff8c1a;} 100%{background:#ff8c1a;} }
+  @keyframes searchFlash { 0%,100%{background:var(--accent-2);} 15%{background:transparent;} 30%{background:var(--accent-2);} 45%{background:transparent;} 60%{background:var(--accent-2);} 75%{background:transparent;} 90%{background:var(--accent-2);} }
   .manual-search-count { font-size:12px; color:var(--text-dim, #888); margin-left:4px; white-space:nowrap; }
 .manual-doc mark.md-jump { background: var(--accent); color:#fff; border-radius:3px; padding:0 1px; animation: mdJumpPulse 1.6s ease-out; }
 @keyframes mdJumpPulse { 0%,50%,100%{ filter:brightness(1);} 25%,75%{ filter:brightness(1.6);} }
-.md-block.search-hit { background: color-mix(in srgb, var(--accent-2) 16%, transparent); }
+.md-block.search-hit { background: color-mix(in srgb, var(--accent-2) 14%, transparent); }
+.manual-confirm { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.4); z-index:80; }
+.manual-confirm-box { background:var(--bg-panel-solid); border:1px solid var(--border); border-radius:12px; padding:18px 16px; max-width:320px; width:80%; box-shadow:0 10px 40px rgba(0,0,0,.4); }
+.manual-confirm-msg { font-size:14px; margin-bottom:14px; line-height:1.5; }
+.manual-confirm-btns { display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; }
+.manual-confirm-btns .manual-btn { min-width:64px; }
 /* 说明书内容排版适配亮色/暗色 */
 .manual-doc h1,.manual-doc h2,.manual-doc h3,.manual-doc h4,.manual-doc h5,.manual-doc h6 { color:var(--text); margin:0.65em 0 0.35em; line-height:1.35; }
 .manual-doc h1 { font-size:1.7em; border-bottom:1px solid var(--border); padding-bottom:0.3em; }
@@ -930,11 +935,16 @@
 .touch-device .manual-toc {
   position:fixed; top:0; bottom:0; left:0; width:84vw; max-width:340px; flex-shrink:0;
   background:var(--bg-panel-solid); border-right:1px solid var(--border);
-  transform:translateX(-100%); transition:transform .25s ease; z-index:60; padding-top:60px;
+  transform:translateX(-100%); transition:transform .25s ease; z-index:60;
+  display:flex; flex-direction:column; padding-top:0;
 }
 .touch-device .manual-toc.open { transform:translateX(0); }
-.touch-device .manual-toc a { white-space:normal; }
+.touch-device .manual-toc a { white-space:normal; padding:8px 12px; }
 .touch-device .manual-toc a.active { color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, transparent); font-weight:600; }
+.manual-toc-head { display:none; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; font-weight:600; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg-panel-solid); }
+.touch-device .manual-toc-head { display:flex; }
+.manual-toc-close { border:none; background:transparent; color:var(--text-dim); font-size:16px; line-height:1; cursor:pointer; padding:4px 8px; border-radius:6px; }
+.manual-toc-close:hover { background:var(--control-bg); color:var(--text); }
 .touch-device .manual-note {
   position:fixed; top:0; right:0; bottom:0; width:88vw; max-width:360px;
   background:var(--bg-panel-solid); z-index:60; transform:translateX(100%);
@@ -1665,6 +1675,7 @@
             <p class="about-author"><span data-i18n="aboutAuthor">作者</span>：Yushichadao</p>
             <p class="about-ai" data-i18n="aboutAI">本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成</p>
             <a class="about-link" id="about-repo" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="aboutRepo">GitHub 仓库</a>
+            <a class="about-link" id="about-online" href="https://yushichadao.github.io/Cub3D-Editor/" target="_blank" rel="noopener" data-i18n="aboutOnline">在线地址</a>
             <div class="about-terms">
               <button type="button" class="about-card" data-term="tos">
                 <span class="about-card-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/></svg></span>
@@ -1739,7 +1750,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js?v=6';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 // 简体中文作为内置默认与回退；其余语言存放在 language/ 目录下独立文件中（见 <head> 的 <script src> 引用）
-const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', fs:'全屏', fsExit:'退出全屏', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·三维图形设计工坊', aboutDesc:'基于 Three.js 的 Android 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>1. 条款的接受</h4><p>本《服务协议》（下称「本协议」）系由本网站（下称「本工具」或「本服务」）的运营者（下称「我们」）与使用者（下称「您」）就本工具的使用所订立的具有法律约束力的协议。当您访问、浏览或使用本工具时，即视为您已充分阅读、理解并同意接受本协议的全部条款与条件。若您不同意本协议的任何内容，请勿使用本工具。</p><h4>2. 使用范围与限制</h4><p>本工具为基于 Three.js 的纯前端三维 / 二维图形设计与编辑工具，仅供个人学习、创意设计、教学演示与非商业用途使用。您承诺：不以任何方式将本工具或其输出用于商业盈利、再分发或提供商业性服务；不利用本工具从事任何违反国家法律、法规或公序良俗的活动；不试图反向工程、反编译、破解或干扰本工具的正常运行。您应对自身上传、导入或创作的素材内容（包括文本、图像、模型等）享有合法权利或已获合法授权，并保证该等内容不侵犯任何第三方的知识产权、肖像权、名誉权或其他合法权益。</p><h4>3. 用户内容与知识产权</h4><p>本工具本身的全部著作权、商标权及其他知识产权归作者 Yushichadao 所有（Copyright © 2026-Present Yushichadao. All Rights Reserved.）。您在使用本工具过程中自行创建、上传或导入的素材及所生成场景文件的知识产权，归您本人所有；您授予我们一项非独占、全球范围、免费、可撤销的许可，仅用于在您使用本工具期间为提供与改进服务之目的而对该等内容进行必要的技术处理（如本地渲染、缓存）。我们不会因您使用本工具而取得您内容的任何权利。</p><h4>4. 账户、费用与第三方资源</h4><p>本工具为纯前端应用，不要求注册账户，亦不收取任何费用。本工具可能在界面中提供指向第三方网站（如 GitHub 开源仓库）的链接，该等链接仅供方便而设，我们对其内容、安全性及隐私实践不承担责任。您访问第三方资源应受其各自条款与政策的约束。</p><h4>5. 服务的变更、中断与终止</h4><p>我们保留在不另行通知的情况下，随时修改、暂停或终止本工具部分或全部功能的权利。对于因维护、升级、网络或不可抗力等原因导致的服务中断或数据丢失，我们不承担任何责任。</p><h4>6. 责任限制</h4><p>在法律允许的最大范围内，对于因使用或无法使用本工具所导致的任何间接、偶然、特殊或后果性损害，我们不承担任何赔偿责任。本工具按「现状」提供，详见《免责声明》。</p><h4>7. 适用法律与争议解决</h4><p>本协议的订立、效力、解释及争议解决均适用中华人民共和国法律（不含冲突规范）。因本协议产生的或与之相关的任何争议，双方应友好协商解决；协商不成的，任何一方均可向作者所在地有管辖权的人民法院提起诉讼。</p><h4>8. 联系我们</h4><p>如您对本协议有任何疑问，可通过本工具的 GitHub 仓库（github.com/yushichadao/Cub3D-Editor）与我们联系。本协议内容如发生变更，将以修订后的版本在站内公示，修订后继续使用即视为接受变更。</p>', disclaimerBody:'<h4>1. 一般声明</h4><p>本工具系按「现状」（AS IS）及「可用」（AS AVAILABLE）基础提供，我们不作任何明示或暗示的担保，包括但不限于对适销性、特定用途适用性、不侵权、准确性、可靠性或持续可用的担保。我们不保证本工具在任何时间、任何设备上均能无误运行，亦不保证缺陷必将被修正。</p><h4>2. 技术说明</h4><p>本工具为纯前端 Web 应用，依托浏览器（WebGL / Three.js）在您本地设备实时渲染三维与二维图形。其功能受您的设备性能、浏览器兼容性及网络环境等因素影响，渲染结果可能因设备与浏览器差异而略有不同。</p><h4>3. 责任限制</h4><p>在法律允许的最大范围内，对于因使用、误用或无法使用本工具，或因依赖本工具输出结果所导致的任何直接、间接、偶然、特殊、惩罚性或后果性损失（包括但不限于数据丢失、设备损耗、利润或业务中断），我们及作者 Yushichadao 均不承担任何责任，即使已被告知该等损害的可能性。</p><h4>4. 用户内容责任</h4><p>您应对使用本工具创建、上传或导入的全部内容独立承担全部责任。您确认本工具不构成任何专业设计、法律、财务或工程建议；任何基于此产生的成果之合规性、安全性与适用性，由您自行判断并负责。</p><h4>5. 第三方资源免责</h4><p>本工具可能包含指向第三方网站、仓库或资源的链接（如 GitHub）。该等第三方资源由其各自运营者负责，我们对其内容、可用性、安全性及隐私实践不作任何担保或承担责任。您与第三方之间的任何交易或交互，风险由您自行承担。</p><h4>6. 无 AI 功能声明</h4><p>本网站及本工具本身不包含任何由运营者提供的生成式人工智能（AI）功能或模型；页面与代码的生成系借助 TRAE 与 CodeBuddy 等开发工具辅助完成，该等工具不参与本工具运行时的功能提供。本《免责声明》所称「本工具」仅指本网站所提供的编辑功能本身。</p><h4>7. 条款变更</h4><p>我们保留随时修改本声明的权利，修订后的声明将在本工具内公示，您继续使用即视为接受修订内容。</p>', privacyBody:'<h4>1. 我们如何对待您的信息</h4><p>我们高度重视并严格保护您的隐私。本工具为纯前端（client-side）应用：所有三维模型、文本、图像、贴图及场景数据均在您的浏览器本地进行处理、渲染与保存，不会上传至任何远程服务器，我们亦无法访问您的任何内容。</p><h4>2. 我们收集的信息</h4><p>我们不会主动收集、存储或传输您的个人信息（如姓名、邮箱、位置等）。本工具不要求注册账户，亦不设置任何服务器端数据库。您在本工具内的全部操作均发生在您的本地设备。</p><h4>3. 本地存储</h4><p>为提升使用体验，本工具可能使用浏览器本地存储（如 localStorage）记录您的偏好设置（如界面语言、主题等）以及您主动导出的场景数据。该等信息仅保存在您自己的设备中，不会离开您的浏览器。您可随时通过清除浏览器数据予以删除。</p><h4>4. 分析与追踪</h4><p>本工具不集成任何第三方统计分析、广告或用户行为追踪脚本，不会对您进行跨站跟踪或画像。</p><h4>5. 第三方链接</h4><p>本工具可能在界面中提供指向第三方网站（如 GitHub）的链接。当您离开本工具访问第三方资源时，其隐私实践由该第三方负责，本《隐私政策》不再适用，请参照其相应政策。</p><h4>6. 儿童隐私</h4><p>本工具不面向未满 13 周岁的儿童，我们不会在知情的情况下收集其个人信息。</p><h4>7. 联系与变更</h4><p>如您对本政策有任何疑问，可通过 GitHub 仓库（github.com/yushichadao/Cub3D-Editor）联系我们。本政策如有变更，将以修订版本在站内公示。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
+const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', fs:'全屏', fsExit:'退出全屏', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·三维图形设计工坊', aboutDesc:'基于 Three.js 的 Android 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', aboutOnline:'在线地址', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>1. 条款的接受</h4><p>本《服务协议》（下称「本协议」）系由本网站（下称「本工具」或「本服务」）的运营者（下称「我们」）与使用者（下称「您」）就本工具的使用所订立的具有法律约束力的协议。当您访问、浏览或使用本工具时，即视为您已充分阅读、理解并同意接受本协议的全部条款与条件。若您不同意本协议的任何内容，请勿使用本工具。</p><h4>2. 使用范围与限制</h4><p>本工具为基于 Three.js 的纯前端三维 / 二维图形设计与编辑工具，仅供个人学习、创意设计、教学演示与非商业用途使用。您承诺：不以任何方式将本工具或其输出用于商业盈利、再分发或提供商业性服务；不利用本工具从事任何违反国家法律、法规或公序良俗的活动；不试图反向工程、反编译、破解或干扰本工具的正常运行。您应对自身上传、导入或创作的素材内容（包括文本、图像、模型等）享有合法权利或已获合法授权，并保证该等内容不侵犯任何第三方的知识产权、肖像权、名誉权或其他合法权益。</p><h4>3. 用户内容与知识产权</h4><p>本工具本身的全部著作权、商标权及其他知识产权归作者 Yushichadao 所有（Copyright © 2026-Present Yushichadao. All Rights Reserved.）。您在使用本工具过程中自行创建、上传或导入的素材及所生成场景文件的知识产权，归您本人所有；您授予我们一项非独占、全球范围、免费、可撤销的许可，仅用于在您使用本工具期间为提供与改进服务之目的而对该等内容进行必要的技术处理（如本地渲染、缓存）。我们不会因您使用本工具而取得您内容的任何权利。</p><h4>4. 账户、费用与第三方资源</h4><p>本工具为纯前端应用，不要求注册账户，亦不收取任何费用。本工具可能在界面中提供指向第三方网站（如 GitHub 开源仓库）的链接，该等链接仅供方便而设，我们对其内容、安全性及隐私实践不承担责任。您访问第三方资源应受其各自条款与政策的约束。</p><h4>5. 服务的变更、中断与终止</h4><p>我们保留在不另行通知的情况下，随时修改、暂停或终止本工具部分或全部功能的权利。对于因维护、升级、网络或不可抗力等原因导致的服务中断或数据丢失，我们不承担任何责任。</p><h4>6. 责任限制</h4><p>在法律允许的最大范围内，对于因使用或无法使用本工具所导致的任何间接、偶然、特殊或后果性损害，我们不承担任何赔偿责任。本工具按「现状」提供，详见《免责声明》。</p><h4>7. 适用法律与争议解决</h4><p>本协议的订立、效力、解释及争议解决均适用中华人民共和国法律（不含冲突规范）。因本协议产生的或与之相关的任何争议，双方应友好协商解决；协商不成的，任何一方均可向作者所在地有管辖权的人民法院提起诉讼。</p><h4>8. 联系我们</h4><p>如您对本协议有任何疑问，可通过本工具的 GitHub 仓库（github.com/yushichadao/Cub3D-Editor）与我们联系。本协议内容如发生变更，将以修订后的版本在站内公示，修订后继续使用即视为接受变更。</p>', disclaimerBody:'<h4>1. 一般声明</h4><p>本工具系按「现状」（AS IS）及「可用」（AS AVAILABLE）基础提供，我们不作任何明示或暗示的担保，包括但不限于对适销性、特定用途适用性、不侵权、准确性、可靠性或持续可用的担保。我们不保证本工具在任何时间、任何设备上均能无误运行，亦不保证缺陷必将被修正。</p><h4>2. 技术说明</h4><p>本工具为纯前端 Web 应用，依托浏览器（WebGL / Three.js）在您本地设备实时渲染三维与二维图形。其功能受您的设备性能、浏览器兼容性及网络环境等因素影响，渲染结果可能因设备与浏览器差异而略有不同。</p><h4>3. 责任限制</h4><p>在法律允许的最大范围内，对于因使用、误用或无法使用本工具，或因依赖本工具输出结果所导致的任何直接、间接、偶然、特殊、惩罚性或后果性损失（包括但不限于数据丢失、设备损耗、利润或业务中断），我们及作者 Yushichadao 均不承担任何责任，即使已被告知该等损害的可能性。</p><h4>4. 用户内容责任</h4><p>您应对使用本工具创建、上传或导入的全部内容独立承担全部责任。您确认本工具不构成任何专业设计、法律、财务或工程建议；任何基于此产生的成果之合规性、安全性与适用性，由您自行判断并负责。</p><h4>5. 第三方资源免责</h4><p>本工具可能包含指向第三方网站、仓库或资源的链接（如 GitHub）。该等第三方资源由其各自运营者负责，我们对其内容、可用性、安全性及隐私实践不作任何担保或承担责任。您与第三方之间的任何交易或交互，风险由您自行承担。</p><h4>6. 无 AI 功能声明</h4><p>本网站及本工具本身不包含任何由运营者提供的生成式人工智能（AI）功能或模型；页面与代码的生成系借助 TRAE 与 CodeBuddy 等开发工具辅助完成，该等工具不参与本工具运行时的功能提供。本《免责声明》所称「本工具」仅指本网站所提供的编辑功能本身。</p><h4>7. 条款变更</h4><p>我们保留随时修改本声明的权利，修订后的声明将在本工具内公示，您继续使用即视为接受修订内容。</p>', privacyBody:'<h4>1. 我们如何对待您的信息</h4><p>我们高度重视并严格保护您的隐私。本工具为纯前端（client-side）应用：所有三维模型、文本、图像、贴图及场景数据均在您的浏览器本地进行处理、渲染与保存，不会上传至任何远程服务器，我们亦无法访问您的任何内容。</p><h4>2. 我们收集的信息</h4><p>我们不会主动收集、存储或传输您的个人信息（如姓名、邮箱、位置等）。本工具不要求注册账户，亦不设置任何服务器端数据库。您在本工具内的全部操作均发生在您的本地设备。</p><h4>3. 本地存储</h4><p>为提升使用体验，本工具可能使用浏览器本地存储（如 localStorage）记录您的偏好设置（如界面语言、主题等）以及您主动导出的场景数据。该等信息仅保存在您自己的设备中，不会离开您的浏览器。您可随时通过清除浏览器数据予以删除。</p><h4>4. 分析与追踪</h4><p>本工具不集成任何第三方统计分析、广告或用户行为追踪脚本，不会对您进行跨站跟踪或画像。</p><h4>5. 第三方链接</h4><p>本工具可能在界面中提供指向第三方网站（如 GitHub）的链接。当您离开本工具访问第三方资源时，其隐私实践由该第三方负责，本《隐私政策》不再适用，请参照其相应政策。</p><h4>6. 儿童隐私</h4><p>本工具不面向未满 13 周岁的儿童，我们不会在知情的情况下收集其个人信息。</p><h4>7. 联系与变更</h4><p>如您对本政策有任何疑问，可通过 GitHub 仓库（github.com/yushichadao/Cub3D-Editor）联系我们。本政策如有变更，将以修订版本在站内公示。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
  // 面板标题
  sec3D:'3D 图形', sec2D:'2D 图形', secTransform:'变换', secMaterial:'材质', secColor:'颜色', secPattern:'花纹 / 贴图', secTextBox:'文本框', secEraser:'橡皮擦属性', secMouse:'鼠标操作', secTouch:'手势操作', secKeyboard:'键盘快捷键',
  // Tab 按钮
@@ -1898,7 +1909,7 @@ kbdSliderPgSel:'大幅增/减',
   appTitle:'3D 编辑器',
   // 说明书阅读器
   tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
-  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文',   manNoteQuoteTip:'点击折叠/展开引用原文', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销',
+  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文',   manNoteQuoteTip:'点击折叠/展开引用原文', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存',
   // 退出确认框
   exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出',
 };
@@ -1961,8 +1972,8 @@ controls.touches = {
 };
 
 // ============ 触摸设备检测 ============
-// 允许通过 URL 参数 ?touch / ?touch=1 / ?mobile 强制启用触屏版（便于桌面浏览器测试移动端）
-const FORCE_TOUCH = /[?&](touch|mobile)(=1)?\b/.test(location.search);
+// 安卓(手机)版默认强制触屏/手机网页布局；如需在桌面浏览器预览桌面版，可附加 ?desktop
+const FORCE_TOUCH = /[?&](touch|mobile)(=1)?\b/.test(location.search) || !/[?&]desktop\b/.test(location.search);
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window || FORCE_TOUCH;
 // 触屏版删除按钮去掉键盘提示文案
 if (isTouch) { const _delBtn = document.getElementById('del-btn'); if (_delBtn) _delBtn.dataset.i18n = 'deleteSelectedTouch'; }
@@ -10608,6 +10619,7 @@ animate();
 // ============ 触摸设备 UI 初始化 ============
 if (isTouch) {
   document.body.classList.add('touch-device');
+  document.documentElement.classList.add('touch-device');
   // 触摸端多选状态初始化
   state.boxSelectMode = false;
   // 隐藏鼠标操作面板，显示手势面板
@@ -10746,6 +10758,7 @@ window.__debug = {
 
 /* ===================== 说明书阅读器（零依赖 Markdown 阅读器） ===================== */
 function mdEscape(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function slugify(s){ return String(s).normalize('NFKC').replace(/\s+/g,''); }
 function mdInline(text){
   const codes = [];
   let s = mdEscape(text);
@@ -10755,6 +10768,8 @@ function mdInline(text){
   s = s.replace(/(^|[^*])\*([^*\s][^*]*?)\*/g, '$1<em>$2</em>');
   s = s.replace(/(^|[^_])_([^_\s][^_]*?)_/g, '$1<em>$2</em>');
   s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (m,t,u)=>'<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a>');
+  s = s.replace(/\[([^\]]+)\]\((#[^)\s]+)\)/g, (m,t,a)=>'<a href="'+a+'" class="md-anchor">'+t+'</a>');
+  s = s.replace(/\[([^\]]+)\]\((jump:[^)\n]+)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
   s = s.replace(/\uE000(\d+)\uE001/g, (m,idx)=>'<code>'+codes[+idx]+'</code>');
   return s;
 }
@@ -10785,7 +10800,7 @@ function parseBlocks(md){
 function renderBlock(b){
   const line=b.line;
   switch(b.type){
-    case 'heading': { const l=b.level; return '<div class="md-block" data-type="heading" data-level="'+l+'" data-line="'+line+'"><h'+l+'>'+mdInline(b.text)+'</h'+l+'></div>'; }
+    case 'heading': { const l=b.level; const id=slugify(b.text); return '<div class="md-block" data-type="heading" data-level="'+l+'" data-line="'+line+'"><h'+l+' id="'+id+'">'+mdInline(b.text)+'</h'+l+'></div>'; }
     case 'para': return '<div class="md-block" data-type="para" data-line="'+line+'"><p>'+b.lines.map(mdInline).join('<br>')+'</p></div>';
     case 'code': return '<div class="md-block" data-type="code" data-line="'+line+'"><pre class="md-code"><code>'+mdEscape(b.lines.join('\n'))+'</code></pre></div>';
     case 'quote': return '<div class="md-block" data-type="quote" data-line="'+line+'"><blockquote>'+b.lines.map(l=>'<p>'+mdInline(l)+'</p>').join('')+'</blockquote></div>';
@@ -10842,8 +10857,37 @@ function openManual(){
 
   if(!openManual._built){
     openManual._built = true;
-    document.getElementById('manual-close').addEventListener('click', ()=>{ saveScroll(); modal.classList.remove('show'); });
-    modal.addEventListener('click', e=>{ if(e.target===modal){ saveScroll(); modal.classList.remove('show'); } });
+    function hideManual(){ clearSearchHits(); searchInput.value=''; const tb=readEl.querySelector('.manual-toolbar'); if(tb) tb.classList.remove('search-open'); closeAllStickies(); saveScroll(); modal.classList.remove('show'); }
+    function showStickyUnsaved(el){
+      return new Promise(resolve=>{
+        const wrap=document.createElement('div'); wrap.className='manual-confirm';
+        wrap.innerHTML='<div class="manual-confirm-box">'
+          +'<div class="manual-confirm-msg">'+mdEscape(T('manNoteUnsaved'))+'</div>'
+          +'<div class="manual-confirm-btns">'
+          +'<button class="manual-btn" data-v="save">'+mdEscape(T('manSave'))+'</button>'
+          +'<button class="manual-btn" data-v="discard">'+mdEscape(T('manNoteDiscard'))+'</button>'
+          +'<button class="manual-btn" data-v="cancel">'+mdEscape(T('manCancel'))+'</button>'
+          +'</div></div>';
+        modal.appendChild(wrap);
+        wrap.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ wrap.remove(); const v=b.dataset.v; if(v==='save'){ flushSticky(el); closeSticky(el); } else if(v==='discard'){ closeSticky(el); } resolve(v); }));
+      });
+    }
+    function manualBackStep(){
+      const layer=stickyLayer();
+      const notes=Array.from(layer.querySelectorAll('.sticky-note'));
+      if(notes.length){
+        notes.sort((a,b)=>(parseInt(a.style.zIndex)||0)-(parseInt(b.style.zIndex)||0));
+        const top=notes[notes.length-1];
+        if(top.classList.contains('sticky-dirty')) showStickyUnsaved(top);
+        else closeSticky(top);
+        return true;
+      }
+      if(isTouchMode() && (tocEl.classList.contains('open') || notePanel.classList.contains('open'))){ closeDrawers(); return true; }
+      hideManual(); return true;
+    }
+    window.__manualBackStep = manualBackStep;
+    document.getElementById('manual-close').addEventListener('click', hideManual);
+    modal.addEventListener('click', e=>{ if(e.target===modal) hideManual(); });
     document.getElementById('manual-zoom-in').addEventListener('click', ()=>zoomDoc(1.12));
     document.getElementById('manual-zoom-out').addEventListener('click', ()=>zoomDoc(0.89));
     document.getElementById('manual-copy-all').addEventListener('click', ()=>copyText(getPlainDoc()));
@@ -10860,7 +10904,7 @@ function openManual(){
     if(bottombarEl){
       bottombarEl.querySelector('[data-act="toc"]').addEventListener('click', ()=>openToc(!tocEl.classList.contains('open')));
       bottombarEl.querySelector('[data-act="note"]').addEventListener('click', ()=>openNote(!notePanel.classList.contains('open')));
-      bottombarEl.querySelector('[data-act="close"]').addEventListener('click', ()=>{ saveScroll(); modal.classList.remove('show'); });
+      bottombarEl.querySelector('[data-act="close"]').addEventListener('click', hideManual);
       bottombarEl.querySelector('[data-act="zoom-in"]').addEventListener('click', ()=>zoomDoc(1.12));
       bottombarEl.querySelector('[data-act="zoom-out"]').addEventListener('click', ()=>zoomDoc(0.89));
       bottombarEl.querySelector('[data-act="search"]').addEventListener('click', ()=>{ const tb=readEl.querySelector('.manual-toolbar'); const open=tb.classList.toggle('search-open'); if(open) searchInput.focus(); else doSearch('first'); });
@@ -10881,6 +10925,7 @@ function openManual(){
     document.getElementById('manual-float-hiexpand').addEventListener('click', expandHl);
     docEl.addEventListener('mousedown', e=>{ if(e.button===2){ const s=window.getSelection(); if(s && !s.isCollapsed) e.preventDefault(); } });
     docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(openManual._sel){ floatEl.style.display='flex'; } });
+    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ const el=tgt.querySelector('h1,h2,h3,h4,h5,h6')||tgt; el.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt.closest('.md-block')||tgt); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
     openManual._mo = new MutationObserver(()=>syncStickyVisibility());
     openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
   }
@@ -10905,7 +10950,8 @@ function openManual(){
   function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function clearSearchHits(){
     docEl.querySelectorAll('mark.search-hit').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); });
-    blocks().forEach(b=>b.normalize());
+    docEl.normalize();
+    try{ applyHighlights(); }catch(e){}
     openManual._hits=[]; openManual._hitIdx=-1;
     const c=document.getElementById('manual-search-count'); if(c) c.textContent='';
   }
@@ -10914,21 +10960,37 @@ function openManual(){
     const re=new RegExp(escapeReg(q),'gi');
     blocks().forEach(b=>{
       const walker=document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null);
-      const nodes=[]; let n; while(n=walker.nextNode()) nodes.push(n);
-      nodes.forEach(node=>{
-        const t=node.nodeValue; if(!t) return;
-        const matches=[...t.matchAll(re)]; if(!matches.length) return;
-        const frag=document.createDocumentFragment(); let last=0;
-        matches.forEach(m=>{ const s=m.index, e=s+m[0].length; if(s>last) frag.appendChild(document.createTextNode(t.slice(last,s))); const mk=document.createElement('mark'); mk.className='search-hit'; mk.textContent=t.slice(s,e); frag.appendChild(mk); last=e; });
-        if(last<t.length) frag.appendChild(document.createTextNode(t.slice(last)));
-        node.parentNode.replaceChild(frag, node);
-      });
+      const nodes=[]; let n; while(n=walker.nextNode()){ if(n.nodeValue) nodes.push(n); }
+      // 将该块的全部文本节点按顺序拼接，建立“字符下标 -> 节点+偏移”映射，
+      // 从而支持跨文本节点 / 跨行内元素（行内代码、粗体、用户高亮等）的整体匹配
+      let full=''; const map=[];
+      nodes.forEach(node=>{ const txt=node.nodeValue; for(let i=0;i<txt.length;i++) map.push({node, offset:i}); full+=txt; });
+      re.lastIndex=0; let m; const ranges=[];
+      while((m=re.exec(full))!==null){
+        if(m[0].length===0){ re.lastIndex++; continue; }
+        let s=m.index, e=s+m[0].length;
+        while(s<e && /\s/.test(full[s])) s++;
+        while(e>s && /\s/.test(full[e-1])) e--;
+        if(e<=s) continue;
+        if(map[s] && map[e-1]) ranges.push([map[s].node, map[s].offset, map[e-1].node, map[e-1].offset+1]);
+        if(ranges.length>2000) break;
+      }
+      // 倒序处理：先包裹靠后的命中，避免前面的替换影响后面的字符映射
+      for(let i=ranges.length-1;i>=0;i--){
+        const [sn,so,en,eo]=ranges[i];
+        try{
+          const r=document.createRange(); r.setStart(sn,so); r.setEnd(en,eo);
+          const frag=r.extractContents();
+          const mk=document.createElement('mark'); mk.className='search-hit';
+          mk.appendChild(frag); r.insertNode(mk);
+        }catch(err){}
+      }
     });
     return Array.from(docEl.querySelectorAll('mark.search-hit'));
   }
   function setSearchCount(idx, total){ const c=document.getElementById('manual-search-count'); if(c) c.textContent = T('manCount').replace('{0}', idx+1).replace('{1}', total); }
   function doSearch(mode){
-    const q=searchInput.value.trim(); if(!q) return;
+    const q=searchInput.value.trim(); if(!q){ clearSearchHits(); return; }
     let hits=openManual._hits;
     if(mode==='first' || !hits || !hits.length){
       hits=highlightAll(q); openManual._hits=hits;
@@ -10941,9 +11003,19 @@ function openManual(){
     }
     const cur=hits[openManual._hitIdx]; cur.classList.add('cur');
     cur.scrollIntoView({behavior:'smooth', block:'center'});
-    flash(cur); setSearchCount(openManual._hitIdx, hits.length);
+    waitForScrollEnd(docEl, ()=>flash(cur)); setSearchCount(openManual._hitIdx, hits.length);
   }
   function flash(b){ b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash'); }
+  function waitForScrollEnd(el, cb){
+    let done=false, lastTop=el.scrollTop, stable=0, timer=null;
+    const finish=()=>{ if(done) return; done=true; if(timer) clearInterval(timer); el.removeEventListener('scroll', onScroll); if('onscrollend' in window) el.removeEventListener('scrollend', onEnd); cb(); };
+    const onScroll=()=>{ lastTop=el.scrollTop; stable=0; };
+    const onEnd=()=>finish();
+    el.addEventListener('scroll', onScroll, {passive:true});
+    if('onscrollend' in window) el.addEventListener('scrollend', onEnd);
+    timer=setInterval(()=>{ if(el.scrollTop===lastTop){ if(++stable>=3) finish(); } else { lastTop=el.scrollTop; stable=0; } }, 70);
+    setTimeout(finish, 1500);
+  }
   function scheduleSaveScroll(){ clearTimeout(openManual._saveT); openManual._saveT=setTimeout(saveScroll,400); }
   function saveScroll(){ if(openManual._lang) saveStore('scroll', docEl.scrollTop); }
   function restoreScroll(){ const s=loadStore('scroll', null); if(s!=null) docEl.scrollTop=s; const z=isTouchMode()?(loadStore('manualMobileFontSize')||16):loadStore('zoom',15); docEl.dataset.zoom=z; docEl.style.fontSize=z+'px'; }
@@ -11147,7 +11219,7 @@ function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); 
     try{ const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('http '+res.status); const md=await res.text(); docEl.innerHTML=parseBlocks(md).map(renderBlock).join(''); buildToc(); applyHighlights(); renderNotes(); const z=isTouchMode()?(loadStore('manualMobileFontSize')||16):loadStore('zoom',15); docEl.dataset.zoom=z; docEl.style.fontSize=z+'px'; restoreScroll(); }
     catch(e){ docEl.innerHTML='<div class="manual-error">'+mdEscape(T('manLoadFail'))+'</div>'; }
   }
-  function buildToc(){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); tocEl.innerHTML=heads.map(h=>'<a class="lvl'+h.dataset.level+'" data-line="'+h.dataset.line+'">'+mdEscape((h.textContent||'').trim())+'</a>').join(''); tocEl.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ const ln=parseInt(a.dataset.line,10); jumpToLine(ln); if(isTouchMode()){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); } })); }
+  function buildToc(){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); tocEl.innerHTML='<div class="manual-toc-head"><span>'+mdEscape(T('manToc'))+'</span><button class="manual-toc-close" id="manual-toc-close" title="'+mdEscape(T('manClose'))+'" aria-label="'+mdEscape(T('manClose'))+'">✕</button></div>'+heads.map(h=>'<a class="lvl'+h.dataset.level+'" data-line="'+h.dataset.line+'">'+mdEscape((h.textContent||'').trim())+'</a>').join(''); const tc=document.getElementById('manual-toc-close'); if(tc) tc.addEventListener('click', ()=>{ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); }); tocEl.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ const ln=parseInt(a.dataset.line,10); jumpToLine(ln); if(isTouchMode()){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); } })); }
 }
 
 /* ===================== 操作指南（只读，无目录 / 搜索 / 便签，无阴影卡片） ===================== */
@@ -11389,6 +11461,7 @@ try { if (typeof endScreenPick === 'function') window.endScreenPick = endScreenP
     var masks = [].slice.call(document.querySelectorAll('.modal-mask.show'));
     if (masks.length) {
       var top = masks[masks.length - 1];
+      if (top.id === 'manual-modal') { if (window.__manualBackStep) { window.__manualBackStep(); return true; } }
       var btn = top.querySelector('[data-act="close"], [id$="-close"], .modal-close');
       if (btn) btn.click();        // 优先点真实关闭按钮，保留 saveScroll 等清理逻辑
       else top.classList.remove('show');
