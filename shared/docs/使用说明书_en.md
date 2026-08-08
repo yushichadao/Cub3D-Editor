@@ -1,11 +1,15 @@
 # Cube · 3D Design Workshop — User Manual
 
-## A heuristic textbook from zero to mastery (web version)
+## A heuristic textbook from zero to mastery (Web · PC · Android)
 
 > This book is not a cold feature list, but a textbook you can **follow along, do along, and think along with**.
 > We assume you have never touched 3D design, or even used professional software. Like a teacher sitting beside you,
 > we start from "what is 3D", guide your thinking with questions, build intuition with analogies, and reinforce muscle memory with exercises,
 > until you move from "knowing which button to click" to "being able to create independently".
+
+> 📦 **One book, four forms**: This tool ships as three editions — Web, PC desktop, and Android.
+> The Web edition further adapts itself into a **mouse mode** and a **touch mode** depending on your device.
+> This book **covers all four forms**. Wherever the operation differs, a "form badge" tells you exactly what to do on your end.
 
 ---
 
@@ -15,11 +19,25 @@
 | --- | --- |
 | Audience | Absolute beginners; also hobbyists who want to level up systematically |
 | Teaching style | Heuristic: ask *why* first, then *how*, then give an exercise |
-| Scope | Covers all features of the web editor (interface, shapes, color, transform, text, brush, eraser, views, shortcuts, files, advanced & practical) |
-| Coordinate convention | This book **always uses the axis labels actually shown on the web page** (page labels: X = blue = front/back, Y = red = left/right, Z = green = height, Z points up). The internal implementation differs from the page labels; ordinary readers need not care |
-| Reading advice | Read the first four Parts in order; the remaining eight Parts can be consulted on demand. Be sure to do the "Think" and "Practice" at the end of every chapter |
+| Scope | Covers all features of the editor (interface, shapes, color, transform, text, brush, eraser, views, shortcuts, files, advanced & practical) |
+| Supported forms | **Web (mouse) / Web (touch) / PC desktop / Android** — all four fully covered |
+| Coordinate convention | This book **always uses the axis labels actually shown on screen** (page labels: X = blue = front/back, Y = red = left/right, Z = green = height, Z points up). The internal implementation differs from the page labels; ordinary readers need not care |
+| Reading advice | Start with [Ch0 The Four Forms and How to Read This Book](jump:Ch0 The Four Forms and How to Read This Book) to identify your edition; read the first four Parts in order; the rest on demand. Be sure to do the "Think" and "Practice" at the end of every chapter |
 | Online address | https://yushichadao.github.io/Cub3D-Editor/ (open the page and start practicing) |
-| Project repo | https://github.com/yushichadao/Cub3D-Editor (source code and this document are both here) |
+| Project repo | https://github.com/yushichadao/Cub3D-Editor (source code, installers and this document are all here) |
+
+**Form badges**
+
+Whenever operations differ across editions, you will see these four badges. **Read only the line that matches your device**:
+
+| Badge | Meaning | Typical device |
+| --- | --- | --- |
+| 🖥️ **Web·Mouse** | Opened in a browser on a device with a mouse/trackpad | Desktop, laptop |
+| 📱 **Web·Touch** | Opened in a browser on a touchscreen device | Phone, tablet browser |
+| 💻 **PC** | The installed Windows desktop app (.exe) | Windows PC |
+| 🤖 **Android** | The installed mobile app (.apk) | Android phone, tablet |
+
+💡 If a passage has **no** badge, it means **all four forms behave identically** — just follow it.
 
 **Notation**
 - 💡 Tip: time-saving experience
@@ -30,6 +48,9 @@
 ---
 
 ## Full Table of Contents
+
+**Part 0 · Forms (identify your edition first)**
+- [Ch0 The Four Forms and How to Read This Book](jump:Ch0 The Four Forms and How to Read This Book)
 
 **Part 1 · Getting Started (zero to beginner)**
 - [Ch1 Re-meeting "3D": Starting from a Photo](jump:Ch1 Re-meeting "3D": Starting from a Photo)
@@ -75,7 +96,7 @@
 
 **Part 8 · Efficiency**
 - [Ch29 Why Learn Shortcuts: The Compound Interest of Efficiency](jump:Ch29 Why Learn Shortcuts: The Compound Interest of Efficiency)
-- [Ch30 Mouse & Gesture Operations: for both desktop and mobile](jump:Ch30 Mouse & Gesture Operations: for both desktop and mobile)
+- [Ch30 Mouse & Gesture Operations: all four forms](jump:Ch30 Mouse & Gesture Operations: all four forms)
 - [Ch31 Single Keys & Shift Combos](jump:Ch31 Single Keys & Shift Combos)
 - [Ch32 Slider/Input & Ctrl Combos](jump:Ch32 Slider/Input & Ctrl Combos)
 
@@ -116,9 +137,117 @@ When you first open this web page, you might feel a little nervous. 3D? Modeling
 
 Take a deep breath first. 🙂
 
-The tool in front of you is a **pure web-based 3D editor** — no installation, no graphics-driver setup, no courses to enroll in. It compresses "creating a 3D world" down to the level of "click, drag, type a few words".
+The tool in front of you is a **lightweight 3D editor** — available on the web, as a PC desktop app, and on Android. No graphics-driver setup, no courses to enroll in. It compresses "creating a 3D world" down to the level of "click, drag, type a few words".
 
-Understand *why* in the first ten Parts, and pick up the *how* in the rest, and you'll be able to build a small world of your own. No rush — let's go one step at a time.
+Understand *why* in the first ten Parts, and pick up the *how* in the rest, and you'll be able to build a small world of your own. No rush — let's first spend five minutes identifying which edition you're holding.
+
+---
+
+# Part 0 · Forms (identify your edition first)
+
+## Chapter 0 · The Four Forms and How to Read This Book
+
+Before doing anything, take three minutes to confirm: **which form are you using?** This determines which badge line to read in every chapter that follows.
+
+### 0.1 Three editions, four usage forms
+
+The tool ships as **three editions**, but because the Web edition adapts to your device, there are **four forms** in practice:
+
+| Form | How to get it | How to confirm you're using it |
+| --- | --- | --- |
+| 🖥️ **Web·Mouse** | Open the online address in a browser | A mouse cursor is present; the left panel shows a "Keyboard Shortcuts" section |
+| 📱 **Web·Touch** | Open the same address on a phone/tablet browser | The bottom bar shows "Box Select" and "Select All"; a "Gestures" help table appears |
+| 💻 **PC** | Download the `.exe`, install it or run the portable build | Self-drawn **Minimize / Maximize / Close** at the top-right; a `☰` menu in the top bar |
+| 🤖 **Android** | Download and install the `.apk` | "Box Select" / "Select All" at the bottom; pressing the system Back key shows an exit confirmation |
+
+💡 **The Web edition decides automatically**: it detects whether your device has a "fine pointer" (mouse) or a "coarse pointer" (finger) and switches layout accordingly — **you don't need to configure anything**.
+
+⚠️ To preview the touch layout on a desktop browser (e.g. for teaching demos), append `?touch` to the URL:
+`https://yushichadao.github.io/Cub3D-Editor/?touch`. Conversely, the Android edition is always in touch layout.
+
+### 0.2 Capability matrix across the four forms
+
+This is the single most useful lookup table in the book. **Skim it now, come back when you need it.**
+
+| Feature | 🖥️ Web·Mouse | 📱 Web·Touch | 💻 PC | 🤖 Android |
+| --- | :---: | :---: | :---: | :---: |
+| All shapes / color / transform / text / brush | ✅ | ✅ | ✅ | ✅ |
+| Keyboard shortcuts | ✅ full | ⛔ no physical keyboard | ✅ full | ⛔ no physical keyboard |
+| "Keyboard Shortcuts" help section | ✅ shown | ⛔ hidden | ✅ shown | ⛔ hidden |
+| "Gestures" help table | ⛔ hidden | ✅ shown | ⛔ hidden | ✅ shown |
+| "Box Select" / "Select All" buttons | ⛔ use shortcuts | ✅ shown | ⛔ use shortcuts | ✅ always shown |
+| "Fullscreen" button | ✅ page fullscreen | ✅ page fullscreen | ✅ window fullscreen | ⛔ already fullscreen |
+| Window minimize/maximize/close | ⛔ browser's own | ⛔ | ✅ built-in | ⛔ |
+| Native menu bar `☰` | ⛔ | ⛔ | ✅ | ⛔ |
+| Extension center (plugins / language packs) | ⛔ | ⛔ | ✅ | ⛔ |
+| Sticky note as an always-on-top window | ⛔ | ⛔ | ✅ | ⛔ |
+| Drag & drop file import | ⛔ | ⛔ | ✅ | ⛔ |
+| Recent files | ⛔ | ⛔ | ✅ | ⛔ |
+| Crash recovery / autosave | ⛔ | ⛔ | ✅ | ⛔ |
+| Screen color picker (pick from anywhere) | ✅ | ⛔ canvas only | ✅ | ⛔ canvas only |
+| Back-key exit confirmation | ⛔ | ⛔ | ⛔ | ✅ |
+| Works offline | ⛔ needs network | ⛔ needs network | ✅ fully offline | ✅ fully offline |
+
+### 0.3 The core difference: fingers have no "right button" or "wheel"
+
+Across the four forms, only one thing really requires new muscle memory: **the input method**.
+
+A mouse gives three independent signals (left, right, wheel); a finger gives only one (press–move–lift). So touch uses **the number of fingers** to express intent:
+
+| What you want | 🖥️💻 Mouse (Web·Mouse / PC) | 📱🤖 Touch (Web·Touch / Android) |
+| --- | --- | --- |
+| Select an object | Left-click | One-finger tap |
+| Place a shape | Left-click the ground | One-finger tap the ground |
+| Orbit the view | **Right-drag** | **One-finger** drag on empty space |
+| Pan the view | **Middle-drag** / `Shift`+right-drag | **Two-finger** drag |
+| Zoom the view | **Scroll wheel** | **Two-finger** pinch / spread |
+| Multi-select | `Shift` + left-click | Tap "Select All", or use "Box Select" |
+| Box select | Just left-drag a rectangle | Tap "Box Select" first, then one-finger drag |
+
+💡 **One line to remember**: **mouse = which button; finger = how many fingers.**
+
+### 0.4 Two touch-only buttons
+
+Because there is no keyboard, the touch forms (📱 Web·Touch and 🤖 Android) add two buttons to the bottom bar, replacing `Ctrl+A` and drag-to-box-select:
+
+- **"Select All"**: equivalent to `Ctrl + A` on mouse — selects every object in the scene;
+- **"Box Select"**: tap once to enter box-select mode (the button turns blue), then drag a rectangle with one finger to select everything inside.
+  ⚠️ **Note**: box-select **exits automatically after one use** (the button returns to its normal color). To box-select again, **tap the button again**. This prevents accidental triggering.
+
+### 0.5 PC-only: treat it like real desktop software
+
+The PC edition is more than "a web page in a shell" — it adds capabilities only desktop software has:
+
+- **Window controls**: self-drawn minimize / maximize / close at the top-right, plus a `☰` native menu in the top bar;
+- **Drag & drop import**: drop a `.json` project file **straight onto the window** to open it — no dialog needed;
+- **Recent files**: the menu keeps a list of recently edited files, one click to reopen;
+- **Crash recovery & autosave**: after an unexpected shutdown, it offers to restore your previous progress;
+- **Detached sticky notes**: pop a sticky note out of the main window into an **always-on-top** floating window, so you can keep notes visible while reading something else;
+- **Extension center**: install plugins, runtimes and language packs; write extensions in several programming languages.
+
+### 0.6 Android-only: the Back key and exit protection
+
+The most important Android-specific behavior is the **system Back key**, which is layered:
+
+> Press Back → close open sticky notes one by one (asking first if a note has unsaved content) → close the table of contents → exit the manual → and only then ask whether to quit the app.
+
+The exit dialog offers three choices: **Save and exit / Exit without saving / Cancel**. This prevents a hard-earned scene from being wiped out by one accidental tap.
+
+💡 The Android edition has **no "Fullscreen" button** — the app already runs fullscreen.
+
+### 0.7 On connectivity and data safety
+
+| | Needs network? | Where is the data? |
+| --- | --- | --- |
+| 🖥️📱 Web | Yes (to load the page) | All computation happens locally on your device; **no work data is uploaded** |
+| 💻 PC | **No** | Entirely on your machine |
+| 🤖 Android | **No** | Entirely on your device |
+
+None of the three editions send your work to any server. The Web edition only uses the network to download the page itself; everything you create afterwards stays on your own device.
+
+❓ **Think**: if you had to teach a class in a room with no internet, which edition would you pick? (Hint: look at the last row above.)
+
+✏️ **Practice**: using the matrix in 0.2, look at your own device — can you see a "Box Select" button? Can you see a "Keyboard Shortcuts" section? From that, determine which of the four forms you are using and remember it. From now on, whenever you meet a form badge, you'll know which line is yours.
 
 ---
 
@@ -134,45 +263,77 @@ Now walk around to the side of the desk and look again. A real desk is **3D**: i
 
 💡 **One-line memory**: 2D is a "picture"; 3D is a "real space you can walk around in".
 
-### 1.2 What this web tool gives you is a "3D stage"
+### 1.2 What this tool gives you is a "3D stage"
 
 When you open the editor, the central canvas becomes a 3D stage. Pick a shape from the left, click on its "ground", and it really "drops" into the stage — you can walk around behind it, lift it up, or look down from above.
 
 ❓ **Think**: When you describe to a friend "a red ball to the left of a blue box", which is less likely to be misunderstood — a 2D photo or a 3D scene? Why?
 
-### 1.3 Why "web version"
+### 1.3 Why a "lightweight three-edition" tool
 
-Traditional 3D software like Blender or Maya is powerful, but its installer is hundreds of MB and the screen is packed. This tool moves only the core functions into the browser.
+Traditional 3D software like Blender or Maya is powerful, but its installer is hundreds of MB and the screen is packed. This tool keeps only the core functions, in a lightweight engine shipped as three editions:
 
-- Open the web page and use it instantly; close it and you're done — no disk space wasted;
-- All computation happens locally on your PC; **no data is ever uploaded**;
-- Output is ordinary JSON files and PNG images, making saving and sharing easy.
+- 🖥️📱 **Web**: open a URL and use it instantly; close it and you're done — no disk space used;
+- 💻 **PC**: install once, then work **fully offline**, with drag & drop and plugin support;
+- 🤖 **Android**: put it on your phone and model something during your commute.
 
-✏️ **Practice**: Open a new browser tab, enter this tool's URL, and confirm you can see the central canvas and the surrounding panels. You don't need to operate yet — just "get familiar with the environment".
+What they share:
+
+- All computation happens locally on your device; **no data is ever uploaded**;
+- Output is ordinary JSON files and PNG images, making saving and sharing easy;
+- **Project files work across all editions** — a `.json` exported on your phone opens in the PC edition.
+
+💡 This matters: **one project can be relayed across devices**. Sketch on your phone when inspiration strikes, then refine it at home on the PC edition.
+
+✏️ **Practice**: Identify your form (see Chapter 0), open the tool, and confirm you can see the central canvas and the surrounding panels. You don't need to operate yet — just "get familiar with the environment".
 
 ---
 
 ## Chapter 2 · Preparing the Tool: Opening This Tool
 
-### 2.1 How to enter (public web access)
+### 2.1 Three ways in — pick one
 
-This tool is a web app deployed online; **no installation, no source download** — just open the public URL below in any browser:
+#### 🖥️📱 Option 1: Web edition (fastest, zero install)
+
+Just open the public URL below in any browser:
 
 > 🌐 **Online address**: https://yushichadao.github.io/Cub3D-Editor/
 
-Copy the URL into your browser's address bar and press Enter to enter the main screen. Phone, tablet, or computer — anything with internet and a browser works.
+Copy the URL into your browser's address bar and press Enter to enter the main screen. Phone, tablet, or computer — anything with internet and a browser works. **It automatically detects whether you're on a mouse or touch device** and switches layout accordingly.
 
 💡 The first load takes a very short moment (3D engine initialization); once the loading layer disappears you are in the main screen.
 
+#### 💻 Option 2: PC desktop edition (Windows, works offline)
+
+Download from the project's **Releases** page. Two packages are available:
+
+| Package | Filename looks like | Characteristics | Best for |
+| --- | --- | --- | --- |
+| **Installer** | `...-Setup-1.0.0.exe` | Double-click to install; creates Start-menu and desktop shortcuts; uninstall via "Apps & features" | Your own main PC, long-term use |
+| **Portable** | `...-1.0.0-portable.exe` | **No installation**; double-click to run; can live on a USB stick | Shared computers, no admin rights, carry-anywhere |
+
+> 📥 Download: https://github.com/yushichadao/Cub3D-Editor/releases
+
+⚠️ Windows may warn "unknown publisher" or trigger SmartScreen — the installer is unsigned (common for personal open-source projects). Click "More info" → "Run anyway".
+
+#### 🤖 Option 3: Android edition (phone, works offline)
+
+Download the `.apk` from the same Releases page, transfer it to your phone and tap to install.
+
+⚠️ You must first allow **installing apps from unknown sources** in Settings → Security (the exact location varies by brand; it's usually a permission on the app doing the installing).
+
 ### 2.2 System requirements
 
-This tool is a pure front-end web app with low device requirements:
+| Form | Requirements |
+| --- | --- |
+| 🖥️📱 Web | Any modern browser (recent Chrome, Edge, Firefox, Safari); WebGL support (almost all devices in recent years); network access to load the page |
+| 💻 PC | Windows 10 / 11 (64-bit); **fully offline** after installation |
+| 🤖 Android | Android 6.0 or later; **fully offline** after installation |
 
-- Any modern browser (recent Chrome, Edge, Firefox, Safari);
-- Supports WebGL (almost all devices in recent years do);
-- Just open the public URL above — nothing needs to be installed locally.
-
-⚠️ **Caution**: If the page is blank after opening, first open the console with `F12` (top-right) and check for red errors. Trying another browser usually solves it.
+⚠️ **Caution**:
+- 🖥️📱 Web: if the page is blank, press `F12` and check the console for red errors; trying another browser usually solves it.
+- 💻 PC: a white screen on startup usually means outdated graphics drivers (WebGL unavailable) — update them.
+- 🤖 Android: if installation is blocked, check that "unknown sources" installation is allowed.
 
 ### 2.3 Where to look first
 
@@ -194,7 +355,14 @@ A row of buttons split into three groups.
 - **Edit group**: Undo · Redo · Copy · Paste · Clone · Clear;
 - **View group**: Axes toggle · Grid toggle · Settings.
 
+**Top-bar differences by form**:
+
+- 🖥️📱 **Web**: additionally has a **Fullscreen** button that makes the page fill the screen.
+- 💻 **PC**: additionally has a `☰` **native menu button** (File, Edit, Extensions…) plus self-drawn **Minimize / Maximize / Close** window buttons at the top-right; the Fullscreen button toggles **window** fullscreen.
+- 🤖 **Android**: **no Fullscreen button** — the app already runs fullscreen, so it would be pointless.
+
 💡 Almost all of these buttons have shortcuts (e.g. `Ctrl+Z` for Undo). We'll cover them together in the Efficiency part later.
+⛔ 📱🤖 Touch forms have no physical keyboard — **tap the buttons directly**. See 3.5 for the touch-only "Select All" / "Box Select" buttons.
 
 ### 3.2 Left panel (pick materials · choose tools)
 
@@ -207,7 +375,12 @@ The left panel has four sections from top to bottom.
 
 ### 3.3 Canvas (the central stage)
 
-All shapes are displayed here. Right-drag to orbit the view, wheel to zoom, left-click to select or place.
+All shapes are displayed here. How you operate depends on your form:
+
+- 🖥️💻 **Mouse forms (Web·Mouse / PC)**: **right-drag** to orbit, **wheel** to zoom, **left-click** to select or place.
+- 📱🤖 **Touch forms (Web·Touch / Android)**: **one-finger drag** to orbit, **two-finger pinch** to zoom, **two-finger drag** to pan, **one-finger tap** to select or place.
+
+💡 See the full comparison in [Chapter 0, §0.3](jump:Ch0 The Four Forms and How to Read This Book).
 
 ### 3.4 Right panel (adjust parameters after selecting)
 
@@ -217,13 +390,33 @@ The right panel only "wakes up" once you have selected an object. Change color, 
 
 A row of 7 view buttons: Perspective · Top · Bottom · Front · Back · Left · Right. One click changes the angle to view the scene.
 
-### 3.6 On a narrow screen
+📱🤖 **Touch forms show two extra buttons**:
 
-On phones or narrow windows, the left/right panels auto-collapse; press the small edge button to expand them. It is designed to "work even on small screens".
+- **"Select All"**: selects every object in the scene (replaces `Ctrl + A`);
+- **"Box Select"**: tap to enter box-select mode, then drag a rectangle with one finger. **It exits automatically after one use** — tap again to box-select again.
+
+🖥️💻 Mouse forms don't show these — you can press `Ctrl+A` and drag a box directly, so no extra buttons are needed.
+
+### 3.6 Help section: each form shows only what applies
+
+At the bottom of the left panel is a help section whose content **switches automatically by form**:
+
+- 🖥️💻 **Mouse forms**: show the **Keyboard Shortcuts** list;
+- 📱🤖 **Touch forms**: hide the shortcut list and show the **Gestures** table instead.
+
+💡 This is deliberate: showing shortcuts to a device with no keyboard — or mouse actions to a device with no mouse — just wastes screen space.
+
+### 3.7 On a narrow screen
+
+On phones or narrow windows (under roughly 960 px wide), the left/right panels **auto-collapse**; press the small edge button to expand them. It is designed to "work even on small screens".
+
+📱🤖 Touch forms usually start collapsed. Expand the left panel to pick a shape, then collapse it again for maximum canvas space.
 
 ❓ **Think**: Why is "change parameters" on the right and "pick materials" on the left? This reflects the "materials on the left, adjustments on the right" habit common to many design tools. Do you agree?
 
-✏️ **Practice**: Hover each button on the top bar in turn and check whether a tooltip appears. It helps you memorize each button's purpose.
+✏️ **Practice**:
+- 🖥️💻 Hover each top-bar button in turn and check whether a tooltip appears.
+- 📱🤖 **Long-press** each top-bar button to see its tooltip; then find "Select All" and "Box Select" on the bottom bar.
 
 ---
 
@@ -283,19 +476,21 @@ Watching alone is not enough. In this chapter we actually make a small work you 
 
 ### 5.1 Step 1: Pick a shape
 
-1. Find the "3D Shapes" section in the left panel;
+1. Find the "3D Shapes" section in the left panel (📱🤖 touch forms: expand the panel with the edge button first);
 2. Click the 1st "Cube" (or any solid you like);
-3. Notice that when the mouse enters the canvas it is in "placement mode" (a preview usually follows the cursor).
+3. You are now in "placement mode":
+   - 🖥️💻 Mouse forms: a **preview follows the cursor** once it enters the canvas;
+   - 📱🤖 Touch forms: fingers can't hover, so there is **no follow preview** — it lands where you tap.
 
 ### 5.2 Step 2: Place it
 
-**Click** the central ground. The cube "drops" onto the grid with a thud. Congratulations — your first 3D object is born.
+**Click** the central ground (📱🤖 touch forms: **one-finger tap**). The cube "drops" onto the grid with a thud. Congratulations — your first 3D object is born.
 
 💡 Don't panic if you can't see where it landed — once you learn "select" next chapter you can move it anytime.
 
 ### 5.3 Step 3: Select it
 
-Click the "Select / Transform" tool at top-left, then **single-click** the cube. Arrows and a frame appear around it, showing it is "selected", and the right panel lights up.
+Click the "Select / Transform" tool in the left panel, then **single-click** the cube (📱🤖 touch forms: **one-finger tap**). Arrows and a frame appear around it, showing it is "selected", and the right panel lights up.
 
 ### 5.4 Step 4: Color it
 
@@ -324,7 +519,9 @@ You'll want to keep what you made and show it to others. This chapter explains f
 
 ### 6.1 Why "export often" is a good habit
 
-When you close or refresh the web page, an un-exported scene is lost. The habit of "export JSON whenever you reach a milestone" will save you many times.
+When you close or refresh the page — or hit Back by accident — an un-exported scene is lost. The habit of "export JSON whenever you reach a milestone" will save you many times.
+
+💻 **The PC edition is an exception**: it has **autosave and crash recovery**, and offers to restore your last session after an unexpected shutdown. But that's only a safety net — **it does not replace exporting on purpose**.
 
 ### 6.2 Screenshot: photograph your work (Ctrl + P)
 
@@ -333,6 +530,14 @@ When you close or refresh the web page, an un-exported scene is lost. The habit 
 - Good for: social posts · illustrations · showing someone the "look";
 - Tip: before screenshotting, hide the **axes and grid** from the top bar for a cleaner image;
 - Output size matches the current canvas pixels.
+
+**Where does the image go? It differs by form:**
+
+| Form | How it lands |
+| --- | --- |
+| 🖥️📱 Web | A browser **download** into your system Downloads folder (mobile browsers may ask "save image?" first) |
+| 💻 PC | A **native save dialog** where you choose the folder and filename |
+| 🤖 Android | Saved to app storage, and can be sent straight to other apps via the **system share** sheet |
 
 💡 A screenshot saves only the "look" and contains no re-editable data. If you want to edit later, use "Export" below.
 
@@ -343,19 +548,41 @@ When you close or refresh the web page, an un-exported scene is lost. The habit 
 - Good for: unfinished work · pieces you want to polish;
 - File names usually carry a timestamp, so rename to something meaningful (e.g. `house_v1.json`).
 
+It lands the same way as screenshots: 🖥️📱 Web downloads via the browser; 💻 PC opens a native save dialog (choose your folder); 🤖 Android saves to app storage and can be shared out.
+
+> ✅ **Important**: this `.json` works across **all editions**. A project exported on your phone can be imported into the PC edition and vice versa.
+
 ### 6.4 Import: read the project back (Ctrl + O)
 
 Pick a previously exported `.json` and the scene is rebuilt. ⚠️ Import **replaces the current scene**. Save your current work first.
+
+How each form picks the file:
+
+- 🖥️📱 **Web**: click "Import" and choose the file in the browser's file picker;
+- 💻 **PC**: click "Import", or simply **drag the `.json` onto the window**; the menu also keeps a **Recent files** list;
+- 🤖 **Android**: click "Import" and locate your `.json` in the system file picker.
 
 ### 6.5 New: from scratch (Ctrl + N)
 
 "New" clears the entire scene. Dangerous, but safe if you "back up with Export first".
 
-### 6.6 A reliable backup rhythm
+### 6.6 🤖 Android-only: the Back key won't waste your work
 
-> Export once before you start → export again at key milestones (with a different file name) → `Ctrl+Z` back anytime.
+When you press Back to leave the Android app, a confirmation dialog offers three choices:
+
+- **Save and exit**: export the current scene first, then quit (recommended);
+- **Exit without saving**: use with care;
+- **Cancel**: stay and keep editing.
+
+💡 So an accidental Back press on Android isn't fatal — but do keep exporting at milestones anyway.
+
+### 6.7 A reliable backup rhythm
+
+> Export once before you start → export again at key milestones (with a different file name) → undo anytime.
+> (🖥️💻 Mouse forms: `Ctrl+Z`; 📱🤖 touch forms: the top-bar "Undo" button.)
 
 ✏️ **Practice**: Save the "red cube and blue sphere" scene from Ch5 once as a Screenshot and once as an Export, then Import it back and check the contents match.
+Bonus: if you have both a phone and a computer, try **exporting on one and importing on the other** to feel how portable the project files are.
 
 ---
 
@@ -367,30 +594,53 @@ In the 3D world, the iron rule is **"select first, then operate"**. This chapter
 
 The right panel's parameters and transform arrows all target the **currently selected object**. Without a selection, the tool doesn't know *who* you want to change. It's like you can't hand a "certificate with only one name" to the whole class at once — you must call roll (say the name) first.
 
-### 7.2 Single select: click
+### 7.2 Single select: tap once
 
-With the "Select / Transform" tool, **left-click** an object. It highlights and shows controls, indicating it is "selected".
+With the "Select / Transform" tool, tap an object. It highlights and shows controls, indicating it is "selected".
 
-### 7.3 Multi-select: Shift + click
+- 🖥️💻 **Mouse forms**: **left-click**;
+- 📱🤖 **Touch forms**: **one-finger tap** (tap and lift — don't drag).
 
-Hold `Shift` and click another object to **add** it to the selection. Click an already-selected object again to **remove** it.
+### 7.3 Multi-select: adding a second, third…
+
+| Form | How to multi-select |
+| --- | --- |
+| 🖥️💻 Web·Mouse / PC | Hold `Shift` and click another object to **add** it; click an already-selected object to **remove** it |
+| 📱🤖 Web·Touch / Android | No `Shift` key — use the bottom-bar **"Box Select"** to enclose a group, or **"Select All"** to take everything |
 
 💡 After multi-selecting, transforming moves all objects together as one block; the reference is their "group center".
 
 ### 7.4 Box select: drag a rectangle
 
-Press and hold the left button on empty space and drag a rectangle; everything inside the frame is selected. Good when you want to "grab a bunch at once".
+Box select is for "grabbing a bunch at once", but the two input styles differ completely — this is the easiest thing to mix up:
 
-⚠️ **Caution**: Box select starts from "empty space". If you start the drag on top of an object, you'll move that object instead.
+**🖥️💻 Mouse forms (Web·Mouse / PC)**
 
-### 7.5 Select all: Ctrl + A
+Press and hold the left button **on empty space** and drag a rectangle; everything inside is selected. Always available, no mode switch.
 
-One click selects every object in the scene. Handy combined with "Clear all" or a whole-scene transform.
+⚠️ Box select must start from "empty space". If you start the drag on top of an object, you'll **move that object** instead.
+
+**📱🤖 Touch forms (Web·Touch / Android)**
+
+A finger drag defaults to orbiting the view, so you must first declare "I want to box-select":
+
+1. Tap the bottom-bar **"Box Select"** button — it turns blue to show box-select mode is on;
+2. **Drag a rectangle with one finger** around the objects you want;
+3. Lift your finger — the selection is made, and **box-select mode switches off automatically** (the button returns to its normal color).
+
+⚠️ **Important**: on touch forms box-select is **one-shot**. To box-select again, **tap the button again**. This prevents accidental boxes when you meant to orbit.
+
+### 7.5 Select all
+
+One action selects every object in the scene. Handy combined with "Clear all" or a whole-scene transform.
+
+- 🖥️💻 **Mouse forms**: press `Ctrl + A`;
+- 📱🤖 **Touch forms**: tap the bottom-bar **"Select All"** button.
 
 ### 7.6 Deselecting
 
-- Click empty space;
-- or press `Esc`.
+- **All forms**: tap empty space on the canvas;
+- 🖥️💻 **Mouse forms also**: press `Esc`.
 
 ### 7.7 Can't select? Check these first
 
@@ -1205,17 +1455,30 @@ The top bar has two switches: "Axes" and "Grid surface".
 
 ### 28.3 Fullscreen
 
-Click the top bar or press **F11** for fullscreen — the canvas fills the screen for immersive observation. Fullscreen is toggled by **F11** or the top-bar "Fullscreen" button; pressing **Esc** only closes controls / deselects and does **not** exit fullscreen.
+| Form | How to go fullscreen |
+| --- | --- |
+| 🖥️📱 **Web** | Tap the top-bar "Fullscreen" button; 🖥️ mouse forms can also press **F11**. This enters **browser fullscreen** |
+| 💻 **PC** | Click "Fullscreen" or press **F11** for **window fullscreen** (hides the title bar and window buttons) |
+| 🤖 **Android** | **No Fullscreen button** — the app already runs fullscreen |
+
+🖥️💻 Pressing **Esc** only closes controls / deselects and does **not** exit fullscreen; press **F11** again or click "Fullscreen" again to leave it.
 
 ### 28.4 A practical combo
 
-> For a clean display image: hide axes + hide grid + switch to Perspective + (optional) fullscreen + screenshot.
+> For a clean display image: hide axes + hide grid + switch to Perspective + (🖥️📱💻 optional) fullscreen + screenshot.
 
 ✏️ **Practice**: Make a small scene, first hide axes/grid for a "clean image", then show them for an "image with guides", and compare how others see it.
 
 ---
 
 # Part 8 · Efficiency
+
+> 📌 **How to read this Part (important)**
+> - 🖥️💻 **Web·Mouse / PC**: everything here applies and is the key to working faster — read it carefully.
+> - 📱🤖 **Web·Touch / Android**: with no physical keyboard, the **keyboard shortcuts in Chapters 29, 31 and 32 do not apply**,
+>   and the app hides the "Keyboard Shortcuts" help section for you. Jump straight to
+>   [Chapter 30](jump:Ch30 Mouse & Gesture Operations: all four forms) — the gesture tables there are your efficiency tools.
+>   (If you attach a physical keyboard to a tablet, the shortcuts work too — read on.)
 
 ## Chapter 29 · Why Learn Shortcuts: The Compound Interest of Efficiency
 
@@ -1260,11 +1523,16 @@ Memorize this table and every later chapter just "composes sentences" from it.
 
 ---
 
-## Chapter 30 · Mouse & Gesture Operations: for both desktop and mobile
+## Chapter 30 · Mouse & Gesture Operations: all four forms
 
-The tool's "quick operations" **switch automatically by device**: mouse on desktop, gestures on phone/tablet. The two tables below are **identical** to the "Mouse operations" and "Gesture operations" shown in `Settings → Quick Operations` in the app — read the one that matches your device.
+The tool's "quick operations" **switch automatically by device**:
 
-### 30.1 Mouse operations (desktop)
+- 🖥️💻 **Web·Mouse and PC** → show and use **Mouse operations** (30.1);
+- 📱🤖 **Web·Touch and Android** → show and use **Gesture operations** (30.2).
+
+The two tables below are **identical** to the "Mouse operations" and "Gesture operations" shown in `Settings → Quick Operations` in the app — read the one that matches your form.
+
+### 30.1 Mouse operations (🖥️ Web·Mouse / 💻 PC)
 
 | Operation | Description |
 |---|---|
@@ -1275,7 +1543,7 @@ The tool's "quick operations" **switch automatically by device**: mouse on deskt
 | Long Press Middle | Pan view |
 | Scroll Wheel | Zoom view |
 
-### 30.2 Gesture operations (mobile / tablet)
+### 30.2 Gesture operations (📱 Web·Touch / 🤖 Android)
 
 | Operation | Description |
 |---|---|
@@ -1286,11 +1554,31 @@ The tool's "quick operations" **switch automatically by device**: mouse on deskt
 | Drag Blank Area | Orbit view |
 | Tap Blank Area | Deselect all |
 | "Select All" Button | Select all objects |
-| "Box Select" Button | Enable single-finger drag to box-select objects |
+| "Box Select" Button | Enable single-finger drag to box-select; **exits automatically after one use** |
 | Two-Finger Drag | Pan view |
 | Pinch Gesture | Zoom view |
+| System Back key (🤖 **Android only**) | Same role as `Esc`: close the topmost sticky note / TOC / manual layer by layer, then close controls / deselect; with nothing open it shows the **exit confirmation** |
 
-💡 Gesture operations map one-to-one to mouse operations: Single Tap = Left Click, Drag Object = Long Press Left to manipulate, Pinch = Scroll Wheel to zoom… just a different "input organ". With no keyboard on a phone, these gestures are your "quick operations".
+⚠️ 📱 **Web·Touch has no "system Back key" behavior** — a mobile browser's back button will **leave the page**. Use the on-screen close buttons instead. This is the **only significant difference** between Web·Touch and Android.
+
+### 30.3 Mouse ↔ gesture correspondence
+
+The two schemes are the same intents expressed through different input:
+
+| Intent | 🖥️💻 Mouse | 📱🤖 Gesture |
+|---|---|---|
+| Select | Left click | Single tap |
+| Edit text | Double left click | Double tap |
+| Add / remove from selection | `Shift` + click | Long press object |
+| Manipulate object | Long press left + drag | Drag object |
+| Orbit view | Long press right | Drag blank area |
+| Pan view | Long press middle | Two-finger drag |
+| Zoom view | Scroll wheel | Pinch |
+| Select all | `Ctrl + A` | "Select All" button |
+| Box select | Drag directly on blank | "Box Select" button → one-finger drag |
+| Cancel / back | `Esc` | Tap blank area (🤖 or system Back key) |
+
+💡 Only the "input organ" differs. Touch forms have no keyboard, so these gestures plus the two dedicated buttons are your complete set of "quick operations".
 
 ---
 
@@ -2234,7 +2522,7 @@ The table below is arranged by "what you see → mostly the cause → how to res
 | 12 | Accidentally deleted whole scene or important content | slipped `Delete`, or cleared the scene | immediately `Ctrl+Z` to undo; and build the habit of periodic `Ctrl+S` (§44.1) |
 | 13 | Import JSON prompts "load failed" | file corrupted, or not the format exported by this tool | confirm using this tool's `Ctrl+S` exported `.json` (Ch6) |
 | 14 | View button not lit, camera goes dark after rotating | after free rotate the "perspective" button goes dark (normal) | click a view button to re-align (Ch28) |
-| 15 | Desktop wants box-select but can't select | box-select is a **touch-only** mode | on desktop use `Shift` add-select, or `Ctrl+A` select all (Ch7) |
+| 15 | 📱🤖 Dragging on touch only orbits the view; no box appears | touch forms need box-select **mode enabled first** | tap the bottom-bar "Box Select" button (turns blue), then one-finger drag; it **auto-exits after one use**, tap again to repeat (§7.4) |
 | 16 | Changed global color, but one object didn't change | that object has an **independent color override**, or is in "no color" state | select it and change color separately (Ch18) |
 | 17 | Screen eyedropper unusable | didn't activate the eyedropper tool first | click the eyedropper button in the color area first, then pick (Ch18) |
 | 18 | Screenshot has grid lines / axes | didn't hide helper elements | hide axes and grid surface then `Ctrl+P` (§28, §43.7) |
@@ -2242,6 +2530,37 @@ The table below is arranged by "what you see → mostly the cause → how to res
 | 20 | Rotated view/object direction reversed | mixed up axes: `A/D` around Y, `W/S` around X, `Q/E` around Z | press against Ch47 cheat sheet, or `Shift`+arrow for big angles (§32, §34) |
 
 💡 **First-principle of troubleshooting**: 90% of "something's off" has only three root causes — **not selected**, **cursor in input box**, **two faces coplanar**. Recite these three first, then check the table by symptom, saves half the time.
+
+### 45.2 Form-specific issues
+
+The table above is mostly universal. The following occur only in specific forms:
+
+**🖥️📱 Web**
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Blank page on open | resources didn't load, or browser too old | refresh; press `F12` and check console for red errors; try a recent Chrome / Edge |
+| "WebGL not supported" | hardware acceleration disabled | enable "use hardware acceleration" in browser settings and restart |
+| 📱 Panels fill the whole phone screen | narrow-screen auto-collapse didn't trigger | use landscape, or collapse panels manually with the edge button |
+| 📱 Back key left the page entirely | the Web edition cannot intercept the browser back button | use on-screen close buttons instead; export important work first |
+
+**💻 PC**
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| "Unknown publisher" warning on install | the installer is unsigned | click "More info" → "Run anyway"; normal for personal open-source projects |
+| White screen after launch | outdated graphics drivers, WebGL unavailable | update drivers and restart |
+| Crashed last time and lost progress | — | PC has **crash recovery** — watch for the restore prompt on relaunch |
+| Dragging a file onto the window does nothing | it isn't a `.json` project file | only `.json` files exported by this tool are supported |
+
+**🤖 Android**
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Can't install the apk | "unknown sources" not allowed | Settings → Security → allow this app to install unknown apps |
+| No "Fullscreen" button | Android already runs fullscreen | this is by design, nothing to look for |
+| Can't find exported files | they're in app storage | use the **share** sheet right after exporting, or browse the app directory with a file manager |
+| Afraid of losing work to the Back key | — | an exit confirmation appears — choose **"Save and exit"** |
 
 ---
 
@@ -2277,9 +2596,12 @@ A vocabulary list for quick lookup. Entries with `*` are terms specific to this 
 ## Chapter 47 · Shortcut cheat sheet
 
 > All shortcuts are **case-insensitive**; `Ctrl` on Mac is `Cmd`.
-> Note: as long as the cursor is in an input/dropdown box, shortcuts fail — this is browser behavior, not a bug (§32.5).
+> Note: as long as the cursor is in an input/dropdown box, shortcuts fail — this is expected behavior, not a bug (§32.5).
+>
+> 📌 **Applies to**: keyboard shortcuts work on 🖥️ **Web·Mouse** and 💻 **PC**.
+> 📱🤖 **Web·Touch / Android** have no physical keyboard — see the gesture table in 47.2 (unless you attach a keyboard).
 
-### 47.1 Mouse operations (desktop)
+### 47.1 Mouse operations (🖥️ Web·Mouse / 💻 PC)
 
 | Operation | Description |
 |---|---|
@@ -2290,7 +2612,7 @@ A vocabulary list for quick lookup. Entries with `*` are terms specific to this 
 | Long Press Middle | Pan view |
 | Scroll Wheel | Zoom view |
 
-### 47.2 Gesture operations (mobile / tablet)
+### 47.2 Gesture operations (📱 Web·Touch / 🤖 Android)
 
 | Operation | Description |
 |---|---|
@@ -2300,12 +2622,13 @@ A vocabulary list for quick lookup. Entries with `*` are terms specific to this 
 | Drag Object | Manipulate object / control |
 | Drag Blank Area | Orbit view |
 | Tap Blank Area | Deselect all |
-| "Select All" Button | Select all objects |
-| "Box Select" Button | Enable single-finger drag to box-select objects |
+| "Select All" Button | Select all objects (equivalent to `Ctrl+A`) |
+| "Box Select" Button | One-finger drag to box-select; **auto-exits after one use**, tap again to repeat |
 | Two-Finger Drag | Pan view |
 | Pinch Gesture | Zoom view |
+| System Back key (🤖 **Android only**) | Close sticky notes / TOC / manual layer by layer → deselect → exit confirmation |
 
-### 47.3 Single keys
+### 47.3 Single keys (🖥️💻 keyboard required)
 
 > With selection: translate 0.1 grid (0.15 units) / rotate 5°{br}No selection: pan view 0.1 grid / rotate 5°
 
@@ -2391,7 +2714,7 @@ All the "material parts" of this tool are here. Coloring uses **preset palette +
 | 19 | `octaPrism` | octagonal prism | octagonal column, lighthouse, pavilion column |
 | 20 | `star3d` | 3D star | 3D star decoration, medal |
 
-💡 Among the 20, `box / sphere / cylinder / cone / pyramid` are the主力 of "block decomposition" (Ch41); the rest are mostly for decoration and accent.
+💡 Among the 20, `box / sphere / cylinder / cone / pyramid` are the workhorses of "block decomposition" (Ch41); the rest are mostly for decoration and accent.
 
 ### 48.2 20 kinds of 2D shapes (lying flat on ground, as sticker/plane)
 
@@ -2487,9 +2810,11 @@ By now you know "how to use the tools". This part covers two small things that "
 
 While studying, you'll often want to "mark" a paragraph. The manual lets you **select some text → add a sticky note** right in the body:
 
-1. While reading the manual, drag to select any text with the mouse;
+1. While reading the manual, select any text:
+   - 🖥️💻 **Mouse forms**: hold the left button and **drag** across the text;
+   - 📱🤖 **Touch forms**: **long-press** the text to bring up selection handles, then drag them to adjust the range;
 2. On release, an "Add sticky note" button pops up — click it;
-3. The selected text is highlighted and recorded in the **sticky-note list** on the right or at the bottom;
+3. The selected text is highlighted and recorded in the **sticky-note list**;
 4. Each entry in the list can be **deleted** individually — a confirmation dialog appears first, to avoid accidental deletion.
 
 > 💡 A sticky note "travels with the text": it is bound to the sentence you selected, so you can later revisit "what I was thinking then".
@@ -2501,6 +2826,20 @@ If you don't want to keep flipping to the note list, you can **expand a sticky n
 - A sticky window is a draggable floating card that hovers above the canvas without blocking operation;
 - It has **read-only** and **edit** states: read-only looks like a sticky pad, edit lets you change the text;
 - When no longer needed, click its close button (`closeSticky`); it disappears from screen, but the note itself stays in the list.
+
+### 50.1 💻 PC-only: pop a note out of the main window
+
+The PC edition can turn a sticky note into a **genuinely separate system window**:
+
+- it stays **always on top**, floating above every other program;
+- you can drag it to a second monitor;
+- it remains visible even when you switch to a browser to look something up.
+
+This is especially handy for "follow a tutorial while operating". On the other three forms, sticky notes can only float inside the app itself.
+
+### 50.2 Closing order (📱🤖 touch forms note)
+
+🤖 On Android, pressing the **system Back key** closes **sticky notes one by one first** (asking first if a note has unsaved content), then the table of contents, then the manual, and only then asks whether to quit the app.
 
 > 📌 Sticky windows suit "temporary hints": e.g. pin a parameter explanation to the side and refer to it while you work.
 
@@ -2517,11 +2856,15 @@ Both the interface and the manual support four languages:
 
 How to switch: choose a language in Settings; the interface text and the manual body switch to that language **together**. The manual's multilingual content lives in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`.
 
-> ⚠️ About delete confirmation: every delete (sticky notes, scene objects) goes through a **custom confirm dialog**, not the browser's native one, so it still pops up reliably in **fullscreen / immersive mode** and never "does nothing when clicked".
+✅ **Four languages × four forms, fully covered**: whichever edition you run and whichever language you pick, you get the same manual, adapted to all editions. 💻 The PC edition can also install extra language packs through the **extension center**.
+
+> ⚠️ About delete confirmation: every delete (sticky notes, scene objects) goes through a **custom confirm dialog**, not a native system one, so it still pops up reliably in **fullscreen / immersive mode** and never "does nothing when clicked".
 
 ---
 
-✅ **The book ends here.** You've walked: 3D basics → shapes & colors → text/brush/image → views → undo history → each shape in detail → shortcuts → transform controls → multi-select & clone → four practice projects → sticky notes & multilingual → this part's troubleshooting appendix.
+✅ **The book ends here.** You've walked: identifying your form → 3D basics → shapes & colors → text/brush/image → views → undo history → each shape in detail → shortcuts & gestures → transform controls → multi-select & clone → four practice projects → sticky notes & multilingual → the troubleshooting appendix.
+
+🌐 **Don't forget**: your work moves freely **between Web, PC and Android** — sketch on your phone, refine on your desktop; the exported `.json` works everywhere.
 
 📌 **Last words**: tools go obsolete, but the three things "decompose — order — aesthetics" do not. Close the document, go build something of your own.
 

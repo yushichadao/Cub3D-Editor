@@ -416,7 +416,7 @@
   /* 屏幕取色覆盖层：冻结画面，屏蔽页面交互 */
   #screen-pick-overlay {
     position: fixed; inset: 0; z-index: 99990;
-    cursor: none; background: #000; touch-action: none; user-select: none;
+    cursor: crosshair; background: #000; touch-action: none; user-select: none;
   }
   #screen-pick-overlay .sp-canvas {
     position: absolute; inset: 0; width: 100%; height: 100%; display: block;
@@ -449,7 +449,7 @@
   .modal-box {
     width: min(420px, 90vw); max-height: 85vh; overflow-y: auto; padding: 18px;
     background: var(--bg-panel-solid); border: 1px solid var(--accent);
-    border-radius: 16px; box-shadow: var(--shadow);
+    border-radius: 16px; box-shadow: none;
     animation: pop .22s ease-out;
   }
   @keyframes pop { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -755,11 +755,12 @@
 .manual-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-bottom:1px solid var(--border); }
 .manual-bar-title { font-weight:600; color:var(--accent); font-size:15px; }
 .manual-bar-actions { display:flex; gap:6px; }
-.manual-btn { background:var(--control-bg); border:1px solid var(--border); color:var(--text); padding:5px 10px; border-radius:8px; cursor:pointer; font-size:12px; font-family:inherit; transition:all .15s; }
+.manual-btn { background:var(--control-bg, rgba(255,255,255,.08)); border:1px solid var(--border, rgba(255,255,255,.15)); color:var(--text, #e8e8f0); padding:5px 10px; border-radius:8px; cursor:pointer; font-size:12px; font-family:inherit; transition:all .15s; }
 .manual-btn:hover { border-color:var(--accent); background:var(--control-bg-hover); }
 .manual-body { flex:1; display:flex; min-height:0; }
-.manual-toc { width:300px; max-width:40%; flex-shrink:0; border-right:1px solid var(--border); display:none; flex-direction:column; overflow-y:auto; }
+.manual-toc { width:300px; max-width:40%; flex-shrink:0; border-right:1px solid var(--border); display:none; flex-direction:column; overflow:hidden; }
 .manual-toc.open { display:flex; }
+.manual-toc-body { flex:1; min-height:0; overflow-y:auto; padding:8px 0; }
 .manual-toc a { display:block; flex-shrink:0; padding:4px 8px; color:var(--text-dim); font-size:12.5px; text-decoration:none; border-radius:6px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .manual-toc a:hover { color:var(--text); background:var(--control-bg); }
 .manual-toc a.lvl2 { padding-left:18px; }
@@ -784,11 +785,12 @@
   .manual-doc mark.search-hit.flash { animation: searchFlash 1.4s ease-out; }
   @keyframes searchFlash { 0%,100%{background:var(--accent-2);} 15%{background:transparent;} 30%{background:var(--accent-2);} 45%{background:transparent;} 60%{background:var(--accent-2);} 75%{background:transparent;} 90%{background:var(--accent-2);} }
   .manual-search-count { font-size:12px; color:var(--text-dim, #888); margin-left:4px; white-space:nowrap; }
-  .manual-confirm { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.4); z-index:80; }
-  .manual-confirm-box { background:var(--bg-panel-solid); border:1px solid var(--border); border-radius:12px; padding:18px 16px; max-width:320px; width:80%; box-shadow:0 10px 40px rgba(0,0,0,.4); }
+  .manual-confirm { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.4); z-index:2147483647; }
+  .manual-confirm-box { background:var(--bg-panel-solid, #1b1e27); border:1px solid var(--border, rgba(255,255,255,.15)); border-radius:12px; padding:18px 16px; max-width:320px; width:80%; box-shadow:none; }
   .manual-confirm-msg { font-size:14px; margin-bottom:14px; line-height:1.5; }
   .manual-confirm-btns { display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; }
   .manual-confirm-btns .manual-btn { min-width:64px; }
+.manual-confirm .manual-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
 /* 说明书内容排版适配亮色/暗色 */
 .manual-doc h1,.manual-doc h2,.manual-doc h3,.manual-doc h4,.manual-doc h5,.manual-doc h6 { color:var(--text); margin:0.65em 0 0.35em; line-height:1.35; }
 .manual-doc h1 { font-size:1.7em; border-bottom:1px solid var(--border); padding-bottom:0.3em; }
@@ -821,11 +823,11 @@
 .manual-doc li { margin:0.15em 0; }
 .manual-doc img { max-width:100%; border-radius:6px; }
 /* 说明书区滚动条美化 */
-.manual-doc, .manual-toc, .manual-note-list { scrollbar-width:thin; scrollbar-color:color-mix(in srgb, var(--text-dim) 45%, transparent) transparent; }
-.manual-doc::-webkit-scrollbar, .manual-toc::-webkit-scrollbar, .manual-note-list::-webkit-scrollbar { width:7px; height:7px; }
-.manual-doc::-webkit-scrollbar-track, .manual-toc::-webkit-scrollbar-track, .manual-note-list::-webkit-scrollbar-track { background:transparent; }
-.manual-doc::-webkit-scrollbar-thumb, .manual-toc::-webkit-scrollbar-thumb, .manual-note-list::-webkit-scrollbar-thumb { background:color-mix(in srgb, var(--text-dim) 40%, transparent); border-radius:4px; border:1.5px solid transparent; background-clip:padding-box; }
-.manual-doc::-webkit-scrollbar-thumb:hover, .manual-toc::-webkit-scrollbar-thumb:hover, .manual-note-list::-webkit-scrollbar-thumb:hover { background:color-mix(in srgb, var(--accent) 45%, transparent); background-clip:padding-box; }
+.manual-doc, .manual-toc-body, .manual-note-list { scrollbar-width:thin; scrollbar-color:color-mix(in srgb, var(--text-dim) 45%, transparent) transparent; }
+.manual-doc::-webkit-scrollbar, .manual-toc-body::-webkit-scrollbar, .manual-note-list::-webkit-scrollbar { width:7px; height:7px; }
+.manual-doc::-webkit-scrollbar-track, .manual-toc-body::-webkit-scrollbar-track, .manual-note-list::-webkit-scrollbar-track { background:transparent; }
+.manual-doc::-webkit-scrollbar-thumb, .manual-toc-body::-webkit-scrollbar-thumb, .manual-note-list::-webkit-scrollbar-thumb { background:color-mix(in srgb, var(--text-dim) 40%, transparent); border-radius:4px; border:1.5px solid transparent; background-clip:padding-box; }
+.manual-doc::-webkit-scrollbar-thumb:hover, .manual-toc-body::-webkit-scrollbar-thumb:hover, .manual-note-list::-webkit-scrollbar-thumb:hover { background:color-mix(in srgb, var(--accent) 45%, transparent); background-clip:padding-box; }
 .manual-note { width:320px; max-width:40%; flex-shrink:0; border-left:1px solid var(--border); display:none; flex-direction:column; overflow:hidden; }
 .manual-note.open { display:flex; }
 .manual-note-head { padding:8px 10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; color:var(--text); }
@@ -846,7 +848,7 @@
 .manual-note-item .note-text { color:var(--text); cursor:pointer; white-space:pre-wrap; word-break:break-word; }
 .manual-note-item .note-actions { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
 .manual-note-empty { color:var(--text-dim); font-size:12px; padding:12px; text-align:center; }
-.manual-note-head { display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border); font-weight:600; flex-shrink:0; }
+.manual-note-head { display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border); font-weight:600; flex-shrink:0; background:var(--bg-panel-solid); position:sticky; top:0; z-index:1; }
 .manual-note-head-actions { margin-left:auto; display:flex; gap:4px; }
 .manual-note-tools { display:flex; align-items:center; gap:8px; padding:6px 10px; border-bottom:1px solid var(--border); font-size:12px; }
 .manual-note-selall { display:flex; align-items:center; gap:4px; cursor:pointer; user-select:none; -webkit-user-select:none; }
@@ -869,7 +871,7 @@
 .sticky-note[data-color="blue"]   { background:#b9dcf7; }
 .sticky-note[data-color="pink"]   { background:#ffc9d8; }
 .sticky-note[data-color="purple"] { background:#dcc9f7; }
-.sticky-note.pinned { box-shadow:0 0 0 2px var(--accent); }
+.sticky-note.pinned { outline:2px solid var(--accent); outline-offset:0; }
 .sticky-head { display:flex; align-items:center; gap:3px; padding:5px 7px; background:rgba(0,0,0,.09); cursor:move; user-select:none; -webkit-user-select:none; touch-action:none; }
 .sticky-title { flex:1; font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sticky-ico { background:transparent; border:none; color:#1c1c1c; cursor:pointer; font-size:12px; line-height:1; padding:3px 5px; border-radius:5px; font-family:inherit; }
@@ -888,7 +890,7 @@
 .sticky-note textarea, .sticky-quote { scrollbar-width:thin; scrollbar-color:rgba(0,0,0,.28) transparent; }
 .sticky-note textarea::-webkit-scrollbar, .sticky-quote::-webkit-scrollbar { width:6px; height:6px; }
 .sticky-note textarea::-webkit-scrollbar-thumb, .sticky-quote::-webkit-scrollbar-thumb { background:rgba(0,0,0,.25); border-radius:4px; }
-.sticky-dirty .sticky-title::after { content:' •'; color:#c0392b; }
+.sticky-unsaved .sticky-title::after { content:' •'; color:#c0392b; }
 /* ===== 触屏版阅读器优化（.touch-device：手机设备 或 ?touch 强制） ===== */
 .manual-bottombar { display:none; }
 .manual-progress { display:none; }
@@ -918,16 +920,19 @@
   border-right:1px solid var(--border);
   box-shadow:4px 0 24px rgba(0,0,0,.35);
   transform:translateX(-100%); transition:transform .28s cubic-bezier(.22,.61,.36,1); z-index:60;
-  display:flex; flex-direction:column; padding-top:0; overflow-y:auto;
+  display:flex; flex-direction:column; padding-top:0; overflow:hidden;
 }
 .touch-device .manual-toc.open { transform:translateX(0); }
+.touch-device .manual-toc-body { flex:1; min-height:0; overflow-y:auto; padding:8px 0; }
+.touch-device .manual-toc.open ~ .manual-read .manual-doc { scrollbar-width:none; }
+.touch-device .manual-toc.open ~ .manual-read .manual-doc::-webkit-scrollbar { display:none; }
 .touch-device .manual-toc a { white-space:normal; padding:9px 14px; margin:1px 8px; border-radius:8px; overflow:visible; line-height:1.5; text-overflow:clip; }
 .manual-doc a.md-jump { user-select:none; -webkit-user-select:none; cursor:pointer; }
 .touch-device .manual-toc a:hover { color:var(--text); background:var(--control-bg); }
 .touch-device .manual-toc a.lvl2 { padding-left:26px; }
 .touch-device .manual-toc a.lvl3 { padding-left:40px; font-size:12px; }
 .touch-device .manual-toc a.active { color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, transparent); font-weight:600; }
-.manual-toc-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; font-weight:600; font-size:14px; color:var(--text); border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg-panel-solid); flex-shrink:0; }
+.manual-toc-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border); font-weight:600; font-size:13px; color:var(--text); flex-shrink:0; background:var(--bg-panel-solid); position:sticky; top:0; z-index:1; }
 .touch-device .manual-toc-head { display:flex; }
 .manual-toc-head > span { position:relative; padding-left:11px; }
 .manual-toc-head > span::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:14px; border-radius:2px; background:linear-gradient(180deg, var(--accent), var(--accent-2)); }
@@ -941,6 +946,7 @@
   transition:transform .28s cubic-bezier(.22,.61,.36,1); display:flex; flex-direction:column; padding-top:0; overflow-y:auto;
 }
 .touch-device .manual-note-head { padding:12px 14px; font-size:14px; flex-shrink:0; }
+.touch-device .manual-toc-head { padding:12px 14px; font-size:14px; }
 .touch-device .manual-note-head > span { position:relative; padding-left:11px; }
 .touch-device .manual-note-head > span::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:14px; border-radius:2px; background:linear-gradient(180deg, var(--accent), var(--accent-2)); }
 .touch-device #manual-note-close { border:1px solid var(--border); background:var(--control-bg); color:var(--text-dim); font-size:15px; line-height:1; cursor:pointer; padding:5px 9px; border-radius:7px; transition:all .15s; }
@@ -979,7 +985,7 @@
 .touch-device .guide-doc th,
 .touch-device .guide-doc td,
 .touch-device .guide-doc .kbd-key { white-space:normal !important; overflow-wrap:anywhere !important; word-break:break-word !important; overflow:visible !important; }
-.touch-device .manual-float.float-bottom { left:0 !important; right:0 !important; top:auto !important; bottom:0 !important; transform:none !important; justify-content:center; border-radius:0; padding:10px calc(10px + env(safe-area-inset-bottom)); gap:12px; background:var(--bg-panel-solid); border-top:1px solid var(--border); }
+.touch-device .manual-float.float-bottom { left:0 !important; right:0 !important; top:auto !important; bottom:0 !important; transform:none !important; justify-content:center; border-radius:0; padding:10px calc(10px + env(safe-area-inset-bottom)); gap:12px; background:var(--bg-panel-solid); border-top:1px solid var(--border); z-index:90; }
 .touch-device .manual-bottombar {
   position:relative; z-index:70; display:flex; align-items:stretch; justify-content:space-around; gap:2px;
   padding:6px 4px calc(6px + env(safe-area-inset-bottom)); background:var(--bg-panel-solid);
@@ -1604,8 +1610,8 @@
       </div>
     </div>
     <div class="modal-actions">
-      <button class="top-btn" id="color-picker-cancel" data-i18n="cancel">取消</button>
       <button class="top-btn primary" id="color-picker-ok" data-i18n="apply">应用颜色</button>
+      <button class="top-btn" id="color-picker-cancel" data-i18n="cancel">取消</button>
     </div>
   </div>
 </div>
@@ -1616,8 +1622,8 @@
     <div class="modal-title" id="text-modal-title" data-i18n="enterText">输入文本</div>
     <textarea id="text-modal-input" rows="3" data-i18n-placeholder="enterTextPlaceholder" placeholder="请输入文本内容..."></textarea>
     <div class="modal-actions">
-      <button class="top-btn" id="text-modal-cancel" data-i18n="cancel">取消</button>
       <button class="top-btn primary" id="text-modal-ok" data-i18n="ok">确定</button>
+      <button class="top-btn" id="text-modal-cancel" data-i18n="cancel">取消</button>
     </div>
   </div>
 </div>
@@ -1631,8 +1637,8 @@
     <div class="modal-title" id="confirm-modal-title" data-i18n="confirm">确认</div>
     <div id="confirm-modal-msg" style="font-size:14px; color:var(--text); line-height:1.6; margin-bottom:4px;"></div>
     <div class="modal-actions">
-      <button class="top-btn" id="confirm-modal-cancel" data-i18n="cancel">取消</button>
       <button class="top-btn primary" id="confirm-modal-ok" data-i18n="ok">确定</button>
+      <button class="top-btn" id="confirm-modal-cancel" data-i18n="cancel">取消</button>
     </div>
   </div>
 </div>
@@ -1744,7 +1750,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js?v=6';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 // 简体中文作为内置默认与回退；其余语言存放在 language/ 目录下独立文件中（见 <head> 的 <script src> 引用）
-const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·三维图形设计工坊', aboutDesc:'基于 Three.js 的网页端三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>1. 条款的接受</h4><p>本《服务协议》（下称「本协议」）系由本网站（下称「本工具」或「本服务」）的运营者（下称「我们」）与使用者（下称「您」）就本工具的使用所订立的具有法律约束力的协议。当您访问、浏览或使用本工具时，即视为您已充分阅读、理解并同意接受本协议的全部条款与条件。若您不同意本协议的任何内容，请勿使用本工具。</p><h4>2. 使用范围与限制</h4><p>本工具为基于 Three.js 的纯前端三维 / 二维图形设计与编辑工具，仅供个人学习、创意设计、教学演示与非商业用途使用。您承诺：不以任何方式将本工具或其输出用于商业盈利、再分发或提供商业性服务；不利用本工具从事任何违反国家法律、法规或公序良俗的活动；不试图反向工程、反编译、破解或干扰本工具的正常运行。您应对自身上传、导入或创作的素材内容（包括文本、图像、模型等）享有合法权利或已获合法授权，并保证该等内容不侵犯任何第三方的知识产权、肖像权、名誉权或其他合法权益。</p><h4>3. 用户内容与知识产权</h4><p>本工具本身的全部著作权、商标权及其他知识产权归作者 Yushichadao 所有（Copyright © 2026-Present Yushichadao. All Rights Reserved.）。您在使用本工具过程中自行创建、上传或导入的素材及所生成场景文件的知识产权，归您本人所有；您授予我们一项非独占、全球范围、免费、可撤销的许可，仅用于在您使用本工具期间为提供与改进服务之目的而对该等内容进行必要的技术处理（如本地渲染、缓存）。我们不会因您使用本工具而取得您内容的任何权利。</p><h4>4. 账户、费用与第三方资源</h4><p>本工具为纯前端应用，不要求注册账户，亦不收取任何费用。本工具可能在界面中提供指向第三方网站（如 GitHub 开源仓库）的链接，该等链接仅供方便而设，我们对其内容、安全性及隐私实践不承担责任。您访问第三方资源应受其各自条款与政策的约束。</p><h4>5. 服务的变更、中断与终止</h4><p>我们保留在不另行通知的情况下，随时修改、暂停或终止本工具部分或全部功能的权利。对于因维护、升级、网络或不可抗力等原因导致的服务中断或数据丢失，我们不承担任何责任。</p><h4>6. 责任限制</h4><p>在法律允许的最大范围内，对于因使用或无法使用本工具所导致的任何间接、偶然、特殊或后果性损害，我们不承担任何赔偿责任。本工具按「现状」提供，详见《免责声明》。</p><h4>7. 适用法律与争议解决</h4><p>本协议的订立、效力、解释及争议解决均适用中华人民共和国法律（不含冲突规范）。因本协议产生的或与之相关的任何争议，双方应友好协商解决；协商不成的，任何一方均可向作者所在地有管辖权的人民法院提起诉讼。</p><h4>8. 联系我们</h4><p>如您对本协议有任何疑问，可通过本工具的 GitHub 仓库（github.com/yushichadao/Cub3D-Editor）与我们联系。本协议内容如发生变更，将以修订后的版本在站内公示，修订后继续使用即视为接受变更。</p>', disclaimerBody:'<h4>1. 一般声明</h4><p>本工具系按「现状」（AS IS）及「可用」（AS AVAILABLE）基础提供，我们不作任何明示或暗示的担保，包括但不限于对适销性、特定用途适用性、不侵权、准确性、可靠性或持续可用的担保。我们不保证本工具在任何时间、任何设备上均能无误运行，亦不保证缺陷必将被修正。</p><h4>2. 技术说明</h4><p>本工具为纯前端 Web 应用，依托浏览器（WebGL / Three.js）在您本地设备实时渲染三维与二维图形。其功能受您的设备性能、浏览器兼容性及网络环境等因素影响，渲染结果可能因设备与浏览器差异而略有不同。</p><h4>3. 责任限制</h4><p>在法律允许的最大范围内，对于因使用、误用或无法使用本工具，或因依赖本工具输出结果所导致的任何直接、间接、偶然、特殊、惩罚性或后果性损失（包括但不限于数据丢失、设备损耗、利润或业务中断），我们及作者 Yushichadao 均不承担任何责任，即使已被告知该等损害的可能性。</p><h4>4. 用户内容责任</h4><p>您应对使用本工具创建、上传或导入的全部内容独立承担全部责任。您确认本工具不构成任何专业设计、法律、财务或工程建议；任何基于此产生的成果之合规性、安全性与适用性，由您自行判断并负责。</p><h4>5. 第三方资源免责</h4><p>本工具可能包含指向第三方网站、仓库或资源的链接（如 GitHub）。该等第三方资源由其各自运营者负责，我们对其内容、可用性、安全性及隐私实践不作任何担保或承担责任。您与第三方之间的任何交易或交互，风险由您自行承担。</p><h4>6. 无 AI 功能声明</h4><p>本网站及本工具本身不包含任何由运营者提供的生成式人工智能（AI）功能或模型；页面与代码的生成系借助 TRAE 与 CodeBuddy 等开发工具辅助完成，该等工具不参与本工具运行时的功能提供。本《免责声明》所称「本工具」仅指本网站所提供的编辑功能本身。</p><h4>7. 条款变更</h4><p>我们保留随时修改本声明的权利，修订后的声明将在本工具内公示，您继续使用即视为接受修订内容。</p>', privacyBody:'<h4>1. 我们如何对待您的信息</h4><p>我们高度重视并严格保护您的隐私。本工具为纯前端（client-side）应用：所有三维模型、文本、图像、贴图及场景数据均在您的浏览器本地进行处理、渲染与保存，不会上传至任何远程服务器，我们亦无法访问您的任何内容。</p><h4>2. 我们收集的信息</h4><p>我们不会主动收集、存储或传输您的个人信息（如姓名、邮箱、位置等）。本工具不要求注册账户，亦不设置任何服务器端数据库。您在本工具内的全部操作均发生在您的本地设备。</p><h4>3. 本地存储</h4><p>为提升使用体验，本工具可能使用浏览器本地存储（如 localStorage）记录您的偏好设置（如界面语言、主题等）以及您主动导出的场景数据。该等信息仅保存在您自己的设备中，不会离开您的浏览器。您可随时通过清除浏览器数据予以删除。</p><h4>4. 分析与追踪</h4><p>本工具不集成任何第三方统计分析、广告或用户行为追踪脚本，不会对您进行跨站跟踪或画像。</p><h4>5. 第三方链接</h4><p>本工具可能在界面中提供指向第三方网站（如 GitHub）的链接。当您离开本工具访问第三方资源时，其隐私实践由该第三方负责，本《隐私政策》不再适用，请参照其相应政策。</p><h4>6. 儿童隐私</h4><p>本工具不面向未满 13 周岁的儿童，我们不会在知情的情况下收集其个人信息。</p><h4>7. 联系与变更</h4><p>如您对本政策有任何疑问，可通过 GitHub 仓库（github.com/yushichadao/Cub3D-Editor）联系我们。本政策如有变更，将以修订版本在站内公示。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
+const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·三维图形设计工坊', aboutDesc:'基于 Three.js 的网页端三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·三维图形设计工坊（以下简称“本软件”）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按“现状”提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按“现状”提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件“关于”页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按“现状”提供</h4><p>本软件及其功能按“现状”与“可用”基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p>', privacyBody:'<h4>隐私政策</h4><p>我们高度重视您的个人信息与隐私保护。<strong>本软件无需注册账号，不收集您的账号名、密码或登录凭证。请您仔细阅读本政策，了解我们如何（以及在何种有限范围内）处理相关信息。</strong>使用本软件即表示您同意本政策的约定。</p><h4>第一条 我们是否收集账号信息</h4><p><strong>本软件不提供账号系统，您无需注册或登录即可使用。我们不会收集、存储您的用户名、密码、邮箱、手机号等账号类个人信息，也不会建立与您身份绑定的用户档案。</strong></p><h4>第二条 本地存储的创作数据</h4><p>（一）<strong>您在本软件中创建的三维模型、场景、便签、标注、文字与图片等创作内容，默认保存在您的本地设备（浏览器本地存储、应用沙盒或您导出的文件），而非上传至我们的服务器。</strong></p><p>（二）除为向您提供本机功能所必需的技术处理外，我们通常不会主动读取、上传或传输您的创作内容。</p><h4>第三条 我们可能收集的信息</h4><p>为改进产品与保障安全，在您使用本软件时，我们可能在本地或经您授权后收集有限的以下信息：<strong>（1）设备与运行信息，如设备型号、操作系统与版本、浏览器类型；（2）技术诊断与崩溃日志，用于定位故障；（3）匿名化的使用统计（如功能使用频次），如您未关闭相关诊断选项。</strong>上述信息的收集以必要为限，且我们尽量进行去标识化处理。</p><h4>第四条 信息的使用目的</h4><p>上述有限信息仅用于：为您提供、维护与改进本软件；定位与修复故障；保障安全与稳定；以及经您授权或法律要求的其他目的。<strong>我们不会将您的个人信息用于与上述目的无关的商业营销，除非获得您的明确同意。</strong></p><h4>第五条 信息共享与披露</h4><p><strong>我们不向任何第三方出售您的个人信息。仅在下列情形下，我们才会在必要范围内共享：</strong>（1）为遵守适用法律法规、司法或监管要求；（2）为保护本软件、您或公众的安全与合法权益；（3）经您事先明确同意。对于共享的信息，我们会要求接收方履行相应的保密义务。</p><h4>第六条 数据存储与安全</h4><p>（一）您的核心创作数据主要存储于本地设备。<strong>我们采取合理的技术与管理措施保护所接触的信息安全，但任何本地存储与网络传输均无法保证绝对安全，您亦应妥善保管自身设备、及时备份并避免在不信任环境中使用。</strong></p><p>（二）如我们因诊断需要临时收集崩溃日志等信息，将在合理期限后删除或匿名化处理。</p><h4>第七条 您的权利与控制</h4><p>（一）<strong>您始终掌控自己的数据：您可随时在本地清除缓存、删除作品、卸载应用，或关闭诊断/统计选项。</strong></p><p>（二）如您对已收集的诊断信息有疑问，可通过本软件“关于”页面提供的联系方式与我们沟通，我们将在合理范围内配合处理。</p><h4>第八条 未成年人保护</h4><p><strong>我们不直接面向未成年人收集个人信息。如发生未成年人误触发诊断信息收集的情形，我们将在知晓后尽快删除相关数据，并建议未成年人在监护人指导下使用本软件。</strong></p><h4>第九条 跨境与地区</h4><p>本软件可能在不同地区提供。您使用本软件即表示理解并同意，我们依据所在地区的法律要求处理相关信息，并尽力符合当地关于个人信息保护的规范。</p><h4>第十条 政策变更</h4><p><strong>本政策可能随软件调整而更新，更新后将通过本软件公示。您继续使用即视为接受更新后的政策；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 联系我们</h4><p>如您对隐私保护有任何疑问或行使权利的要求，可通过本软件“关于”页面提供的联系方式与我们沟通，我们将在合理时间内回复。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
  // 面板标题
  sec3D:'3D 图形', sec2D:'2D 图形', secTransform:'变换', secMaterial:'材质', secColor:'颜色', secPattern:'花纹 / 贴图', secTextBox:'文本框', secEraser:'橡皮擦属性', secMouse:'鼠标操作', secTouch:'手势操作', secKeyboard:'键盘快捷键',
  // Tab 按钮
@@ -1904,7 +1910,7 @@ kbdSliderPgSel:'大幅增/减',
   appTitle:'3D 编辑器',
   // 说明书阅读器
   tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
-  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存',
+  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本服务。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateReread:'重新阅读', manExportFail:'导出失败', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存',
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
@@ -3810,39 +3816,32 @@ function rebuildFromSnapshot(s, promises) {
       for (const seg of s.tubeSegments) {
         const points = seg.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
         const segR = seg.brushRadius || r;
-        let curve;
-        if (points.length === 2) {
-          curve = new THREE.LineCurve3(points[0].clone(), points[1].clone());
-        } else {
-          // 直接使用原始点，不进行细化优化
-          curve = new THREE.CatmullRomCurve3(points.map(p => p.clone()), false, 'centripetal', 0.5);
-        }
-        const curveLength = curve.getLength();
-        // 统一管状段密度，确保与绘制时一致（每段至少4个分割）
-        const tubularSegments = Math.max(128, Math.min(800, Math.floor(curveLength / (segR * 0.05))));
-        const tubeGeo = new THREE.TubeGeometry(curve, tubularSegments, segR, 24, false);
-        const tubeMesh = new THREE.Mesh(tubeGeo, mat.clone());
-        tubeMesh.position.copy(meshOffset);
-        tubeMesh.castShadow = true; tubeMesh.receiveShadow = true;
-        tubeMesh.userData.brushCurve = curve;
-        tubeMesh.userData.brushCurvePoints = points;
-        tubeMesh.userData.brushRadius = segR;
-        group.add(tubeMesh);
 
-        // 使用曲线端点确保端帽与TubeGeometry无缝连接
-        if (points.length >= 1) {
-          const startPt = curve.getPointAt(0);
-          const startCap = new THREE.Mesh(new THREE.SphereGeometry(segR, 24, 16), mat.clone());
-          startCap.position.copy(startPt).add(meshOffset);
-          startCap.castShadow = true; startCap.receiveShadow = true;
-          group.add(startCap);
+        if (points.length === 1) {
+          // 单点：仅一个球头（端帽由下方 children 重建，这里补一颗防止缺失）
+          const sphere = new THREE.Mesh(new THREE.SphereGeometry(segR, 24, 16), mat.clone());
+          sphere.position.copy(meshOffset);
+          sphere.castShadow = true; sphere.receiveShadow = true;
+          sphere.userData.isBrushCap = true;
+          group.add(sphere);
+          continue;
         }
-        if (points.length >= 2) {
-          const endPt = curve.getPointAt(1);
-          const endCap = new THREE.Mesh(new THREE.SphereGeometry(segR, 24, 16), mat.clone());
-          endCap.position.copy(endPt).add(meshOffset);
-          endCap.castShadow = true; endCap.receiveShadow = true;
-          group.add(endCap);
+
+        // 逐段直线管：与实时绘制的段式管完全一致（LineCurve3 直管，不做 CatmullRom 平滑），
+        // 保证导入后笔迹形状与原样一致（直角/折角不被圆滑化）。
+        // 拐角关节球与端帽由下方 s.children 重建，无需在此重复添加。
+        for (let i = 0; i < points.length - 1; i++) {
+          const a = points[i], b = points[i + 1];
+          const dist = a.distanceTo(b);
+          if (dist < 0.0001) continue;
+          const tubularSegments = Math.max(4, Math.ceil(dist / 0.02));
+          const tubeGeo = new THREE.TubeGeometry(new THREE.LineCurve3(a.clone(), b.clone()), tubularSegments, segR, 16, false);
+          const tubeMesh = new THREE.Mesh(tubeGeo, mat.clone());
+          tubeMesh.position.copy(meshOffset);
+          tubeMesh.castShadow = true; tubeMesh.receiveShadow = true;
+          tubeMesh.userData.brushCurvePoints = points.map(p => [p.x, p.y, p.z]);
+          tubeMesh.userData.brushRadius = segR;
+          group.add(tubeMesh);
         }
       }
       if (s.children) {
@@ -3861,18 +3860,6 @@ function rebuildFromSnapshot(s, promises) {
       }
     } else if (s.curvePoints && s.curvePoints.length >= 2) {
       const points = s.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
-      let curve;
-      if (points.length === 2) {
-        curve = new THREE.LineCurve3(points[0].clone(), points[1].clone());
-      } else {
-        // 直接使用原始点，不进行细化优化
-        curve = new THREE.CatmullRomCurve3(points.map(p => p.clone()), false, 'centripetal', 0.5);
-      }
-      const curveLength = curve.getLength();
-      // 统一管状段密度，确保与绘制时一致（每段至少4个分割）
-      const tubularSegments = Math.max(128, Math.min(800, Math.floor(curveLength / (r * 0.05))));
-      const tubeGeo = new THREE.TubeGeometry(curve, tubularSegments, r, 24, false, 1);
-      const tubeMesh = new THREE.Mesh(tubeGeo, mat);
       // 使用保存的children中的pos（= -原始center，不变），避免移动后位置错误
       let tubeChildPos2 = null;
       if (s.children) {
@@ -3882,22 +3869,43 @@ function rebuildFromSnapshot(s, promises) {
         }
       }
       const meshOffset2 = tubeChildPos2 || new THREE.Vector3(-s.pos[0], -s.pos[1], -s.pos[2]);
-      tubeMesh.position.copy(meshOffset2);
-      tubeMesh.castShadow = true; tubeMesh.receiveShadow = true;
-      tubeMesh.userData.brushCurve = curve;
-      tubeMesh.userData.brushCurvePoints = points;
-      tubeMesh.userData.brushRadius = r;
-      group.add(tubeMesh);
 
-      // 使用曲线端点确保端帽与TubeGeometry无缝连接
-      const startPt = curve.getPointAt(0);
+      // 逐段直线管：与实时绘制的段式管完全一致（LineCurve3 直管，不做 CatmullRom 平滑）
+      for (let i = 0; i < points.length - 1; i++) {
+        const a = points[i], b = points[i + 1];
+        const dist = a.distanceTo(b);
+        if (dist < 0.0001) continue;
+        const tubularSegments = Math.max(4, Math.ceil(dist / 0.02));
+        const tubeGeo = new THREE.TubeGeometry(new THREE.LineCurve3(a.clone(), b.clone()), tubularSegments, r, 16, false);
+        const tubeMesh = new THREE.Mesh(tubeGeo, mat.clone());
+        tubeMesh.position.copy(meshOffset2);
+        tubeMesh.castShadow = true; tubeMesh.receiveShadow = true;
+        tubeMesh.userData.brushCurvePoints = points.map(p => [p.x, p.y, p.z]);
+        tubeMesh.userData.brushRadius = r;
+        group.add(tubeMesh);
+      }
+
+      // 拐角关节球（非共线锚点）与端帽，与绘制时一致
+      for (let i = 1; i < points.length - 1; i++) {
+        const prev = points[i - 1], cur = points[i], next = points[i + 1];
+        const d1 = new THREE.Vector3().subVectors(cur, prev);
+        const d2 = new THREE.Vector3().subVectors(next, cur);
+        if (d1.lengthSq() > 1e-12 && d2.lengthSq() > 1e-12) {
+          if (d1.normalize().dot(d2.normalize()) < 0.9999) {
+            const joint = new THREE.Mesh(new THREE.SphereGeometry(r * 1.01, 24, 16), mat.clone());
+            joint.position.copy(cur.clone().add(meshOffset2));
+            joint.castShadow = true; joint.receiveShadow = true;
+            joint.userData.isBrushCap = true;
+            group.add(joint);
+          }
+        }
+      }
       const startCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
-      startCap.position.copy(startPt).add(meshOffset2);
+      startCap.position.copy(points[0].clone().add(meshOffset2));
       startCap.castShadow = true; startCap.receiveShadow = true;
       group.add(startCap);
-      const endPt = curve.getPointAt(1);
       const endCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
-      endCap.position.copy(endPt).add(meshOffset2);
+      endCap.position.copy(points[points.length - 1].clone().add(meshOffset2));
       endCap.castShadow = true; endCap.receiveShadow = true;
       group.add(endCap);
     } else if (s.children && s.children.length > 0) {
@@ -10066,7 +10074,75 @@ function rotateSelection(axis, deltaRad, objects) {
     });
   }
 }
+// ===== 统一的返回/ESC 处理（与 Android 手机返回键同一效果）=====
+window.__inspectEntered = false;
+function clearCanvasNow(){
+  select(null);
+  if (typeof deselectAll === 'function') deselectAll();
+  state.objects.forEach(disposeObject);
+  state.objects = [];
+  if (typeof updateClearButtonState === 'function') updateClearButtonState();
+  if (typeof pushHistory === 'function') pushHistory();
+  if (typeof setPanelCollapsed === 'function') { setPanelCollapsed('left', true); setPanelCollapsed('right', true); }
+  if (typeof toast === 'function') toast(_t('toastCleared'));
+}
+function showClearCanvasDialog(){
+  var has = (state && state.objects && state.objects.length > 0);
+  if (!has) { if (typeof toast === 'function') toast(_t('toastCleared')); return; }
+  if (typeof showConfirm === 'function') {
+    showConfirm(_t('confirmClearScene')).then(function (ok) {
+      if (ok) clearCanvasNow();
+      else window.__inspectEntered = false;
+    });
+  } else {
+    if (window.confirm(_t('confirmClearScene'))) clearCanvasNow();
+    else window.__inspectEntered = false;
+  }
+}
+function doExitCheck(){
+  if (typeof window.tryExit === 'function') { tryExit(); return; }
+  showClearCanvasDialog();
+}
+function backEntry(){
+  // 0) 全屏拾取/冻结覆盖层
+  if (document.getElementById('screen-pick-overlay')) {
+    if (typeof window.endScreenPick === 'function') window.endScreenPick();
+    else { var ov0 = document.getElementById('screen-pick-overlay'); if (ov0) ov0.remove(); }
+    return;
+  }
+  // 1) 便签/便签栏/目录栏/说明书/快捷操作（统一由 handleBack 处理；无论焦点/鼠标是否在便签上都生效）
+  if (typeof window.__handleBack === 'function') {
+    try { if (window.__handleBack()) return; } catch (e) { console.error(e); }
+  }
+  // 2) 设置栏
+  var settings0 = document.getElementById('settings-modal');
+  if (settings0 && settings0.classList.contains('show')) { settings0.classList.remove('show'); window.__inspectEntered = false; return; }
+  // 3) 单选/多选 → 退出选中模式
+  if (state && state.selectedList && state.selectedList.length > 0) { deselectAll(); window.__inspectEntered = false; return; }
+  // 4) 检验对象 → 触发退出/清空（仅一次）
+  if (!window.__inspectEntered) {
+    window.__inspectEntered = true;
+    doExitCheck();
+  }
+}
+// 触屏网页：拦截浏览器返回手势，统一交由 backEntry 处理（禁用浏览器层导航）
+if (document.documentElement.classList.contains('touch-device') || window.innerWidth <= 768) {
+  try {
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', function () {
+      try { history.pushState(null, '', location.href); } catch (e) {}
+      if (typeof backEntry === 'function') backEntry();
+    });
+  } catch (e) { /* 部分环境（如 file://）不支持 pushState，忽略手势拦截 */ }
+}
+
 window.addEventListener('keydown', (e) => {
+  // ESC：即使焦点在输入框/文本框（如便签）内，也交由统一返回栈处理
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    backEntry();
+    return;
+  }
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
   const sel = state.selectedList;
   const shift = e.shiftKey;
@@ -10110,12 +10186,6 @@ window.addEventListener('keydown', (e) => {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen();
     else document.exitFullscreen();
     return;
-  }
-  if (e.key === 'Escape') {
-    if (document.getElementById('guide-modal') && document.getElementById('guide-modal').classList.contains('show')) { document.getElementById('guide-close').click(); return; }
-    if (document.getElementById('manual-modal') && document.getElementById('manual-modal').classList.contains('show')) { if (window.__manualBackStep) { e.preventDefault(); window.__manualBackStep(); } return; }
-    // Esc 只负责关闭窗口 / 取消工具与选择，不再退出全屏（全屏由 F11 或全屏按钮切换）
-    setTool(null); deselect(); return;
   }
   if (e.key === 'Delete' || e.key === 'Backspace') {
     if (transformActive) { toast(_t('toastTransformNoDelete')); return; }
@@ -10805,38 +10875,60 @@ function openManual(){
   titleEl.textContent = T('manTitle');
   if(isTouchMode()){ const sf=loadStore('manualMobileFontSize'); if(sf) docEl.style.fontSize=sf+'px'; }
   modal.classList.add('show');
+  // 进入说明书时默认不打开搜索栏
+  const _tb = modal.querySelector('.manual-toolbar'); if(_tb) _tb.classList.remove('search-open');
+  const _si = document.getElementById('manual-search'); if(_si) _si.value='';
 
   if(!openManual._built){
     openManual._built = true;
-    function hideManual(){ clearSearchHits(); searchInput.value=''; const tb=readEl.querySelector('.manual-toolbar'); if(tb) tb.classList.remove('search-open'); closeAllStickies(); saveScroll(); modal.classList.remove('show'); }
-    function showStickyUnsaved(el){
-      return new Promise(resolve=>{
-        const wrap=document.createElement('div'); wrap.className='manual-confirm';
-        wrap.innerHTML='<div class="manual-confirm-box">'
-          +'<div class="manual-confirm-msg">'+mdEscape(T('manNoteUnsaved'))+'</div>'
-          +'<div class="manual-confirm-btns">'
-          +'<button class="manual-btn" data-v="save">'+mdEscape(T('manSave'))+'</button>'
-          +'<button class="manual-btn" data-v="discard">'+mdEscape(T('manNoteDiscard'))+'</button>'
-          +'<button class="manual-btn" data-v="cancel">'+mdEscape(T('manCancel'))+'</button>'
-          +'</div></div>';
-        modal.appendChild(wrap);
-        wrap.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ wrap.remove(); const v=b.dataset.v; if(v==='save'){ flushSticky(el); closeSticky(el); } else if(v==='discard'){ closeSticky(el); } resolve(v); }));
-      });
-    }
+    async function hideManual(){ const ok=await closeAllStickies(); if(!ok) return; clearSearchHits(); searchInput.value=''; const tb=readEl.querySelector('.manual-toolbar'); if(tb) tb.classList.remove('search-open'); saveScroll(); modal.classList.remove('show'); var s=document.getElementById('settings-modal'); if(s) s.classList.add('show'); }
     function manualBackStep(){
       const layer=stickyLayer();
       const notes=Array.from(layer.querySelectorAll('.sticky-note'));
       if(notes.length){
         notes.sort((a,b)=>(parseInt(a.style.zIndex)||0)-(parseInt(b.style.zIndex)||0));
         const top=notes[notes.length-1];
-        if(top.classList.contains('sticky-dirty')) showStickyUnsaved(top);
-        else closeSticky(top);
+        closeSticky(top);
         return true;
       }
       if(isTouchMode() && (tocEl.classList.contains('open') || notePanel.classList.contains('open'))){ closeDrawers(); return true; }
       hideManual(); return true;
     }
     window.__manualBackStep = manualBackStep;
+  // 统一的返回/ESC 处理函数（便签→便签栏→目录栏→说明书/快捷操作）
+  // 返回 true 表示已处理某一层；返回 false 表示没有可处理的层级（交由 backEntry 继续）
+  function handleBack(){
+    // 1) 便签：关闭最上面一层。编辑状态(dirty=有未保存修改)弹保存确认，否则直接关闭
+    const layer=stickyLayer();
+    const notes=layer?Array.from(layer.querySelectorAll('.sticky-note')):[];
+    if(notes.length){
+      notes.sort((a,b)=>(parseInt(a.style.zIndex)||0)-(parseInt(b.style.zIndex)||0));
+      const top=notes[notes.length-1];
+      closeSticky(top);
+      window.__inspectEntered=false; return true;
+    }
+    // 2) 便签栏
+    if(notePanel.classList.contains('open')){
+      if(isTouchMode()) openNote(false); else notePanel.classList.remove('open');
+      window.__inspectEntered=false; return true;
+    }
+    // 3) 目录栏（仅触屏 / Android）
+    if(isTouchMode() && tocEl.classList.contains('open')){
+      if(isTouchMode()) openToc(false); else tocEl.classList.remove('open');
+      window.__inspectEntered=false; return true;
+    }
+    // 4) 快捷操作 / 使用说明书 → 先展示目录页（目录栏），再次返回才退出
+    var g=document.getElementById('guide-modal');
+    if(g && g.classList.contains('show')){ g.classList.remove('show'); openManual(); if(isTouchMode()) openToc(true); else tocEl.classList.add('open'); window.__inspectEntered=false; return true; }
+    if(modal && modal.classList.contains('show')){
+      // 先展示目录页（目录栏），再次返回才退出说明书
+      if(!tocEl.classList.contains('open')){ if(isTouchMode()) openToc(true); else tocEl.classList.add('open'); }
+      else { hideManual(); }
+      window.__inspectEntered=false; return true;
+    }
+    return false;
+  }
+  window.__handleBack = handleBack;
     document.getElementById('manual-close').addEventListener('click', hideManual);
     modal.addEventListener('click', e=>{ if(e.target===modal) hideManual(); });
     document.getElementById('manual-zoom-in').addEventListener('click', ()=>zoomDoc(1.12));
@@ -10874,7 +10966,30 @@ function openManual(){
     document.getElementById('manual-float-hicancel').addEventListener('click', cancelHlInSelection);
     document.getElementById('manual-float-hiexpand').addEventListener('click', expandHl);
     docEl.addEventListener('mousedown', e=>{ if(e.button===2){ const s=window.getSelection(); if(s && !s.isCollapsed) e.preventDefault(); } });
-    docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(openManual._sel){ floatEl.style.display='flex'; } });
+    // 移动端长按选词 → 弹出 便签/高亮/复制 浮层
+    function selectWordAt(x, y){
+      let range = null;
+      if(document.caretRangeFromPoint){ range = document.caretRangeFromPoint(x, y); }
+      else if(document.caretPositionFromPoint){ const p = document.caretPositionFromPoint(x, y); if(p){ range = document.createRange(); range.setStart(p.offsetNode, p.offset); range.collapse(true); } }
+      if(!range) return false;
+      let node = range.startContainer;
+      if(node.nodeType !== 3 || !docEl.contains(node)) return false;
+      const text = node.nodeValue, idx = range.startOffset;
+      let s = idx, e = idx;
+      const isWord = ch => /\S/.test(ch);
+      while(s > 0 && isWord(text[s-1])) s--;
+      while(e < text.length && isWord(text[e])) e++;
+      if(e <= s) return false;
+      const r = document.createRange(); r.setStart(node, s); r.setEnd(node, e);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      return true;
+    }
+    let _lpTimer = null, _lpXY = null;
+    docEl.addEventListener('touchstart', e=>{ if(!isTouchMode() || e.touches.length !== 1) return; const t = e.touches[0]; _lpXY = {x:t.clientX, y:t.clientY}; clearTimeout(_lpTimer); _lpTimer = setTimeout(()=>{ _lpTimer = null; selectWordAt(_lpXY.x, _lpXY.y); onSelectionChange(); }, 450); }, {passive:true});
+    docEl.addEventListener('touchmove', e=>{ if(!_lpXY || !e.touches[0]) return; const t = e.touches[0]; if(Math.hypot(t.clientX - _lpXY.x, t.clientY - _lpXY.y) > 8){ clearTimeout(_lpTimer); _lpTimer = null; } }, {passive:true});
+    docEl.addEventListener('touchend', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
+    docEl.addEventListener('touchcancel', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
+    docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(!openManual._sel && (e.clientX || e.clientY)){ selectWordAt(e.clientX, e.clientY); } onSelectionChange(); });
     docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ const el=tgt.querySelector('h1,h2,h3,h4,h5,h6')||tgt; el.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt.closest('.md-block')||tgt); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
     openManual._mo = new MutationObserver(()=>syncStickyVisibility());
     openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
@@ -10997,7 +11112,7 @@ function openManual(){
       +'<button class="manual-btn" data-jump="'+n.id+'">'+T('manJump')+'</button>'
       +'<button class="manual-btn" data-del="'+n.id+'">'+T('manDelete')+'</button>'
       +'</div></div>').join('');
-    noteListEl.querySelectorAll('[data-del]').forEach(el=>el.addEventListener('click', async e=>{ e.preventDefault(); if(!await showConfirm(T('manDelConfirm'))) return; const id=el.dataset.del; removeNote(id); closeSticky(id); renderNotes(); toast(T('manDeleted')); }));
+    noteListEl.querySelectorAll('[data-del]').forEach(el=>el.addEventListener('click', async e=>{ e.preventDefault(); if(!await showConfirm(T('manDelConfirm'))) return; const id=el.dataset.del; const stEl=stickyEl(id); if(stEl) stEl.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(id); renderNotes(); toast(T('manDeleted')); }));
     noteListEl.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click', ()=>openSticky(el.dataset.open, false)));
     noteListEl.querySelectorAll('[data-jump]').forEach(el=>el.addEventListener('click', ()=>{ const n=noteById(el.dataset.jump); if(n) jumpToNote(n); }));
     noteListEl.querySelectorAll('.note-check').forEach(c=>c.addEventListener('change', updateNoteCount));
@@ -11043,21 +11158,36 @@ function openManual(){
     const id=el.dataset.id; if(el.dataset.max==='1') return;
     saveStore('sticky.'+id, {x:parseInt(el.style.left,10)||0, y:parseInt(el.style.top,10)||0, w:el.offsetWidth, h:el.offsetHeight, fs:parseFloat(el.dataset.fs||'13')});
   }
-  function closeSticky(id){ const el=typeof id==='string'?stickyEl(id):id; if(el && el.parentNode){ flushSticky(el); el.parentNode.removeChild(el); } }
-  function closeAllStickies(){ stickyLayer().querySelectorAll('.sticky-note').forEach(el=>{ flushSticky(el); if(el.parentNode) el.parentNode.removeChild(el); }); }
+  function showStickyUnsaved(el){
+    return new Promise(resolve=>{
+      const wrap=document.createElement('div'); wrap.className='manual-confirm';
+      wrap.innerHTML='<div class="manual-confirm-box">'
+        +'<div class="manual-confirm-msg">'+mdEscape(T('manNoteUnsaved'))+'</div>'
+        +'<div class="manual-confirm-btns">'
+        +'<button class="manual-btn primary" data-v="save">'+mdEscape(T('manSave'))+'</button>'
+        +'<button class="manual-btn" data-v="discard">'+mdEscape(T('manNoteDiscard'))+'</button>'
+        +'<button class="manual-btn" data-v="cancel">'+mdEscape(T('manCancel'))+'</button>'
+        +'</div></div>';
+      document.body.appendChild(wrap);
+      wrap.addEventListener('click', e=>{ if(e.target===wrap){ wrap.remove(); resolve('cancel'); } });
+      wrap.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ wrap.remove(); resolve(b.dataset.v); }));
+    });
+  }
+  async function closeSticky(id){ const el=typeof id==='string'?stickyEl(id):id; if(!el || !el.parentNode) return true; if(el.classList.contains('sticky-unsaved')){ const v=await showStickyUnsaved(el); if(v==='cancel') return false; if(v==='save') flushSticky(el); } el.classList.remove('sticky-unsaved'); el.parentNode.removeChild(el); return true; }
+  async function closeAllStickies(){ const els=Array.from(stickyLayer().querySelectorAll('.sticky-note')); for(const el of els){ const ok=await closeSticky(el); if(!ok) return false; } return true; }
   function flushSticky(el){ if(!el || !el.classList.contains('sticky-dirty')) return; const area=el.querySelector('.sticky-area'); updateNote(el.dataset.id, {note: area.value}); el.classList.remove('sticky-dirty'); renderNotes(); }
   function syncStickyVisibility(){ const open=modal.classList.contains('show'); stickyLayer().querySelectorAll('.sticky-note').forEach(el=>{ el.style.display=(open||el.classList.contains('pinned'))?'flex':'none'; }); }
   function applyStickyMode(el){ const area=el.querySelector('.sticky-area'); const ro=el.dataset.mode!=='edit'; area.readOnly=ro; el.classList.toggle('sticky-readonly', ro); const saveBtn=el.querySelector('[data-act="save"]'); const editBtn=el.querySelector('[data-act="edit"]'); if(saveBtn) saveBtn.style.display=ro?'none':''; if(editBtn) editBtn.style.display=ro?'':'none'; }
   function exportNotes(){ const arr=notes(); const data=JSON.stringify(arr, null, 2); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); const d=new Date(); const p=x=>String(x).padStart(2,'0'); const name='notes-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+'.json'; a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')); }
   function importNotes(file){ const reader=new FileReader(); reader.onload=()=>{ try{ const data=JSON.parse(reader.result); if(!Array.isArray(data)) throw new Error('not array'); const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0; data.forEach(n=>{ if(!n||typeof n!=='object') return; const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now()}, n); item.id=String(item.id||newNoteId()); if(ids.has(item.id)) item.id=newNoteId(); ids.add(String(item.id)); cur.push(item); added++; }); saveStore('notes', cur); renderNotes(); toast(T('manImported').replace('{0}', added)); }catch(e){ toast(T('manImportFail')); } }; reader.readAsText(file); }
-  async function batchDeleteNotes(){ const ids=Array.from(noteListEl.querySelectorAll('.note-check:checked')).map(c=>String(c.dataset.id)); if(!ids.length){ toast(T('manNoSel')); return; } if(!await showConfirm(T('manBatchDelConfirm').replace('{0}', ids.length))) return; ids.forEach(id=>{ removeNote(id); closeSticky(id); }); renderNotes(); toast(T('manBatchDeleted').replace('{0}', ids.length)); }
+  async function batchDeleteNotes(){ const ids=Array.from(noteListEl.querySelectorAll('.note-check:checked')).map(c=>String(c.dataset.id)); if(!ids.length){ toast(T('manNoSel')); return; } if(!await showConfirm(T('manBatchDelConfirm').replace('{0}', ids.length))) return; ids.forEach(id=>{ const st=stickyEl(id); if(st) st.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(id); }); renderNotes(); toast(T('manBatchDeleted').replace('{0}', ids.length)); }
   function openSticky(id, forceEdit){
     const n=noteById(id); if(!n) return;
     const layer=stickyLayer();
     let el=stickyEl(id);
     if(el){ bringFront(el); el.style.display='flex'; el.querySelector('.sticky-area').focus(); return; }
     const opened=Array.from(layer.querySelectorAll('.sticky-note'));
-    if(opened.length>=5) closeSticky(opened[0]);
+    if(opened.length>=5){ const _o=opened[0]; flushSticky(_o); _o.classList.remove('sticky-unsaved'); closeSticky(_o); }
     const box=loadStore('sticky.'+id, null) || defaultBox(opened.length);
     el=document.createElement('div');
     el.className='sticky-note'+(n.pinned?' pinned':'');
@@ -11116,10 +11246,10 @@ function openManual(){
       e.preventDefault(); e.stopPropagation();
     });
     // 编辑：输入防抖自动保存 + 失焦保存
-    area.addEventListener('input', ()=>{ el.classList.add('sticky-dirty'); clearTimeout(el._saveT); el._saveT=setTimeout(()=>flushSticky(el), 1200); });
-    area.addEventListener('blur', ()=>flushSticky(el));
+    area.addEventListener('input', ()=>{ el.classList.add('sticky-dirty'); el.classList.add('sticky-unsaved'); });
+    area.addEventListener('blur', ()=>{});
     area.addEventListener('dblclick', ()=>{ if(area.readOnly){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(), 0); } });
-    area.addEventListener('keydown', e=>{ if((e.ctrlKey||e.metaKey) && e.key==='s'){ e.preventDefault(); flushSticky(el); toast(T('manNoteSaved')); } e.stopPropagation(); });
+    area.addEventListener('keydown', e=>{ if(e.key==='Escape'){ return; } if((e.ctrlKey||e.metaKey) && e.key==='s'){ e.preventDefault(); flushSticky(el); el.classList.remove('sticky-unsaved'); toast(T('manNoteSaved')); } e.stopPropagation(); });
     // 颜色
     el.querySelectorAll('.sticky-dot').forEach(d=>d.addEventListener('click', ()=>{ const c=d.dataset.color; el.dataset.color=c; updateNote(id,{color:c}); el.querySelectorAll('.sticky-dot').forEach(x=>x.classList.toggle('on', x===d)); renderNotes(); }));
     // 头/尾按钮
@@ -11127,8 +11257,8 @@ function openManual(){
       ev.stopPropagation();
       const act=b.dataset.act;
       if(act==='close'){ closeSticky(el); }
-      else if(act==='save'){ flushSticky(el); el.dataset.mode='ro'; applyStickyMode(el); toast(T('manNoteSaved')); }
-      else if(act==='del'){ if(!await showConfirm(T('manDelConfirm'))) return; flushSticky(el); removeNote(id); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
+      else if(act==='save'){ flushSticky(el); el.classList.remove('sticky-unsaved'); el.dataset.mode='ro'; applyStickyMode(el); toast(T('manNoteSaved')); }
+      else if(act==='del'){ if(!await showConfirm(T('manDelConfirm'))) return; flushSticky(el); el.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
       else if(act==='edit'){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(),0); }
       else if(act==='pin'){ const n=noteById(id); const p=!(n&&n.pinned); updateNote(id,{pinned:p}); el.classList.toggle('pinned', p); b.textContent=p?'★':'☆'; b.title=T(p?'manUnpin':'manPin'); syncStickyVisibility(); }
       else if(act==='fs+'||act==='fs-'){ let fs=parseFloat(el.dataset.fs||'13'); fs=Math.max(11, Math.min(26, act==='fs+'?fs*1.12:fs*0.9)); el.dataset.fs=String(fs); el.style.setProperty('--sfs', fs+'px'); saveStickyBox(el); }
@@ -11149,8 +11279,8 @@ function openManual(){
 function cancelHlInSelection(){ const s=openManual._sel; if(!s) return; const arr=hilites(); const kept=arr.filter(h=>!(h.start!=null && h.start<s.end && h.end>s.start)); if(kept.length!==arr.length){ saveStore('hilites', kept); applyHighlights(); toast(T('manUnHl')); } floatEl.style.display='none'; }
 function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); const overlaps=arr.filter(h=>h.start!=null && h.start<s.end && h.end>s.start); if(!overlaps.length){ floatEl.style.display='none'; return; } const ns=Math.min(s.start, ...overlaps.map(h=>h.start)); const ne=Math.max(s.end, ...overlaps.map(h=>h.end)); const keepId=overlaps.reduce((a,b)=>(a.id<b.id?a:b)).id; arr=arr.map(h=> h.id===keepId ? {id:h.id, start:ns, end:ne} : h); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHiExpanded')); }
   function onSelectionChange(){ const sel=window.getSelection(); if(!sel || sel.isCollapsed || sel.rangeCount===0){ floatEl.style.display='none'; openManual._sel=null; return; } const range=sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)){ floatEl.style.display='none'; openManual._sel=null; return; } const off=rangeToOffsets(range, docEl); const arr=hilites(); const overlap=arr.some(h=>h.start!=null && h.start<off[1] && h.end>off[0]); openManual._sel={ text: sel.toString(), line: blockLineOf((sel.anchorNode)||docEl), start: off[0], end: off[1] }; floatEl.style.display='flex'; const hiBtn=document.getElementById('manual-float-hi'); const cancelBtn=document.getElementById('manual-float-hicancel'); const expandBtn=document.getElementById('manual-float-hiexpand'); if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; } else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; } if(isTouchMode()){ floatEl.classList.add('float-bottom'); return; } floatEl.classList.remove('float-bottom'); const rect=range.getBoundingClientRect(); const mrect=modal.getBoundingClientRect(); const card=modal.querySelector('.manual-card').getBoundingClientRect(); let left=rect.left+rect.width/2-mrect.left-60; let top=rect.top-mrect.top-38; const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top; left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top); floatEl.style.left=left+'px'; floatEl.style.top=top+'px'; }
-  function openToc(open){ tocEl.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.toggle('on', !!open); }
-  function openNote(open){ notePanel.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.toggle('on', !!open); }
+  function openToc(open){ tocEl.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.toggle('on', !!open); if(open){ notePanel.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }
+  function openNote(open){ notePanel.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.toggle('on', !!open); if(open){ tocEl.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); } }
   function closeDrawers(){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); if(bottombarEl){ bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }
   function updateProgress(){ const max=docEl.scrollHeight-docEl.clientHeight; const p=max>0? docEl.scrollTop/max : 0; if(progressEl) progressEl.style.width=(p*100)+'%'; }
   function updateTocActive(){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=null; heads.forEach(h=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=parseInt(h.dataset.line,10); }); tocEl.querySelectorAll('a').forEach(a=>a.classList.toggle('active', parseInt(a.dataset.line,10)===cur)); }
@@ -11163,7 +11293,7 @@ function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); 
     try{ const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('http '+res.status); const md=await res.text(); docEl.innerHTML=parseBlocks(md).map(renderBlock).join(''); buildToc(); applyHighlights(); renderNotes(); const z=isTouchMode()?(loadStore('manualMobileFontSize')||16):loadStore('zoom',15); docEl.dataset.zoom=z; docEl.style.fontSize=z+'px'; restoreScroll(); if(!isTouchMode()) tocEl.classList.add('open'); }
     catch(e){ docEl.innerHTML='<div class="manual-error">'+mdEscape(T('manLoadFail'))+'</div>'; }
   }
-  function buildToc(){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); tocEl.innerHTML='<div class="manual-toc-head"><span>'+mdEscape(T('manToc'))+'</span><button class="manual-toc-close" id="manual-toc-close" title="'+mdEscape(T('manClose'))+'" aria-label="'+mdEscape(T('manClose'))+'">✕</button></div>'+heads.map(h=>'<a class="lvl'+h.dataset.level+'" data-line="'+h.dataset.line+'">'+mdEscape((h.textContent||'').trim())+'</a>').join(''); const tc=document.getElementById('manual-toc-close'); if(tc) tc.addEventListener('click', ()=>{ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); }); tocEl.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ const ln=parseInt(a.dataset.line,10); jumpToLine(ln); if(isTouchMode()){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); } })); }
+  function buildToc(){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); tocEl.innerHTML='<div class="manual-toc-head"><span>'+mdEscape(T('manToc'))+'</span><button class="manual-toc-close" id="manual-toc-close" title="'+mdEscape(T('manClose'))+'" aria-label="'+mdEscape(T('manClose'))+'">✕</button></div><div class="manual-toc-body">'+heads.map(h=>'<a class="lvl'+h.dataset.level+'" data-line="'+h.dataset.line+'">'+mdEscape((h.textContent||'').trim())+'</a>').join('')+'</div>'; const tc=document.getElementById('manual-toc-close'); if(tc) tc.addEventListener('click', ()=>closeDrawers()); tocEl.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ const ln=parseInt(a.dataset.line,10); jumpToLine(ln); if(isTouchMode()) closeDrawers(); })); }
 }
 
 /* ===================== 操作指南（只读，无目录 / 搜索 / 便签，无阴影卡片） ===================== */
@@ -11188,8 +11318,8 @@ function openGuide(){
   titleEl.textContent = T('tabGuide') || '快捷操作';
   if(!openGuide._built){
     openGuide._built = true;
-    document.getElementById('guide-close').addEventListener('click', ()=>modal.classList.remove('show'));
-    modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('show'); });
+    document.getElementById('guide-close').addEventListener('click', ()=>{ modal.classList.remove('show'); document.getElementById('settings-modal').classList.add('show'); });
+    modal.addEventListener('click', e=>{ if(e.target===modal){ modal.classList.remove('show'); document.getElementById('settings-modal').classList.add('show'); } });
   }
   // 鼠标/手势与键盘快捷键克隆隐藏源 #guide-src 内的 #sec-mouse 与 #sec-kbd（初始化时已从右栏移入），UI 与右栏一致
   const frag = document.createDocumentFragment();
@@ -11287,5 +11417,66 @@ function openGuide(){
   </div>
 </div>
 <div id="guide-src" style="display:none" aria-hidden="true"></div>
+
+
+<style id="tos-gate-style">
+.toast { z-index: 99000 !important; }
+.manual-toast { z-index: 99000 !important; }
+/* 让站内条款弹窗显示在本浮窗之上 */
+#terms-modal { z-index: 100020 !important; }
+.tos-gate { position:fixed; inset:0; z-index:100000; display:none; background:rgba(8,10,18,.55); align-items:center; justify-content:center; padding:22px; }
+.tos-gate.show { display:flex; }
+.tos-gate-inner { width:min(440px, 94vw); max-height:88vh; display:flex; flex-direction:column; background:var(--bg-panel-solid); color:var(--text); border:1px solid var(--border); border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.55); animation:tosIn .25s ease; overflow:hidden; }
+@keyframes tosIn { from{opacity:0; transform:translateY(10px) scale(.98);} to{opacity:1; transform:none;} }
+.tos-gate-head { padding:20px 20px 12px; border-bottom:1px solid var(--border); }
+.tos-gate-head h2 { margin:0 0 8px; font-size:18px; }
+.tos-gate-head p { margin:0; font-size:12.5px; color:var(--text-dim); line-height:1.7; }
+.tos-gate-links { display:flex; flex-direction:column; gap:10px; padding:16px 20px; overflow-y:auto; }
+.tos-gate-link { display:flex; align-items:center; gap:10px; width:100%; text-align:left; cursor:pointer; padding:13px 14px; border:1px solid var(--border); border-radius:12px; background:var(--control-bg); color:var(--text); font-size:14px; font-family:inherit; transition:border-color .18s, background .18s; }
+.tos-gate-link:hover { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 8%, var(--bg-panel)); }
+.tos-gate-link:active { transform:scale(.99); }
+.tos-gate-link-ico { color:var(--accent); width:18px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
+.tos-gate-link-title { flex:1; font-weight:600; }
+.tos-gate-link-arrow { color:var(--text-dim); font-size:15px; }
+.tos-gate-actions { display:flex; gap:12px; padding:14px 20px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--border); }
+.tos-gate-btn { flex:1; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--control-bg); color:var(--text); font-size:15px; cursor:pointer; font-family:inherit; }
+.tos-gate-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.tos-gate-btn.exit { background:transparent; }
+.tos-gate-blocked { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:30px; text-align:center; background:var(--bg-panel-solid); border-radius:18px; }
+.tos-gate-blocked p { max-width:420px; font-size:14px; line-height:1.8; color:var(--text); }
+</style>
+<div id="tos-gate" class="tos-gate">
+  <div class="tos-gate-inner">
+    <div class="tos-gate-head">
+      <h2 data-i18n="tosGateTitle">服务协议与隐私政策</h2>
+      <p data-i18n="tosGateSub">请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。</p>
+    </div>
+    <div class="tos-gate-links">
+      <button type="button" class="tos-gate-link" data-term="tos">
+        <span class="tos-gate-link-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/></svg></span>
+        <span class="tos-gate-link-title" data-i18n="tosLink">服务协议</span>
+        <span class="tos-gate-link-arrow">›</span>
+      </button>
+      <button type="button" class="tos-gate-link" data-term="disclaimer">
+        <span class="tos-gate-link-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+        <span class="tos-gate-link-title" data-i18n="disclaimerLink">免责声明</span>
+        <span class="tos-gate-link-arrow">›</span>
+      </button>
+      <button type="button" class="tos-gate-link" data-term="privacy">
+        <span class="tos-gate-link-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        <span class="tos-gate-link-title" data-i18n="privacyLink">隐私政策</span>
+        <span class="tos-gate-link-arrow">›</span>
+      </button>
+    </div>
+    <div class="tos-gate-actions">
+      <button class="tos-gate-btn primary" id="tos-gate-accept" data-i18n="tosGateAccept">同意并继续</button>
+      <button class="tos-gate-btn exit" id="tos-gate-exit" data-i18n="tosGateExit">不同意并退出</button>
+    </div>
+    <div class="tos-gate-blocked">
+      <p data-i18n="tosGateBlocked">您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。</p>
+      <button class="tos-gate-btn primary" id="tos-gate-reread" data-i18n="tosGateReread">重新阅读</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

@@ -85,7 +85,7 @@ body.desktop .win-divider {
   background: var(--bg-panel-solid);
   border: 1px solid var(--border);
   border-radius: 14px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, .55);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -262,7 +262,7 @@ body.desktop .dk-quick.show { display: flex; }
   color: var(--text);
   font-size: 12.5px;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .3);
+  box-shadow: none;
 }
 .dk-quick .qa:hover { border-color: var(--accent-2); color: var(--accent-2); }
 

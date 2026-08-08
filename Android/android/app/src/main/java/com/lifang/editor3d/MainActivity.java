@@ -30,8 +30,10 @@ import java.nio.charset.StandardCharsets;
 public class MainActivity extends BridgeActivity {
 
     private static final int SAVE_REQUEST = 9001;
+    private static final int OPEN_REQUEST = 9002;
     private String pendingJson = null;
     private String pendingCb = null;
+    private String pendingImportCb = null;
     private WebView cachedWebView = null;
     private long lastBackMs = 0;
 
@@ -54,6 +56,7 @@ public class MainActivity extends BridgeActivity {
             try {
                 wv.addJavascriptInterface(new SaverBridge(), "AndroidSaver");
                 wv.addJavascriptInterface(new ExitBridge(), "AndroidExit");
+                wv.addJavascriptInterface(new ImporterBridge(), "AndroidImporter");
                 // 视图层拦截物理返回键（最早、最可靠）
                 wv.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK
@@ -157,8 +160,57 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
+    // 使用系统文件管理器（SAF）打开文件，读入内容后回传 JS
+    private class ImporterBridge {
+        @JavascriptInterface
+        public void open(final String callbackId) {
+            final Activity activity = MainActivity.this;
+            activity.runOnUiThread(() -> {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/json", "application/octet-stream", "text/plain"});
+                pendingImportCb = callbackId;
+                activity.startActivityForResult(intent, OPEN_REQUEST);
+            });
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == OPEN_REQUEST) {
+            final String cb = pendingImportCb;
+            pendingImportCb = null;
+            WebView wv = getWebView();
+            if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                Uri uri = data.getData();
+                String content = "";
+                boolean ok = false;
+                try {
+                    java.io.InputStream is = getContentResolver().openInputStream(uri);
+                    if (is != null) {
+                        java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+                        byte[] buf = new byte[4096];
+                        int n;
+                        while ((n = is.read(buf)) != -1) bos.write(buf, 0, n);
+                        is.close();
+                        content = new String(bos.toByteArray(), StandardCharsets.UTF_8);
+                        ok = true;
+                    }
+                } catch (Exception e) {
+                    ok = false;
+                }
+                final boolean fok = ok;
+                final String fcontent = content;
+                final String js = "window.__androidImporterContent=" + org.json.JSONObject.quote(fcontent)
+                        + ";if(window.__androidImporterResult)window.__androidImporterResult('" + cb + "'," + (fok ? "true" : "false") + ");";
+                if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
+            } else {
+                final String js = "if(window.__androidImporterResult)window.__androidImporterResult('" + cb + "',false);";
+                if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
+            }
+            return;
+        }
         if (requestCode == SAVE_REQUEST) {
             final String cb = pendingCb;
             final String json = pendingJson;

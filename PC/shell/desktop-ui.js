@@ -48,7 +48,7 @@
     mask.style.cssText = 'position:fixed;inset:0;z-index:6000;display:flex;align-items:center;justify-content:center;background:var(--modal-mask,rgba(8,10,18,0.72));font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;';
     var box = document.createElement('div');
     box.className = 'modal-box';
-    box.style.cssText = 'background:var(--bg-panel-solid,#fff);border-radius:14px;padding:24px 26px;min-width:340px;max-width:90vw;box-shadow:var(--shadow,0 20px 60px rgba(0,0,0,0.55));color:var(--text,#1b2440);';
+    box.style.cssText = 'background:var(--bg-panel-solid,#fff);border-radius:14px;padding:24px 26px;min-width:340px;max-width:90vw;box-shadow:none;color:var(--text,#1b2440);';
     if (opts.title) {
       var title = document.createElement('div');
       title.className = 'modal-title';
