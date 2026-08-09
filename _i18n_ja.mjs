@@ -1,4 +1,7 @@
 import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // 日本語翻訳：ポップアップ文案 ＋ ZH_CN 新版構造と一致する法律全文（ローカル型 3D エディタ、アカウントなし）
 const TRANS = {
@@ -27,7 +30,7 @@ function replaceKey(src, key, value) {
 
 let ok = 0;
 for (const d of dirs) {
-  const p = d + '/' + file;
+  const p = path.join(__dirname, d, file);
   if (!fs.existsSync(p)) { console.error('跳过(不存在):', p); continue; }
   let src = fs.readFileSync(p, 'utf8');
   const before = src;

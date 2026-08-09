@@ -33,7 +33,7 @@ let emitEvent = () => {};   // 由 init() 注入，向所有窗口广播插件�
 
 /** 允许插件调用的 editor 方法白名单（防止插件乱调内部函数） */
 const EDITOR_METHODS = new Set([
-  'editor.getInfo', 'editor.listShapes', 'editor.addShape', 'editor.addText', 'editor.addBrushPath',
+  'editor.getInfo', 'editor.listShapes', 'editor.addShape', 'editor.addText',
   'editor.listObjects', 'editor.getObject', 'editor.updateObject', 'editor.removeObject',
   'editor.clearScene', 'editor.getScene', 'editor.setScene',
   'editor.select', 'editor.getSelection', 'editor.deselectAll',

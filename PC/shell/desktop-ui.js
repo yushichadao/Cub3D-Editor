@@ -1,7 +1,6 @@
 /* ==========================================================================
    桌面版界面层
-   · 无边框窗口的自绘控制区（菜单 / 最小化 / 最大化 / 关闭）
-   · 原生菜单与快捷键的响应
+   · 无边框窗口的自绘控制区（最小化 / 最大化 / 关闭）
    · 本地文件的新建 / 打开 / 保存 / 另存为 / 最近文件 / 拖放导入
    · 自动保存与崩溃恢复
    · 关闭前的未保存提醒
@@ -26,11 +25,6 @@
       if (el) { el.click(); return true; }
     }
     return false;
-  }
-  function key(k, opts) {
-    var e = new KeyboardEvent('keydown', Object.assign({ key: k, bubbles: true, cancelable: true }, opts || {}));
-    (document.activeElement || document.body).dispatchEvent(e);
-    window.dispatchEvent(e);
   }
   function say(msg) { if (K && K.toast) K.toast(msg); }
 
@@ -248,12 +242,13 @@
     });
   }
 
+  function defaultJsonName(prefix) { var d = new Date(); var p = function (x) { return String(x).padStart(2, '0'); }; return prefix + '_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes()) + '.json'; }
   function doSave(saveAs) {
     var payload = {
       data: sceneDoc(),
       saveAs: !!saveAs,
       path: saveAs ? null : currentPath,
-      suggestName: (currentPath ? currentPath.replace(/^.*[\\/]/, '') : '场景-' + new Date().toISOString().slice(0, 10) + '.l3d')
+      suggestName: (currentPath ? currentPath.replace(/^.*[\\/]/, '') : defaultJsonName('场景'))
     };
     return D.file.saveScene(payload).then(function (r) {
       if (!r.ok) { if (!r.canceled) say(r.message || '保存失败'); return false; }
@@ -339,68 +334,6 @@
     });
   }
 
-  /* ------------------------------- 菜单响应 ------------------------------- */
-
-  var actions = {
-    'file.new': doNew,
-    'file.open': function () { doOpen(); },
-    'file.openRecent': function (p) { doOpen(p); },
-    'file.clearRecent': function () { D.file.clearRecent(); say('已清空最近列表'); },
-    'file.save': function () { doSave(false); },
-    'file.saveAs': function () { doSave(true); },
-    'file.import': function () { clickAny(['btn-import']); },
-    'file.export': function () { clickAny(['btn-export']); },
-    'file.screenshot': function () { clickAny(['btn-shot']); },
-
-    'edit.undo': function () { K.undo(); updateTitle(); },
-    'edit.redo': function () { K.redo(); updateTitle(); },
-    'edit.copy': function () { key('c', { ctrlKey: true }); },
-    'edit.paste': function () { key('v', { ctrlKey: true }); },
-    'edit.duplicate': function () { key('d', { ctrlKey: true }); },
-    'edit.delete': function () { K.deleteSelected(); updateTitle(); },
-    'edit.selectAll': function () { key('a', { ctrlKey: true }); },
-    'edit.clear': function () {
-      if (!window.confirm('确定清空场景中的全部对象？')) return;
-      K.deselectAll();
-      K.state.selectedList = K.state.objects.slice();
-      if (K.state.selectedList.length) K.deleteSelected();
-      updateTitle();
-    },
-
-    'view.preset': function (v) { K.setView(v); },
-    'view.toggleAxes': function () { clickAny(['btn-axes']); },
-    'view.toggleGrid': function () { clickAny(['btn-grid']); },
-
-    'ext.plugins': function () { window.__dkPanels && window.__dkPanels.open('plugins'); },
-    'ext.runtimes': function () { window.__dkPanels && window.__dkPanels.open('runtimes'); },
-    'ext.langpacks': function () { window.__dkPanels && window.__dkPanels.open('langpacks'); },
-    'ext.installPlugin': function () {
-      D.plugin.installDir().then(function (r) {
-        if (r.ok) { say('已安装：' + r.pluginId); window.__dkPanels && window.__dkPanels.refresh(); }
-        else if (!r.canceled) say(r.message || '安装失败');
-      });
-    },
-    'ext.exportLangTemplate': function () {
-      var dict = (K.I18N && K.I18N['zh-CN']) || {};
-      D.langpack.exportTemplate(dict, 'my-lang').then(function (r) {
-        if (r.ok) say('Template: ' + r.path);
-        else if (!r.canceled) say(r.message || '导出失败');
-      });
-    },
-
-    'help.manual': function () { clickAny(['btn-manual', 'manual-btn']) || (K.openManual && K.openManual()); },
-    'help.pluginGuide': function () { window.__dkPanels && window.__dkPanels.open('guide'); },
-    'help.about': function () {
-      D.app.info().then(function (i) {
-        webConfirm({
-          title: '立方三维设计工坊 v' + i.version,
-          detail: '离线桌面版\n\nElectron ' + i.electron + ' / Chromium ' + i.chrome + ' / Node ' + i.node + '\n运行模式：' + (i.portable ? '便携版' : '安装版') + '\n数据目录：' + i.dataRoot,
-          buttons: ['确认']
-        });
-      });
-    }
-  };
-
   /* --------------------------------- 启动 --------------------------------- */
 
   function boot() {
@@ -412,11 +345,6 @@
     setupAutosave();
     updateTitle();
     setInterval(updateTitle, 1000);
-
-    D.menu.onAction(function (m) {
-      var fn = actions[m.action];
-      if (fn) { try { fn(m.payload); } catch (e) { console.error(e); say('操作失败：' + e.message); } }
-    });
 
     // 文件关联 / 命令行传入
     D.file.onOpenRequest(function (p) { doOpen(p); });
@@ -440,7 +368,7 @@
     });
   });
 
-    // 键盘补充：Ctrl+S / Ctrl+O 在渲染层也拦一次，避免焦点在输入框时菜单加速器不触发
+    // 键盘补充：Ctrl+S / Ctrl+O 保存与打开
     window.addEventListener('keydown', function (e) {
       if (!e.ctrlKey || e.altKey) return;
       var k = e.key.toLowerCase();

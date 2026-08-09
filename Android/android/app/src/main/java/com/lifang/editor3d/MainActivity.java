@@ -31,9 +31,12 @@ public class MainActivity extends BridgeActivity {
 
     private static final int SAVE_REQUEST = 9001;
     private static final int OPEN_REQUEST = 9002;
+    private static final int SAVE_IMAGE_REQUEST = 9003;
     private String pendingJson = null;
     private String pendingCb = null;
     private String pendingImportCb = null;
+    private String pendingImgB64 = null;
+    private String pendingImgCb = null;
     private WebView cachedWebView = null;
     private long lastBackMs = 0;
 
@@ -57,6 +60,7 @@ public class MainActivity extends BridgeActivity {
                 wv.addJavascriptInterface(new SaverBridge(), "AndroidSaver");
                 wv.addJavascriptInterface(new ExitBridge(), "AndroidExit");
                 wv.addJavascriptInterface(new ImporterBridge(), "AndroidImporter");
+                wv.addJavascriptInterface(new ImageSaverBridge(), "AndroidImageSaver");
                 // 视图层拦截物理返回键（最早、最可靠）
                 wv.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK
@@ -176,6 +180,24 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
+    // 通过系统文件管理器（SAF）选择位置并保存 PNG 截图
+    // base64 为完整 data URL（形如 data:image/png;base64,xxxx），由原生端剥离前缀后写入目标 URI
+    private class ImageSaverBridge {
+        @JavascriptInterface
+        public void save(final String base64, final String filename, final String callbackId) {
+            final Activity activity = MainActivity.this;
+            activity.runOnUiThread(() -> {
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/png");
+                intent.putExtra(Intent.EXTRA_TITLE, filename);
+                pendingImgB64 = base64;
+                pendingImgCb = callbackId;
+                activity.startActivityForResult(intent, SAVE_IMAGE_REQUEST);
+            });
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == OPEN_REQUEST) {
@@ -235,6 +257,38 @@ public class MainActivity extends BridgeActivity {
                 if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
             } else {
                 final String js = "if(window.__androidSaverResult)window.__androidSaverResult('" + cb + "',false);";
+                if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
+            }
+            return;
+        }
+        if (requestCode == SAVE_IMAGE_REQUEST) {
+            final String cb = pendingImgCb;
+            final String b64 = pendingImgB64;
+            pendingImgCb = null;
+            pendingImgB64 = null;
+            WebView wv = getWebView();
+            if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                Uri uri = data.getData();
+                boolean ok = false;
+                try {
+                    String pure = b64;
+                    int comma = b64.indexOf(',');
+                    if (comma >= 0) pure = b64.substring(comma + 1);
+                    byte[] bytes = android.util.Base64.decode(pure, android.util.Base64.DEFAULT);
+                    OutputStream os = getContentResolver().openOutputStream(uri);
+                    if (os != null) {
+                        os.write(bytes);
+                        os.close();
+                        ok = true;
+                    }
+                } catch (Exception e) {
+                    ok = false;
+                }
+                final boolean saved = ok;
+                final String js = "if(window.__androidImageSaverResult)window.__androidImageSaverResult('" + cb + "'," + (saved ? "true" : "false") + ");";
+                if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
+            } else {
+                final String js = "if(window.__androidImageSaverResult)window.__androidImageSaverResult('" + cb + "',false);";
                 if (wv != null) wv.post(() -> wv.evaluateJavascript(js, null));
             }
             return;

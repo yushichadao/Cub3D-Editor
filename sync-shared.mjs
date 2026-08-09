@@ -72,7 +72,20 @@ async function main() {
 
   const scripts = (await fs.readdir(SCRIPTS_SRC)).filter((f) => f.endsWith('.mjs'));
   for (const f of scripts) await syncFile(SCRIPTS_SRC, f, SCRIPTS_DESTS);
-  console.log('[sync-shared] 完成：共享资源已统一到各端。');
+  console.log('[sync-shared] 共享脚本同步完成。');
+
+  // 4) 国际化：将弹窗文案与扩展后的法律全文写入各平台语言包（en / ja / zh-TW）
+  //    复用独立脚本 _i18n_en.mjs / _i18n_ja.mjs / _i18n_zh-TW.mjs（亦可单独运行）
+  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW']) {
+    try {
+      await import('./' + lang + '.mjs');
+      console.log(`[sync-shared] 国际化（${lang}）执行完成。`);
+    } catch (e) {
+      console.error(`[sync-shared] 国际化（${lang}）失败：`, e.message);
+    }
+  }
+
+  console.log('[sync-shared] 完成：共享资源已统一同步到各端，并完成法律文本国际化。');
 }
 
 main().catch((err) => {

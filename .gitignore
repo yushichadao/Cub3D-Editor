@@ -20,6 +20,8 @@ www/
 **/www/
 build/
 **/build/
+# 例外：PC 构建资源源文件（图标 icon.ico/icon.png、NSIS 脚本 installer.nsh、侧边栏图 installer-sidebar.bmp）必须入库
+!PC/build/
 android/.gradle/
 android/.idea/
 android/app/release/

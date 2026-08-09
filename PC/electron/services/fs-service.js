@@ -7,7 +7,7 @@ const P = require('../paths');
 const store = require('../store');
 
 const SCENE_FILTERS = [
-  { name: '立方场景文件', extensions: ['l3d', 'json'] },
+  { name: '立方场景文件', extensions: ['json'] },
   { name: '所有文件', extensions: ['*'] }
 ];
 
@@ -32,14 +32,20 @@ async function openScene(win, presetPath) {
   try {
     const text = fs.readFileSync(target, 'utf8');
     const json = JSON.parse(text);
+    const kind = classifyImport(json);
+    if (kind !== 'scene') {
+      return { ok: false, reason: kind, message: kind === 'sticky'
+        ? '该文件是便签数据（便签备份），不能导入到画布。请在便签面板导入便签。'
+        : '无法识别的文件内容，仅支持画布场景文件（.json 场景）。' };
+    }
     currentFile = target;
-    store.pushRecent(target);
     return { ok: true, path: target, name: path.basename(target), data: json };
   } catch (e) {
     return { ok: false, message: '读取失败: ' + e.message };
   }
 }
 
+function defaultJsonName(prefix) { var d = new Date(); var p = function (x) { return String(x).padStart(2, '0'); }; return prefix + '_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes()) + '.json'; }
 async function saveScene(win, payload = {}) {
   const { data, saveAs } = payload;
   let target = saveAs ? null : (payload.path || currentFile);
@@ -47,7 +53,7 @@ async function saveScene(win, payload = {}) {
   if (!target) {
     const r = await dialog.showSaveDialog(win, {
       title: saveAs ? '另存为' : '保存场景',
-      defaultPath: path.join(P.projects, payload.suggestName || ('场景-' + new Date().toISOString().slice(0, 10) + '.l3d')),
+      defaultPath: path.join(P.projects, payload.suggestName || defaultJsonName('场景')),
       filters: SCENE_FILTERS
     });
     if (r.canceled || !r.filePath) return { ok: false, canceled: true };
@@ -59,7 +65,6 @@ async function saveScene(win, payload = {}) {
     const text = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
     fs.writeFileSync(target, text, 'utf8');
     currentFile = target;
-    store.pushRecent(target);
     return { ok: true, path: target, name: path.basename(target) };
   } catch (e) {
     return { ok: false, message: '保存失败: ' + e.message };
@@ -97,10 +102,10 @@ function writeImage(dataURL, targetPath) {
 function autosave(data) {
   try {
     fs.mkdirSync(P.autosave, { recursive: true });
-    const file = path.join(P.autosave, 'autosave-' + Date.now() + '.l3d');
+    const file = path.join(P.autosave, 'autosave-' + Date.now() + '.json');
     fs.writeFileSync(file, typeof data === 'string' ? data : JSON.stringify(data), 'utf8');
     // 只保留最近 10 份
-    const list = fs.readdirSync(P.autosave).filter(f => f.endsWith('.l3d')).sort();
+    const list = fs.readdirSync(P.autosave).filter(f => f.endsWith('.json')).sort();
     while (list.length > 10) {
       try { fs.unlinkSync(path.join(P.autosave, list.shift())); } catch (_) {}
     }
@@ -116,7 +121,7 @@ function autosave(data) {
 function listAutosaves() {
   try {
     return fs.readdirSync(P.autosave)
-      .filter(f => f.endsWith('.l3d'))
+      .filter(f => f.endsWith('.json'))
       .map(f => {
         const full = path.join(P.autosave, f);
         const st = fs.statSync(full);
@@ -176,12 +181,11 @@ function readDropped(filePath) {
   }
 }
 
-function getRecent() { return store.get('recentFiles', []).filter(f => { try { return fs.existsSync(f.path); } catch (_) { return false; } }); }
 function revealPath(p) { if (p && fs.existsSync(p)) shell.showItemInFolder(p); }
 function openDataFolder() { shell.openPath(P.dataRoot); return P.dataRoot; }
 
 module.exports = {
   openScene, saveScene, saveImage, writeImage, autosave, listAutosaves,
   readLastSession, clearLastSession, pickImage, readDropped,
-  getRecent, revealPath, openDataFolder, setCurrentFile, getCurrentFile, SCENE_FILTERS
+  revealPath, openDataFolder, setCurrentFile, getCurrentFile, SCENE_FILTERS
 };

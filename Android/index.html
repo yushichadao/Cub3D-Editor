@@ -1374,6 +1374,7 @@
         <tr><td><b data-i18n="helpTouchBoxSelect">「框选」按钮</b></td><td data-i18n="helpTouchBoxSelectDesc">开启后单指拖拽框选对象</td></tr>
         <tr><td><b data-i18n="helpTouchTwoDrag">双指拖动</b></td><td data-i18n="helpTouchTwoDragDesc">视角平移</td></tr>
         <tr><td><b data-i18n="helpTouchPinch">双指捏合</b></td><td data-i18n="helpTouchPinchDesc">视角缩放</td></tr>
+        <tr><td><b data-i18n="helpTouchBackKey">单击返回键（仅 Android）</b></td><td data-i18n="helpTouchBackKeyDesc">与 Esc 相同：逐层关窗口→取消选择→无则退出确认</td></tr>
       </table>
     </div>
     </div>
@@ -1624,6 +1625,7 @@ toastNewScene:'已新建空白场景', toastImageExported:'图像已导出', toa
  helpTouchBoxSelect:'「框选」按钮', helpTouchBoxSelectDesc:'开启后单指拖拽框选对象',
  helpTouchTwoDrag:'双指拖动', helpTouchTwoDragDesc:'视角平移',
   helpTouchPinch:'双指捏合', helpTouchPinchDesc:'视角缩放',
+  helpTouchBackKey:'单击返回键（仅 Android）', helpTouchBackKeyDesc:'与 Esc 相同：逐层关窗口→取消选择→无则退出确认',
   helpThOp:'操作', helpThDesc:'说明',
  // Toast 消息模板（{0}{1}{2}为占位符，会被替换）
  toastSelectAllN:'已全选 {0} 个对象', toastOldestState:'已是最早状态', toastUndone:'已撤销',
@@ -2439,7 +2441,7 @@ const state = {
   shiftDown: false,
   brushThickness: 0.5,
   eraserSize: 0.30,
-  eraserMode: 'local',   // 'local' = 局部擦除（仅擦除圈内笔迹，可分节）; 'whole' = 整体擦除（画笔对象作为整体删除）
+  eraserMode: 'whole',  // 'local' = 局部擦除（仅擦除圈内笔迹，可分节）; 'whole' = 整体擦除（画笔对象作为整体删除）
   brushRefPlane: null,  // 3D画笔参考平面（锁定）
   brushRefPlaneMesh: null, // 3D画笔参考平面mesh
   brushLockedPlane: null,  // 笔画期间锁定的参考平面
@@ -3034,6 +3036,7 @@ function deselectAll() {
   transformCtrl.detach();
   refreshProps();
   updateShapeButtonStates();
+  toast(_t('toastSelCleared'));
 }
 function selectAll() {
   state.selectedList.forEach(o => applySelectionVisual(o, false));
@@ -3621,101 +3624,35 @@ function rebuildFromSnapshot(s, promises) {
       // 兼容：如果没有children数据，用-s.pos
       const meshOffset = tubeChildPos || new THREE.Vector3(-s.pos[0], -s.pos[1], -s.pos[2]);
 
+      // 与实时绘制完全一致地重建：整条中心线一次成"连续圆管"，彻底消除旧式逐段直管
+      // 在拐角处产生的楔形空隙（绘制时光滑、导入后出现裂缝的问题根因）。
+      const finalPos = new THREE.Vector3(s.pos[0], s.pos[1], s.pos[2]);
+      if (s.worldPos) finalPos.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+
       for (const seg of s.tubeSegments) {
         const points = seg.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
         const segR = seg.brushRadius || r;
-
-        if (points.length === 1) {
-          // 单点：仅一个球头（端帽由下方 children 重建，这里补一颗防止缺失）
-          const sphere = new THREE.Mesh(new THREE.SphereGeometry(segR, 24, 16), mat.clone());
-          sphere.position.copy(meshOffset);
-          sphere.castShadow = true; sphere.receiveShadow = true;
-          sphere.userData.isBrushCap = true;
-          group.add(sphere);
-          continue;
-        }
-
-        // 逐段直线管：与实时绘制的段式管完全一致（LineCurve3 直管，不做 CatmullRom 平滑），
-        // 保证导入后笔迹形状与原样一致（直角/折角不被圆滑化）。
-        // 拐角关节球与端帽由下方 s.children 重建，无需在此重复添加。
-        for (let i = 0; i < points.length - 1; i++) {
-          const a = points[i], b = points[i + 1];
-          const dist = a.distanceTo(b);
-          if (dist < 0.0001) continue;
-          const tubularSegments = Math.max(4, Math.ceil(dist / 0.02));
-          const tubeGeo = new THREE.TubeGeometry(new THREE.LineCurve3(a.clone(), b.clone()), tubularSegments, segR, 16, false);
-          const tubeMesh = new THREE.Mesh(tubeGeo, mat.clone());
-          tubeMesh.position.copy(meshOffset);
-          tubeMesh.castShadow = true; tubeMesh.receiveShadow = true;
-          tubeMesh.userData.brushCurvePoints = points.map(p => [p.x, p.y, p.z]);
-          tubeMesh.userData.brushRadius = segR;
-          group.add(tubeMesh);
-        }
-      }
-      if (s.children) {
-        s.children.forEach(ch => {
-          if (ch.geoType === 'TubeGeometry') return;
-          if (ch.geoType === 'SphereGeometry') {
-            const sphereRadius = (ch.geoParams && ch.geoParams.radius !== undefined) ? ch.geoParams.radius : r;
-            const geo = new THREE.SphereGeometry(sphereRadius, 32, 24);
-            const mesh = new THREE.Mesh(geo, mat.clone());
-            mesh.position.set(ch.pos[0], ch.pos[1], ch.pos[2]);
-            if (ch.quat) mesh.quaternion.set(ch.quat[0], ch.quat[1], ch.quat[2], ch.quat[3]);
-            mesh.castShadow = true; mesh.receiveShadow = true;
-            group.add(mesh);
-          }
+        // 2D 笔画用扁平带状网格；3D 笔画用连续 CatmullRom 圆管 + 两端球头
+        const built = (s.type === 'brush2d')
+          ? build2DTubeMeshes(points, segR, mat)
+          : build3DTubeMeshes(points, segR, mat, { live: false });
+        built.forEach(m => {
+          m.position.sub(finalPos);   // 转入 group 局部坐标（group.position 稍后设为 finalPos）
+          group.add(m);
         });
       }
     } else if (s.curvePoints && s.curvePoints.length >= 2) {
       const points = s.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
-      // 使用保存的children中的pos（= -原始center，不变），避免移动后位置错误
-      let tubeChildPos2 = null;
-      if (s.children) {
-        const tubeChild = s.children.find(ch => ch.geoType === 'TubeGeometry');
-        if (tubeChild && tubeChild.pos) {
-          tubeChildPos2 = new THREE.Vector3(tubeChild.pos[0], tubeChild.pos[1], tubeChild.pos[2]);
-        }
-      }
-      const meshOffset2 = tubeChildPos2 || new THREE.Vector3(-s.pos[0], -s.pos[1], -s.pos[2]);
-
-      // 逐段直线管：与实时绘制的段式管完全一致（LineCurve3 直管，不做 CatmullRom 平滑）
-      for (let i = 0; i < points.length - 1; i++) {
-        const a = points[i], b = points[i + 1];
-        const dist = a.distanceTo(b);
-        if (dist < 0.0001) continue;
-        const tubularSegments = Math.max(4, Math.ceil(dist / 0.02));
-        const tubeGeo = new THREE.TubeGeometry(new THREE.LineCurve3(a.clone(), b.clone()), tubularSegments, r, 16, false);
-        const tubeMesh = new THREE.Mesh(tubeGeo, mat.clone());
-        tubeMesh.position.copy(meshOffset2);
-        tubeMesh.castShadow = true; tubeMesh.receiveShadow = true;
-        tubeMesh.userData.brushCurvePoints = points.map(p => [p.x, p.y, p.z]);
-        tubeMesh.userData.brushRadius = r;
-        group.add(tubeMesh);
-      }
-
-      // 拐角关节球（非共线锚点）与端帽，与绘制时一致
-      for (let i = 1; i < points.length - 1; i++) {
-        const prev = points[i - 1], cur = points[i], next = points[i + 1];
-        const d1 = new THREE.Vector3().subVectors(cur, prev);
-        const d2 = new THREE.Vector3().subVectors(next, cur);
-        if (d1.lengthSq() > 1e-12 && d2.lengthSq() > 1e-12) {
-          if (d1.normalize().dot(d2.normalize()) < 0.9999) {
-            const joint = new THREE.Mesh(new THREE.SphereGeometry(r * 1.01, 24, 16), mat.clone());
-            joint.position.copy(cur.clone().add(meshOffset2));
-            joint.castShadow = true; joint.receiveShadow = true;
-            joint.userData.isBrushCap = true;
-            group.add(joint);
-          }
-        }
-      }
-      const startCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
-      startCap.position.copy(points[0].clone().add(meshOffset2));
-      startCap.castShadow = true; startCap.receiveShadow = true;
-      group.add(startCap);
-      const endCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
-      endCap.position.copy(points[points.length - 1].clone().add(meshOffset2));
-      endCap.castShadow = true; endCap.receiveShadow = true;
-      group.add(endCap);
+      const finalPos = new THREE.Vector3(s.pos[0], s.pos[1], s.pos[2]);
+      if (s.worldPos) finalPos.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+      // 同样走"连续圆管/扁平带"，与实时绘制一致，避免楔形空隙
+      const built = (s.type === 'brush2d')
+        ? build2DTubeMeshes(points, r, mat)
+        : build3DTubeMeshes(points, r, mat, { live: false });
+      built.forEach(m => {
+        m.position.sub(finalPos);
+        group.add(m);
+      });
     } else if (s.children && s.children.length > 0) {
       s.children.forEach(ch => {
         let geo;
@@ -6317,9 +6254,9 @@ function captureScreenshot() {
   camera.updateProjectionMatrix();
   renderer.render(scene, camera);
 
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png'); a.download = 'cube3d-' + Date.now() + '.png'; a.click();
-  toast(_t('toastImageExportedWH', w, h));
+  // 先抓取 PNG 数据（data URL），之后再恢复画布尺寸
+  const dataUrl = canvas.toDataURL('image/png');
+  const filename = 'cube3d-' + Date.now() + '.png';
 
   // 恢复隐藏的无色对象
   hiddenMeshes.forEach(m => { m.visible = true; });
@@ -6330,6 +6267,12 @@ function captureScreenshot() {
   camera.aspect = prevAspect;
   camera.updateProjectionMatrix();
   renderer.render(scene, camera);
+
+  // 导出：Android 原生走系统文件管理器（SAF）选择位置保存，其余环境回退浏览器下载
+  saveImageViaSystem(dataUrl, filename).then(function (saved) {
+    if (saved === true) toast(_t('toastImageExportedWH', w, h));
+    else if (saved === false) toast(_t('toastExportCancelled'));
+  });
 }
 document.getElementById('btn-shot').addEventListener('click', captureScreenshot);
 
@@ -6494,6 +6437,46 @@ function fallbackDownloadJson(filename, jsonString) {
   } catch (e) {}
 }
 
+// 截图导出 PNG：原生（Android）通过系统文件管理器（SAF）选择位置保存；
+// 非原生环境 / 桥不可用时，回退到浏览器下载。
+var __androidImageSaverCbs = {};
+window.__androidImageSaverResult = function (id, ok) {
+  var cb = __androidImageSaverCbs[id];
+  if (!cb) return;
+  delete __androidImageSaverCbs[id];
+  cb(ok === true);
+};
+function fallbackDownloadImage(dataUrl, filename) {
+  try {
+    var a = document.createElement('a');
+    a.href = dataUrl; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { a.remove(); }, 1000);
+  } catch (e) {}
+}
+function saveImageViaSystem(dataUrl, filename) {
+  return new Promise(function (resolve) {
+    if (window.AndroidImageSaver && typeof window.AndroidImageSaver.save === 'function') {
+      var id = 'i' + Date.now() + Math.floor(Math.random() * 1e6);
+      __androidImageSaverCbs[id] = resolve;
+      try {
+        window.AndroidImageSaver.save(dataUrl, filename, id);
+      } catch (e) {
+        delete __androidImageSaverCbs[id];
+        fallbackDownloadImage(dataUrl, filename); resolve(false);
+      }
+      return;
+    }
+    var isNative = !!(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform());
+    if (!isNative) {
+      fallbackDownloadImage(dataUrl, filename); resolve(true);
+    } else {
+      resolve(false);
+    }
+  });
+}
+
+function defaultJsonName(prefix){ const d=new Date(), p=x=>String(x).padStart(2,'0'); return prefix+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'; }
 function exportScene() {
   // 保存相机视角参数
   const cameraData = {
@@ -6506,7 +6489,7 @@ function exportScene() {
     far: camera.far
   };
   const data = JSON.stringify({ version:2, objects: snapshot(), camera: cameraData, colorMemory: { ...colorMemory }, defaultColor: state.defaultColor, brushColor: brush.color }, null, 2);
-  const filename = 'cube3d-scene-' + Date.now() + '.json';
+  const filename = defaultJsonName('场景');
   return saveJsonViaSystem(filename, data).then(function (saved) {
     if (saved === true) toast(_t('toastSceneExported'));
     else toast(_t('toastExportCancelled'));
@@ -6845,6 +6828,10 @@ const boxSelEl = document.getElementById('box-sel');
 let ghostPlaceScale = 1;
 
 // ============ 画笔绘制 ============
+// ===== 3D画笔预览层：与笔迹（管道）渲染完全解耦 =====
+let brushPreviewGroup = null;
+let brushPreviewMat = null;
+let brushPreviewStartCap = null;
 function createBrushMaterial() {
   const effectiveColor = brush.color === NO_COLOR ? 0xffffff : brush.color;
   // 使用 MeshStandardMaterial 光滑材质，受光照影响产生明暗层次
@@ -6905,6 +6892,57 @@ function createBrushMaterialForSnapshot(s) {
   return mat;
 }
 
+function ensureBrushPreviewLayer() {
+  if (!brushPreviewGroup) {
+    brushPreviewGroup = new THREE.Group();
+    brushPreviewGroup.name = '__brushPreview';
+    scene.add(brushPreviewGroup);
+  }
+  return brushPreviewGroup;
+}
+
+function placeBrushStartCap(p) {
+  const g = ensureBrushPreviewLayer();
+  const r = brush.thickness / 2;
+  brushPreviewStartCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), brushPreviewMat);
+  brushPreviewStartCap.position.copy(p);
+  brushPreviewStartCap.castShadow = true; brushPreviewStartCap.receiveShadow = true;
+  brushPreviewStartCap.userData.isPreview = true;
+  g.add(brushPreviewStartCap);
+}
+
+function placeBrushHead(p) {
+  const g = ensureBrushPreviewLayer();
+  if (!brush.previewEndCap) {
+    const r = brush.thickness / 2;
+    brush.previewEndCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), brushPreviewMat);
+    brush.previewEndCap.castShadow = true; brush.previewEndCap.receiveShadow = true;
+    brush.previewEndCap.userData.isPreview = true;
+    g.add(brush.previewEndCap);
+  }
+  brush.previewEndCap.position.copy(p);
+}
+
+function clearBrushPreviewHeads() {
+  [brush.previewEndCap, brushPreviewStartCap].forEach(m => {
+    if (!m) return;
+    if (m.parent) m.parent.remove(m);
+    if (m.geometry) m.geometry.dispose();
+  });
+  brush.previewEndCap = null;
+  brushPreviewStartCap = null;
+  if (brushPreviewMat) { brushPreviewMat.dispose(); brushPreviewMat = null; }
+}
+
+function disposeBrushLiveMeshes() {
+  brush.currentMeshes.forEach(m => {
+    scene.remove(m);
+    if (m.geometry) m.geometry.dispose();
+    if (m.material) { if (Array.isArray(m.material)) m.material.forEach(x => x.dispose()); else m.material.dispose(); }
+  });
+  brush.currentMeshes = [];
+}
+
 function startBrushStroke(groundPoint) {
   brush.drawing = true;
   // 从颜色记忆加载对应画笔类型的颜色
@@ -6912,159 +6950,91 @@ function startBrushStroke(groundPoint) {
   brush.currentPoints = [groundPoint.clone()];
   brush.currentMeshes = [];
   brush.lastInterpPoint = groundPoint.clone();
+  brush.lastDrawPoint = null;  // 每笔重置，供 endBrushStroke 捕获末端点
   // 注意：不清除brushLockedPlane，因为它在getBrush3DHitPoint中已设置
   // 清除操作在endBrushStroke中执行
-  
-  // 3D画笔：起点球头 + 终点球头（随指针移动），管段由 addBrushPoint3D 逐段追加
+
+  // 3D画笔：预览层模式——起点球头放入独立预览层，管道实时重绘
   if (state.tool === 'brush3d') {
-    const r = brush.thickness / 2;
-    const mat = createBrushMaterial();
-    // 起点球头（永久留存）
-    const startCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat);
-    startCap.position.copy(groundPoint);
-    startCap.castShadow = true; startCap.receiveShadow = true;
-    startCap.userData.isPreview = true;
-    startCap.userData.isBrushCap = true;
-    brush.currentMeshes.push(startCap);
-    scene.add(startCap);
-    // 终点球头（预览，跟随指针）
-    brush.previewEndCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat);
-    brush.previewEndCap.position.copy(groundPoint);
-    brush.previewEndCap.castShadow = true; brush.previewEndCap.receiveShadow = true;
-    brush.previewEndCap.userData.isPreview = true;
-    scene.add(brush.previewEndCap);
+    ensureBrushPreviewLayer();
+    brushPreviewMat = createBrushMaterial();
+    placeBrushStartCap(groundPoint);
+    placeBrushHead(groundPoint);
   }
 }
 
-// 3D画笔：分段管绘制，每两点间创建独立管段，已绘部分不闪不抖
+// 3D画笔：锚点采样 + 全量重绘模式——管面持续刷新，不闪不抖
 function addBrushPoint3D(groundPoint) {
   const pts = brush.currentPoints;
   const last = pts[pts.length - 1];
-  const minDist = 0.02;
-  if (last && last.distanceTo(groundPoint) < minDist) return;
-
-  // 在上一锚点与新锚点之间创建独立管段
-  if (pts.length >= 1) {
-    const r = brush.thickness / 2;
-    const curve = new THREE.LineCurve3(last.clone(), groundPoint.clone());
-    const segDist = curve.getLength();
-    const tubularSegments = Math.max(4, Math.ceil(segDist / 0.02));
-    const tubeGeo = new THREE.TubeGeometry(curve, tubularSegments, r, 16, false, 1);
-    const mat = createBrushMaterial();
-    const segmentMesh = new THREE.Mesh(tubeGeo, mat);
-    segmentMesh.castShadow = true; segmentMesh.receiveShadow = true;
-    segmentMesh.userData.isPreview = true;
-    brush.currentMeshes.push(segmentMesh);
-    scene.add(segmentMesh);
-
-    // 拐角关节球：相邻两段方向不同时，两段端面切口无法重合，外侧会留下楔形空隙。
-    // 在交界锚点补一颗与管等半径（略放大以覆盖球面多边形细分带来的极细缝）的球，
-    // 球心在中心线上，不改变笔迹整体形状与粗细观感。
-    if (pts.length >= 2) {
-      const prev = pts[pts.length - 2];
-      const d1 = new THREE.Vector3().subVectors(last, prev);
-      const d2 = new THREE.Vector3().subVectors(groundPoint, last);
-      if (d1.lengthSq() > 1e-12 && d2.lengthSq() > 1e-12) {
-        // 仅当两段不共线才补球；直线笔迹 d1·d2≈1 精确跳过，避免成百上千冗余球。
-        // 阈值 0.9999 覆盖到约 1.1°，确保小角度下的极细楔形缺口也被填满。
-        if (d1.normalize().dot(d2.normalize()) < 0.9999) {
-          // 半径略放大 1%：SphereGeometry 经纬度细分的最细处 ≈ r·cos(π/24)，
-          // 仅放大 1% 即可让球面处处 ≥ r，彻底消除球与管接缝处的极细缝（1% 视觉不可察觉）。
-          const joint = new THREE.Mesh(new THREE.SphereGeometry(r * 1.01, 24, 16), createBrushMaterial());
-          joint.position.copy(last);
-          joint.castShadow = true; joint.receiveShadow = true;
-          joint.userData.isPreview = true;
-          joint.userData.isBrushCap = true;
-          brush.currentMeshes.push(joint);
-          scene.add(joint);
-        }
-      }
+  const r = brush.thickness / 2;
+  const dsq = new THREE.Vector3().subVectors(groundPoint, last).lengthSq();
+  if (dsq > 1e-12) {
+    // 锚点采样：间距 < r/2 时跳过，避免管道过密
+    if (dsq < (r * 0.5) * (r * 0.5)) {
+      placeBrushHead(groundPoint);
+      return;
     }
+    pts.push(groundPoint.clone());
   }
-
-  pts.push(groundPoint.clone());
-
-  // 终点球头跟随指针移动
-  if (brush.previewEndCap) {
-    brush.previewEndCap.position.copy(groundPoint);
-  }
+  placeBrushHead(groundPoint);
+  rebuild3DBrushMeshes();
 }
 
 function endBrushStroke(cancel) {
   if (!brush.drawing) return;
   brush.drawing = false;
+  brush.constrainActive = false;
 
   const pts = brush.currentPoints;
   const is2D = state.tool === 'brush2d';
-  let curvePoints; // 存储用于擦除/重建的点（细化后的点），在整个函数作用域中可用
+  let curvePoints;
 
-  // 清理预览终点球头（3D画笔指针指示器；2D无此预览）
-  if (brush.previewEndCap) {
-    scene.remove(brush.previewEndCap);
-    if (brush.previewEndCap.geometry) brush.previewEndCap.geometry.dispose();
-    brush.previewEndCap = null;
-  }
+  clearBrushPreviewHeads();
 
-  // 取消模式：直接丢弃当前笔画
   if (cancel) {
-    brush.currentMeshes.forEach(m => {
-      scene.remove(m);
-      if (m.geometry) m.geometry.dispose();
-      if (m.material) {
-        if (Array.isArray(m.material)) m.material.forEach(mat => mat.dispose());
-        else m.material.dispose();
-      }
-    });
+    disposeBrushLiveMeshes();
     brush.currentPoints = [];
-    brush.currentMeshes = [];
     state.brushLockedPlane = null;
     hideBrushRefPlane();
     return;
   }
 
   if (!is2D) {
-    // 3D画笔：段式管 + 球头已在绘制时创建完毕，仅需收尾
-    const r = brush.thickness / 2;
-    const mat = createBrushMaterial();
-
-    // 清除所有预览标记
-    brush.currentMeshes.forEach(m => { m.userData.isPreview = false; });
+    disposeBrushLiveMeshes();
 
     if (pts.length === 0) {
-      brush.currentMeshes.forEach(m => { scene.remove(m); if (m.geometry) m.geometry.dispose(); });
-      brush.currentMeshes = [];
       brush.currentPoints = [];
+      brush.lastDrawPoint = null;
       state.brushLockedPlane = null;
       hideBrushRefPlane();
       return;
     }
 
-    if (pts.length === 1) {
-      // 单点：startCap 已在 currentMeshes 中，无需额外操作
-    } else {
-      // 多点：在终点添加永久球头，构成胶囊形
-      const endPt = pts[pts.length - 1].clone();
-      const endCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat);
-      endCap.position.copy(endPt);
-      endCap.castShadow = true; endCap.receiveShadow = true;
-      endCap.userData.isBrushCap = true;
-      brush.currentMeshes.push(endCap);
-
-      // 存储曲线数据用于擦除功能
-      curvePoints = pts.map(p => p.clone());
+    if (brush.lastDrawPoint && pts.length >= 1) {
+      const lastSampled = pts[pts.length - 1];
+      const d = lastSampled.distanceTo(brush.lastDrawPoint);
+      if (d >= Math.max(0.01, brush.thickness / 2 * 0.25)) {
+        pts.push(brush.lastDrawPoint.clone());
+      }
     }
+    brush.lastDrawPoint = null;
+
+    const r = brush.thickness / 2;
+    build3DTubeMeshes(pts, r, createBrushMaterial(), { live: false }).forEach(m => {
+      scene.add(m);
+      brush.currentMeshes.push(m);
+    });
+
+    curvePoints = pts.map(p => p.clone());
   }
 
   if (brush.currentMeshes.length > 0) {
-    // 计算画笔笔迹的包围盒中心
-    // 关键修复：必须用所有 mesh 的 geometry.boundingBox（包含 TubeGeometry 实际顶点范围）
-    // 而不仅是 mesh.position（对 TubeGeometry 来说是 (0,0,0)，无法反映曲线范围）
     let minX = Infinity, minY = Infinity, minZ = Infinity;
     let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
     const size = brush.thickness || 0.5;
     brush.currentMeshes.forEach(m => {
       const p = m.position;
-      // 优先使用 geometry 的 boundingBox（精确包含所有顶点）
       if (m.geometry) {
         m.geometry.computeBoundingBox();
         const bb = m.geometry.boundingBox;
@@ -7078,7 +7048,6 @@ function endBrushStroke(cancel) {
           return;
         }
       }
-      // 兜底：用 mesh.position ± size 估算
       minX = Math.min(minX, p.x - size);
       minY = Math.min(minY, p.y - size);
       minZ = Math.min(minZ, p.z - size);
@@ -7086,31 +7055,22 @@ function endBrushStroke(cancel) {
       maxY = Math.max(maxY, p.y + size);
       maxZ = Math.max(maxZ, p.z + size);
     });
-    const centerX = (minX + maxX) / 2;
-    const centerY = (minY + maxY) / 2;
-    const centerZ = (minZ + maxZ) / 2;
+    const center = new THREE.Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
 
     const group = new THREE.Group();
-    group.position.set(centerX, centerY, centerZ);
+    group.position.copy(center);
     brush.currentMeshes.forEach(m => {
-      m.position.x -= centerX;
-      m.position.y -= centerY;
-      m.position.z -= centerZ;
+      m.position.sub(center);
       scene.remove(m);
       group.add(m);
-      // 注意：brushCurvePoints/brushCurve 保持世界坐标（与 TubeGeometry 顶点一致）
-      // 擦除时 child.matrixWorld 平移 = group.position(center) + child.position(-center) = 0
-      // 所以 applyMatrix4(世界坐标) = 世界坐标，与擦除点 groundPoint 匹配
     });
 
-    // 为2D笔迹分配唯一的renderOrder
     if (is2D) {
       const order = getNextRenderOrder();
       group.children.forEach(child => {
         if (child.isMesh) {
           child.renderOrder = order;
           if (child.material) {
-            // 2D笔迹：depthWrite=false避免同平面闪烁；depthTest=true让3D对象表面优先显示遮挡笔迹
             child.material.depthWrite = false;
             child.material.depthTest = true;
           }
@@ -7119,14 +7079,13 @@ function endBrushStroke(cancel) {
     }
 
     scene.add(group);
-    const color = brush.color;
     const entry = {
       mesh: group,
       data: {
         id: idCounter++,
         kind: 'brush',
         type: state.tool,
-        color: color,
+        color: brush.color,
         pattern: PATTERNS[brush.pattern] || '纯色',
         opacity: brush.opacity,
         thickness: brush.thickness,
@@ -7134,11 +7093,8 @@ function endBrushStroke(cancel) {
       }
     };
     entry.mesh.userData.id = entry.data.id;
-
-    // 存储笔迹曲线点用于局部擦除分节（2D/3D 均存储）
     entry.data.curvePoints = pts.map(p => [p.x, p.y, p.z]);
     entry.data.brushRadius = brush.thickness / 2;
-
     state.objects.push(entry);
     updateSelBoxes();
     pushHistory();
@@ -7152,10 +7108,25 @@ function endBrushStroke(cancel) {
 // 2D画笔：纯2D平面圆形，在XZ平面上绘制，笔画连贯无断口
 // ===== 平滑笔迹构建 + 局部擦除（可分节）辅助函数 =====
 
+// 3D笔迹中心线：2 点走直线段，>2 点走 CatmullRom 平滑曲线
+function brush3DCurve(worldPoints) {
+  if (!worldPoints || worldPoints.length < 2) return null;
+  if (worldPoints.length === 2) {
+    return new THREE.LineCurve3(worldPoints[0].clone(), worldPoints[1].clone());
+  }
+  return new THREE.CatmullRomCurve3(worldPoints.map(p => p.clone()), false, 'catmullrom', 0.5);
+}
+
 // 用一条平滑曲线构建 3D 笔迹网格（无关节环圈）
-function build3DTubeMeshes(worldPoints, r, mat) {
+// opts.live=true → 材质浅色、depthWrite=false（实时预览管）
+// opts.live=false/未传 → 最终提交管
+function build3DTubeMeshes(worldPoints, r, mat, opts) {
+  const live = !!(opts && opts.live);
   const meshes = [];
+  if (!worldPoints || worldPoints.length === 0) return meshes;
+
   if (worldPoints.length === 1) {
+    // 单点成珠：一个点也是合法笔迹
     const s = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
     s.position.copy(worldPoints[0]);
     s.userData.isBrushCap = true;
@@ -7163,21 +7134,25 @@ function build3DTubeMeshes(worldPoints, r, mat) {
     meshes.push(s);
     return meshes;
   }
-  const curve = worldPoints.length === 2
-    ? new THREE.LineCurve3(worldPoints[0].clone(), worldPoints[1].clone())
-    : new THREE.CatmullRomCurve3(worldPoints.map(p => p.clone()), false, 'centripetal', 0.5);
-  const len = curve.getLength();
-  const tubularSegments = Math.max(8, Math.min(2000, Math.floor(len / (r * 0.2))));
-  const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, tubularSegments, r, 24, false, 1), mat.clone());
+
+  const curve = brush3DCurve(worldPoints);
+  // 分段数随锚点数线性增长；过程态降低细分以保证重建帧率，最终态提高细分保证圆滑
+  const tubularSegments = Math.max(8, Math.min(2000, worldPoints.length * 4));
+  const radialSegments = live ? 14 : 24;
+  const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, tubularSegments, r, radialSegments, false), mat.clone());
   tube.castShadow = tube.receiveShadow = true;
-  tube.userData.brushCurvePoints = worldPoints.map(p => [p.x, p.y, p.z]);
+  // 中心线锚点随管道一起留存（世界坐标，与 TubeGeometry 顶点同一坐标系），供导出/克隆/局部擦除复用
+  tube.userData.brushCurvePoints = worldPoints.map(p => p.clone());
   tube.userData.brushRadius = r;
   meshes.push(tube);
-  const start = curve.getPointAt(0), end = curve.getPointAt(1);
-  const cs = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
-  cs.position.copy(start); cs.userData.isBrushCap = true; cs.castShadow = cs.receiveShadow = true; meshes.push(cs);
-  const ce = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
-  ce.position.copy(end); ce.userData.isBrushCap = true; ce.castShadow = ce.receiveShadow = true; meshes.push(ce);
+
+  if (!live) {
+    const a = worldPoints[0], b = worldPoints[worldPoints.length - 1];
+    const cs = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
+    cs.position.copy(a); cs.userData.isBrushCap = true; cs.castShadow = cs.receiveShadow = true; meshes.push(cs);
+    const ce = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat.clone());
+    ce.position.copy(b); ce.userData.isBrushCap = true; ce.castShadow = ce.receiveShadow = true; meshes.push(ce);
+  }
   return meshes;
 }
 
@@ -7217,6 +7192,7 @@ function build2DTubeMeshes(worldPoints, r, mat) {
 }
 
 // 将网格（世界坐标）打包为对象条目并加入场景与 state.objects
+// 将网格（世界坐标）打包为对象条目并加入场景与 state.objects
 function groupAndCommitBrush(data, worldPoints, r, meshes) {
   let minX = Infinity, minY = Infinity, minZ = Infinity, maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
   const size = r * 2;
@@ -7238,6 +7214,7 @@ function groupAndCommitBrush(data, worldPoints, r, meshes) {
   const group = new THREE.Group();
   group.position.copy(center);
   meshes.forEach(m => { m.position.sub(center); scene.remove(m); group.add(m); });
+  group.userData.brushLocalCenterline = worldPoints.map(p => p.clone().sub(center));
   if (data.type === 'brush2d') {
     const order = getNextRenderOrder();
     group.children.forEach(c => { if (c.isMesh) { c.renderOrder = order; if (c.material) { c.material.depthWrite = false; c.material.depthTest = true; } } });
@@ -7263,47 +7240,110 @@ function groupAndCommitBrush(data, worldPoints, r, meshes) {
   return entry;
 }
 
-// 3D 绘制时重建整条平滑管（避免关节环圈）
+// 3D 绘制过程态：用当前全部锚点整体重建一条平滑管（不含端球，端点交给预览层球头）
 function rebuild3DBrushMeshes() {
   const pts = brush.currentPoints;
   const r = brush.thickness / 2;
-  brush.currentMeshes.forEach(m => {
-    scene.remove(m);
-    if (m.geometry) m.geometry.dispose();
-    if (m.material) { if (Array.isArray(m.material)) m.material.forEach(x => x.dispose()); else m.material.dispose(); }
+  disposeBrushLiveMeshes();
+  if (!pts || pts.length < 2) return;
+  build3DTubeMeshes(pts, r, createBrushMaterial(), { live: true }).forEach(m => {
+    m.userData.isPreview = true;
+    scene.add(m);
+    brush.currentMeshes.push(m);
   });
-  brush.currentMeshes = [];
-  if (pts.length === 1) {
-    const startCap = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), createBrushMaterial());
-    startCap.position.copy(pts[0]);
-    startCap.userData.isPreview = true;
-    startCap.userData.isBrushCap = true;
-    startCap.castShadow = startCap.receiveShadow = true;
-    brush.currentMeshes.push(startCap);
-    scene.add(startCap);
-    return;
-  }
-  const meshes = build3DTubeMeshes(pts, r, createBrushMaterial());
-  meshes.forEach(m => { m.userData.isPreview = true; scene.add(m); brush.currentMeshes.push(m); });
 }
 
-// 局部擦除：删除圈内笔迹，剩余分节各自成为独立对象
+// ===== 笔迹中心线：定位、重采样、命中判定 =====
+
+function getBrushLocalCenterline(o) {
+  if (!o || !o.mesh) return null;
+  if (o.mesh.userData.brushLocalCenterline) return o.mesh.userData.brushLocalCenterline;
+  const cp = o.data && o.data.curvePoints;
+  if (!cp || cp.length === 0) return null;
+  const off = new THREE.Vector3();
+  if (o.mesh.isGroup) {
+    const host = o.mesh.children.find(c => c.isMesh && c.geometry &&
+      (c.geometry.type === 'TubeGeometry' || c.userData.brushCurvePoints)) ||
+      o.mesh.children.find(c => c.isMesh && c.geometry && c.geometry.type === 'BufferGeometry' && !c.userData.isBrushCircle);
+    if (host) off.copy(host.position);
+    else off.copy(o.mesh.position).multiplyScalar(-1);
+  }
+  const line = cp.map(p => new THREE.Vector3(p[0] + off.x, p[1] + off.y, p[2] + off.z));
+  o.mesh.userData.brushLocalCenterline = line;
+  return line;
+}
+
+function getBrushWorldCenterline(o) {
+  const local = getBrushLocalCenterline(o);
+  if (!local) return null;
+  o.mesh.updateMatrixWorld(true);
+  const m = o.mesh.matrixWorld;
+  return local.map(p => p.clone().applyMatrix4(m));
+}
+
+function resampleBrushCenterline(points, step) {
+  if (!points || points.length < 2) return points ? points.map(p => p.clone()) : [];
+  const curve = brush3DCurve(points);
+  if (!curve) return points.map(p => p.clone());
+  const len = curve.getLength();
+  if (!(len > 0)) return points.map(p => p.clone());
+  const n = Math.max(1, Math.min(4000, Math.ceil(len / Math.max(step, 1e-4))));
+  const out = [];
+  for (let i = 0; i <= n; i++) out.push(curve.getPointAt(i / n));
+  return out;
+}
+
+function distPointToSegment(p, a, b) {
+  const ab = new THREE.Vector3().subVectors(b, a);
+  const l2 = ab.lengthSq();
+  if (l2 < 1e-12) return p.distanceTo(a);
+  let t = new THREE.Vector3().subVectors(p, a).dot(ab) / l2;
+  t = Math.max(0, Math.min(1, t));
+  return p.distanceTo(a.clone().addScaledVector(ab, t));
+}
+
+function distPointToBrush(point, o) {
+  const line = getBrushWorldCenterline(o);
+  if (!line || line.length === 0) return Infinity;
+  const r = (o.data.brushRadius != null) ? o.data.brushRadius : (o.data.thickness ? o.data.thickness / 2 : 0.25);
+  if (line.length === 1) return point.distanceTo(line[0]) - r;
+  let best = Infinity;
+  for (let i = 0; i + 1 < line.length; i++) {
+    const d = distPointToSegment(point, line[i], line[i + 1]);
+    if (d < best) best = d;
+  }
+  return best - r;
+}
+
+function polylineLength(pts) {
+  let s = 0;
+  for (let i = 0; i + 1 < pts.length; i++) s += pts[i].distanceTo(pts[i + 1]);
+  return s;
+}
+
+// 局部擦除：抹掉落在橡皮范围内的中心线区段，剩下的每一段各自独立成为一个新对象
 function eraseBrushLocal(allPoints3D, allPoints2D, brushObjects) {
   const eraserR = state.eraserSize;
   const toRemove = [];
+  const created = [];
   for (const o of brushObjects) {
     const r = (o.data.brushRadius != null) ? o.data.brushRadius : (o.data.thickness ? o.data.thickness / 2 : eraserR);
-    const cp = o.data.curvePoints;
-    if (!cp || cp.length === 0) continue;
-    const V = cp.map(p => new THREE.Vector3(p[0], p[1], p[2]));
-    const centers = (o.data.type === 'brush2d') ? allPoints2D : allPoints3D;
+    const is2D = o.data.type === 'brush2d';
+    let V = getBrushWorldCenterline(o);
+    if (!V || V.length === 0) continue;
+    if (!is2D && V.length >= 2) V = resampleBrushCenterline(V, Math.max(r * 0.25, 0.01));
+
+    const centers = is2D ? allPoints2D : allPoints3D;
     const effR = eraserR + r;
     const removed = new Array(V.length).fill(false);
+    let hit = false;
     for (let i = 0; i < V.length; i++) {
       for (const c of centers) {
-        if (V[i].distanceTo(c) <= effR) { removed[i] = true; break; }
+        if (V[i].distanceTo(c) <= effR) { removed[i] = true; hit = true; break; }
       }
     }
+    if (!hit) continue;
+
     const runs = [];
     let run = [];
     for (let i = 0; i < V.length; i++) {
@@ -7311,12 +7351,15 @@ function eraseBrushLocal(allPoints3D, allPoints2D, brushObjects) {
       else { if (run.length) runs.push(run); run = []; }
     }
     if (run.length) runs.push(run);
-    if (runs.length === 0) { toRemove.push(o); continue; }
+
     for (const rp of runs) {
-      const meshes = (o.data.type === 'brush2d')
+      if (rp.length < 2 && runs.length > 1) continue;
+      if (rp.length >= 2 && polylineLength(rp) < r * 0.75) continue;
+      const meshes = is2D
         ? build2DTubeMeshes(rp, r, createBrushMaterialForSnapshot(o.data))
-        : build3DTubeMeshes(rp, r, createBrushMaterialForSnapshot(o.data));
-      groupAndCommitBrush(o.data, rp, r, meshes);
+        : build3DTubeMeshes(rp, r, createBrushMaterialForSnapshot(o.data), { live: false });
+      if (!meshes.length) continue;
+      created.push(groupAndCommitBrush(o.data, rp, r, meshes));
     }
     toRemove.push(o);
   }
@@ -7327,7 +7370,7 @@ function eraseBrushLocal(allPoints3D, allPoints2D, brushObjects) {
     if (sIdx >= 0) state.selectedList.splice(sIdx, 1);
     disposeObject(o);
   }
-  return toRemove.length > 0;
+  return toRemove.length > 0 || created.length > 0;
 }
 
 function addBrushPoint2D(groundPoint, normal) {
@@ -8024,9 +8067,9 @@ const SHAPE_PARAMS = {
     ]
   },
   tetra: { label: '正四面体', fields: [{ key: 'edge', label: '底面边长', min: 0.2, max: 8, step: 0.1 }] },
-  octa: { label: '八面体', fields: [{ key: 'edge', label: '边长', min: 0.2, max: 6, step: 0.05 }] },
-  dodeca: { label: '十二面体', fields: [{ key: 'edge', label: '边长', min: 0.1, max: 3.5, step: 0.05 }] },
-  icosa: { label: '二十面体', fields: [{ key: 'edge', label: '边长', min: 0.15, max: 5, step: 0.05 }] },
+  octa: { label: '正八面体', fields: [{ key: 'edge', label: '边长', min: 0.2, max: 6, step: 0.05 }] },
+  dodeca: { label: '正十二面体', fields: [{ key: 'edge', label: '边长', min: 0.1, max: 3.5, step: 0.05 }] },
+  icosa: { label: '正二十面体', fields: [{ key: 'edge', label: '边长', min: 0.15, max: 5, step: 0.05 }] },
   // 2D 图形参数
   square2: {
     label: '正方形',
@@ -9222,6 +9265,7 @@ canvas.addEventListener('pointermove', (e) => {
         _lastMoveErasePoint = gp.clone();  // 记录最后位置，pointerup时补擦
         updateEraserRing(gp, hit.normal);
       } else if (brush.drawing) {
+        brush.lastDrawPoint = gp.clone();  // 记录最后一帧点位，供 endBrushStroke 补端球头
         if (state.tool === 'brush3d') addBrushPoint3D(gp);
         else addBrushPoint2D(gp, hit.normal);
         updateBrushCursor(gp, hit.normal);
@@ -10764,7 +10808,7 @@ function openManual(){
     const arr=notes();
     const data=JSON.stringify(arr, null, 2);
     const d=new Date(); const p=x=>String(x).padStart(2,'0');
-    const name='notes-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+'.json';
+    const name=defaultJsonName('notes');
     saveJsonViaSystem(name, data).then(function(ok){ if(ok===true||ok==null) toast(T('manExported')); else toast(T('manExportFail')); });
   }
   function importNotes(file){ const reader=new FileReader(); reader.onload=()=>{ try{ const data=JSON.parse(reader.result); if(!Array.isArray(data)) throw new Error('not array'); const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0; data.forEach(n=>{ if(!n||typeof n!=='object') return; const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now()}, n); item.id=String(item.id||newNoteId()); if(ids.has(item.id)) item.id=newNoteId(); ids.add(String(item.id)); cur.push(item); added++; }); saveStore('notes', cur); renderNotes(); toast(T('manImported').replace('{0}', added)); }catch(e){ toast(T('manImportFail')); } }; reader.readAsText(file); }
@@ -10918,6 +10962,24 @@ function openGuide(){
   }
   docEl.innerHTML = '';
   docEl.appendChild(frag);
+  // 克隆进来的内容带有 data-i18n，但 applyLang 不会再次触发，需在此手动翻译
+  (function(){
+    const dict = I18N[currentLang] || I18N['zh-CN'];
+    const fb = I18N['zh-CN'];
+    docEl.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.dataset.i18n;
+      const v = dict[k] !== undefined ? dict[k] : fb[k];
+      if (v !== undefined) {
+        if (v.indexOf('{br}') !== -1) el.innerHTML = v.replace(/\{br\}/g, '<br>');
+        else el.textContent = v;
+      }
+    });
+    docEl.querySelectorAll('[data-i18n-title]').forEach(el => {
+      const k = el.dataset.i18nTitle;
+      const v = dict[k] !== undefined ? dict[k] : fb[k];
+      if (v !== undefined) el.title = v;
+    });
+  })();
   modal.classList.add('show');
 }
 
@@ -10929,6 +10991,103 @@ try { if (typeof exportScene === 'function') window.exportScene = exportScene; }
 try { if (typeof _t === 'function') window._t = _t; } catch (e) {}
 try { if (typeof toast === 'function') window.toast = toast; } catch (e) {}
 try { if (typeof endScreenPick === 'function') window.endScreenPick = endScreenPick; } catch (e) {}
+
+/* ===== 防崩溃自动保存与恢复（安卓版，机制与 PC 版等效） =====
+ 使用 IndexedDB 模拟 PC 版文件系统：
+ - autosave-*.json（保留最近 10 份）+ last-session.json（崩溃恢复标记）
+ 启动时若检测到上次未正常关闭（last-session.closed!==true），弹出恢复提示。
+*/
+(function setupCrashRecovery(){
+if (typeof indexedDB === 'undefined') return;
+const DB_NAME='cube3d-recovery', STORE='snapshots', MAX_AUTOSAVE=10;
+const T = (typeof _t === 'function') ? _t : function(k){ return k; };
+
+function sceneDoc(){
+  return {
+    version: 2,
+    objects: (typeof snapshot === 'function') ? snapshot() : [],
+    camera: { position: [camera.position.x, camera.position.y, camera.position.z],
+              target: (controls && controls.target) ? [controls.target.x, controls.target.y, controls.target.z] : [0,0,0] },
+    colorMemory: (typeof colorMemory !== 'undefined') ? { ...colorMemory } : {},
+    defaultColor: (typeof state !== 'undefined') ? state.defaultColor : undefined,
+    brushColor: (typeof brush !== 'undefined') ? brush.color : undefined
+  };
+}
+
+function openDB(){
+  return new Promise((res, rej)=>{
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = ()=>{ const db=req.result; if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, { keyPath:'id' }); };
+    req.onsuccess = ()=>res(req.result);
+    req.onerror = ()=>rej(req.error);
+  });
+}
+async function idbPut(rec){
+  const db = await openDB();
+  return new Promise((res, rej)=>{ const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).put(rec); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); });
+}
+async function idbGet(id){
+  const db = await openDB();
+  return new Promise((res, rej)=>{ const tx=db.transaction(STORE,'readonly'); const rq=tx.objectStore(STORE).get(id); rq.onsuccess=()=>res(rq.result||null); rq.onerror=()=>rej(rq.error); });
+}
+async function idbGetAll(){
+  const db = await openDB();
+  return new Promise((res, rej)=>{ const tx=db.transaction(STORE,'readonly'); const rq=tx.objectStore(STORE).getAll(); rq.onsuccess=()=>res(rq.result||[]); rq.onerror=()=>rej(rq.error); });
+}
+async function idbDel(id){
+  const db = await openDB();
+  return new Promise((res, rej)=>{ const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).delete(id); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); });
+}
+
+async function autosave(){
+  try {
+    const doc = sceneDoc();
+    if (!doc || !doc.objects || doc.objects.length === 0) return; // 空场景不写
+    const now = Date.now();
+    await idbPut({ id:'autosave-'+now, kind:'autosave', ts:now, scene:doc });
+    await idbPut({ id:'last-session', kind:'last-session', closed:false, ts:now, scene:doc });
+    const all = (await idbGetAll()) || [];
+    const autos = all.filter(r=>r.kind==='autosave').sort((a,b)=>a.ts-b.ts);
+    while (autos.length > MAX_AUTOSAVE){ const old = autos.shift(); await idbDel(old.id); }
+  } catch(e){ /* 自动保存失败不影响编辑 */ }
+}
+async function readLastSession(){
+  try { const rec = await idbGet('last-session'); if (!rec || rec.closed !== false) return null; return rec.scene || null; }
+  catch(e){ return null; }
+}
+async function clearLastSession(){ try { await idbDel('last-session'); } catch(e){} }
+
+async function offerRestore(){
+  let scene = null;
+  try { scene = await readLastSession(); } catch(e){ scene = null; }
+  if (!scene) return;
+  const objCount = (scene.objects && scene.objects.length) || 0;
+  const msg = (T('recoveryMsg') || '上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。').replace('{0}', objCount);
+  const ok = await showConfirm(msg, T('recoveryTitle') || '检测到未保存的会话');
+  if (ok) {
+    const text = JSON.stringify(scene);
+    try {
+      if (typeof applyImportedJson === 'function') applyImportedJson(text);
+      else if (typeof applySceneText === 'function') applySceneText(text);
+      if (typeof toast === 'function') toast(T('toastSceneImported') || '场景已导入');
+    } catch(err){ if (typeof toast === 'function') toast((T('toastImportFailed')||'导入失败')+': '+(err&&err.message||err)); }
+  } else {
+    clearLastSession();
+  }
+}
+
+// 启动后提示恢复（延迟以便先渲染场景）
+setTimeout(offerRestore, 900);
+// 定时自动保存（每 5 分钟，与 PC 版一致）
+setInterval(()=>{ autosave(); }, 5*60*1000);
+// 启动后首次自动保存（标记会话进行中，便于崩溃恢复）
+setTimeout(()=>{ autosave(); }, 4000);
+
+// 正常关闭时清除 last-session；崩溃（无此事件）则保留 → 下次启动恢复
+const markClosed = ()=>{ clearLastSession(); };
+window.addEventListener('pagehide', markClosed);
+window.addEventListener('beforeunload', markClosed);
+})();
 </script>
 
 <div class="modal-mask" id="manual-modal">
@@ -11204,8 +11363,8 @@ try { if (typeof endScreenPick === 'function') window.endScreenPick = endScreenP
     if(typeof termsMap==='undefined' || !termsMap || !termsModal) return;
     var m = termsMap[key]; if(!m) return;
     try{
-      termsModalTitle.textContent = T(m.title);
-      termsModalBody.innerHTML = T(m.body);
+      termsModalTitle.textContent = _t(m.title);
+      termsModalBody.innerHTML = _t(m.body);
       termsModal.classList.add('show');
     }catch(e){}
   }

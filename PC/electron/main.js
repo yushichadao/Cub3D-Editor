@@ -5,10 +5,10 @@
  * 启动顺序（顺序不可调换）：
  *   1. 单实例锁              —— 双击第二个文件时复用已开窗口
  *   2. 注册 app:// 特权 scheme —— 必须早于 app.ready
- *   3. ready 后挂载协议处理器、IPC、菜单、插件宿主
+ *   3. ready 后挂载协议处理器、IPC、插件宿主
  *   4. 创建主窗口并处理命令行传入的场景文件
  */
-const { app, BrowserWindow, dialog, ipcMain } = require('electron');
+const { app, BrowserWindow, dialog, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -17,9 +17,7 @@ const store = require('./store');
 const proto = require('./protocol');
 const W = require('./windows');
 const ipc = require('./ipc');
-const menu = require('./menu');
 const pluginHost = require('./services/plugin-host');
-const fsSvc = require('./services/fs-service');
 
 /* ------------------------------ 基础环境设置 ------------------------------ */
 
@@ -48,12 +46,12 @@ if (!gotLock) {
   });
 }
 
-/** 从命令行参数里挑出场景文件（双击 .l3d 时 Windows 会把路径塞进来） */
+/** 从命令行参数里挑出场景文件（双击 .json 时 Windows 会把路径塞进来） */
 function pickSceneFromArgv(argv) {
   const args = (argv || process.argv).slice(1);
   for (const a of args) {
     if (typeof a !== 'string' || a.startsWith('-')) continue;
-    if (!/\.(l3d|json)$/i.test(a)) continue;
+    if (!/\.json$/i.test(a)) continue;
     try { if (fs.existsSync(a)) return path.resolve(a); } catch (_) {}
   }
   return null;
@@ -87,14 +85,8 @@ app.whenReady().then(() => {
 
   ipc.register();
 
-  // 自绘标题栏的菜单按钮
-  ipcMain.on('menu:popup', (e, pos) => {
-    const win = BrowserWindow.fromWebContents(e.sender);
-    if (win) menu.popup(win, pos && pos.x, pos && pos.y);
-  });
-  ipcMain.on('menu:rebuild', () => menu.build());
-
-  menu.build();
+  // 应用不提供任何菜单栏 / 弹出菜单
+  Menu.setApplicationMenu(null);
 
   const win = W.createMainWindow();
 

@@ -51,12 +51,6 @@ win:
     - target: portable
       arch: [x64]
   requestedExecutionLevel: asInvoker
-  fileAssociations:
-    - ext: l3d
-      name: 立方场景文件
-      description: 立方三维设计工坊场景文件
-      icon: build/icon.ico
-      role: Editor
 
 portable:
   artifactName: Cube3D-Studio-Portable-${version}-x64.${ext}

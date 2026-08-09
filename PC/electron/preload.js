@@ -55,8 +55,6 @@ const api = {
     listAutosaves: () => invoke('file:list-autosaves'),
     lastSession: () => invoke('file:last-session'),
     clearLastSession: () => invoke('file:clear-last-session'),
-    recent: () => invoke('file:recent'),
-    clearRecent: () => invoke('file:clear-recent'),
     readDropped: p => invoke('file:read-dropped', p),
     reveal: p => invoke('file:reveal', p),
     openDataFolder: () => invoke('file:open-data-folder'),
@@ -118,13 +116,6 @@ const api = {
     list: () => invoke('sticky:list'),
     sync: payload => ipcRenderer.send('sticky:sync', payload),
     onSync: cb => on('sticky:sync', cb)
-  },
-
-  menu: {
-    onAction: cb => on('menu:action', cb),
-    /** 自绘标题栏的「☰」按钮：在指定坐标弹出原生菜单 */
-    popup: (x, y) => ipcRenderer.send('menu:popup', { x, y }),
-    rebuild: () => ipcRenderer.send('menu:rebuild')
   },
 
   shell: {

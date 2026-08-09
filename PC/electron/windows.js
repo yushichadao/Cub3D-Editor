@@ -200,7 +200,6 @@ function createConsoleWindow() {
 }
 
 function getMain() { return mainWindow; }
-function getConsole() { return consoleWindow; }
 function broadcast(channel, payload) {
   for (const w of BrowserWindow.getAllWindows()) {
     if (!w.isDestroyed()) w.webContents.send(channel, payload);
@@ -209,5 +208,5 @@ function broadcast(channel, payload) {
 
 module.exports = {
   createMainWindow, createStickyWindow, closeStickyWindow, createConsoleWindow,
-  getMain, getConsole, broadcast, persistBounds, stickyWindows
+  getMain, broadcast, persistBounds, stickyWindows
 };

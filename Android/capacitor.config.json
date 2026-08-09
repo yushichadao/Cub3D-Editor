@@ -10,10 +10,7 @@
     "captureInput": false,
     "webContentsDebuggingEnabled": true,
     "backgroundColor": "#0b0f14",
-    "useLegacyBridge": false,
-    "plugins": [
-      { "androidClass": "com.lifang.editor3d.FileSaverPlugin" }
-    ]
+    "useLegacyBridge": false
   },
   "plugins": {
     "SplashScreen": {

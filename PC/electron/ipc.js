@@ -81,8 +81,6 @@ function register() {
   ipcMain.handle('file:list-autosaves', () => ok({ list: fsSvc.listAutosaves() }));
   ipcMain.handle('file:last-session', () => ok({ session: fsSvc.readLastSession() }));
   ipcMain.handle('file:clear-last-session', () => { fsSvc.clearLastSession(); return ok(); });
-  ipcMain.handle('file:recent', () => ok({ list: fsSvc.getRecent() }));
-  ipcMain.handle('file:clear-recent', () => { store.clearRecent(); return ok(); });
   ipcMain.handle('file:read-dropped', (_e, p) => fsSvc.readDropped(p));
   ipcMain.handle('file:reveal', (_e, p) => { fsSvc.revealPath(p); return ok(); });
   ipcMain.handle('file:open-data-folder', () => ok({ path: fsSvc.openDataFolder() }));

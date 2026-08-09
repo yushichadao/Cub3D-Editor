@@ -15,7 +15,6 @@ const P = require('../paths');
 const store = require('../store');
 
 const IS_WIN = process.platform === 'win32';
-const exe = (n) => (IS_WIN ? n + '.exe' : n);
 
 /**
  * 语言注册表。
