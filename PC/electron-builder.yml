@@ -9,10 +9,12 @@ directories:
 # 打进 asar 的应用本体
 files:
   - index.html
+  - lang-override.js
   - server.js
   - package.json
   - LICENSE
   - README.md
+  - vercel.json
   - three/**/*
   - language/**/*
   - docs/**/*

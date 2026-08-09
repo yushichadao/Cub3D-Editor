@@ -84,7 +84,24 @@ function createMainWindow() {
 
   win.loadURL(INDEX_URL);
 
+  // 诊断：页面加载失败/完成都打印，便于定位「无窗体」问题
+  win.webContents.on('did-fail-load', (_e, errorCode, errorDescription, validatedURL) => {
+    console.error('[load] did-fail-load', errorCode, errorDescription, validatedURL);
+  });
+  win.webContents.on('did-finish-load', () => {
+    console.log('[load] did-finish-load', win.webContents.getURL());
+  });
+
+  // 兜底：若 8 秒内仍没触发 ready-to-show（页面卡住），强制显示窗口，避免「永远看不到窗体」
+  const showFallback = setTimeout(() => {
+    if (!win.isDestroyed() && !win.isVisible()) {
+      console.warn('[load] ready-to-show 超时，强制显示窗口');
+      win.show();
+    }
+  }, 8000);
+
   win.once('ready-to-show', () => {
+    clearTimeout(showFallback);
     if (store.get('window.maximized', false)) win.maximize();
     win.show();
     if (P.isDev) win.webContents.openDevTools({ mode: 'detach' });

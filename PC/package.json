@@ -13,8 +13,8 @@
   "scripts": {
     "predev": "node ../sync-shared.mjs",
     "prestart": "node ../sync-shared.mjs",
-    "prepack": "node ../sync-shared.mjs",
-    "predist": "node ../sync-shared.mjs",
+    "prepack": "node scripts/_deref-junctions.mjs && node ../sync-shared.mjs",
+    "predist": "node scripts/_deref-junctions.mjs && node ../sync-shared.mjs",
     "start": "electron .",
     "dev": "electron . --dev",
     "web": "node server.js",

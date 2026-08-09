@@ -40,6 +40,19 @@
     -webkit-font-smoothing: antialiased;
     user-select: none;
   }
+  /* 阅读/笔记内容区：显式允许其所有后代被选择。
+     全局 user-select:none 在移动端 WebView 下会抑制后代继承，
+     必须用后代选择器逐一放行，移动端长按/拖拽选择手柄才能正常工作。 */
+  .manual-doc, .manual-doc *,
+  .guide-doc, .guide-doc *,
+  .manual-note-text, .manual-note-text *,
+  .sticky-area, .sticky-area *,
+  .manual-content, .manual-content * {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-touch-callout: default !important;
+    touch-action: auto;
+  }
   /* 文字选择高亮：跟随主题，暗色下不再刺眼；统一外观避免"不一样大" */
   ::selection { background: color-mix(in srgb, var(--accent) 30%, var(--control-bg)); color: var(--text); }
   ::-moz-selection { background: color-mix(in srgb, var(--accent) 30%, var(--control-bg)); color: var(--text); }
@@ -85,7 +98,9 @@
     border-radius:3px; transform: translate(7px,7px);
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .top-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; }
+  .top-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; }
+  /* 未溢出时靠右对齐（auto 外边距吸收剩余空间）；溢出时规范会自动将其归零，不影响左滑 */
+  .top-actions > :first-child { margin-left: auto; }
   .top-actions::-webkit-scrollbar { display: none; }
   .top-btn {
     height: 30px; padding: 0 9px; font-size: 12px;
@@ -599,8 +614,8 @@
       -webkit-overflow-scrolling: touch;
       padding: 0 2px;
     }
-    /* 按钮区内容不足时右对齐（margin-left:auto吸收剩余空间）；溢出时自动变为0，正常左右滚动 */
-    .top-actions > :first-child { margin-left: auto; }
+    /* 注意：不要在此使用 margin-left:auto 右对齐，它会在 overflow-x:auto 的 flex 容器里
+       干扰 scrollWidth 计算，导致「溢出」判定失效、滚轮/拖拽无法触发。右对齐由 justify-content:flex-end 负责。 */
     .top-actions::-webkit-scrollbar { display: none; }
     .top-btn { height: 30px; padding: 0 8px; font-size: 12px; flex-shrink: 0; }
     .top-btn-sep { width: 1px; height: 18px; background: var(--bb-sep); flex-shrink: 0; margin: 0 2px; }
@@ -1050,8 +1065,8 @@
     <button class="top-btn" id="btn-clear" data-i18n-title="titleClear"><span class="ic">🗑</span><span class="lbl" data-i18n="clear">清空</span></button>
     <div class="top-btn-sep"></div>
     <button class="top-btn active" id="btn-axes" data-i18n-title="titleAxes"><span class="ic">📐</span><span class="lbl" data-i18n="axes">坐标轴</span></button>
-    <button class="top-btn active" id="btn-grid" data-i18n-title="titleGrid"><span class="ic">🔲</span><span class="lbl" data-i18n="grid">网格面</span></button>
-    <button class="top-btn active" id="btn-ground" data-i18n-title="titleGround"><span class="ic">▦</span><span class="lbl" data-i18n="ground">地面</span></button>
+    <button class="top-btn active" id="btn-grid" data-i18n-title="titleGrid"><span class="ic">▦</span><span class="lbl" data-i18n="grid">网格面</span></button>
+    <button class="top-btn active" id="btn-ground" data-i18n-title="titleGround"><span class="ic">🔲</span><span class="lbl" data-i18n="ground">地面</span></button>
     <div class="top-btn-sep"></div>
     <button class="top-btn" id="btn-settings" data-i18n-title="titleSettings"><span class="ic">⚙</span><span class="lbl" data-i18n="settings">设置</span></button>
   </div>
@@ -6391,6 +6406,7 @@ settingsTabs.querySelectorAll('.settings-tab').forEach(t => {
     settingsTabs.querySelectorAll('.settings-tab').forEach(x => x.classList.remove('active'));
     t.classList.add('active');
     document.querySelectorAll('.settings-pane').forEach(p => p.style.display = (p.dataset.pane === tab) ? '' : 'none');
+    if (tab === 'about') { var _sc = settingsModal.querySelector('.settings-content'); if (_sc) _sc.scrollTop = 0; }
   });
 });
 
@@ -6409,6 +6425,8 @@ document.querySelectorAll('.about-card').forEach(btn => {
     if (!m) return;
     termsModalTitle.textContent = _t(m.title);
     termsModalBody.innerHTML = _t(m.body);
+    termsModalBody.scrollTop = 0;
+    var _tb = termsModal.querySelector('.modal-box'); if (_tb) _tb.scrollTop = 0;
     termsModal.classList.add('show');
   });
 });
@@ -10563,13 +10581,23 @@ function topActionsOverflow() {
   return topActionsEl.scrollWidth > topActionsEl.clientWidth;
 }
 if (topbarEl && topActionsEl) {
-  topbarEl.addEventListener('wheel', (e) => {
-    if (topActionsEl.contains(e.target) && topActionsOverflow()) {
-      e.preventDefault();
-      topActionsEl.scrollLeft += (e.deltaY !== 0 ? e.deltaY : e.deltaX);
-    } else {
-      // 其他区域：将滚轮事件转发到画布，触发视野缩放
-      e.preventDefault();
+  // 按钮区自身监听滚轮：溢出时横向滚动
+  topActionsEl.addEventListener('wheel', (e) => {
+    if (!topActionsOverflow()) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // 兼容不同 deltaMode：像素(0)直接用；行(1)≈16px；页(2)≈一屏
+    let d = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+    if (e.deltaMode === 1) d *= 16;
+    else if (e.deltaMode === 2) d *= topActionsEl.clientWidth;
+    topActionsEl.scrollLeft += d;
+  }, { passive: false });
+
+  // 顶栏其它区域（brand / 空白）滚轮 → 转发到画布做视野缩放
+  topbarEl.addEventListener('wheel', function (e) {
+    if (topActionsEl.contains(e.target)) return; // 按钮区自行处理
+    e.preventDefault();
+    if (canvas && typeof canvas.dispatchEvent === 'function') {
       canvas.dispatchEvent(new WheelEvent('wheel', {
         deltaY: e.deltaY,
         deltaX: e.deltaX,
@@ -10591,6 +10619,7 @@ if (topbarEl && topActionsEl) {
   topActionsEl.addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
     if (!topActionsOverflow()) return;
+    e.preventDefault(); // 阻止 OS 把这次按下当作窗口拖拽
     dragScrolling = true;
     dragMoved = false;
     dragStartX = e.clientX;
@@ -10852,13 +10881,12 @@ function openManual(){
       if(isTouchMode()) openToc(false); else tocEl.classList.remove('open');
       window.__inspectEntered=false; return true;
     }
-    // 4) 快捷操作 / 使用说明书 → 先展示目录页（目录栏），再次返回才退出
+    // 4) 快捷操作 → 退回设置栏（与 guide-close 按钮行为一致）
     var g=document.getElementById('guide-modal');
-    if(g && g.classList.contains('show')){ g.classList.remove('show'); openManual(); if(isTouchMode()) openToc(true); else tocEl.classList.add('open'); window.__inspectEntered=false; return true; }
+    if(g && g.classList.contains('show')){ g.classList.remove('show'); document.getElementById('settings-modal').classList.add('show'); window.__inspectEntered=false; return true; }
     if(modal && modal.classList.contains('show')){
-      // 先展示目录页（目录栏），再次返回才退出说明书
-      if(!tocEl.classList.contains('open')){ if(isTouchMode()) openToc(true); else tocEl.classList.add('open'); }
-      else { hideManual(); }
+      // 返回键直接退出说明书（目录栏/便签栏已在前面步骤优先关闭）
+      hideManual();
       window.__inspectEntered=false; return true;
     }
     return false;
@@ -11493,6 +11521,8 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
       var m = termsMap[key]; if(!m) return;
       termsModalTitle.textContent = T(m.title);
       termsModalBody.innerHTML = T(m.body);
+      termsModalBody.scrollTop = 0;
+      var _tb = termsModal.querySelector('.modal-box'); if (_tb) _tb.scrollTop = 0;
       termsModal.classList.add('show');
       }
       function tosGateOpen(){ var g=document.getElementById('tos-gate'); return g && g.classList.contains('show'); }

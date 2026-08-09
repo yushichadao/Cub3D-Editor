@@ -49,3 +49,14 @@ keystore.properties
 
 # ===== 各端平台专属 IDE 配置（可选保留，这里排除以避免噪音）=====
 .vscode/
+
+# ===== 运行时用户数据（自动保存、配置缓存等，绝不入库）=====
+.userdata/
+**/.userdata/
+
+# ===== 临时构建目录 / 诊断脚本（排查用，不入库）=====
+dist_build/
+**/dist_build/
+cap_diag*.bat
+check_exe*.ps1
+_check*.ps1

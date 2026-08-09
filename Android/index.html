@@ -44,6 +44,19 @@
   /* 全局禁用文本拖放 — 阻止国内 ROM（MIUI 超级拖放/ColorOS 直达/OriginOS 拖放等）干扰文本选择 */
   *, *::before, *::after { -webkit-user-drag: none !important; user-drag: none !important; }
   [contenteditable], [contenteditable] * { -webkit-user-drag: none !important; }
+  /* 阅读/笔记内容区：显式允许其所有后代被选择。
+     全局 user-select:none 在 Android WebView 下会抑制后代继承，
+     必须用后代选择器逐一放行，移动端长按/拖拽选择手柄才能正常工作。 */
+  .manual-doc, .manual-doc *,
+  .guide-doc, .guide-doc *,
+  .manual-note-text, .manual-note-text *,
+  .sticky-area, .sticky-area *,
+  .manual-content, .manual-content * {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-touch-callout: default !important;
+    touch-action: auto;
+  }
   /* 文字选择高亮：跟随主题，暗色下不再刺眼；统一外观避免"不一样大" */
   ::selection { background: color-mix(in srgb, var(--accent) 30%, var(--control-bg)); color: var(--text); }
   ::-moz-selection { background: color-mix(in srgb, var(--accent) 30%, var(--control-bg)); color: var(--text); }
@@ -971,7 +984,7 @@
 .touch-device .manual-toolbar.search-open { display:flex; gap:6px; padding:8px 10px; border-bottom:1px solid var(--border); }
 .touch-device .manual-doc {
   padding:14px 16px calc(96px + env(safe-area-inset-bottom)); font-size:16px; line-height:1.72;
-  max-width:760px; margin:0 auto; -webkit-overflow-scrolling:touch; overflow-y:auto; overflow-x:hidden; touch-action:pan-y; overscroll-behavior:contain; overscroll-behavior-x:contain;
+  max-width:760px; margin:0 auto; -webkit-overflow-scrolling:touch; overflow-y:auto; overflow-x:hidden; touch-action:auto; overscroll-behavior:contain; overscroll-behavior-x:contain;
   overflow-wrap:break-word; word-break:break-word;
 }
 .touch-device .manual-doc h1 { font-size:1.44em; line-height:1.3; } .touch-device .manual-doc h2 { font-size:1.25em; line-height:1.35; }
@@ -986,7 +999,7 @@
 .touch-device .manual-doc .kbd-key { white-space:normal !important; overflow-wrap:anywhere !important; word-break:break-word !important; overflow:visible !important; }
 .touch-device .manual-doc img { border-radius:8px; max-width:100%; height:auto; display:block; }
 /* 操作指南（快捷操作）弹窗：手机版同样禁止横向滚动，表格换行自适应 */
-.touch-device .guide-doc { overflow-x:hidden; touch-action:pan-y; overscroll-behavior-x:contain; overflow-wrap:break-word; word-break:break-word; padding:16px calc(16px + env(safe-area-inset-right)) 16px calc(16px + env(safe-area-inset-left)); }
+.touch-device .guide-doc { overflow-x:hidden; touch-action:auto; overscroll-behavior-x:contain; overflow-wrap:break-word; word-break:break-word; padding:16px calc(16px + env(safe-area-inset-right)) 16px calc(16px + env(safe-area-inset-left)); }
 .touch-device .guide-doc img { max-width:100%; height:auto; display:block; }
 .touch-device .guide-doc pre { white-space:pre-wrap; overflow-wrap:break-word; word-break:break-word; overflow-x:hidden; }
 .touch-device .guide-doc .kbd-table,
@@ -1065,8 +1078,8 @@
     <button class="top-btn" id="btn-clear" data-i18n-title="titleClear"><span class="ic">🗑</span><span class="lbl" data-i18n="clear">清空</span></button>
     <div class="top-btn-sep"></div>
     <button class="top-btn active" id="btn-axes" data-i18n-title="titleAxes"><span class="ic">📐</span><span class="lbl" data-i18n="axes">坐标轴</span></button>
-    <button class="top-btn active" id="btn-grid" data-i18n-title="titleGrid"><span class="ic">🔲</span><span class="lbl" data-i18n="grid">网格面</span></button>
-    <button class="top-btn active" id="btn-ground" data-i18n-title="titleGround"><span class="ic">▦</span><span class="lbl" data-i18n="ground">地面</span></button>
+    <button class="top-btn active" id="btn-grid" data-i18n-title="titleGrid"><span class="ic">▦</span><span class="lbl" data-i18n="grid">网格面</span></button>
+    <button class="top-btn active" id="btn-ground" data-i18n-title="titleGround"><span class="ic">🔲</span><span class="lbl" data-i18n="ground">地面</span></button>
     <div class="top-btn-sep"></div>
     <button class="top-btn" id="btn-settings" data-i18n-title="titleSettings"><span class="ic">⚙</span><span class="lbl" data-i18n="settings">设置</span></button>
   </div>
@@ -6380,6 +6393,7 @@ settingsTabs.querySelectorAll('.settings-tab').forEach(t => {
     settingsTabs.querySelectorAll('.settings-tab').forEach(x => x.classList.remove('active'));
     t.classList.add('active');
     document.querySelectorAll('.settings-pane').forEach(p => p.style.display = (p.dataset.pane === tab) ? '' : 'none');
+    if (tab === 'about') { var _sc = settingsModal.querySelector('.settings-content'); if (_sc) _sc.scrollTop = 0; }
   });
 });
 
@@ -6398,6 +6412,8 @@ document.querySelectorAll('.about-card').forEach(btn => {
     if (!m) return;
     termsModalTitle.textContent = _t(m.title);
     termsModalBody.innerHTML = _t(m.body);
+    termsModalBody.scrollTop = 0;
+    var _tb = termsModal.querySelector('.modal-box'); if (_tb) _tb.scrollTop = 0;
     termsModal.classList.add('show');
   });
 });
@@ -10625,13 +10641,12 @@ function openManual(){
       if(isTouchMode()) openToc(false); else tocEl.classList.remove('open');
       window.__inspectEntered=false; return true;
     }
-    // 4) 快捷操作 / 使用说明书 → 先展示目录页（目录栏），再次返回才退出
+    // 4) 快捷操作 → 退回设置栏（与 guide-close 按钮行为一致）
     var g=document.getElementById('guide-modal');
-    if(g && g.classList.contains('show')){ g.classList.remove('show'); openManual(); if(isTouchMode()) openToc(true); else tocEl.classList.add('open'); window.__inspectEntered=false; return true; }
+    if(g && g.classList.contains('show')){ g.classList.remove('show'); document.getElementById('settings-modal').classList.add('show'); window.__inspectEntered=false; return true; }
     if(modal && modal.classList.contains('show')){
-      // 先展示目录页（目录栏），再次返回才退出说明书
-      if(!tocEl.classList.contains('open')){ if(isTouchMode()) openToc(true); else tocEl.classList.add('open'); }
-      else { hideManual(); }
+      // 返回键直接退出说明书（目录栏/便签栏已在前面步骤优先关闭）
+      hideManual();
       window.__inspectEntered=false; return true;
     }
     return false;
@@ -11278,6 +11293,10 @@ window.addEventListener('beforeunload', markClosed);
 
 <script>
 (function () {
+  // isTouch 在 ES module 作用域内定义，对经典脚本不可见（module 为 deferred，晚于此脚本执行）。
+  // 此处独立计算，避免 ReferenceError: isTouch is not defined（导致页面加载失败弹窗）。
+  var FORCE_TOUCH = /[?&](touch|mobile)(=1)?\b/.test(location.search) || !/[?&]desktop\b/.test(location.search);
+  var isTouch = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window) || FORCE_TOUCH;
   // 退出确认弹窗：返回 'save' | 'exit' | 'cancel'
   function showExitDialog(msgOverride) {
     return new Promise(function (resolve) {
@@ -11323,10 +11342,13 @@ window.addEventListener('beforeunload', markClosed);
     var App = (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) || null;
     // 统一退出入口：优先 Capacitor App 插件，缺失时回退到原生 finish
     function doExit() {
+      window.__inspectEntered = false;
       if (App) { App.exitApp(); return; }
       try { if (window.AndroidExit && window.AndroidExit.finish) { window.AndroidExit.finish(); return; } } catch (e) {}
       try { window.close(); } catch (e) {}
     }
+    // 标记“退出流程进行中”，阻止返回键重复触发同一流程；确认框关闭后由 handleChoice 复位
+    window.__inspectEntered = true;
     // 空间内没有任何对象：直接退出，无需确认
     if (state.objects.length === 0) {
       doExit();
@@ -11350,7 +11372,7 @@ window.addEventListener('beforeunload', markClosed);
     function handleChoice(choice) {
       if (choice === 'save') saveAndMaybeExit();
       else if (choice === 'exit') doExit();
-      // cancel：留在应用
+      else { window.__inspectEntered = false; } // cancel：留在应用，复位以便再次按返回键
     }
     showExitDialog().then(handleChoice);
   }
@@ -11379,16 +11401,17 @@ window.addEventListener('beforeunload', markClosed);
     if (settings0 && settings0.classList.contains('show')) { settings0.classList.remove('show'); window.__inspectEntered = false; return; }
     // 3) 单选/多选状态 → 退出选中模式
     if (state && state.selectedList && state.selectedList.length > 0) { deselectAll(); window.__inspectEntered = false; return; }
-    // 4) 检验对象模式 → 触发退出/清空（仅一次）
+    // 4) 检验对象模式 → 触发退出/清空
+    // 注意：不再用 __inspectEntered 做“仅一次”拦截。该标志仅表示“退出流程进行中”，
+    // 由 tryExit 在确认框关闭后负责复位，避免取消后仍被锁定导致返回键永久失效。
     if (!window.__inspectEntered) {
-      window.__inspectEntered = true;
       doExitCheck();
     }
   }
 
   // 退出/清空统一入口：Android 走原生退出确认；Web/PC 走清空画布确认
   function doExitCheck(){
-    if (typeof window.tryExit === 'function') { tryExit(); return; }
+    if (typeof window.__tryExit === 'function') { window.__tryExit(); return; }
     if (typeof showClearCanvasDialog === 'function') { showClearCanvasDialog(); return; }
   }
 
@@ -11483,6 +11506,8 @@ window.addEventListener('beforeunload', markClosed);
     try{
       title.textContent = _t(m.title);
       body.innerHTML = _t(m.body);
+      body.scrollTop = 0;
+      var _tb = modal.querySelector('.modal-box'); if (_tb) _tb.scrollTop = 0;
       modal.classList.add('show');
     }catch(e){}
   }

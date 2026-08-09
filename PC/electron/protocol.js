@@ -102,7 +102,17 @@ function handle() {
     }
 
     const ext = path.extname(file).toLowerCase();
-    const res = await net.fetch(pathToFileURL(file).toString());
+    let res;
+    try {
+      res = await net.fetch(pathToFileURL(file).toString());
+    } catch (err) {
+      // 文件读取失败（asar 路径异常 / 权限等问题）时给出明确错误，避免请求静默挂起
+      console.error('[app://] fetch 失败:', file, err && err.message);
+      return new Response('Failed to load resource: ' + rel + '\n' + (err && err.message || ''), {
+        status: 500,
+        headers: { 'content-type': 'text/plain; charset=utf-8' }
+      });
+    }
     const headers = new Headers(res.headers);
     headers.set('content-type', MIME[ext] || 'application/octet-stream');
     headers.set('cache-control', 'no-cache');
