@@ -45,7 +45,9 @@ function main() {
 
   console.log(`[apk] 执行 Gradle ${task}（首次运行需下载 Gradle 与依赖，耗时较长）…`);
 
-  const r = spawnSync(gradlew, [task, '--no-daemon', '--console=plain'], {
+  // Windows 下 shell:true 会把命令按空格拆分，路径含空格时必须加引号，否则会被截断
+  const gradlewCmd = process.platform === 'win32' ? `"${gradlew}"` : gradlew;
+  const r = spawnSync(gradlewCmd, [task, '--no-daemon', '--console=plain'], {
     cwd: ANDROID_DIR,
     env: buildEnv(),
     stdio: 'inherit',

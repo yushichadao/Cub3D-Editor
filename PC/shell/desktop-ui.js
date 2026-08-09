@@ -187,33 +187,45 @@
   /* ------------------------------- 文件操作 ------------------------------- */
 
   function sceneDoc() {
+    var c = K.camera, t = K.controls ? K.controls.target : null;
     return {
-      format: 'cube3d-scene',
-      version: 1,
-      app: '立方三维设计工坊',
-      savedAt: new Date().toISOString(),
+      version: 2,
+      objects: K.snapshot(),
+      camera: {
+        position: [c.position.x, c.position.y, c.position.z],
+        quaternion: [c.quaternion.x, c.quaternion.y, c.quaternion.z, c.quaternion.w],
+        target: t ? [t.x, t.y, t.z] : [0, 0, 0],
+        fov: c.fov,
+        aspect: c.aspect,
+        near: c.near,
+        far: c.far
+      },
       lang: K.getLang(),
       theme: K.getTheme(),
-      camera: (function () {
-        var c = K.camera, t = K.controls ? K.controls.target : null;
-        return { position: [c.position.x, c.position.y, c.position.z], target: t ? [t.x, t.y, t.z] : [0, 0, 0] };
-      })(),
-      scene: K.snapshot()
+      savedAt: new Date().toISOString()
     };
   }
 
   function applyDoc(doc) {
-    var arr = Array.isArray(doc) ? doc : (doc && doc.scene);
+    var arr = Array.isArray(doc) ? doc : (doc && (doc.objects || doc.scene));
     if (!Array.isArray(arr)) { say('文件格式无法识别'); return false; }
     K.restore(arr);
     K.pushHistory();
-    if (doc && doc.camera && Array.isArray(doc.camera.position)) {
-      K.camera.position.set.apply(K.camera.position, doc.camera.position);
-      if (K.controls && Array.isArray(doc.camera.target)) {
-        K.controls.target.set.apply(K.controls.target, doc.camera.target);
-        K.controls.update();
-      }
+    // 恢复相机视角（与导出/自动保存的 version:2 格式一致）
+    if (doc && doc.camera) {
+      var c = doc.camera;
+      try {
+        if (c.position && c.position.length === 3) K.camera.position.set(c.position[0], c.position[1], c.position[2]);
+        if (c.quaternion && c.quaternion.length === 4) K.camera.quaternion.set(c.quaternion[0], c.quaternion[1], c.quaternion[2], c.quaternion[3]);
+        if (c.target && c.target.length === 3 && K.controls) K.controls.target.set(c.target[0], c.target[1], c.target[2]);
+        if (typeof c.fov === 'number') K.camera.fov = c.fov;
+        if (typeof c.near === 'number' && c.near > 0) K.camera.near = c.near;
+        if (typeof c.far === 'number' && c.far > K.camera.near) K.camera.far = c.far;
+        K.camera.updateProjectionMatrix();
+        if (K.controls) K.controls.update();
+      } catch (err) { /* 相机恢复失败不影响对象恢复 */ }
     }
+    if (typeof K.refreshUI === 'function') K.refreshUI();
     savedMark = K.state.hIndex;
     return true;
   }
@@ -248,7 +260,7 @@
       data: sceneDoc(),
       saveAs: !!saveAs,
       path: saveAs ? null : currentPath,
-      suggestName: (currentPath ? currentPath.replace(/^.*[\\/]/, '') : defaultJsonName('场景'))
+      suggestName: (currentPath ? currentPath.replace(/^.*[\\/]/, '') : defaultJsonName('scene'))
     };
     return D.file.saveScene(payload).then(function (r) {
       if (!r.ok) { if (!r.canceled) say(r.message || '保存失败'); return false; }
@@ -309,7 +321,8 @@
 
   function offerRestore() {
     D.file.lastSession().then(function (r) {
-      var s = r && r.ok && r.session;
+      // 兼容两种返回结构：{ok, session:{time,file,data}} 或 {time,file,data}
+      var s = (r && r.session) ? r.session : r;
       if (!s || !s.data) return;
       // 只在非正常退出（存在残留会话）且当前场景为空时询问
       if (K.state.objects.length > 0) return;
@@ -321,10 +334,11 @@
         buttons: ['放弃', '恢复'],
         defaultId: 1, cancelId: 0
       }).then(function (res) {
-        if (res.ok && res.response === 1) {
+        if (res && res.ok && res.response === 1) {
           if (applyDoc(s.data)) {
             currentPath = s.file || null;
             updateTitle();
+            if (typeof K.refreshUI === 'function') K.refreshUI();
             say('已恢复上次会话');
           }
         } else {

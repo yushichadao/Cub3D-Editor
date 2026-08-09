@@ -61,6 +61,15 @@ public class MainActivity extends BridgeActivity {
                 wv.addJavascriptInterface(new ExitBridge(), "AndroidExit");
                 wv.addJavascriptInterface(new ImporterBridge(), "AndroidImporter");
                 wv.addJavascriptInterface(new ImageSaverBridge(), "AndroidImageSaver");
+                // 设备名注入：导出场景时把作者记为手机名称（厂商 + 型号）
+                try {
+                    final String deviceName = (android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
+                            .trim().replace("\"", "").replace("'", "");
+                    wv.evaluateJavascript(
+                            "window.__DEVICE_NAME__=" + org.json.JSONObject.quote(deviceName) + ";", null);
+                } catch (Exception e) {
+                    android.util.Log.e("Editor3D", "inject device name failed", e);
+                }
                 // 视图层拦截物理返回键（最早、最可靠）
                 wv.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK

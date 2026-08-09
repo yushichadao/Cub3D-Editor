@@ -1,0 +1,21 @@
+{
+  "name": "cub3d-editor",
+  "version": "1.0.0",
+  "description": "一个**离线优先**的网页 / 桌面 / 移动端 3D·2D 场景编辑器，支持多语言界面与多编程语言插件扩展。\r 从零基础到进阶创作，配套一套**同时适配三种平台、四种使用形态**的启发式使用说明书。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yushichadao/Cub3D-Editor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/yushichadao/Cub3D-Editor/issues"
+  },
+  "homepage": "https://github.com/yushichadao/Cub3D-Editor#readme"
+}

@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = 'c:/Users/yushi/CodeBuddy/Cub3D Editor';
+const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const MANUAL = path.join(ROOT, 'shared/docs/使用说明书.md');
 
 const SCAN = ['Web', 'PC', 'Android', 'shared'];

@@ -10,7 +10,7 @@
 ---
 
 ## How to use this book
-> Tip: Click the "Table of Contents" at the beginning of the manual to jump to a chapter. On touch devices and the PC edition, pressing the Back key first closes sticky notes one by one (asking first if there is unsaved content), then closes the table of contents, then exits the manual and shows the settings.
+> Tip: Click the "Table of Contents" at the beginning of the manual to jump to a chapter. The manual reader's bottom bar also has "Previous chapter / Next chapter" buttons (◀ ▶) so you can page through chapters in order without returning to the TOC. On touch devices and the PC edition, pressing the Back key first closes sticky notes one by one (asking first if there is unsaved content), then closes the table of contents, then exits the manual and shows the settings.
 
 | Item | Description |
 | --- | --- |
@@ -20,8 +20,8 @@
 | Supported forms | **Web (mouse) / Web (touch) / PC desktop / Android** — all four fully covered |
 | Coordinate convention | This book **always uses the axis labels actually shown on screen** (page labels: X = blue = front/back, Y = red = left/right, Z = green = height, Z points up). The code's internal axes differ from the page labels; ordinary readers need not care. |
 | Reading advice | Start with [Chapter 0 · The Four Forms and How to Read This Book](jump:Chapter 0 · The Four Forms and How to Read This Book) to identify your edition; read the first four Parts in order; the remaining Parts on demand. Be sure to do the "Think" and "Practice" at the end of every chapter. |
-| Online address | https://yushichadao.github.io/Cub3D-Editor/ (open the page and start practicing) |
-| Project repo | https://github.com/yushichadao/Cub3D-Editor (source code, installers and this document are all here) |
+| Online address | [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/) (open the page and start practicing) |
+| Project repo | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (source code, installers and this document are all here) |
 
 **Form badge convention**
 
@@ -119,7 +119,7 @@ Whenever operations differ across editions, you will see these four badges. **Re
 
 **Part 13 · Troubleshooting & Appendix**
 - [Chapter 45 · FAQ Troubleshooting](jump:Chapter 45 · FAQ Troubleshooting)
-- [Chapter 46 · Glossary (Chinese–English)](jump:Chapter 46 · Glossary (Chinese–English))
+- [Chapter 46 · Glossary](jump:Chapter 46 · Glossary)
 - [Chapter 47 · Quick Shortcut Reference](jump:Chapter 47 · Quick Shortcut Reference)
 - [Chapter 48 · Shape · Pattern · Color Index](jump:Chapter 48 · Shape · Pattern · Color Index)
 
@@ -177,7 +177,7 @@ This tool has **three editions**, but because the Web edition adapts to your dev
 💡 **The Web edition decides automatically**: it detects whether your device is a "precise pointer (mouse)" or a "coarse pointer (finger)", then switches to the matching mode. **You do not need to do any setup**.
 
 ⚠️ If you want to **preview what the touch version looks like** in a desktop browser (e.g. for a teaching demo), add `?touch` to the URL, e.g.:
-`https://yushichadao.github.io/Cub3D-Editor/?touch`. Conversely, the Android edition is always the touch layout.
+[`https://yushichadao.github.io/Cub3D-Editor/?touch`](https://yushichadao.github.io/Cub3D-Editor/?touch). Conversely, the Android edition is always the touch layout.
 
 ### 0.2 Capability comparison table of the four forms
 
@@ -196,7 +196,8 @@ This is the single most important quick-reference table in the book. **We sugges
 | Drag-and-drop file import | ✅ | ⛔ | ✅ | ⛔ |
 | Crash recovery / auto-save | ✅ | ✅ | ✅ | ✅ |
 | Screen color picker (pick anywhere on screen) | ✅ | ⛔ canvas-only | ✅ | ⛔ canvas-only |
-| Back-key exit confirmation | ⛔ | ⛔ | ⛔ | ✅ |
+| Save confirmation on exit (close window / quit) | ✅ | ✅ | ✅ | ⛔ (uses Back-key confirmation) |
+| Phone Back-key layered exit confirmation | ⛔ | ⛔ | ⛔ | ✅ |
 | Offline use | ⛔ needs network | ⛔ needs network | ✅ fully offline | ✅ fully offline |
 
 ### 0.3 The core difference: fingers have no "right button" or "scroll wheel"
@@ -232,7 +233,7 @@ The PC edition is not just "a webpage in a shell" — it additionally provides c
 - **Window controls**: a self-drawn minimize / maximize / close button at top-right, plus a native `☰` menu in the top bar;
 - **Drag-and-drop import**: drop a `.json` project file **into the window** to open it directly, no need to go through the "Import" dialog;
 - **Recent files**: the menu keeps a list of recently edited files, openable with one click;
-- **Crash recovery & auto-save**: after an unexpected close and reopen, it prompts you to restore your last progress;
+- **Crash recovery & auto-save**: after an unexpected close and reopen, a "Recoverable session detected" dialog appears and asks whether to restore the auto-saved progress (showing the object count); closing it discards, but **active exporting is still recommended**;
 - **Independent sticky window**: you can "throw" a sticky note out of the main window into an **always-on-top** floating mini-window, so you can read other materials while taking notes;
 - **Extension center**: install plugins, runtimes and language packs; extend the editor in multiple programming languages.
 
@@ -242,7 +243,9 @@ The most important thing to watch on the Android edition is the behavior of the 
 
 > Press Back → if sticky notes are open, close them one by one (asking first if there is unsaved content) → then close the table of contents → then exit the manual → only then ask whether to exit the app.
 
-When exiting the app, a confirmation box appears, giving you three choices: **Save and exit / Exit directly / Cancel**. This prevents your hard-built scene from being wiped by one mis-tap.
+When exiting the app, a confirmation box appears, giving you three choices: **Save and exit / Exit without saving / Cancel**. This prevents your hard-built scene from being wiped by one mis-tap.
+
+💻 **The PC and Web editions** also have "save confirmation on exit": when you **close the window / quit the program**, if the scene is unsaved, it asks "Save the current scene?" and offers **Save and exit / Exit without saving / Cancel**. If you haven't picked a save location or the save fails, it asks again to confirm quitting. This differs in timing from Android's layered Back-key exit, but the goal is the same — protect your work from being lost by accident.
 
 💡 The Android edition **has no "Fullscreen" button**, because it is already a fullscreen app.
 
@@ -296,7 +299,7 @@ Shared benefits of the three:
 
 💡 This matters: **the same work can be接力 (relayed) across editions**. Get a draft on your phone when inspired, refine it on the PC at home.
 
-✏️ **Practice**: Confirm your form (see Chapter 0), open the tool, and recognize the central canvas and the surrounding panels. Don't rush to operate yet — just "get to know the environment".
+✏️ **Practice**: Confirm your form (see [Chapter 0](jump:Chapter 0 · The Four Forms and How to Read This Book)), open the tool, and recognize the central canvas and the surrounding panels. Don't rush to operate yet — just "get to know the environment".
 
 ---
 
@@ -308,7 +311,7 @@ Shared benefits of the three:
 
 Open the public URL below directly in a browser:
 
-> 🌐 **Online address**: https://yushichadao.github.io/Cub3D-Editor/
+> 🌐 **Online address**: [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/)
 
 Copy the URL into any modern browser's address bar and press Enter to enter the main interface. Phone, tablet, and computer all work, as long as there is internet and a browser. **It auto-detects whether you are a mouse device or a touch device** and switches to the matching layout.
 
@@ -323,7 +326,7 @@ Go to the project repo's **Releases** page to download; there are two packages, 
 | **Installer** | `...-Setup-1.0.0.exe` | Double-click to install, creates Start-menu and desktop shortcuts, uninstallable via "Apps & features" | Your main computer for long-term use |
 | **Portable** | `...-1.0.0-portable.exe` | **No install**, double-click to run, can live on a USB drive | Public computers, no admin rights, want to carry it around |
 
-> 📥 Download: https://github.com/yushichadao/Cub3D-Editor/releases
+> 📥 Download: [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
 
 ⚠️ Windows may warn "unknown publisher" or block via SmartScreen — this is because the installer is unsigned (common for personal open-source projects). Click "More info" → "Run anyway".
 
@@ -532,7 +535,7 @@ Of course you want to keep and show off what you made. This chapter covers four 
 
 Closing the page, refreshing, or accidentally hitting Back can lose an un-exported scene. Get into the habit of "export JSON after finishing a stretch" — it will save you countless times.
 
-💻 **The PC edition is an exception**: it has **auto-save and crash recovery**; after an unexpected close, reopening prompts you to restore last progress. But this is only a "safety rope" — **it does not replace active exporting.**
+💻 **The PC and Web editions are exceptions**: they have **auto-save and crash recovery**; after an unexpected close, reopening shows a "Recoverable session detected" dialog asking whether to restore the last auto-saved progress (including the object count). But this is only a "safety rope" — **it does not replace active exporting.**
 
 ### 6.2 Screenshot: photograph the work (Ctrl + P)
 
@@ -796,7 +799,7 @@ You can step back many times in a row, and step forward again with redo.
 
 Internally the software keeps an **operation list** (like a browser's back history). Each important operation pushes one entry; undo pops the last one.
 
-⚠️ **Note**: History has a **step limit**. Very early operations may be "pushed out" of the list and become un-undoable — so export JSON backups at key milestones (see Chapter 6).
+⚠️ **Note**: History has a **step limit**. Very early operations may be "pushed out" of the list and become un-undoable — so export JSON backups at key milestones (see [Chapter 6](jump:Chapter 6 · Export & Share: Screenshots, Scene Export, and Backups)).
 
 ### 10.3 What enters history, what doesn't
 
@@ -1571,7 +1574,7 @@ You will almost certainly find: **the keyboard is faster, more accurate, less ti
 Three reasons:
 1. **Hands don't leave the keyboard core** — eyes on the canvas, fingers on the letter keys; the brain needn't switch between "look at canvas → find panel → move mouse → drag slider".
 2. **Fixed step** — one arrow-key press moves the object exactly "0.1 grid"; 10 presses is exactly 1 grid. Drag the slider 10 times and you can't tell how far it moved.
-3. **Stackable, undoable** — every keyboard operation enters the history stack (see Chapter 32); a wrong press is one `Ctrl+Z` away; slider dragging is continuous change, and undo often "jumps" harshly.
+3. **Stackable, undoable** — every keyboard operation enters the history stack (see [Chapter 32](jump:Chapter 32 · Slider/Input & Ctrl Combos)); a wrong press is one `Ctrl+Z` away; slider dragging is continuous change, and undo often "jumps" harshly.
 
 💡 **One-line mindset**: the mouse handles "select" and "draw", the keyboard handles "change" and "tune". Divide and conquer, double the efficiency.
 
@@ -1713,7 +1716,7 @@ When your cursor is in a slider or number input box, the keys below "change the 
 | `+` / `-` | — | input positive / negative sign |
 | `PgUp` / `PgDn` | large increase / decrease | scroll right panel up / down |
 
-⚠️ To use object shortcuts, first click empty canvas or an object to move focus out of the input box (see Chapter 32.1).
+⚠️ To use object shortcuts, first click empty canvas or an object to move focus out of the input box (see [Chapter 32.1](jump:Chapter 32 · Slider/Input & Ctrl Combos)).
 
 ### 32.2 Ctrl combos
 
@@ -2651,32 +2654,32 @@ Most above are shared across all four forms. These below appear only on specific
 
 ---
 
-## Chapter 46 · Glossary (Chinese–English)
+## Chapter 46 · Glossary
 
 A glossary for quick lookup. Entries marked `*` are terms specific to this tool.
 
-| Chinese | English / Abbr | One-line explanation |
-| --- | --- | --- |
-| Grid unit* | GRID_UNIT | the length of one ground cell; also the base of move step (0.1 cell / 1 cell) |
-| Z-up* | Z-up | this tool takes the Z axis as "up", unlike most 3D software using Y as "up" |
-| Coplanar flicker | Z-fighting | flicker/intersection when two faces share the same depth and fight for position |
-| Block analysis | block analysis | the idea of breaking a complex object into simple-geometry combinations (building-block thinking) |
-| Uniform scale | uniform scale | lock width/height/depth ratio and scale together, preventing deformation |
-| Selection set* | selection set | the currently selected group of objects (built via `Shift` add-select) |
-| Master pivot* | master pivot | the shared control center of a multi-selected group (Ch 38) |
-| Clone | clone | duplicate an identical object (`Ctrl+D`) |
-| Array* | array | regular repeated clone arrangement (multiple `Ctrl+D` + arrow keys) |
-| Transform controls | transform controls | the three "gripping tools" in the scene: arrow/ring/cube handles |
-| Translate mode | translate mode | drag the object around with arrows |
-| Rotate mode | rotate mode | use rings to decide which axis to spin around |
-| Scale mode | scale mode | enlarge/shrink with cube handles |
-| Pattern / texture | pattern / texture | the 12 procedural textures on an object's surface (not external images) |
-| Opacity | opacity | 0.1 = almost fully transparent (slider floor, truly clear is impossible), 1 = fully opaque; semi-transparent for water, glass, halo |
-| Wireframe | wireframe | display mode showing only skeleton lines, not filling surfaces |
-| View / camera | view / camera | 7 preset cameras: perspective/top/bottom/front/back/left/right |
-| Brush stroke* | brush stroke | the fixed line drawn by the brush tool; not fine-tunable or scalable after drawing |
-| Screen color pick | eyedropper | sample a color from anywhere on the canvas |
-| History stack | history stack | the operation log behind undo/redo (Ch 10) |
+| English | One-line explanation |
+| --- | --- |
+| GRID_UNIT | the length of one ground cell; also the base of move step (0.1 cell / 1 cell) |
+| Z-up | this tool takes the Z axis as "up", unlike most 3D software using Y as "up" |
+| Z-fighting | flicker/intersection when two faces share the same depth and fight for position |
+| block analysis | the idea of breaking a complex object into simple-geometry combinations (building-block thinking) |
+| uniform scale | lock width/height/depth ratio and scale together, preventing deformation |
+| selection set | the currently selected group of objects (built via `Shift` add-select) |
+| master pivot | the shared control center of a multi-selected group (Ch 38) |
+| clone | duplicate an identical object (`Ctrl+D`) |
+| array | regular repeated clone arrangement (multiple `Ctrl+D` + arrow keys) |
+| transform controls | the three "gripping tools" in the scene: arrow/ring/cube handles |
+| translate mode | drag the object around with arrows |
+| rotate mode | use rings to decide which axis to spin around |
+| scale mode | enlarge/shrink with cube handles |
+| pattern / texture | the 12 procedural textures on an object's surface (not external images) |
+| opacity | 0.1 = almost fully transparent (slider floor, truly clear is impossible), 1 = fully opaque; semi-transparent for water, glass, halo |
+| wireframe | display mode showing only skeleton lines, not filling surfaces |
+| view / camera | 7 preset cameras: perspective/top/bottom/front/back/left/right |
+| brush stroke | the fixed line drawn by the brush tool; not fine-tunable or scalable after drawing |
+| eyedropper | sample a color from anywhere on the canvas |
+| history stack | the operation log behind undo/redo (Ch 10) |
 
 ---
 

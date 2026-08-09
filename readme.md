@@ -43,6 +43,24 @@
 | `使用说明书_en.md` | English |
 | `使用説明書_ja.md` | 日本語 |
 
+> ⚠️ `Web/docs`、`PC/docs`、`Android/docs` 是指向 `shared/docs` 的**目录符号链接**，不要单独编辑；
+> 一律改 `shared/docs/`，改完即对三端生效。只有 `Android/www/docs` 与
+> `Android/android/app/src/main/assets/public/docs` 是真实副本，需 `node sync-shared.mjs` 同步。
+
+### 说明书内的跳转写法
+
+说明书正文支持三种可点击跳转，渲染器（各端 `index.html` 内置）会分别处理：
+
+| 写法 | 效果 |
+| --- | --- |
+| `[文字](jump:第0章 四种形态与本书读法)` | 跳到本说明书内的对应标题 |
+| `[文字](#锚点)` | 跳到页内锚点 |
+| `[文字](https://example.com)` | 新窗口打开外部网页（PC 版走系统浏览器） |
+
+`jump:` 目标按「去空格 + 去除英文引号」后与标题比对，因此空格差异不影响匹配；
+但**标题里的括号会截断链接**，这类标题请依赖渲染器的子串回退匹配。
+凡正文里写了「详见第 N 章 / see Chapter N」之类的措辞，都必须做成上表中的可点击链接。
+
 界面语言文案集中在 `shared/language/`（`en.js` / `ja.js` / `zh-TW.js`，简体中文为内置默认）。
 同步时由根目录的 `_i18n_en.mjs` / `_i18n_ja.mjs` / `_i18n_zh-TW.mjs` 把弹窗文案与法律文本写入各端语言包。
 
@@ -55,7 +73,7 @@
 ```
 Cub3D Editor/
 ├── shared/                 # 各端共享的「单一源」
-│   ├── docs/               # 四语言说明书源文件
+│   ├── docs/               # 四语言说明书源文件（唯一可编辑处）
 │   ├── language/           # 界面语言文案（en / ja / zh-TW）
 │   ├── infra/              # 三端逐字节一致的基础设施（LICENSE / server.js / server.ps1 / vercel.json）
 │   ├── scripts/            # 三端共享脚本（_geocheck / _hardcode / _paramdoc / _serve）
@@ -67,12 +85,22 @@ Cub3D Editor/
 ├── _i18n_en.mjs            # 英文文案 / 法律文本生成
 ├── _i18n_ja.mjs            # 日文文案 / 法律文本生成
 ├── _i18n_zh-TW.mjs         # 繁体中文文案 / 法律文本生成
-├── check_manual.mjs        # 说明书一致性检查
-├── missing_terms.txt       # i18n 待补词条
+├── check_manual.mjs        # 说明书 ↔ 界面文案一致性检查
+├── missing_terms.txt       # check_manual.mjs 输出的待核对词条
 └── readme.md               # 本文件
 ```
 
 构建前请先运行 `node sync-shared.mjs` 把 `shared/` 同步到各端（各端 `npm start` / `npm run dist` 也已配置 `pre*` 钩子自动同步）。
+
+### 校验脚本
+
+```powershell
+node sync-shared.mjs     # 同步 shared/ 到各端 + 生成各语言包
+node check_manual.mjs    # 核对说明书里出现的界面名词是否与代码一致
+```
+
+`check_manual.mjs` 会列出说明书提到、但在界面文案中找不到完全对应的名词，
+供人工判断是「说明书写错」还是「界面改了名」；部分教学用语（如「想一想」）属正常误报。
 
 ---
 

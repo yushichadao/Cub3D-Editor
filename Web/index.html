@@ -518,6 +518,11 @@
   /* 设置及子页面（条款弹窗）不加阴影 */
   #settings-modal .modal-box,
   #terms-modal .modal-box { box-shadow: none; }
+  /* 设置弹窗：标题栏与左栏固定，仅右页面栏可滚动 */
+  #settings-modal .modal-box { display:flex; flex-direction:column; max-height:85vh; overflow:hidden; }
+  #settings-modal .settings-body { flex:1; min-height:0; }
+  #settings-modal .settings-content { scrollbar-width:none; -ms-overflow-style:none; }
+  #settings-modal .settings-content::-webkit-scrollbar { display:none; }
   .terms-body {
     font-size:13px; line-height:1.85; color:var(--text-dim);
     max-height:62vh; overflow-y:auto; padding-right:4px;
@@ -822,6 +827,9 @@
 .manual-doc ul,.manual-doc ol { padding-left:1.4em; margin:0.4em 0; }
 .manual-doc li { margin:0.15em 0; }
 .manual-doc img { max-width:100%; border-radius:6px; }
+/* 说明书内嵌键盘/快捷键表与注释：改用相对单位，随放大缩小字号一起缩放 */
+.manual-doc .kbd-table, .manual-doc .kbd-help-table { font-size:0.6em; margin:0.13em 0 0.27em; }
+.manual-doc .kbd-note { font-size:0.6em; }
 /* 说明书区滚动条美化 */
 .manual-doc, .manual-toc-body, .manual-note-list { scrollbar-width:thin; scrollbar-color:color-mix(in srgb, var(--text-dim) 45%, transparent) transparent; }
 .manual-doc::-webkit-scrollbar, .manual-toc-body::-webkit-scrollbar, .manual-note-list::-webkit-scrollbar { width:7px; height:7px; }
@@ -964,12 +972,12 @@
   max-width:760px; margin:0 auto; -webkit-overflow-scrolling:touch; overflow-y:auto; overflow-x:hidden; touch-action:pan-y; overscroll-behavior:contain; overscroll-behavior-x:contain;
   overflow-wrap:break-word; word-break:break-word;
 }
-.touch-device .manual-doc h1 { font-size:23px; line-height:1.3; } .touch-device .manual-doc h2 { font-size:20px; line-height:1.35; }
-.touch-device .manual-doc h3 { font-size:17px; } .touch-device .manual-doc p, .touch-device .manual-doc li { font-size:15.5px; }
-.touch-device .manual-doc pre { font-size:13px; white-space:pre-wrap; overflow-wrap:break-word; word-break:break-word; overflow-x:hidden; } .touch-device .manual-doc code { font-size:13px; }
-.touch-device .manual-doc table { display:table; width:100%; table-layout:fixed; border-collapse:collapse; font-size:11px; }
+.touch-device .manual-doc h1 { font-size:1.44em; line-height:1.3; } .touch-device .manual-doc h2 { font-size:1.25em; line-height:1.35; }
+.touch-device .manual-doc h3 { font-size:1.06em; } .touch-device .manual-doc p, .touch-device .manual-doc li { font-size:0.97em; }
+.touch-device .manual-doc pre { font-size:0.81em; white-space:pre-wrap; overflow-wrap:break-word; word-break:break-word; overflow-x:hidden; } .touch-device .manual-doc code { font-size:0.81em; }
+.touch-device .manual-doc table { display:table; width:100%; table-layout:fixed; border-collapse:collapse; font-size:0.69em; }
 .touch-device .manual-doc .kbd-table,
-.touch-device .manual-doc .kbd-help-table { font-size:11px; }
+.touch-device .manual-doc .kbd-help-table { font-size:0.69em; }
 .touch-device .manual-doc table,
 .touch-device .manual-doc th,
 .touch-device .manual-doc td,
@@ -1008,20 +1016,20 @@
 .manual-error a { color:var(--accent); }
 .manual-toast { position:absolute; left:50%; bottom:48px; transform:translateX(-50%) translateY(10px); background:var(--bg-panel-solid); border:1px solid var(--accent); color:var(--text); padding:8px 16px; border-radius:10px; font-size:13px; opacity:0; pointer-events:none; transition:all .2s; z-index:30; }
 .manual-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-.md-table { border-collapse:collapse; margin:10px 0; width:100%; }
-.md-table th, .md-table td { border:1px solid var(--border); padding:6px 10px; font-size:13px; }
+.md-table { border-collapse:collapse; margin:0.67em 0; width:100%; }
+.md-table th, .md-table td { border:1px solid var(--border); padding:0.4em 0.67em; font-size:0.87em; }
 .md-table th { background:var(--control-bg); color:var(--text); }
 .md-table td { color:var(--text-dim); }
-.md-code { background:var(--control-bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:13px; font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--text); }
+.md-code { background:var(--control-bg); border:1px solid var(--border); border-radius:8px; padding:0.8em 0.93em; overflow-x:auto; font-size:0.87em; font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--text); }
 .md-quote { border-left:4px solid var(--accent); padding:10px 16px; color:var(--text); margin:8px 0; border-radius:8px; border:1px solid var(--border); background:color-mix(in srgb, var(--accent) 10%, var(--control-bg)); }
-.md-block h1 { font-size:22px; margin:16px 0 8px; color:var(--text); }
-.md-block h2 { font-size:18px; margin:13px 0 6px; color:var(--text); }
-.md-block h3 { font-size:15px; margin:10px 0 5px; color:var(--text); }
-.md-block p { margin:6px 0; color:var(--text); }
+.md-block h1 { font-size:1.47em; margin:1.07em 0 0.53em; color:var(--text); }
+.md-block h2 { font-size:1.2em; margin:0.87em 0 0.4em; color:var(--text); }
+.md-block h3 { font-size:1em; margin:0.67em 0 0.33em; color:var(--text); }
+.md-block p { margin:0.4em 0; color:var(--text); }
 .md-block a { color:var(--accent); }
-.md-block ul, .md-block ol { margin:6px 0 6px 22px; color:var(--text); }
-.md-block li { margin:3px 0; }
-.md-block code { background:var(--control-bg); border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:12.5px; font-family:ui-monospace,Menlo,Consolas,monospace; }
+.md-block ul, .md-block ol { margin:0.4em 0 0.4em 1.47em; color:var(--text); }
+.md-block li { margin:0.2em 0; }
+.md-block code { background:var(--control-bg); border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:0.83em; font-family:ui-monospace,Menlo,Consolas,monospace; }
 .md-block hr { border:none; border-top:1px solid var(--border); margin:14px 0; }
 </style>
   <!-- 语言包：每语言独立文件，与简体中文（index.html 内 ZH_CN）分开存储；新增语言只需加文件并在此处引用 -->
@@ -1054,8 +1062,9 @@
     <button class="top-btn" id="btn-dup" data-i18n-title="titleDup"><span class="ic">⎘</span><span class="lbl" data-i18n="dup">克隆</span></button>
     <button class="top-btn" id="btn-clear" data-i18n-title="titleClear"><span class="ic">🗑</span><span class="lbl" data-i18n="clear">清空</span></button>
     <div class="top-btn-sep"></div>
-    <button class="top-btn" id="btn-axes" data-i18n-title="titleAxes"><span class="ic">📐</span><span class="lbl" data-i18n="axes">坐标轴</span></button>
-    <button class="top-btn" id="btn-grid" data-i18n-title="titleGrid"><span class="ic">🔲</span><span class="lbl" data-i18n="grid">网格面</span></button>
+    <button class="top-btn active" id="btn-axes" data-i18n-title="titleAxes"><span class="ic">📐</span><span class="lbl" data-i18n="axes">坐标轴</span></button>
+    <button class="top-btn active" id="btn-grid" data-i18n-title="titleGrid"><span class="ic">🔲</span><span class="lbl" data-i18n="grid">网格面</span></button>
+    <button class="top-btn active" id="btn-ground" data-i18n-title="titleGround"><span class="ic">▦</span><span class="lbl" data-i18n="ground">地面</span></button>
     <div class="top-btn-sep"></div>
     <button class="top-btn" id="btn-settings" data-i18n-title="titleSettings"><span class="ic">⚙</span><span class="lbl" data-i18n="settings">设置</span></button>
     <button class="top-btn primary" id="btn-fs" data-i18n-title="titleFS"><span class="ic">⛶</span><span class="lbl" data-i18n="fs">全屏</span></button>
@@ -1751,7 +1760,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js?v=6';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 // 简体中文作为内置默认与回退；其余语言存放在 language/ 目录下独立文件中（见 <head> 的 <script src> 引用）
-const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·三维图形设计工坊', aboutDesc:'基于 Three.js 的网页端三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·三维图形设计工坊（以下简称“本软件”）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按“现状”提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按“现状”提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件“关于”页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按“现状”提供</h4><p>本软件及其功能按“现状”与“可用”基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p>', privacyBody:'<h4>隐私政策</h4><p>我们高度重视您的个人信息与隐私保护。<strong>本软件无需注册账号，不收集您的账号名、密码或登录凭证。请您仔细阅读本政策，了解我们如何（以及在何种有限范围内）处理相关信息。</strong>使用本软件即表示您同意本政策的约定。</p><h4>第一条 我们是否收集账号信息</h4><p><strong>本软件不提供账号系统，您无需注册或登录即可使用。我们不会收集、存储您的用户名、密码、邮箱、手机号等账号类个人信息，也不会建立与您身份绑定的用户档案。</strong></p><h4>第二条 本地存储的创作数据</h4><p>（一）<strong>您在本软件中创建的三维模型、场景、便签、标注、文字与图片等创作内容，默认保存在您的本地设备（浏览器本地存储、应用沙盒或您导出的文件），而非上传至我们的服务器。</strong></p><p>（二）除为向您提供本机功能所必需的技术处理外，我们通常不会主动读取、上传或传输您的创作内容。</p><h4>第三条 我们可能收集的信息</h4><p>为改进产品与保障安全，在您使用本软件时，我们可能在本地或经您授权后收集有限的以下信息：<strong>（1）设备与运行信息，如设备型号、操作系统与版本、浏览器类型；（2）技术诊断与崩溃日志，用于定位故障；（3）匿名化的使用统计（如功能使用频次），如您未关闭相关诊断选项。</strong>上述信息的收集以必要为限，且我们尽量进行去标识化处理。</p><h4>第四条 信息的使用目的</h4><p>上述有限信息仅用于：为您提供、维护与改进本软件；定位与修复故障；保障安全与稳定；以及经您授权或法律要求的其他目的。<strong>我们不会将您的个人信息用于与上述目的无关的商业营销，除非获得您的明确同意。</strong></p><h4>第五条 信息共享与披露</h4><p><strong>我们不向任何第三方出售您的个人信息。仅在下列情形下，我们才会在必要范围内共享：</strong>（1）为遵守适用法律法规、司法或监管要求；（2）为保护本软件、您或公众的安全与合法权益；（3）经您事先明确同意。对于共享的信息，我们会要求接收方履行相应的保密义务。</p><h4>第六条 数据存储与安全</h4><p>（一）您的核心创作数据主要存储于本地设备。<strong>我们采取合理的技术与管理措施保护所接触的信息安全，但任何本地存储与网络传输均无法保证绝对安全，您亦应妥善保管自身设备、及时备份并避免在不信任环境中使用。</strong></p><p>（二）如我们因诊断需要临时收集崩溃日志等信息，将在合理期限后删除或匿名化处理。</p><h4>第七条 您的权利与控制</h4><p>（一）<strong>您始终掌控自己的数据：您可随时在本地清除缓存、删除作品、卸载应用，或关闭诊断/统计选项。</strong></p><p>（二）如您对已收集的诊断信息有疑问，可通过本软件“关于”页面提供的联系方式与我们沟通，我们将在合理范围内配合处理。</p><h4>第八条 未成年人保护</h4><p><strong>我们不直接面向未成年人收集个人信息。如发生未成年人误触发诊断信息收集的情形，我们将在知晓后尽快删除相关数据，并建议未成年人在监护人指导下使用本软件。</strong></p><h4>第九条 跨境与地区</h4><p>本软件可能在不同地区提供。您使用本软件即表示理解并同意，我们依据所在地区的法律要求处理相关信息，并尽力符合当地关于个人信息保护的规范。</p><h4>第十条 政策变更</h4><p><strong>本政策可能随软件调整而更新，更新后将通过本软件公示。您继续使用即视为接受更新后的政策；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 联系我们</h4><p>如您对隐私保护有任何疑问或行使权利的要求，可通过本软件“关于”页面提供的联系方式与我们沟通，我们将在合理时间内回复。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
+const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', ground:'地面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·三维图形设计工坊', aboutDesc:'基于 Three.js 的网页端三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·三维图形设计工坊（以下简称"本软件"）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按"现状"提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按"现状"提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件"关于"页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按"现状"提供</h4><p>本软件及其功能按"现状"与"可用"基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p>', privacyBody:'<h4>隐私政策</h4><p>我们高度重视您的个人信息与隐私保护。<strong>本软件无需注册账号，不收集您的账号名、密码或登录凭证。请您仔细阅读本政策，了解我们如何（以及在何种有限范围内）处理相关信息。</strong>使用本软件即表示您同意本政策的约定。</p><h4>第一条 我们是否收集账号信息</h4><p><strong>本软件不提供账号系统，您无需注册或登录即可使用。我们不会收集、存储您的用户名、密码、邮箱、手机号等账号类个人信息，也不会建立与您身份绑定的用户档案。</strong></p><h4>第二条 本地存储的创作数据</h4><p>（一）<strong>您在本软件中创建的三维模型、场景、便签、标注、文字与图片等创作内容，默认保存在您的本地设备（浏览器本地存储、应用沙盒或您导出的文件），而非上传至我们的服务器。</strong></p><p>（二）除为向您提供本机功能所必需的技术处理外，我们通常不会主动读取、上传或传输您的创作内容。</p><h4>第三条 我们可能收集的信息</h4><p>为改进产品与保障安全，在您使用本软件时，我们可能在本地或经您授权后收集有限的以下信息：<strong>（1）设备与运行信息，如设备型号、操作系统与版本、浏览器类型；（2）技术诊断与崩溃日志，用于定位故障；（3）匿名化的使用统计（如功能使用频次），如您未关闭相关诊断选项。</strong>上述信息的收集以必要为限，且我们尽量进行去标识化处理。</p><h4>第四条 信息的使用目的</h4><p>上述有限信息仅用于：为您提供、维护与改进本软件；定位与修复故障；保障安全与稳定；以及经您授权或法律要求的其他目的。<strong>我们不会将您的个人信息用于与上述目的无关的商业营销，除非获得您的明确同意。</strong></p><h4>第五条 信息共享与披露</h4><p><strong>我们不向任何第三方出售您的个人信息。仅在下列情形下，我们才会在必要范围内共享：</strong>（1）为遵守适用法律法规、司法或监管要求；（2）为保护本软件、您或公众的安全与合法权益；（3）经您事先明确同意。对于共享的信息，我们会要求接收方履行相应的保密义务。</p><h4>第六条 数据存储与安全</h4><p>（一）您的核心创作数据主要存储于本地设备。<strong>我们采取合理的技术与管理措施保护所接触的信息安全，但任何本地存储与网络传输均无法保证绝对安全，您亦应妥善保管自身设备、及时备份并避免在不信任环境中使用。</strong></p><p>（二）如我们因诊断需要临时收集崩溃日志等信息，将在合理期限后删除或匿名化处理。</p><h4>第七条 您的权利与控制</h4><p>（一）<strong>您始终掌控自己的数据：您可随时在本地清除缓存、删除作品、卸载应用，或关闭诊断/统计选项。</strong></p><p>（二）如您对已收集的诊断信息有疑问，可通过本软件"关于"页面提供的联系方式与我们沟通，我们将在合理范围内配合处理。</p><h4>第八条 未成年人保护</h4><p><strong>我们不直接面向未成年人收集个人信息。如发生未成年人误触发诊断信息收集的情形，我们将在知晓后尽快删除相关数据，并建议未成年人在监护人指导下使用本软件。</strong></p><h4>第九条 跨境与地区</h4><p>本软件可能在不同地区提供。您使用本软件即表示理解并同意，我们依据所在地区的法律要求处理相关信息，并尽力符合当地关于个人信息保护的规范。</p><h4>第十条 政策变更</h4><p><strong>本政策可能随软件调整而更新，更新后将通过本软件公示。您继续使用即视为接受更新后的政策；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 联系我们</h4><p>如您对隐私保护有任何疑问或行使权利的要求，可通过本软件"关于"页面提供的联系方式与我们沟通，我们将在合理时间内回复。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
  // 面板标题
  sec3D:'3D 图形', sec2D:'2D 图形', secTransform:'变换', secMaterial:'材质', secColor:'颜色', secPattern:'花纹 / 贴图', secTextBox:'文本框', secEraser:'橡皮擦属性', secMouse:'鼠标操作', secTouch:'手势操作', secKeyboard:'键盘快捷键',
  // Tab 按钮
@@ -1830,6 +1839,7 @@ kbdSliderPgSel:'大幅增/减',
  toastTexCleared:'已清除贴图', toastCleared:'已清空',
  toastAxesShown:'坐标轴已显示', toastAxesHidden:'坐标轴已隐藏',
  toastGridShown:'网格面已显示', toastGridHidden:'网格面已隐藏',
+ toastGroundShown:'地面已显示', toastGroundHidden:'地面已隐藏',
  toastNewScene:'已新建空白场景', toastImageExportedWH:'图像已导出（{0}×{1}）',
  toastSceneExported:'场景已导出 JSON', toastSceneImported:'场景已导入', toastImportFailed:'导入失败：{0}',
  toastBoxSelectOn:'框选模式：单指拖拽框选对象', toastBoxSelectOff:'已退出框选模式',
@@ -1846,7 +1856,7 @@ kbdSliderPgSel:'大幅增/减',
   // Tooltips
   titleNew:'新建场景 (Ctrl+N)', titleImport:'导入场景 JSON (Ctrl+O)', titleExport:'导出场景 JSON (Ctrl+S)', titleShot:'导出图像 PNG (Ctrl+P)',
   titleUndo:'撤销 (Ctrl+Z)', titleRedo:'重做 (Ctrl+Y)', titleCopy:'复制 (Ctrl+C)', titlePaste:'粘贴 (Ctrl+V)', titleDup:'克隆 (Ctrl+D)', titleClear:'清空场景（Ctrl+Del/Backspace）',
-  titleAxes:'切换坐标轴显示', titleGrid:'切换网格面显示', titleSettings:'设置', titleFS:'全屏 (F11 / Esc)',
+  titleAxes:'切换坐标轴显示', titleGrid:'切换网格面显示', titleGround:'切换地面显示', titleSettings:'设置', titleFS:'全屏 (F11 / Esc)',
   titleTranslate:'平移模式', titleRotate:'旋转模式', titleScale:'缩放模式',
   titleBBToggle:'展开/收起视角切换', titleBoxSelect:'框选模式：单指拖拽框选对象', titleSelectAll:'全选所有对象',
   titleEyedropper:'使用屏幕取色器', titleSettingsClose:'关闭',
@@ -1911,8 +1921,8 @@ kbdSliderPgSel:'大幅增/减',
   statusEraser:'橡皮擦：拖拽或点击擦除 · 整体擦除=将对象整条删除；局部擦除=仅擦除圈内笔迹（可分节）· 右键平移视角',
   appTitle:'3D 编辑器',
   // 说明书阅读器
-  tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
-  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本服务。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateReread:'重新阅读', manExportFail:'导出失败', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存',
+  tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manPrevCh:'上一章', manNextCh:'下一章', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
+  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方"同意并继续"。如不同意，请选择"不同意并退出"，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本服务。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateReread:'重新阅读', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', manExportFail:'导出失败', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', recoveryTitle:'检测到未保存的会话', toastImportUnsupported:'不支持的文件类型，仅支持 .scene JSON 格式的3D场景文件，是否返回空白场景？', toastImportSticky:'导入的是便签备份文件，而非3D场景文件，是否返回空白场景？', toastDropOnlyScene:'不支持的文件类型，请拖入 .scene 场景文件', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出',
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
@@ -2099,6 +2109,30 @@ axesGroup.add(xLabel, yLabel, zLabel);
 axesGroup.position.y = 0.002;
 scene.add(axesGroup);
 
+// 网格面交线（坐标轴隐藏时显示，提供方向参考；使用单一醒目色，避免与网格/坐标轴混淆）
+const INTERSECT_COLOR = 0xffb000;
+const interMat = new THREE.LineBasicMaterial({ color: INTERSECT_COLOR, transparent: true, opacity: 0.95, depthTest: false });
+const interGroup = new THREE.Group();
+function buildIntersectLines(len) {
+  while (interGroup.children.length) {
+    const c = interGroup.children.pop();
+    c.geometry.dispose();
+  }
+  const segs = [
+    [new THREE.Vector3(-len, 0, 0), new THREE.Vector3(len, 0, 0)],
+    [new THREE.Vector3(0, -len, 0), new THREE.Vector3(0, len, 0)],
+    [new THREE.Vector3(0, 0, -len), new THREE.Vector3(0, 0, len)]
+  ];
+  segs.forEach(s => {
+    const g = new THREE.BufferGeometry().setFromPoints(s);
+    interGroup.add(new THREE.Line(g, interMat));
+  });
+}
+buildIntersectLines(GROUND_SIZE / 2);
+interGroup.position.y = 0.002;
+interGroup.visible = false; // 默认坐标轴显示，故隐藏
+scene.add(interGroup);
+
 // 背墙网格（XY 平面）—— X红 + Y绿 = 黄色
 let gridXZ = new THREE.GridHelper(GROUND_SIZE, 20, 0xa2a277, 0xa2a277);
 gridXZ.material.opacity = 0.25; gridXZ.material.transparent = true;
@@ -2115,49 +2149,7 @@ scene.add(gridYZ);
 
 let axesVisible = true;
 let gridVisible = true;
-
-// 基准面参考平面（在网格/坐标轴隐藏时提供视觉定位）
-const refGroup = new THREE.Group();
-refGroup.visible = false;
-
-// XZ平面参考（地面）—— 取消网格面后唯一保留的参考面，白色
-const refGround = new THREE.Mesh(
-  new THREE.PlaneGeometry(GROUND_SIZE, GROUND_SIZE),
-  new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false })
-);
-refGround.rotation.x = -Math.PI / 2;
-refGround.position.y = 0.005;
-refGroup.add(refGround);
-
-// XY平面参考（后墙）—— 已停用，无网格面时不再显示侧面白墙
-const refBack = new THREE.Mesh(
-  new THREE.PlaneGeometry(GROUND_SIZE, GROUND_SIZE),
-  new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8, side: THREE.DoubleSide, depthWrite: false })
-);
-refBack.position.set(0, GROUND_SIZE / 2, -GROUND_SIZE / 2);
-refBack.visible = false;
-refGroup.add(refBack);
-
-// YZ平面参考（侧墙）—— 已停用
-const refSide = new THREE.Mesh(
-  new THREE.PlaneGeometry(GROUND_SIZE, GROUND_SIZE),
-  new THREE.MeshBasicMaterial({ color: 0x44ff88, transparent: true, opacity: 0.15, side: THREE.DoubleSide, depthWrite: false })
-);
-refSide.position.set(GROUND_SIZE / 2, GROUND_SIZE / 2, 0);
-refSide.rotation.y = Math.PI / 2;
-refSide.visible = false;
-refGroup.add(refSide);
-
-scene.add(refGroup);
-
-function updateRefPlanesVisibility() {
-  // 取消网格面后，仅保留白色 XZ 地面参考面（无论是否有坐标轴）；
-  // 不再显示任何侧面白墙，只有地面
-  refGroup.visible = !gridVisible;
-  refGround.visible = true;   // 白色地面
-  refBack.visible = false;    // 无后墙
-  refSide.visible = false;    // 无侧墙
-}
+let groundVisible = true;
 
 // ============ 幽灵预览系统 ============
 let ghostMesh = null;       // 预览网格
@@ -2479,8 +2471,8 @@ const centerRing = new THREE.Mesh(
   new THREE.RingGeometry(0.42, 0.5, 48),
   new THREE.MeshBasicMaterial({ color: 0x6ee7ff, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
 );
-centerRing.rotation.x = -Math.PI / 2; centerRing.position.y = 0.004;
-scene.add(centerRing);
+centerRing.rotation.x = -Math.PI / 2; centerRing.position.y = 0.002;
+axesGroup.add(centerRing); // 原点圈属于坐标轴显示区，随坐标轴显隐联动
 
 // 地面数学平面（用于射线拾取，y=0 水平面）
 const groundMathPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
@@ -2626,6 +2618,7 @@ const state = {
   pointerStart: new THREE.Vector2(),
   pointerMoved: false,
   defaultColor: 0xffffff,
+  meta: { createdAt: '' },
   boxSelecting: false,
   boxStart: new THREE.Vector2(),
   shiftDown: false,
@@ -3521,6 +3514,19 @@ function syncTextProps(obj) {
 }
 
 // ============ 历史 ============
+// 脏话过滤：检测并替换为随机字母（保持可读ID形式）
+const BAD_WORDS = /nmsl|cnmb|cnm|nmd|tmd|sb|nmb|nsl|wcnm|cao|fuck|shit|bitch|asshole|dick|pussy|cunt|bastard|whore|slut|motherfucker|mlgb/i;
+function filterBadWords(text) {
+  if (typeof text !== 'string' || !text) return text;
+  const chars = 'abcdefghijklmnopqrstuvwxyz';
+  return text.replace(BAD_WORDS, m => {
+    let result = '';
+    for (let i = 0; i < m.length; i++) {
+      result += chars[Math.floor(Math.random() * 26)];
+    }
+    return result;
+  });
+}
 function snapshot() {
   return state.objects.map(o => {
     const halfH = o.data.halfH || 0;
@@ -3538,7 +3544,7 @@ function snapshot() {
       kind: o.data.kind,
       type: o.data.type || o.data.shape,
       shape: o.data.shape,
-      text: o.data.text,
+      text: filterBadWords(o.data.text),
       color: o.data.color,
       pattern: o.data.pattern,
       image: o.data.image,
@@ -4040,12 +4046,6 @@ function intersectObjects() {
     }
   }
   return null;
-}
-
-function intersectObjectsAll() {
-  raycaster.setFromCamera(pointer, camera);
-  const meshes = state.objects.map(o => o.mesh);
-  return raycaster.intersectObjects(meshes, true);
 }
 
 function intersectGround() {
@@ -6351,7 +6351,8 @@ document.getElementById('btn-clear').addEventListener('click', async () => {
 document.getElementById('btn-axes').addEventListener('click', () => {
   axesVisible = !axesVisible;
   axesGroup.visible = axesVisible;
-  updateRefPlanesVisibility();
+  interGroup.visible = !axesVisible && gridVisible;
+  document.getElementById('btn-axes').classList.toggle('active', axesVisible);
   toast(axesVisible ? _t('toastAxesShown') : _t('toastAxesHidden'));
 });
 document.getElementById('btn-grid').addEventListener('click', () => {
@@ -6359,8 +6360,15 @@ document.getElementById('btn-grid').addEventListener('click', () => {
   grid.visible = gridVisible;
   gridXZ.visible = gridVisible;
   gridYZ.visible = gridVisible;
-  updateRefPlanesVisibility();
+  interGroup.visible = gridVisible && !axesVisible;
+  document.getElementById('btn-grid').classList.toggle('active', gridVisible);
   toast(gridVisible ? _t('toastGridShown') : _t('toastGridHidden'));
+});
+document.getElementById('btn-ground').addEventListener('click', () => {
+  groundVisible = !groundVisible;
+  ground.visible = groundVisible;
+  document.getElementById('btn-ground').classList.toggle('active', groundVisible);
+  toast(groundVisible ? _t('toastGroundShown') : _t('toastGroundHidden'));
 });
 // 新建场景
 async function newScene() {
@@ -6391,9 +6399,15 @@ async function newScene() {
   setPanelCollapsed('right', true);
   toast(_t('toastNewScene'));
 }
+// 截图文件命名：Cub3D_2026-08-09_14-30-25.png（不与系统截屏命名冲突）
+function shotFileName() {
+  var d = new Date(), p = function(x) { return String(x).padStart(2, '0'); };
+  return 'Cub3D_' + d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + '_' + p(d.getHours()) + '-' + p(d.getMinutes()) + '-' + p(d.getSeconds()) + '.png';
+}
+
 // 截图导出 PNG：setSize(w,h,true) 同步 CSS 与 drawing buffer，保证视野与当前画面一致
 function captureScreenshot() {
-  const SHOT_SCALE = 2;
+  const SHOT_SCALE = Math.max(3, window.devicePixelRatio);
   const cw = canvas.clientWidth;
   const ch = canvas.clientHeight;
   const w = Math.floor(cw * SHOT_SCALE);
@@ -6402,6 +6416,7 @@ function captureScreenshot() {
   // 保存原始状态
   const prevSize = new THREE.Vector2();
   renderer.getSize(prevSize);
+  const prevPR = renderer.getPixelRatio();
   const prevAspect = camera.aspect;
 
   // 无色对象（color === NO_COLOR）仅在空间编辑时可见，截图时隐藏
@@ -6424,15 +6439,16 @@ function captureScreenshot() {
   renderer.render(scene, camera);
 
   const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png'); a.download = 'cube3d-' + Date.now() + '.png'; a.click();
+  a.href = canvas.toDataURL('image/png'); a.download = shotFileName(); a.click();
   toast(_t('toastImageExportedWH', w, h));
 
   // 恢复隐藏的无色对象
   hiddenMeshes.forEach(m => { m.visible = true; });
 
-  // 恢复原始canvas尺寸和相机参数
+  // 恢复原始canvas尺寸和相机参数（不覆盖CSS百分比样式）
   document.body.style.overflow = '';
-  renderer.setSize(prevSize.x, prevSize.y, true);
+  renderer.setPixelRatio(prevPR);
+  renderer.setSize(prevSize.x, prevSize.y);
   camera.aspect = prevAspect;
   camera.updateProjectionMatrix();
   renderer.render(scene, camera);
@@ -6580,6 +6596,49 @@ refreshTheme(); updateThemeActive();
 applyLang(); updateLangActive();
 // 导出场景 JSON
 function defaultJsonName(prefix){ const d=new Date(), p=x=>String(x).padStart(2,'0'); return prefix+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'; }
+// 软件版本号（可由构建脚本注入 window.__CUB3D_VERSION__ 覆盖）
+const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.0.0';
+// 统计对象类型分布
+function countObjects(objects) {
+  const counts = { total: objects.length, byKind: {}, byType: {} };
+  objects.forEach(o => {
+    const kind = o.kind || 'unknown';
+    const type = o.type || o.shape || 'unknown';
+    counts.byKind[kind] = (counts.byKind[kind] || 0) + 1;
+    counts.byType[type] = (counts.byType[type] || 0) + 1;
+  });
+  return counts;
+}
+// 计算场景整体包围盒（基于每个对象的位置与缩放，作为取景/缩略参考）
+function computeSceneBounds(objects) {
+  let has = false, minX=Infinity, minY=Infinity, minZ=Infinity, maxX=-Infinity, maxY=-Infinity, maxZ=-Infinity;
+  objects.forEach(o => {
+    const m = o.worldPos || o.pos; if (!m) return;
+    const sx = (o.worldScale ? o.worldScale[0] : (o.scale || 1));
+    const sy = (o.worldScale ? o.worldScale[1] : (o.scale || 1));
+    const sz = (o.worldScale ? o.worldScale[2] : (o.scale || 1));
+    has = true;
+    minX = Math.min(minX, m[0]-sx); maxX = Math.max(maxX, m[0]+sx);
+    minY = Math.min(minY, m[1]-sy); maxY = Math.max(maxY, m[1]+sy);
+    minZ = Math.min(minZ, m[2]-sz); maxZ = Math.max(maxZ, m[2]+sz);
+  });
+  if (!has) return null;
+  return {
+    min: [minX, minY, minZ], max: [maxX, maxY, maxZ],
+    center: [(minX+maxX)/2, (minY+maxY)/2, (minZ+maxZ)/2],
+    size: [maxX-minX, maxY-minY, maxZ-minZ]
+  };
+}
+// 轻量校验和（基于 objects 序列化），导入时可检测文件损坏
+function computeChecksum(objects) {
+  const s = JSON.stringify(objects);
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return ('00000000' + (h >>> 0).toString(16)).slice(-8);
+}
 function exportScene() {
   // 保存相机视角参数
   const cameraData = {
@@ -6591,10 +6650,40 @@ function exportScene() {
     near: camera.near,
     far: camera.far
   };
-  const data = JSON.stringify({ version:2, objects: snapshot(), camera: cameraData, colorMemory: { ...colorMemory }, defaultColor: state.defaultColor, brushColor: brush.color }, null, 2);
+  const objects = snapshot();
+  const now = new Date().toISOString();
+  const data = JSON.stringify({
+    format: 'cube3d-scene',
+    schemaVersion: 2,
+    version: 2,
+    meta: {
+      createdAt: (state.meta && state.meta.createdAt) || now,
+      updatedAt: now,
+      appVersion: __APP_VERSION__,
+      platform: 'web',
+      generator: 'Cub3D Editor Web',
+      locale: currentLang,
+      author: (window.__DEVICE_NAME__ ? String(window.__DEVICE_NAME__) : 'Web')
+    },
+    unit: { upAxis: 'Y', gridUnit: GRID_UNIT, groundSize: GROUND_SIZE },
+    counts: countObjects(objects),
+    sceneBounds: computeSceneBounds(objects),
+    objects: objects,
+    camera: cameraData,
+    colorMemory: { ...colorMemory },
+    defaultColor: state.defaultColor,
+    brushColor: brush.color,
+    settings: {
+      background: '#' + (scene.background && scene.background.getHexString ? scene.background.getHexString() : 'eef1f6'),
+      axesVisible: axesVisible,
+      gridVisible: gridVisible,
+      groundVisible: groundVisible
+    },
+    checksum: computeChecksum(objects)
+  }, null, 2);
   const blob = new Blob([data], { type:'application/json' });
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = defaultJsonName('场景'); a.click();
+  a.href = URL.createObjectURL(blob); a.download = defaultJsonName('scene'); a.click();
   toast(_t('toastSceneExported'));
 }
 document.getElementById('btn-export').addEventListener('click', exportScene);
@@ -6654,6 +6743,37 @@ function applySceneText(text) {
     }
     if (typeof json.brushColor === 'number') {
       setBrushColor(json.brushColor);
+    }
+    // 恢复元数据（作者/标题/描述/创建时间），供下次导出沿用
+    if (json.meta && typeof json.meta === 'object') {
+      state.meta = { createdAt: json.meta.createdAt || new Date().toISOString() };
+    } else {
+      state.meta = { createdAt: new Date().toISOString() };
+    }
+    // 恢复场景级设置（背景色、网格/坐标轴/地面可见性）
+    if (json.settings && typeof json.settings === 'object') {
+      try {
+        const s = json.settings;
+        if (typeof s.background === 'string') {
+          scene.background = new THREE.Color(s.background);
+          renderer.setClearColor(new THREE.Color(s.background), 1);
+        }
+        if (typeof s.axesVisible === 'boolean' && s.axesVisible !== axesVisible) {
+          axesVisible = s.axesVisible; axesGroup.visible = axesVisible;
+          document.getElementById('btn-axes').classList.toggle('active', axesVisible);
+        }
+        if (typeof s.gridVisible === 'boolean' && s.gridVisible !== gridVisible) {
+          gridVisible = s.gridVisible; grid.visible = gridVisible;
+          document.getElementById('btn-grid').classList.toggle('active', gridVisible);
+        }
+        if (typeof s.groundVisible === 'boolean' && s.groundVisible !== groundVisible) {
+          groundVisible = s.groundVisible; ground.visible = groundVisible;
+          document.getElementById('btn-ground').classList.toggle('active', groundVisible);
+        }
+        interGroup.visible = gridVisible && !axesVisible;
+      } catch(err) {
+        console.warn('恢复场景设置失败，使用默认设置', err);
+      }
     }
     // 恢复相机视角（如果导出文件中包含视角数据）
     if (json.camera) {
@@ -7463,30 +7583,6 @@ function resampleBrushCenterline(points, step) {
   return out;
 }
 
-// 点到线段的最短距离
-function distPointToSegment(p, a, b) {
-  const ab = new THREE.Vector3().subVectors(b, a);
-  const l2 = ab.lengthSq();
-  if (l2 < 1e-12) return p.distanceTo(a);
-  let t = new THREE.Vector3().subVectors(p, a).dot(ab) / l2;
-  t = Math.max(0, Math.min(1, t));
-  return p.distanceTo(a.clone().addScaledVector(ab, t));
-}
-
-// 点到整条笔迹表面的最短距离（负值表示点在笔迹内部）
-function distPointToBrush(point, o) {
-  const line = getBrushWorldCenterline(o);
-  if (!line || line.length === 0) return Infinity;
-  const r = (o.data.brushRadius != null) ? o.data.brushRadius : (o.data.thickness ? o.data.thickness / 2 : 0.25);
-  if (line.length === 1) return point.distanceTo(line[0]) - r;
-  let best = Infinity;
-  for (let i = 0; i + 1 < line.length; i++) {
-    const d = distPointToSegment(point, line[i], line[i + 1]);
-    if (d < best) best = d;
-  }
-  return best - r;
-}
-
 // 折线总长
 function polylineLength(pts) {
   let s = 0;
@@ -7930,44 +8026,6 @@ function clearEraserHighlight() {
   });
   obj._eraserOrigMaterials = null;
   eraserHighlightObj = null;
-}
-
-// 基于射线的对象检测：返回所有距射线距离 < radius 的对象（按距离排序）
-// 用于橡皮擦：避免表面吸附导致深度方向的对象无法被擦除
-function findObjectsNearRay(ray, radius) {
-  const results = [];
-  const ro = ray.origin;
-  const rd = ray.direction;
-  const radiusSq = radius * radius;
-  state.objects.forEach(o => {
-    const obj = o.mesh;
-    // 画笔对象（group）由局部擦除单独处理，射线命中检测跳过
-    if (obj.isGroup && o.data.isBrush) return;
-    // 统一用整体包围盒：对单体 mesh 与 Group 均适用
-    obj.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(obj);
-    if (box.isEmpty()) return;
-    // 射线与包围盒：取包围盒中心到射线距离 + 包围盒半尺寸估算
-    const center = new THREE.Vector3();
-    box.getCenter(center);
-    const oc = center.clone().sub(ro);
-    const t = oc.dot(rd);
-    if (t < 0) return; // 在相机后方
-    const proj = ro.clone().add(rd.clone().multiplyScalar(t));
-    const distToRay = center.distanceTo(proj);
-    // 包围盒半尺寸（用于放宽判定）
-    const half = Math.max(
-      Math.abs(box.max.x - center.x), Math.abs(box.min.x - center.x),
-      Math.abs(box.max.y - center.y), Math.abs(box.min.y - center.y),
-      Math.abs(box.max.z - center.z), Math.abs(box.min.z - center.z)
-    );
-    const maxDist = radius + half;
-    if (distToRay < maxDist) {
-      results.push({ obj: o, dist: distToRay });
-    }
-  });
-  results.sort((a, b) => a.dist - b.dist);
-  return results.map(r => r.obj);
 }
 
 function findObjectsInRadius(point, radius) {
@@ -9237,12 +9295,12 @@ function buildParametricGeo2D(type, data) {
       // 闪电：高度 / 宽度
       const H = data.height || 1.8, W = data.width || 0.9;
       // 翻转 180 度：X、Y 同时取反
-      s.moveTo(0.17*W, -0.5*H);
-      s.lineTo(-0.28*W, -0.07*H);
-      s.lineTo(-0.06*W, -0.07*H);
-      s.lineTo(-0.22*W, 0.5*H);
-      s.lineTo(0.28*W, 0.04*H);
-      s.lineTo(0.06*W, 0.04*H);
+      s.moveTo(-0.17*W, -0.5*H);
+      s.lineTo(0.28*W, -0.07*H);
+      s.lineTo(0.06*W, -0.07*H);
+      s.lineTo(0.22*W, 0.5*H);
+      s.lineTo(-0.28*W, 0.04*H);
+      s.lineTo(-0.06*W, 0.04*H);
       s.closePath();
       break;
     }
@@ -10247,7 +10305,9 @@ function backEntry(){
   }
 }
 // 触屏网页：拦截浏览器返回手势，统一交由 backEntry 处理（禁用浏览器层导航）
-if (document.documentElement.classList.contains('touch-device') || window.innerWidth <= 768) {
+// 触发条件：触摸设备（isTouch 覆盖 iPad 横屏/触摸本等宽屏触摸设备）或窄屏，
+// 不依赖 documentElement 上的 touch-device 类（该类实际挂在 body 上，文档元素判断恒为 false）。
+if (isTouch || window.innerWidth <= 768) {
   try {
     history.pushState(null, '', location.href);
     window.addEventListener('popstate', function () {
@@ -10722,7 +10782,7 @@ function resizeGrid(newSize) {
   // 替换网格
   scene.remove(grid);
   grid.geometry.dispose();
-  grid = new THREE.GridHelper(newSize, Math.round(newSize / GRID_UNIT), 0x6b7fff, 0xc0c8d8);
+  grid = new THREE.GridHelper(newSize, Math.round(newSize / GRID_UNIT), 0xa266b3, 0xa266b3);
   grid.material.opacity = 0.5;
   grid.material.transparent = true;
   grid.position.y = 0.002;
@@ -10733,7 +10793,7 @@ function resizeGrid(newSize) {
   // 更新XZ网格（后墙）
   scene.remove(gridXZ);
   gridXZ.geometry.dispose();
-  gridXZ = new THREE.GridHelper(newSize, Math.round(newSize / GRID_UNIT), 0x4488ff, 0x334466);
+  gridXZ = new THREE.GridHelper(newSize, Math.round(newSize / GRID_UNIT), 0xa2a277, 0xa2a277);
   gridXZ.material.opacity = 0.25;
   gridXZ.material.transparent = true;
   gridXZ.rotation.x = Math.PI / 2;
@@ -10744,24 +10804,14 @@ function resizeGrid(newSize) {
   // 更新YZ网格（侧墙）
   scene.remove(gridYZ);
   gridYZ.geometry.dispose();
-  gridYZ = new THREE.GridHelper(newSize, Math.round(newSize / GRID_UNIT), 0x44ff88, 0x336644);
+  gridYZ = new THREE.GridHelper(newSize, Math.round(newSize / GRID_UNIT), 0x44c4c4, 0x44c4c4);
   gridYZ.material.opacity = 0.25;
   gridYZ.material.transparent = true;
   gridYZ.rotation.z = Math.PI / 2;
   gridYZ.visible = gridVisible;
   gridYZ.frustumCulled = false;
   scene.add(gridYZ);
-  
-  // 更新基准面参考平面
-  refGround.geometry.dispose();
-  refGround.geometry = new THREE.PlaneGeometry(newSize, newSize);
-  refBack.geometry.dispose();
-  refBack.geometry = new THREE.PlaneGeometry(newSize, newSize);
-  refBack.position.set(0, newSize / 2, -newSize / 2);
-  refSide.geometry.dispose();
-  refSide.geometry = new THREE.PlaneGeometry(newSize, newSize);
-  refSide.position.set(newSize / 2, newSize / 2, 0);
-  
+
   // 调整坐标轴：正反方向均突出网格面边缘外3个单位（2个单位网格长度）
   const axisLen = newSize / 2 + AXIS_EXTENSION;
   [xAxisArrow, yAxisArrow, zAxisArrow].forEach(arrow => {
@@ -10778,6 +10828,8 @@ function resizeGrid(newSize) {
   updateNegLine(xNegLine, new THREE.Vector3(1,0,0), axisLen);
   updateNegLine(yNegLine, new THREE.Vector3(0,1,0), axisLen);
   updateNegLine(zNegLine, new THREE.Vector3(0,0,1), axisLen);
+  // 同步网格面交线（坐标轴隐藏时显示；长度对齐网格面边缘，不向外突出）
+  buildIntersectLines(newSize / 2);
   xLabel.position.set(axisLen + 0.8, 0.3, 0);
   yLabel.position.set(0.1, axisLen + 0.8, 0);
   zLabel.position.set(0, 0.3, axisLen + 0.8);
@@ -10822,6 +10874,8 @@ animate();
 // ============ 触摸设备 UI 初始化 ============
 if (isTouch) {
   document.body.classList.add('touch-device');
+  // 同步挂到 documentElement，使 isTouchMode() 等依赖 documentElement 类的判断（如说明书触摸布局）生效
+  document.documentElement.classList.add('touch-device');
   // 触摸端多选状态初始化
   state.boxSelectMode = false;
   // 隐藏鼠标操作面板，显示手势面板
@@ -10960,7 +11014,7 @@ window.__debug = {
 
 /* ===================== 说明书阅读器（零依赖 Markdown 阅读器） ===================== */
 function mdEscape(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function slugify(s){ return String(s).normalize('NFKC').replace(/\s+/g,''); }
+function slugify(s){ return String(s).normalize('NFKC').replace(/\s+/g,'').replace(/["']/g,''); }
 function mdInline(text){
   const codes = [];
   let s = mdEscape(text);
@@ -11056,6 +11110,8 @@ function openManual(){
   titleEl.textContent = T('manTitle');
   if(isTouchMode()){ const sf=loadStore('manualMobileFontSize'); if(sf) docEl.style.fontSize=sf+'px'; }
   modal.classList.add('show');
+  // 进入说明书时默认隐藏便签/高亮/复制栏，除非有文本被选择
+  floatEl.style.display='none'; if(window.getSelection) window.getSelection().removeAllRanges();
   // 进入说明书时默认不打开搜索栏
   const _tb = modal.querySelector('.manual-toolbar'); if(_tb) _tb.classList.remove('search-open');
   const _si = document.getElementById('manual-search'); if(_si) _si.value='';
@@ -11171,7 +11227,7 @@ function openManual(){
     docEl.addEventListener('touchend', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
     docEl.addEventListener('touchcancel', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
     docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(!openManual._sel && (e.clientX || e.clientY)){ selectWordAt(e.clientX, e.clientY); } onSelectionChange(); });
-    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ const el=tgt.querySelector('h1,h2,h3,h4,h5,h6')||tgt; el.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt.closest('.md-block')||tgt); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
+    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; block.scrollIntoView({behavior:'smooth',block:'start'}); flash(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
     openManual._mo = new MutationObserver(()=>syncStickyVisibility());
     openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
   }
@@ -11189,10 +11245,17 @@ function openManual(){
   function lsKey(suffix){ return 'manual.'+currentLang+'.'+suffix; }
   function loadStore(suffix, def){ try{ const v=localStorage.getItem(lsKey(suffix)); return v==null?def:JSON.parse(v); }catch(e){ return def; } }
   function saveStore(suffix, val){ try{ localStorage.setItem(lsKey(suffix), JSON.stringify(val)); }catch(e){} }
-  function zoomDoc(f){ const cur=parseFloat(docEl.style.fontSize)||(isTouchMode()?16:15); const next=Math.min(34, Math.max(11, cur*f)); docEl.style.fontSize=next+'px'; docEl.dataset.zoom=next; if(isTouchMode()) saveStore('manualMobileFontSize', next); else saveStore('zoom', next); }
+  function zoomDoc(f){ const cur=parseFloat(docEl.style.fontSize)||(isTouchMode()?16:15); const next=Math.min(34, Math.max(11, cur*f));
+    /* 缩放前记录视口顶部锚点，缩放后恢复阅读位置，避免放大缩小后找不到原内容 */
+    const docRect=docEl.getBoundingClientRect(); let anchor=null, rel=0;
+    const blks=docEl.querySelectorAll('.md-block');
+    for(const b of blks){ const top=b.getBoundingClientRect().top-docRect.top; if(top>-4){ anchor=b; rel=top; break; } }
+    docEl.style.fontSize=next+'px'; docEl.dataset.zoom=next;
+    if(anchor){ const newTop=anchor.getBoundingClientRect().top-docRect.top; docEl.scrollTop+=(newTop-rel); }
+    if(isTouchMode()) saveStore('manualMobileFontSize', next); else saveStore('zoom', next); }
   function blocks(){ return Array.from(docEl.querySelectorAll('.md-block')); }
   function blockLineOf(node){ let el=node.nodeType===3?node.parentElement:node; while(el && el!==docEl){ if(el.classList && el.classList.contains('md-block')) return parseInt(el.dataset.line,10); el=el.parentElement; } return 0; }
-  function jumpToLine(n){ const bs=blocks(); let target=null; for(const b of bs){ if(parseInt(b.dataset.line,10)<=n) target=b; else break; } if(target){ target.scrollIntoView({behavior:'smooth',block:'start'}); flash(target); notePanel.classList.add('open'); } }
+  function jumpToLine(n){ const bs=blocks(); let target=null; for(const b of bs){ if(parseInt(b.dataset.line,10)<=n) target=b; else break; } if(target){ target.scrollIntoView({behavior:'smooth',block:'start'}); flash(target); } }
   function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function clearSearchHits(){
     docEl.querySelectorAll('mark.search-hit').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); });
@@ -11207,7 +11270,7 @@ function openManual(){
     blocks().forEach(b=>{
       const walker=document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null);
       const nodes=[]; let n; while(n=walker.nextNode()){ if(n.nodeValue) nodes.push(n); }
-      // 将该块的全部文本节点按顺序拼接，建立“字符下标 -> 节点+偏移”映射，
+      // 将该块的全部文本节点按顺序拼接，建立"字符下标 -> 节点+偏移"映射，
       // 从而支持跨文本节点 / 跨行内元素（行内代码、粗体、用户高亮等）的整体匹配
       let full=''; const map=[];
       nodes.forEach(node=>{ const txt=node.nodeValue; for(let i=0;i<txt.length;i++) map.push({node, offset:i}); full+=txt; });
@@ -11459,13 +11522,14 @@ function openManual(){
   function addHlFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const arr=hilites(); arr.push({id:(openManual._hlSeq=(openManual._hlSeq||0)+1), start:s.start, end:s.end}); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHi')); }
 function cancelHlInSelection(){ const s=openManual._sel; if(!s) return; const arr=hilites(); const kept=arr.filter(h=>!(h.start!=null && h.start<s.end && h.end>s.start)); if(kept.length!==arr.length){ saveStore('hilites', kept); applyHighlights(); toast(T('manUnHl')); } floatEl.style.display='none'; }
 function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); const overlaps=arr.filter(h=>h.start!=null && h.start<s.end && h.end>s.start); if(!overlaps.length){ floatEl.style.display='none'; return; } const ns=Math.min(s.start, ...overlaps.map(h=>h.start)); const ne=Math.max(s.end, ...overlaps.map(h=>h.end)); const keepId=overlaps.reduce((a,b)=>(a.id<b.id?a:b)).id; arr=arr.map(h=> h.id===keepId ? {id:h.id, start:ns, end:ne} : h); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHiExpanded')); }
-  function onSelectionChange(){ const sel=window.getSelection(); if(!sel || sel.isCollapsed || sel.rangeCount===0){ floatEl.style.display='none'; openManual._sel=null; return; } const range=sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)){ floatEl.style.display='none'; openManual._sel=null; return; } const off=rangeToOffsets(range, docEl); const arr=hilites(); const overlap=arr.some(h=>h.start!=null && h.start<off[1] && h.end>off[0]); openManual._sel={ text: sel.toString(), line: blockLineOf((sel.anchorNode)||docEl), start: off[0], end: off[1] }; floatEl.style.display='flex'; const hiBtn=document.getElementById('manual-float-hi'); const cancelBtn=document.getElementById('manual-float-hicancel'); const expandBtn=document.getElementById('manual-float-hiexpand'); if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; } else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; } if(isTouchMode()){ floatEl.classList.add('float-bottom'); return; } floatEl.classList.remove('float-bottom'); const rect=range.getBoundingClientRect(); const mrect=modal.getBoundingClientRect(); const card=modal.querySelector('.manual-card').getBoundingClientRect(); let left=rect.left+rect.width/2-mrect.left-60; let top=rect.top-mrect.top-38; const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top; left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top); floatEl.style.left=left+'px'; floatEl.style.top=top+'px'; }
+  function onSelectionChange(){ const sel=window.getSelection(); if(!sel || sel.isCollapsed || sel.rangeCount===0){ floatEl.style.display='none'; openManual._sel=null; return; } const range=sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)){ floatEl.style.display='none'; openManual._sel=null; return; } const off=rangeToOffsets(range, docEl); const arr=hilites(); const overlap=arr.some(h=>h.start!=null && h.start<off[1] && h.end>off[0]); openManual._sel={ text: sel.toString(), line: blockLineOf((sel.anchorNode)||docEl), start: off[0], end: off[1] }; floatEl.style.display='flex'; const hiBtn=document.getElementById('manual-float-hi'); const cancelBtn=document.getElementById('manual-float-hicancel'); const expandBtn=document.getElementById('manual-float-hiexpand'); if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; } else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; } floatEl.classList.remove('float-bottom'); const rect=range.getBoundingClientRect(); const mrect=modal.getBoundingClientRect(); const card=modal.querySelector('.manual-card').getBoundingClientRect(); let left=rect.left+rect.width/2-mrect.left-60; let top=rect.top-mrect.top-38; const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top; left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top); floatEl.style.left=left+'px'; floatEl.style.top=top+'px'; }
   function openToc(open){ tocEl.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.toggle('on', !!open); if(open){ notePanel.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }
   function openNote(open){ notePanel.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.toggle('on', !!open); if(open){ tocEl.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); } }
   function closeDrawers(){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); if(bottombarEl){ bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }
   function updateProgress(){ const max=docEl.scrollHeight-docEl.clientHeight; const p=max>0? docEl.scrollTop/max : 0; if(progressEl) progressEl.style.width=(p*100)+'%'; }
-  function updateTocActive(){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=null; heads.forEach(h=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=parseInt(h.dataset.line,10); }); tocEl.querySelectorAll('a').forEach(a=>a.classList.toggle('active', parseInt(a.dataset.line,10)===cur)); }
-  function goChapter(dir){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=-1; heads.forEach((h,i)=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=i; }); let idx = dir>0 ? Math.min(heads.length-1, cur+1) : Math.max(0, cur-1); if(cur<0) idx = 0; const target=heads[idx]; const top=target.getBoundingClientRect().top-base+docEl.scrollTop; docEl.scrollTo({top:Math.max(0, top-8), behavior:'smooth'}); flash(target); closeDrawers(); }
+  function chapterHeads(){ const all=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); const fi=all.findIndex(h=>/^第\d+章/.test((h.textContent||'').trim())); return fi<0?all:all.filter((h,i)=>i<fi||/^第.+篇/.test((h.textContent||'').trim())||/^第\d+章/.test((h.textContent||'').trim())); }
+  function updateTocActive(){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=null; heads.forEach(h=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=parseInt(h.dataset.line,10); }); tocEl.querySelectorAll('a').forEach(a=>a.classList.toggle('active', parseInt(a.dataset.line,10)===cur)); }
+  function goChapter(dir){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=-1; heads.forEach((h,i)=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=i; }); let idx = dir>0 ? Math.min(heads.length-1, cur+1) : Math.max(0, cur-1); if(cur<0) idx = 0; const target=heads[idx]; const top=target.getBoundingClientRect().top-base+docEl.scrollTop; docEl.scrollTo({top:Math.max(0, top-8), behavior:'smooth'}); flash(target); closeDrawers(); }
   async function loadManual(lang){
     const file=fileMap[lang]||fileMap['zh-CN'];
     // 内置说明书：从同源站点内的 docs/ 目录加载，避免使用外链（GitHub 等）
@@ -11474,7 +11538,7 @@ function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); 
     try{ const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('http '+res.status); const md=await res.text(); docEl.innerHTML=parseBlocks(md).map(renderBlock).join(''); buildToc(); applyHighlights(); renderNotes(); const z=isTouchMode()?(loadStore('manualMobileFontSize')||16):loadStore('zoom',15); docEl.dataset.zoom=z; docEl.style.fontSize=z+'px'; restoreScroll(); if(!isTouchMode()) tocEl.classList.add('open'); }
     catch(e){ docEl.innerHTML='<div class="manual-error">'+mdEscape(T('manLoadFail'))+'</div>'; }
   }
-  function buildToc(){ const heads=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); tocEl.innerHTML='<div class="manual-toc-head"><span>'+mdEscape(T('manToc'))+'</span><button class="manual-toc-close" id="manual-toc-close" title="'+mdEscape(T('manClose'))+'" aria-label="'+mdEscape(T('manClose'))+'">✕</button></div><div class="manual-toc-body">'+heads.map(h=>'<a class="lvl'+h.dataset.level+'" data-line="'+h.dataset.line+'">'+mdEscape((h.textContent||'').trim())+'</a>').join('')+'</div>'; const tc=document.getElementById('manual-toc-close'); if(tc) tc.addEventListener('click', ()=>closeDrawers()); tocEl.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ const ln=parseInt(a.dataset.line,10); jumpToLine(ln); if(isTouchMode()) closeDrawers(); })); }
+  function buildToc(){ const heads=chapterHeads(); tocEl.innerHTML='<div class="manual-toc-head"><span>'+mdEscape(T('manToc'))+'</span><button class="manual-toc-close" id="manual-toc-close" title="'+mdEscape(T('manClose'))+'" aria-label="'+mdEscape(T('manClose'))+'">✕</button></div><div class="manual-toc-body">'+heads.map(h=>'<a class="lvl'+h.dataset.level+'" data-line="'+h.dataset.line+'">'+mdEscape((h.textContent||'').trim())+'</a>').join('')+'</div>'; const tc=document.getElementById('manual-toc-close'); if(tc) tc.addEventListener('click', ()=>closeDrawers()); tocEl.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ const ln=parseInt(a.dataset.line,10); jumpToLine(ln); if(isTouchMode()) closeDrawers(); })); }
 }
 
 /* ===================== 操作指南（只读，无目录 / 搜索 / 便签，无阴影卡片） ===================== */
@@ -11555,8 +11619,15 @@ function openGuide(){
     return {
       version: 2,
       objects: (typeof snapshot === 'function') ? snapshot() : [],
-      camera: { position: [camera.position.x, camera.position.y, camera.position.z],
-                target: (controls && controls.target) ? [controls.target.x, controls.target.y, controls.target.z] : [0,0,0] },
+      camera: {
+        position: [camera.position.x, camera.position.y, camera.position.z],
+        quaternion: [camera.quaternion.x, camera.quaternion.y, camera.quaternion.z, camera.quaternion.w],
+        target: (controls && controls.target) ? [controls.target.x, controls.target.y, controls.target.z] : [0,0,0],
+        fov: camera.fov,
+        aspect: camera.aspect,
+        near: camera.near,
+        far: camera.far
+      },
       colorMemory: (typeof colorMemory !== 'undefined') ? { ...colorMemory } : {},
       defaultColor: (typeof state !== 'undefined') ? state.defaultColor : undefined,
       brushColor: (typeof brush !== 'undefined') ? brush.color : undefined
@@ -11745,7 +11816,7 @@ function openGuide(){
   <div class="tos-gate-inner">
     <div class="tos-gate-head">
       <h2 data-i18n="tosGateTitle">服务协议与隐私政策</h2>
-      <p data-i18n="tosGateSub">请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。</p>
+      <p data-i18n="tosGateSub">请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方"同意并继续"。如不同意，请选择"不同意并退出"，将无法使用本软件。</p>
     </div>
     <div class="tos-gate-links">
       <button type="button" class="tos-gate-link" data-term="tos">
@@ -11800,6 +11871,11 @@ function openGuide(){
       try{ localStorage.setItem('tosAccepted','1'); }catch(e){}
       hideTosGate();
       }
+      function exitTos(){
+      // 网页版：浏览器原生弹窗提示用户关闭此网页
+      alert(T('tosGateExitAlert'));
+      try{ window.close(); }catch(e){}
+      }
       function rereadTos(){
       var g=document.getElementById('tos-gate'); if(!g) return;
       var blocked=g.querySelector('.tos-gate-blocked'); if(blocked) blocked.style.display='none';
@@ -11811,6 +11887,8 @@ function openGuide(){
       if(accepted) return;
       var g=document.getElementById('tos-gate'); if(!g) return;
       var a=document.getElementById('tos-gate-accept'); if(a) a.addEventListener('click', acceptTos);
+      var e=document.getElementById('tos-gate-exit'); if(e) e.addEventListener('click', exitTos);
+      var r=document.getElementById('tos-gate-reread'); if(r) r.addEventListener('click', rereadTos);
       g.querySelectorAll('.tos-gate-link').forEach(function(btn){
         btn.addEventListener('click', function(){ tosOpenTerm(btn.getAttribute('data-term')); });
       });

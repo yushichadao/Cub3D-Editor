@@ -5,6 +5,7 @@
  * 只能通过这里白名单式地调用主进程。
  */
 const { contextBridge, ipcRenderer, webUtils } = require('electron');
+const os = require('os');
 
 const invoke = (ch, ...args) => ipcRenderer.invoke(ch, ...args);
 
@@ -147,4 +148,14 @@ try {
   contextBridge.exposeInMainWorld('__cube3dExtraPacks', packs);
 } catch (_) {
   contextBridge.exposeInMainWorld('__cube3dExtraPacks', {});
+}
+
+/**
+ * 设备名注入：让页面在导出场景时能把作者记为电脑名。
+ * 必须在页面脚本读取前暴露，exportScene 会读取 window.__DEVICE_NAME__。
+ */
+try {
+  contextBridge.exposeInMainWorld('__DEVICE_NAME__', os.hostname());
+} catch (_) {
+  contextBridge.exposeInMainWorld('__DEVICE_NAME__', 'PC');
 }

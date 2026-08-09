@@ -17,6 +17,27 @@ let currentFile = null;
 function setCurrentFile(p) { currentFile = p || null; return currentFile; }
 function getCurrentFile() { return currentFile; }
 
+/**
+ * 识别文件内容类型：scene=画布场景，sticky=便签备份，unknown=其他。
+ * 与 Web/index.html 中的 classifyImport 保持一致（桌面端主进程无浏览器环境，故在此实现）。
+ */
+function classifyImport(data) {
+  if (data == null || typeof data !== 'object') return 'unknown';
+  if (Array.isArray(data)) {
+    if (!data.length) return 'unknown';
+    const f = data[0];
+    const sticky = f && typeof f === 'object' && ('note' in f || 'quote' in f || 'color' in f || 'line' in f || 'text' in f);
+    const shape = f && typeof f === 'object' && ('type' in f || 'data' in f || 'scene' in f || 'objects' in f);
+    if (sticky && !shape) return 'sticky';
+    if (shape) return 'scene';
+    return 'unknown';
+  }
+  if (data.format === 'cube3d-scene' || Array.isArray(data.scene) || Array.isArray(data.objects)) return 'scene';
+  if (typeof data.text === 'string' && (typeof data.color === 'string' || 'note' in data)) return 'sticky';
+  if ('note' in data || 'quote' in data || 'sticky' in data) return 'sticky';
+  return 'unknown';
+}
+
 async function openScene(win, presetPath) {
   let target = presetPath;
   if (!target) {
@@ -53,7 +74,7 @@ async function saveScene(win, payload = {}) {
   if (!target) {
     const r = await dialog.showSaveDialog(win, {
       title: saveAs ? '另存为' : '保存场景',
-      defaultPath: path.join(P.projects, payload.suggestName || defaultJsonName('场景')),
+      defaultPath: path.join(P.projects, payload.suggestName || defaultJsonName('scene')),
       filters: SCENE_FILTERS
     });
     if (r.canceled || !r.filePath) return { ok: false, canceled: true };
@@ -169,7 +190,15 @@ function readDropped(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   try {
     if (['.l3d', '.json'].includes(ext)) {
-      return { ok: true, kind: 'scene', path: filePath, data: JSON.parse(fs.readFileSync(filePath, 'utf8')) };
+      const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      // 复用 classifyImport 与“打开”菜单一致，避免把便签备份/未知文件误当场景导入
+      const kind = classifyImport(json);
+      if (kind !== 'scene') {
+        return { ok: false, reason: kind, message: kind === 'sticky'
+          ? '该文件是便签数据（便签备份），不能导入到画布。请在便签面板导入便签。'
+          : '无法识别的文件内容，仅支持画布场景文件（.json 场景）。' };
+      }
+      return { ok: true, kind: 'scene', path: filePath, data: json };
     }
     if (['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp'].includes(ext)) {
       const mime = ext === '.jpg' ? 'jpeg' : ext.slice(1);
