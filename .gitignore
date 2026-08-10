@@ -60,3 +60,14 @@ dist_build/
 cap_diag*.bat
 check_exe*.ps1
 _check*.ps1
+
+# ===== 一次性排查 / 调试产物（根目录，均非打包依赖，运行时再生）=====
+_audit_tmp.mjs
+_out*.txt
+_out*.json
+_out_shapeparams.json
+_out_toc.txt
+_z1.txt
+cap_diag*.log
+cap_update_diag*.log
+missing_terms.txt

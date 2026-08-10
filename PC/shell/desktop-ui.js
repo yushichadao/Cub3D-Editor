@@ -367,7 +367,7 @@
   D.app.onBeforeClose(function () {
     // 已有弹窗在等待用户时，不再重复弹出
     if (window.__closing) return;
-    if (!isDirty()) { D.window.forceClose(); return; }
+    if (!isDirty() || (K && K.state && K.state.objects && !K.state.objects.length)) { D.window.forceClose(); return; }
     window.__closing = true;
     webConfirm({
       message: '场景有未保存的修改',

@@ -1,680 +1,702 @@
-# Cube · 3D Design Workshop — User Manual
+# Cube3D Workshop — User Manual
 
-## A heuristic textbook from zero to mastery (Web · PC · Android)
+## A Heuristic Tutorial from Zero to Mastery (Web · PC · Android — Universal)
 
-> This book is not a cold feature list, but a textbook you can **learn by following, do by following, and think by following**.
-> We assume you have never touched 3D design, or even used professional software. Like a teacher sitting beside you, we start from "what is 3D", guide your thinking with questions, build intuition with analogies, and reinforce muscle memory with exercises, until you move from "knowing which button to click" to "being able to create independently".
+> This book is not a cold list of features, but a **learn-by-doing, practice-along, think-along** tutorial.
+> We assume you have never touched 3D design, or even used professional software. Like a teacher sitting beside you,
+> we start from "what is 3D", use questions to guide your thinking, use analogies to build intuition, and use exercises to strengthen your hands-on feel,
+> ultimately taking you from "knowing which button to click" to "being able to create independently".
 
-> 📦 **One book, four forms**: This tool ships as three editions — Web, PC desktop, and Android. The Web edition further adapts itself into a **mouse mode** and a **touch mode** depending on your device. This book **covers all four forms**; wherever the operation differs, a "form badge" tells you exactly what to do on your end.
+> 📦 **One book, four forms**: This tool has three releases — Web, PC desktop, and Android —
+> among which the Web version automatically splits into **mouse mode** and **touch mode** based on your device.
+> This book **covers all four forms at once**. Wherever operations differ, a "form tag" clearly tells you what to do on each end.
 
 ---
 
-## How to use this book
-> Tip: Click the "Table of Contents" at the beginning of the manual to jump to a chapter. The manual reader's bottom bar also has "Previous chapter / Next chapter" buttons (◀ ▶) so you can page through chapters in order without returning to the TOC. On touch devices and the PC edition, pressing the Back key first closes sticky notes one by one (asking first if there is unsaved content), then closes the table of contents, then exits the manual and shows the settings.
+## First Launch: Service Agreement and Privacy Policy
+
+No matter which end you use, the tool pops up a **Service Agreement and Privacy Policy** consent gate on **first launch**:
+
+- The page lists three documents — *Service Agreement*, *Disclaimer*, and *Privacy Policy* (click the links to view the full text);
+- You must **first read and check to agree to all terms**, then click **"Agree and Continue"** to enter the editor;
+- If you choose **"Disagree and Exit"**, the program will exit immediately and **the software cannot be used**;
+- If you entered but still want to back out, click **"Re-read"** to view the terms again.
+
+> ⚠️ This is a mandatory pre-step: until you agree, no feature is available. Be sure to watch for this popup on first open — don't mistake it for a freeze.
+
+---
+
+## How to Use This Book
+> Tip: Click "Contents" at the beginning of the manual to jump to the corresponding chapter; the manual reader's "Previous Chapter / Next Chapter" buttons (◀ ▶) are located in the **bottom bar** and visible only in the **touch form** — you can flip through chapters in order without returning to the contents. On touch devices and the PC end, pressing the back key will first close sticky notes one by one (unsaved content will prompt), then close the contents, and finally exit the manual and show settings.
 
 | Item | Description |
 | --- | --- |
-| Audience | Absolute beginners; also hobbyists who want to level up systematically |
-| Teaching style | Heuristic: ask *why* first, then *how*, then give an exercise |
-| Scope | Covers all features of the editor (interface, shapes, color, transform, text, brush, eraser, views, shortcuts, files, advanced & practical) |
-| Supported forms | **Web (mouse) / Web (touch) / PC desktop / Android** — all four fully covered |
-| Coordinate convention | This book **always uses the axis labels actually shown on screen** (page labels: X = blue = front/back, Y = red = left/right, Z = green = height, Z points up). The code's internal axes differ from the page labels; ordinary readers need not care. |
-| Reading advice | Start with [Chapter 0 · The Four Forms and How to Read This Book](jump:Chapter 0 · The Four Forms and How to Read This Book) to identify your edition; read the first four Parts in order; the remaining Parts on demand. Be sure to do the "Think" and "Practice" at the end of every chapter. |
-| Online address | [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/) (open the page and start practicing) |
-| Project repo | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (source code, installers and this document are all here) |
+| Target audience | Beginners with no prior experience; also hobbyists who want systematic advancement |
+| Teaching style | Heuristic: ask why first, then how, then give exercises |
+| Scope | Covers all editor features (interface, shapes, color, transform, text, brush, eraser, viewpoint, shortcuts, files, advanced topics and practice) |
+| Applicable forms | **Web (mouse) / Web (touch) / PC Desktop / Android** — all four forms fully covered |
+| Coordinate system convention | This book **always follows the axis labels actually shown on the interface** (page labels: X blue = front-back, Y red = left-right, Z green = height, Z axis points up). The internal code implementation axes differ from the page labels; ordinary readers need not concern themselves with this |
+| Reading suggestions | First read [Chapter 0: Four Forms and How to Read This Book](jump:第0章 四种形态与本书读法), and identify which end you are using; read the first four parts in order; the remaining eight parts can be consulted as needed. Be sure to do the "Think About It" and "Try It" at the end of each chapter |
+| Online address | [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/) (open the page to start practicing) |
+| Project repository | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (source code, installers, and this documentation are all here) |
 
-**Form badge convention**
+**Form Tag Convention**
 
-Whenever operations differ across editions, you will see these four badges. **Read only the line that matches your device; you may skip the rest**:
+Whenever the book encounters differences in operation across ends, one of the four tags below will appear. **Read only the line relevant to your device**; the rest can be skipped:
 
-| Badge | Meaning | Typical device |
+| Tag | Meaning | Typical devices |
 | --- | --- | --- |
-| 🖥️ **Web·Mouse** | Opened in a browser on a device with a mouse/trackpad | Desktop, laptop |
-| 📱 **Web·Touch** | Opened in a browser on a touchscreen device | Phone, tablet browser |
-| 💻 **PC** | The installed Windows desktop app (.exe) | Windows PC |
-| 🤖 **Android** | The installed mobile app (.apk) | Android phone, tablet |
+| 🖥️ **Web · Mouse** | Open in a browser, and the system has a mouse/trackpad | Desktop, laptop |
+| 📱 **Web · Touch** | Open in a browser, and it is a touchscreen device | Phone, tablet browser |
+| 💻 **PC version** | Downloaded and installed Windows desktop program (.exe) | Windows computer |
+| 🤖 **Android version** | Installed phone app (.apk) | Android phone, tablet |
 
-💡 If a passage has **no** badge, it means **all four forms behave identically** — just follow it.
+💡 If a section of operations has **no** form tag, it means **all four ends are identical** — just follow along.
 
-**Symbol convention**
+**Symbol Convention**
 - 💡 Tip: time-saving experience
-- ❓ Think: a question to guide your thinking
-- ✏️ Practice: a hands-on exercise
-- ⚠️ Caution: a pitfall to avoid
+- ❓ Think About It: questions to guide your thinking
+- ✏️ Try It: hands-on exercises
+- ⚠️ Note: pitfalls to avoid
 
 ---
 
 ## Full Table of Contents
 
-**Part 0 · Forms (identify your edition first)**
-- [Chapter 0 · The Four Forms and How to Read This Book](jump:Chapter 0 · The Four Forms and How to Read This Book)
+**Part Zero: Forms (Identify Your Version First)**
+- [Chapter 0: Four Forms and How to Read This Book](jump:第0章 四种形态与本书读法)
 
-**Part 1 · Getting Started (zero to beginner)**
-- [Chapter 1 · Re-meeting "3D": Starting from a Photo](jump:Chapter 1 · Re-meeting "3D": Starting from a Photo)
-- [Chapter 2 · Preparing the Tool: Opening This Tool](jump:Chapter 2 · Preparing the Tool: Opening This Tool)
-- [Chapter 3 · The Whole Interface: The Five Areas in Front of You](jump:Chapter 3 · The Whole Interface: The Five Areas in Front of You)
-- [Chapter 4 · Coordinate System: The Three Lines Labeled X / Y / Z on the Page](jump:Chapter 4 · Coordinate System: The Three Lines Labeled X / Y / Z on the Page)
-- [Chapter 5 · Let's Build: Your First 3D Work](jump:Chapter 5 · Let's Build: Your First 3D Work)
-- [Chapter 6 · Export & Share: Screenshots, Scene Export, and Backups](jump:Chapter 6 · Export & Share: Screenshots, Scene Export, and Backups)
+**Part One: Setting Sail (Zero-Basics Onboarding)**
+- [Chapter 1: Rethinking "3D": Starting from a Photo](jump:第1章 重新认识"三维"：从一张照片说起)
+- [Chapter 2: Prepare Your Tools: Opening This Tool](jump:第2章 工欲善其事：打开这个工具)
+- [Chapter 3: Interface Overview: The Five Areas Before You](jump:第3章 界面全景：你眼前的五块天地)
+- [Chapter 4: Coordinate System: The Three Lines Labeled X / Y / Z on the Web Page](jump:第4章 坐标系：网页上标着 X / Y / Z 的那三根线)
+- [Chapter 5: Hands-On: Your First 3D Work](jump:第5章 动手做：你的第一个三维作品)
+- [Chapter 6: Save and Share: Screenshot, Export, and Backup](jump:第6章 保存与分享：截图、导出与备份)
 
-**Part 2 · Basic Operations (select · transform · undo)**
-- [Chapter 7 · The Art of Selecting Objects: Single, Multi, and Box Select](jump:Chapter 7 · The Art of Selecting Objects: Single, Multi, and Box Select)
-- [Chapter 8 · The Transform Trio: Translate, Rotate, Scale](jump:Chapter 8 · The Transform Trio: Translate, Rotate, Scale)
-- [Chapter 9 · Transform Modes and the Uniform Scale Lock](jump:Chapter 9 · Transform Modes and the Uniform Scale Lock)
-- [Chapter 10 · Undo and History: The Confidence to Experiment](jump:Chapter 10 · Undo and History: The Confidence to Experiment)
+**Part Two: Operating Basics (Select · Transform · Undo)**
+- [Chapter 7: The Art of Selecting Objects: Single, Multiple, and Box Selection](jump:第7章 选择对象的艺术：单选、多选与框选)
+- [Chapter 8: The Transform Trio: Move, Rotate, Scale](jump:第8章 变换三件套：移动、旋转、缩放)
+- [Chapter 9: Transform Modes and Uniform Scaling](jump:第9章 变换模式与等比缩放)
+- [Chapter 10: Undo and History: The Confidence to Experiment Boldly](jump:第10章 撤销与历史：大胆试错的底气)
 
-**Part 3 · The Shape Universe (how to use the 20 + 20 types)**
-- [Chapter 11 · 3D Shapes Overview (how to classify the 20 types)](jump:Chapter 11 · 3D Shapes Overview (how to classify the 20 types))
-- [Chapter 12 · 2D Shapes Overview (the 20 types and the "sticker" mindset)](jump:Chapter 12 · 2D Shapes Overview (the 20 types and the "sticker" mindset))
-- [Chapter 13 · Parameters of Every 3D Shape (1): Basic Solids](jump:Chapter 13 · Parameters of Every 3D Shape (1): Basic Solids)
-- [Chapter 14 · Parameters of Every 3D Shape (2): Special Shapes](jump:Chapter 14 · Parameters of Every 3D Shape (2): Special Shapes)
-- [Chapter 15 · "Standing" vs "Lying": The Essential 3D/2D Difference](jump:Chapter 15 · "Standing" vs "Lying": The Essential 3D/2D Difference)
+**Part Three: The Shape Universe (How to Use 20 + 20 Types)**
+- [Chapter 11: 3D Shape Overview (How the 20 Types Are Categorized)](jump:第11章 3D 图形总览（20 种如何分类）)
+- [Chapter 12: 2D Shape Overview (20 Types and the "Sticker" Mindset)](jump:第12章 2D 图形总览（20 种与"贴纸"思维）)
+- [Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Solids](jump:第13章 每种 3D 图形参数详解（上）：基础体)
+- [Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes](jump:第14章 每种 3D 图形参数详解（下）：特种形状)
+- [Chapter 15: "Standing" vs "Lying": The Essential Difference Between 3D and 2D](jump:第15章 "站"与"躺"：3D 与 2D 的本质差异)
 
-**Part 4 · Color & Material**
-- [Chapter 16 · Color Basics: the Game between the Human Eye and Light](jump:Chapter 16 · Color Basics: the Game between the Human Eye and Light)
-- [Chapter 17 · 27 Preset Colors: One-click Coloring](jump:Chapter 17 · 27 Preset Colors: One-click Coloring)
-- [Chapter 18 · Custom Color: HEX, HSV, and the Screen Color Picker](jump:Chapter 18 · Custom Color: HEX, HSV, and the Screen Color Picker)
-- [Chapter 19 · 12 Patterns: Give the Surface a Story](jump:Chapter 19 · 12 Patterns: Give the Surface a Story)
-- [Chapter 20 · Uploading Image Textures, Opacity & Wireframe](jump:Chapter 20 · Uploading Image Textures, Opacity & Wireframe)
+**Part Four: Color and Material**
+- [Chapter 16: Color Basics: The Game of Human Eyes and Light](jump:第16章 颜色入门：人眼与光的游戏)
+- [Chapter 17: 27 Preset Colors: One-Click Coloring](jump:第17章 27 种预设色：一键上色)
+- [Chapter 18: Custom Colors: HEX, HSV, and Screen Color Picker](jump:第18章 自定义颜色：HEX、HSV 与屏幕取色器)
+- [Chapter 19: 12 Pattern Textures: Giving Surfaces a Story](jump:第19章 12 种花纹贴图：让表面有故事)
+- [Chapter 20: Upload Image Textures and Opacity](jump:第20章 上传图片贴图与不透明度)
 
-**Part 5 · Text & Image**
-- [Chapter 21 · Adding Text: Let the Scene Speak](jump:Chapter 21 · Adding Text: Let the Scene Speak)
-- [Chapter 22 · Font, Size, Weight, Vertical/Horizontal](jump:Chapter 22 · Font, Size, Weight, Vertical/Horizontal)
-- [Chapter 23 · Image Object: Bringing Photos into the 3D World](jump:Chapter 23 · Image Object: Bringing Photos into the 3D World)
+**Part Five: Text and Images**
+- [Chapter 21: Adding Text: Let the Scene Speak](jump:第21章 添加文本：让场景会说话)
+- [Chapter 22: Font, Size, Weight, and Horizontal/Vertical Layout](jump:第22章 字体、字号、粗细与横竖排)
+- [Chapter 23: Image Objects: Putting Photos into the 3D World](jump:第23章 图片对象：把照片放进三维世界)
 
-**Part 6 · Brush & Eraser**
-- [Chapter 24 · 2D Brush: Drawing Lines on the Ground](jump:Chapter 24 · 2D Brush: Drawing Lines on the Ground)
-- [Chapter 25 · 3D Brush and the Reference Plane](jump:Chapter 25 · 3D Brush and the Reference Plane)
-- [Chapter 26 · Eraser: Whole vs Partial](jump:Chapter 26 · Eraser: Whole vs Partial)
+**Part Six: Brush and Eraser**
+- [Chapter 24: 2D Brush: Drawing Lines on the Ground](jump:第24章 2D 画笔：在地面画线)
+- [Chapter 25: 3D Brush and Reference Plane](jump:第25章 3D 画笔与参考平面)
+- [Chapter 26: Eraser: Whole and Partial](jump:第26章 橡皮擦：整体与局部)
 
-**Part 7 · Views & Observation**
-- [Chapter 27 · Seven Preset Views: See the World from Another Angle](jump:Chapter 27 · Seven Preset Views: See the World from Another Angle)
-- [Chapter 28 · Locking the View, Hiding Aids, and Fullscreen](jump:Chapter 28 · Locking the View, Hiding Aids, and Fullscreen)
+**Part Seven: Viewpoint and Observation**
+- [Chapter 27: Seven Preset Viewpoints: See the World from Another Angle](jump:第27章 七种预设视角：换个角度看世界)
+- [Chapter 28: Hide Helpers and Fullscreen](jump:第28章 隐藏辅助与全屏)
 
-**Part 8 · Efficiency · Shortcuts (let your hands fly)**
-- [Chapter 29 · Why Learn Shortcuts: The Compound Interest of Efficiency](jump:Chapter 29 · Why Learn Shortcuts: The Compound Interest of Efficiency)
-- [Chapter 30 · Mouse & Gesture Operations: All Four Forms](jump:Chapter 30 · Mouse & Gesture Operations: All Four Forms)
-- [Chapter 31 · Single Keys & Shift Combos](jump:Chapter 31 · Single Keys & Shift Combos)
-- [Chapter 32 · Slider/Input & Ctrl Combos](jump:Chapter 32 · Slider/Input & Ctrl Combos)
+**Part Eight: Efficiency · Shortcuts (Make Your Hands "Fly")**
+- [Chapter 29: Why Memorize Shortcuts: The Compound Interest of Efficiency](jump:第29章 为什么要记快捷键：效率的复利)
+- [Chapter 30: Mouse and Gesture Operations: All Four Forms Explained](jump:第30章 鼠标与手势操作：四种形态都讲)
+- [Chapter 31: Single-Key Operations and Shift Combinations](jump:第31章 单键操作与 Shift 组合键)
+- [Chapter 32: Sliders/Input Boxes and Ctrl Combinations](jump:第32章 滑动条/输入框 与 Ctrl 组合键)
 
-**Part 9 · Transform Controls (the arrows that "talk")**
-- [Chapter 33 · First Transform Controls: Three "Gripping Tools"](jump:Chapter 33 · First Transform Controls: Three "Gripping Tools")
-- [Chapter 34 · Translate Mode: Drag Objects with the Arrow](jump:Chapter 34 · Translate Mode: Drag Objects with the Arrow)
-- [Chapter 35 · Rotate Mode: Rings Decide Which Axis to Spin Around](jump:Chapter 35 · Rotate Mode: Rings Decide Which Axis to Spin Around)
-- [Chapter 36 · Scale Mode: Square Handles and the "Uniform" Switch](jump:Chapter 36 · Scale Mode: Square Handles and the "Uniform" Switch)
+**Part Nine: Transform Controls (Arrows That "Talk")**
+- [Chapter 33: First Encounter with Transform Controls: Three "Gripping Tools"](jump:第33章 初见变换控件：三件"抓握工具")
+- [Chapter 34: Translate Mode: "Grab" the Object with the Arrow and Move It](jump:第34章 平移模式：用箭头"抓"着物体走)
+- [Chapter 35: Rotate Mode: The Ring Decides "Which Axis to Rotate Around"](jump:第35章 旋转模式：圆环决定"绕哪根轴转")
+- [Chapter 36: Scale Mode: Box Handles and the "Uniform" Switch](jump:第36章 缩放模式：方块手柄与"等比"开关)
 
-**Part 10 · Groups (managing a "crowd" at once)**
-- [Chapter 37 · Selecting a Group: Understanding "Selection Sets"](jump:Chapter 37 · Selecting a Group: Understanding "Selection Sets")
-- [Chapter 38 · Moving a Group: The Master Pivot of Multi-select](jump:Chapter 38 · Moving a Group: The Master Pivot of Multi-select)
-- [Chapter 39 · Mass Production: Copy, Clone, and "Arrays"](jump:Chapter 39 · Mass Production: Copy, Clone, and "Arrays")
+**Part Ten: Group Management (Manage a "Group" of Objects at Once)**
+- [Chapter 37: Select a Group at Once: Understanding the "Selection Set"](jump:第37章 一次选中一群：认识"选择集")
+- [Chapter 38: Move a Group Together: The "Master Handle" of Multi-Select Transform](jump:第38章 一群一起动：多选变换的"主控点")
+- [Chapter 39: Mass Production: Copy, Clone, and "Array"](jump:第39章 量产：复制、克隆与"阵列")
 
-**Part 11 · Off-screen (share · collaborate · align)**
-- [Chapter 40 · Export & Share: Taking Work Off-screen](jump:Chapter 40 · Export & Share: Taking Work Off-screen)
+**Part Eleven: Works Leaving the Screen (Share · Collaborate · Align)**
+- [Chapter 40: Save and Share: Let Your Work Leave the Screen](jump:第40章 保存与分享：让作品离开屏幕)
 
-**Part 12 · Hands-on (build a complete scene from scratch)**
-- [Chapter 41 · Project 1: Build a Small House](jump:Chapter 41 · Project 1: Build a Small House)
-- [Chapter 42 · Project 2: Make a 3D Text Slogan](jump:Chapter 42 · Project 2: Make a 3D Text Slogan)
-- [Chapter 43 · Project 3: Design a Logo / Icon](jump:Chapter 43 · Project 3: Design a Logo / Icon)
-- [Chapter 44 · Project 4: Comprehensive Scene "My Little Courtyard"](jump:Chapter 44 · Project 4: Comprehensive Scene "My Little Courtyard")
+**Part Twelve: Practice (Build a Complete Scene from Scratch)**
+- [Chapter 41: Project 1: Build a Small House](jump:第41章 项目一：搭一座小房子)
+- [Chapter 42: Project 2: Make a 3D Text Slogan](jump:第42章 项目二：制作立体字标语)
+- [Chapter 43: Project 3: Design a Badge / Icon](jump:第43章 项目三：设计一枚徽标 / 图标)
+- [Chapter 44: Project 4: Comprehensive Scene "My Little Courtyard"](jump:第44章 项目四：综合场景《我的小院》)
 
-**Part 13 · Troubleshooting & Appendix**
-- [Chapter 45 · FAQ Troubleshooting](jump:Chapter 45 · FAQ Troubleshooting)
-- [Chapter 46 · Glossary](jump:Chapter 46 · Glossary)
-- [Chapter 47 · Quick Shortcut Reference](jump:Chapter 47 · Quick Shortcut Reference)
-- [Chapter 48 · Shape · Pattern · Color Index](jump:Chapter 48 · Shape · Pattern · Color Index)
+**Part Thirteen: Troubleshooting and Appendix**
+- [Chapter 45: FAQ Troubleshooting Guide](jump:第45章 常见问题排查手册)
+- [Chapter 46: Glossary (Chinese-English)](jump:第46章 术语表（中英对照）)
+- [Chapter 47: Shortcut Quick Reference](jump:第47章 快捷键速查表)
+- [Chapter 48: Shape · Pattern · Color Index](jump:第48章 图形 · 花纹 · 颜色索引)
 
-**Part 14 · Sticky Notes · Multilingual**
-- [Chapter 49 · Take Notes While Reading: Sticky Notes in the Manual](jump:Chapter 49 · Take Notes While Reading: Sticky Notes in the Manual)
-- [Chapter 50 · Floating Sticky Windows: Pin a Note on Screen](jump:Chapter 50 · Floating Sticky Windows: Pin a Note on Screen)
-- [Chapter 51 · Multilingual: the Manual Also "Speaks" Your Language](jump:Chapter 51 · Multilingual: the Manual Also "Speaks" Your Language)
+**Part Fourteen: Sticky Notes · Multilingual**
+- [Chapter 49: Take Notes While Reading: Sticky Notes in the Manual](jump:第49章 边读边记：说明书里的便签)
+- [Chapter 50: Make Sticky Notes "Float" on Screen](jump:第50章 让便签"浮"在屏幕上)
+- [Chapter 51: Multilingual: The Manual Also "Speaks" Your Language](jump:第51章 多语言：说明书也会"说"你的语言)
 
 ---
 
-## Preface: to you who have never touched 3D
+## Preface: For Those Who Have Never Touched 3D
 
-Maybe when you opened this page, you felt a little nervous: 3D? Modeling? Isn't that something you have to study for a long time with heavy software?
+Perhaps when you opened this web page, you felt a little nervous: 3D? Modeling? Doesn't that require learning software for a long time?
 
 Take a deep breath first. 🙂
 
-The tool in front of you is a **pure-web 3D editor** — no installation, no graphics drivers, no classes needed. It compresses "creating a 3D world" down to "click, drag, type a few words".
+The tool before you is a **pure web-based 3D editor** — no installation, no graphics driver, no classes needed. It compresses "creating a 3D world" down to the level of "click a bit, drag a bit, type a few words."
 
-Many beginners get stuck at step one because they are scared off by a pile of jargon: coordinate axes, transforms, grids, textures… In fact, they are all very everyday:
+Many beginners get stuck at the first step because they are intimidated by a pile of jargon: coordinate axes, transform, grid, texture... In fact, they are all very down-to-earth:
 
-- **Coordinate axes** are like the three invisible rulers in your room — "front–back, left–right, up–down";
-- **Transform** simply means "move it, turn it, scale it";
-- **Grid** is the squares on the ground that help you judge size and distance;
-- **Texture** is pasting a picture onto an object's surface, like putting wallpaper on a wall.
+- **Coordinate axes** are like the three invisible rulers of "front-back, left-right, up-down" in your room;
+- **Transform** is simply "move position, turn around, enlarge or shrink";
+- **Grid** is the squares on the ground, helping you judge size and distance;
+- **Texture** is sticking an image onto an object's surface, like putting wallpaper on a wall.
 
-This book takes these concepts one by one and explains them in plain words you can understand. We do not take the old path of "memorize definitions first, then operate". Instead, we **let you make something first, then go back and understand why it is the way it is**. That is what "heuristic" means.
+This book will break down these concepts one by one and explain them in plain language you can understand. We do not take the old path of "memorize definitions first, then operate"; instead, we **let you make something first, then go back and understand why it is this way**. That is "heuristic."
 
 After reading this book, you will be able to:
-1. Place, adjust, and color any shape independently;
+1. Independently place, adjust, and color any shape;
 2. Enrich your scene with text, images, and brushes;
-3. Boost efficiency with shortcuts until it flows like water;
-4. Complete whole works from a house, to a slogan, to a logo.
+3. Use shortcuts to boost efficiency to "flowing like clouds and water";
+4. Complete full works from a house, a slogan, to a badge.
 
-Ready? Let's spend five minutes first to identify which edition you have in hand.
+Ready? Let's spend five minutes first to identify the version in your hands.
 
 ---
 
-# Part 0 · Forms (identify your edition first)
+# Part Zero: Forms (Identify Your Version First)
 
-## Chapter 0 · The Four Forms and How to Read This Book
+## Chapter 0: Four Forms and How to Read This Book
 
-Before you start, spend three minutes confirming: **which form are you using right now?** This decides, in every later chapter, which badge line you should read.
+Before you start, please spend three minutes confirming: **Which form are you using right now?** This determines, in every later chapter, which tag line you should read.
 
-### 0.1 Three releases, four usage forms
+### 0.1 Three Releases, Four Usage Forms
 
-This tool has **three editions**, but because the Web edition adapts to your device automatically, there are actually **four forms** in daily use:
+This tool has released **three versions**, but because the Web version automatically adapts to devices, in actual use there are **four forms** in total:
 
 | Form | How to get it | How to confirm you are using it |
 | --- | --- | --- |
-| 🖥️ **Web·Mouse** | Open the online address in a browser | A mouse pointer is on screen; the left panel has a "Keyboard Shortcuts" section |
-| 📱 **Web·Touch** | Open the same address in a phone/tablet browser | The bottom toolbar shows "Box select" and "Select all" buttons; a "Gesture operations" help table appears |
-| 💻 **PC** | Download the `.exe`, install or unzip, then run | The window's top-right has its own drawn "Minimize / Maximize / Close" |
-| 🤖 **Android** | Download the `.apk` and install | Bottom shows "Box select" and "Select all"; pressing the phone's Back key pops up an exit confirmation |
+| 🖥️ **Web · Mouse** | Open the online address in a browser | A mouse cursor is on screen; the "keyboard shortcuts" help area is shown in the "Settings → Quick Actions" popup (not permanently in any panel) |
+| 📱 **Web · Touch** | Open the same address in a phone/tablet browser | The bottom toolbar shows "Box Select" and "Select All" buttons; there is a "Gesture Operations" help table |
+| 💻 **PC version** | Download the `.exe`, install or run after unzipping | The top-right corner of the window has self-drawn "Minimize / Maximize / Close" |
+| 🤖 **Android version** | Download the `.apk` and install | The bottom has "Box Select" and "Select All"; pressing the phone back key pops up an exit confirmation |
 
-💡 **The Web edition decides automatically**: it detects whether your device is a "precise pointer (mouse)" or a "coarse pointer (finger)", then switches to the matching mode. **You do not need to do any setup**.
+💡 **The Web version judges automatically**: it detects whether your device is a "precise pointer (mouse)" or a "coarse pointer (finger)", then automatically switches to the corresponding mode — **you do not need to make any settings**.
 
-⚠️ If you want to **preview what the touch version looks like** in a desktop browser (e.g. for a teaching demo), add `?touch` to the URL, e.g.:
-[`https://yushichadao.github.io/Cub3D-Editor/?touch`](https://yushichadao.github.io/Cub3D-Editor/?touch). Conversely, the Android edition is always the touch layout.
+⚠️ If you want to **preview what the touch version looks like** in a desktop browser (e.g., for teaching demos), append `?touch` to the URL, for example:
+[`https://yushichadao.github.io/Cub3D-Editor/?touch`](https://yushichadao.github.io/Cub3D-Editor/?touch). Conversely, the Android version is permanently the touch layout by default.
 
-### 0.2 Capability comparison table of the four forms
+### 0.2 Capability Comparison Table of the Four Forms
 
-This is the single most important quick-reference table in the book. **We suggest skimming it once for an impression, then coming back when you hit a specific feature.**
+This is the most important quick-reference table in the whole book. **It is recommended to glance at it for an impression first, and come back to it when encountering specific features.**
 
-| Feature | 🖥️ Web·Mouse | 📱 Web·Touch | 💻 PC | 🤖 Android |
+| Feature | 🖥️ Web · Mouse | 📱 Web · Touch | 💻 PC version | 🤖 Android version |
 | --- | :---: | :---: | :---: | :---: |
 | All shapes / colors / transforms / text / brushes | ✅ | ✅ | ✅ | ✅ |
-| Keyboard shortcuts | ✅ full | ⛔ no physical keyboard | ✅ full | ⛔ no physical keyboard |
-| "Keyboard shortcuts" help section | ✅ shown | ⛔ hidden | ✅ shown | ⛔ hidden |
-| "Gesture operations" help table | ⛔ hidden | ✅ shown | ⛔ hidden | ✅ shown |
-| "Box select" / "Select all" buttons | ⛔ replaced by shortcuts | ✅ shown | ⛔ replaced by shortcuts | ✅ always shown |
-| "Fullscreen" button | ✅ web fullscreen | ✅ web fullscreen | ✅ window fullscreen | ⛔ already a fullscreen app |
-| Window minimize/maximize/close | ⛔ use the browser's | ⛔ | ✅ app-provided | ⛔ |
-| Independent pinned sticky window | ✅ | ✅ | ✅ | ✅ |
+| Keyboard shortcuts | ✅ Full | ⛔ No physical keyboard | ✅ Full | ⛔ No physical keyboard |
+| "Keyboard shortcuts" help area | ✅ Shown | ⛔ Hidden | ✅ Shown | ⛔ Hidden |
+| "Gesture Operations" help table | ⛔ Hidden | ✅ Shown | ⛔ Hidden | ✅ Shown |
+| "Box Select" / "Select All" buttons | ⛔ Replaced by shortcuts | ✅ Shown | ⛔ Replaced by shortcuts | ✅ Always shown |
+| "Fullscreen" button | ✅ Web fullscreen | ✅ Web fullscreen | ⛔ Use F11 / window maximize button | ⛔ Already a fullscreen app |
+| Window minimize/maximize/close | ⛔ Use the browser's | ⛔ | ✅ App's own | ⛔ |
+| Sticky note top floating layer (in-page float, not a separate window) | ✅ | ✅ | ✅ | ✅ |
 | Drag-and-drop file import | ✅ | ⛔ | ✅ | ⛔ |
 | Crash recovery / auto-save | ✅ | ✅ | ✅ | ✅ |
-| Screen color picker (pick anywhere on screen) | ✅ | ⛔ canvas-only | ✅ | ⛔ canvas-only |
-| Save confirmation on exit (close window / quit) | ✅ | ✅ | ✅ | ⛔ (uses Back-key confirmation) |
-| Phone Back-key layered exit confirmation | ⛔ | ⛔ | ⛔ | ✅ |
-| Offline use | ⛔ needs network | ⛔ needs network | ✅ fully offline | ✅ fully offline |
+| Screen color picker (button named "屏幕取色", touch end actually only samples within the canvas) | ✅ Pick anywhere on screen | ✅ Only sample within canvas | ✅ Pick anywhere on screen | ✅ Only sample within canvas |
+| Save confirmation on exit (close window / exit) | ✅ | ✅ | ✅ | ⛔ (goes through back-key confirmation) |
+| Phone back-key layered exit confirmation | ⛔ | ⛔ | ⛔ | ✅ |
+| Offline use | ⛔ Requires internet | ⛔ Requires internet | ✅ Fully offline | ✅ Fully offline |
 
-### 0.3 The core difference: fingers have no "right button" or "scroll wheel"
+### 0.3 The Core Difference: Fingers Have No "Right Click" or "Scroll Wheel"
 
-Among the four forms, the only thing that really requires changing your muscle memory is one thing: **the input method**.
+Among the four forms, the only thing that truly requires you to change your muscle memory is actually one thing: **the input method**.
 
-A mouse has three independent signals (left button, right button, scroll wheel); a finger has only one (press–move–release). So touch must use **the number of fingers** to tell intentions apart:
+A mouse has three independent signals (left button, right button, scroll wheel); a finger has only one (press-move-release). So the touch screen must use **number of fingers** to distinguish intent:
 
-| What you want to do | 🖥️💻 Mouse (Web·Mouse / PC) | 📱🤖 Finger (Web·Touch / Android) |
+| What you want to do | 🖥️💻 Mouse (Web · Mouse / PC) | 📱🤖 Touch (Web · Touch / Android) |
 | --- | --- | --- |
-| Select an object | Left-click | Single-finger tap |
-| Place a shape | Left-click the ground | Single-finger tap the ground |
-| Rotate the view | **Right-button** drag | **Single-finger** drag on empty space |
-| Pan the view | **Middle-button** drag / `Shift`+right-button | **Two-finger** drag together |
-| Zoom the view | **Scroll wheel** | **Two-finger** pinch / spread |
-| Multi-select | `Shift` + left-click | Tap "Select all", or use "Box select" |
-| Box select | Directly left-drag a rectangle | First tap "Box select", then single-finger drag |
+| Select object | Left click | Single-finger tap |
+| Place shape | Left click on ground | Single-finger tap on ground |
+| Rotate view | **Right button** drag | **Single-finger** drag on empty space |
+| Pan view | **Middle button** drag | **Two-finger** drag together |
+| Zoom view | **Scroll wheel** scroll | **Two-finger** pinch / spread |
+| Multi-select | `Shift` + left click | Tap "Select All", or use "Box Select" |
+| Box select | Directly left-drag a rectangle | First tap "Box Select" button, then single-finger drag |
 
-💡 **One-line memory**: **The mouse looks at "which button", the finger looks at "how many fingers".**
+💡 **One-line memory**: **Mouse looks at "which button", fingers look at "how many fingers".**
 
-### 0.4 The two exclusive buttons on touch
+### 0.4 Two Exclusive Buttons on the Touch End
 
-Because there is no keyboard, the touch forms (📱 Web·Touch and 🤖 Android) add two buttons to the bottom toolbar, replacing `Ctrl+A` and "drag-to-box-select":
+Because there is no keyboard, the touch form (📱 Web · Touch and 🤖 Android) adds two buttons on the bottom toolbar, which replace `Ctrl+A` and "drag-to-box-select":
 
-- **"Select all"**: equivalent to `Ctrl + A` on the mouse side, selects all objects in the scene with one tap;
-- **"Box select"**: tap once to enter box-select mode (button turns blue), then drag a rectangle with one finger; objects inside the box are selected together.
-  ⚠️ **Note**: After one box-select finishes, it **automatically exits** that mode (button returns to its original color). To box-select again, you must **tap "Box select" once more**. This is a design to prevent accidental touches.
+- **"Select All"**: equivalent to `Ctrl + A` on the mouse end, selects all objects in the scene with one click;
+- **"Box Select"**: tap once to enter box-select mode (button turns blue), then single-finger drag a rectangle; objects enclosed will be selected together.
+  ⚠️ **Note**: Box select **automatically exits** after one completion (button returns to original color). To box-select again, you need to **tap "Box Select" again**. This is a design to prevent accidental touches.
 
-### 0.5 PC-exclusive: use it as "real software"
+> 🤖 **Android version limitation**: The "Box Select" and "Select All" buttons are only available in **select / transform** mode; when you are in brush, text, eraser, or other tool modes, they will **grey out and disable** with a prompt "Please switch to 'Select/Transform' mode first". This is to avoid conflict with the tool's click logic, not a missing feature.
 
-The PC edition is not just "a webpage in a shell" — it additionally provides capabilities only desktop software has:
+### 0.5 PC Version Exclusive: Use It Like "Real Software"
 
-- **Window controls**: a self-drawn minimize / maximize / close button at top-right, plus a native `☰` menu in the top bar;
-- **Drag-and-drop import**: drop a `.json` project file **into the window** to open it directly, no need to go through the "Import" dialog;
-- **Recent files**: the menu keeps a list of recently edited files, openable with one click;
-- **Crash recovery & auto-save**: after an unexpected close and reopen, a "Recoverable session detected" dialog appears and asks whether to restore the auto-saved progress (showing the object count); closing it discards, but **active exporting is still recommended**;
-- **Independent sticky window**: you can "throw" a sticky note out of the main window into an **always-on-top** floating mini-window, so you can read other materials while taking notes;
-- **Extension center**: install plugins, runtimes and language packs; extend the editor in multiple programming languages.
+The PC version is not just "a web page in a shell" — it additionally provides capabilities that only desktop software has:
 
-### 0.6 Android-exclusive: the Back key and exit protection
+- **Window control**: self-drawn minimize / maximize / close buttons at the top-right corner;
+- **Drag-and-drop import**: directly drag a `.json` project file **into the window** to open it, without going through the "Import" dialog; 💻 the PC version also supports dragging **image files** into the window — dropped images are placed as image objects;
+- **Crash recovery and auto-save**: after an unexpected close and reopening, a "Recovered unsaved session detected" prompt pops up, asking whether to restore the auto-saved progress (and showing the current object count); closing directly discards it, but **actively exporting is still recommended**;
+- **Sticky note top floating layer**: you can expand a sticky note into an **always-on-top** floating card (in-page float), to take notes while viewing other materials;
+- **Sticky notes**: you can select text in the manual body to add a sticky note, and expand the sticky note into a top floating layer (see Part Thirteen for details).
 
-The most important thing to watch on the Android edition is the behavior of the **phone's Back key**, which is layered:
+### 0.6 Android Version Exclusive: Back Key and Exit Protection
 
-> Press Back → if sticky notes are open, close them one by one (asking first if there is unsaved content) → then close the table of contents → then exit the manual → only then ask whether to exit the app.
+The most important thing to note about the Android version is the behavior of the **phone back key**, which is layered:
 
-When exiting the app, a confirmation box appears, giving you three choices: **Save and exit / Exit without saving / Cancel**. This prevents your hard-built scene from being wiped by one mis-tap.
+> Press back key → if a sticky note is open, close them one by one (unsaved content prompts first) → then close the contents → then exit the manual → finally ask whether to exit the app.
 
-💻 **The PC and Web editions** also have "save confirmation on exit": when you **close the window / quit the program**, if the scene is unsaved, it asks "Save the current scene?" and offers **Save and exit / Exit without saving / Cancel**. If you haven't picked a save location or the save fails, it asks again to confirm quitting. This differs in timing from Android's layered Back-key exit, but the goal is the same — protect your work from being lost by accident.
+When exiting the app, a confirmation dialog pops up, giving you three choices: **Save and Exit / Exit Without Saving / Cancel**. This prevents your hard-built scene from being wiped out by one accidental touch.
 
-💡 The Android edition **has no "Fullscreen" button**, because it is already a fullscreen app.
+💻 **PC version and Web version** also have a "save confirmation on exit": when you **close the window / exit the program**, if the scene has not been saved, a confirmation dialog pops up — the PC version shows "The scene has unsaved modifications / Save before closing?"; the Web version shows "Save the current scene? Unsaved content will be lost after exit." — and provides three options (in order: "Cancel / Don't Save / Save"); if you did not choose a save location or the save failed, it will ask again whether to exit anyway. This differs in trigger timing from Android's "layered back-key exit", but the purpose is the same — protecting your work from being lost by mistake.
 
-### 0.7 About "networking" and "data security"
+💡 The Android version **has no "Fullscreen" button**, because it is itself a fullscreen-running app.
 
-| | Needs network? | Where is the data? |
+### 0.7 About "Internet" and "Data Security"
+
+| | Requires internet? | Where is the data? |
 | --- | --- | --- |
-| 🖥️📱 Web edition | Yes (when loading the page) | All computation runs locally on your device; **no work data is uploaded** |
-| 💻 PC edition | **Not at all** | All on the local machine |
-| 🤖 Android edition | **Not at all** | All on the local machine |
+| 🖥️📱 Web version | Requires (when loading the page) | All computation is done locally on your device, **no work data is uploaded** |
+| 💻 PC version | **Not needed at all** | All on the local machine |
+| 🤖 Android version | **Not needed at all** | All on the local machine |
 
-None of the three editions will **send your work to any server**. The Web edition only uses the network to download the page; once opened, all creation happens on your own device.
+All three versions **will not transmit your work to any server**. The Web version only needs internet to download the page; all creation after opening happens on your own device.
 
-❓ **Think**: If you were teaching students in a classroom with no network, which edition would you pick? (Hint: look at the last row of the table above.)
+❓ **Think About It**: If you were to teach students in a classroom without internet, which version would you choose? (Hint: see the last row of the table above)
 
-✏️ **Practice**: Against the table in 0.2, look on your own device — can you see the "Box select" button? Can you see the "Keyboard shortcuts" section? From this, confirm which of the four forms you are using, and remember it. Then in every later chapter, when you see a form badge, you will know which line to read.
+✏️ **Try It**: Against the 0.2 master table, look on your own device — can you see the "Box Select" button? Can you see the "Keyboard Shortcuts" area? From this, confirm which of the four forms you are using, and remember it. In every later chapter when you encounter a form tag, you'll know which line to read.
 
 ---
 
-# Part 1 · Getting Started (zero to beginner)
+# Part One: Setting Sail (Zero-Basics Onboarding)
 
-## Chapter 1 · Re-meeting "3D": Starting from a Photo
+## Chapter 1: Rethinking "3D": Starting from a Photo
 
-### 1.1 What differs between 2D and 3D?
+### 1.1 What's the Difference Between 2D and 3D?
 
-Take out your phone and photograph a table. The photo is **2D**: it has width and height, but your finger feels it is flat — it only "looks" three-dimensional.
+Take out your phone and take a photo of a desk. The photo is **2D**: it has width and height, but feels flat to the touch — it only "looks" three-dimensional.
 
-Now walk around to the side of the table and take another look. A real table is **3D**: it has width, height, and **depth** (the bit the legs stick forward). As you move, the shape you see changes; the photo is frozen forever.
+Now walk around to the side of the desk and take another look. The real desk is **3D**: it has width, height, and also **depth** (the part where the legs extend forward). As you move, the shape you see changes; the photo is forever frozen.
 
-💡 **One-line memory**: 2D is "a picture", 3D is "a real space you can walk into".
+💡 **One-line memory**: 2D is a "picture", 3D is a "real space you can walk around in".
 
-### 1.2 This webpage gives you a "3D stage"
+### 1.2 This Web Page Gives You a "3D Stage"
 
-Open the editor; the central canvas is a 3D stage. Pick a shape from the left, click once on the "ground", and it truly "lands" in the stage — you can walk around behind it, lift it up, or look down from above.
+Open the editor; the canvas in the center is a 3D stage. You pick a shape on the left, tap on the "ground", and it truly "lands" in the stage — you can walk around behind it, lift it up, or look down from above.
 
-❓ **Think**: If you wanted to describe "a red ball to the left of a blue box" to a friend, which is less likely to be misunderstood — a 2D photo, or a 3D scene? Why?
+❓ **Think About It**: If you were to describe "a red ball to the left of a blue box" to a friend, which is less likely to cause misunderstanding — a 2D photo or a 3D scene? Why?
 
-### 1.3 Why "lightweight across three editions"?
+### 1.3 Why Make It "Lightweight Three-End"?
 
-Traditional 3D software (e.g. Blender, Maya) is powerful, but the installer is often hundreds of megabytes and the interface is crammed. This tool packs the core ability into a lightweight engine and ships as three editions:
+Traditional 3D software (like Blender, Maya) is powerful, but installers are often hundreds of megabytes, with densely packed interfaces. This tool turns the core capabilities into a lightweight engine, packaged into three versions:
 
-- 🖥️📱 **Web**: open the URL and use it instantly, close it and leave — no disk space taken;
-- 💻 **PC**: install once, then **fully offline**, and you can drag-drop files and install plugins;
-- 🤖 **Android**: install on your phone, model something on the commute anytime.
+- 🖥️📱 **Web version**: open the URL and use it instantly, close and leave, takes no disk space;
+- 💻 **PC version**: install once, then **fully offline**, and can drag-drop files and install plugins;
+- 🤖 **Android version**: install on your phone, model something anytime on your commute.
 
-Shared benefits of the three:
+The shared benefits of all three:
 
-- All computation runs on your own device locally; **no data is uploaded**;
-- Export is plain JSON files and PNG images, easy to save and share;
-- **Project files work across all three editions** — a `.json` you export on your phone can be continued on the PC edition.
+- All computation is done locally on your own device, **no data uploaded**;
+- Export is ordinary JSON files and PNG images, easy to save and share;
+- **Project files are universal across the three ends** — a `.json` you export on your phone can be continued on the PC version.
 
-💡 This matters: **the same work can be接力 (relayed) across editions**. Get a draft on your phone when inspired, refine it on the PC at home.
+💡 This is important: **the same work can be接力 across ends**. Get a draft on your phone when inspired, refine it on the PC version at home.
 
-✏️ **Practice**: Confirm your form (see [Chapter 0](jump:Chapter 0 · The Four Forms and How to Read This Book)), open the tool, and recognize the central canvas and the surrounding panels. Don't rush to operate yet — just "get to know the environment".
+✏️ **Try It**: Confirm your form (see [Chapter 0](jump:第0章 四种形态与本书读法)), open the tool, and just see the central canvas and surrounding panels. Don't rush to operate — just "get familiar with the environment".
 
 ---
 
-## Chapter 2 · Preparing the Tool: Opening This Tool
+## Chapter 2: Prepare Your Tools: Opening This Tool
 
-### 2.1 Three ways in, pick one
+### 2.1 Three Ways to Enter, Pick One
 
-#### 🖥️📱 Way 1: Web edition (fastest, zero install)
+#### 🖥️📱 Method 1: Web Version (Fastest, Zero Install)
 
 Open the public URL below directly in a browser:
 
 > 🌐 **Online address**: [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/)
 
-Copy the URL into any modern browser's address bar and press Enter to enter the main interface. Phone, tablet, and computer all work, as long as there is internet and a browser. **It auto-detects whether you are a mouse device or a touch device** and switches to the matching layout.
+Copy the URL into the address bar of any modern browser and press Enter to enter the main interface. Phones, tablets, and computers all work, as long as you have internet and a browser. **It automatically detects whether you are a mouse device or a touch device**, switching to the corresponding layout.
 
-💡 On first open there is a very brief loading (initializing the 3D engine); once the loading layer disappears, you are in the main interface.
+💡 On first open there is a very brief loading (initializing the 3D engine); once the loading layer disappears, you enter the main interface.
 
-#### 💻 Way 2: PC desktop edition (Windows, offline-capable)
+#### 💻 Method 2: PC Desktop Version (Windows, Can Be Offline)
 
-Go to the project repo's **Releases** page to download; there are two packages, choose as needed:
+Download from the **Releases** page of the project repository; there are two kinds of packages, choose as needed:
 
-| Package | File name looks like | Features | Recommended for |
+| Package type | Filename like | Features | Recommended for |
 | --- | --- | --- | --- |
-| **Installer** | `...-Setup-1.0.0.exe` | Double-click to install, creates Start-menu and desktop shortcuts, uninstallable via "Apps & features" | Your main computer for long-term use |
-| **Portable** | `...-1.0.0-portable.exe` | **No install**, double-click to run, can live on a USB drive | Public computers, no admin rights, want to carry it around |
+| **Installer** | `...-Setup-1.0.0.exe` | Double-click to install, creates Start menu and desktop shortcut, can uninstall from "Apps & Features" | Your main long-term-use computer |
+| **Portable** | `...-1.0.0-portable.exe` | **No install**, double-click to run directly, can be put on a USB drive | Public computers, no admin rights, want to carry around |
 
-> 📥 Download: [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
+> 📥 Download address: [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
 
-⚠️ Windows may warn "unknown publisher" or block via SmartScreen — this is because the installer is unsigned (common for personal open-source projects). Click "More info" → "Run anyway".
+⚠️ Windows may show "Unknown publisher" or SmartScreen blocking — this is because the installer is not digitally signed (common for personal open-source projects). Click "More info" → "Run anyway" to proceed.
 
-#### 🤖 Way 3: Android edition (phone, offline-capable)
+#### 🤖 Method 3: Android Version (Phone, Can Be Offline)
 
-Also download the `.apk` from the Releases page, transfer it to your phone, and tap to install.
+Also download the `.apk` file from the Releases page, transfer it to your phone, then tap to install.
 
-⚠️ Before installing, you must allow **installing apps from unknown sources** in the phone's Settings → Security (location varies by brand, usually in the permissions of the app you install from).
+⚠️ Before installing, you need to allow **installing apps from unknown sources** in the phone's "Settings → Security" (locations vary slightly by brand, usually in the permissions of the app you install from).
 
-### 2.2 Runtime environment
+### 2.2 Runtime Environment
 
-| Form | Requirements |
+| Form | Environment requirements |
 | --- | --- |
-| 🖥️📱 Web | Any modern browser (Chrome, Edge, Firefox, recent Safari); needs WebGL (basically all devices from the last five years); needs internet to open the page |
-| 💻 PC | Windows 10 / 11 (64-bit); after install **fully offline** |
-| 🤖 Android | Android 6.0 or above; after install **fully offline** |
+| 🖥️📱 Web version | Any modern browser (Chrome, Edge, Firefox, Safari new versions); needs WebGL support (devices from the last ~5 years basically all support it); needs internet to open the page |
+| 💻 PC version | Windows 10 / 11 (64-bit); after install, **fully offline** usable |
+| 🤖 Android version | Android 6.0 and above; after install, **fully offline** usable |
 
 ⚠️ **Note**:
-- 🖥️📱 If the web edition opens to a blank page, first press `F12` to open the console and check for red errors; trying another browser often fixes it.
-- 💻 If the PC edition shows a white screen after launch, it is usually an outdated graphics driver disabling WebGL — update the driver.
-- 🤖 If the Android install is blocked, check whether "unknown sources" is allowed.
+- 🖥️📱 If the Web version opens to a blank page, first press `F12` to open the console and check for red errors; trying another browser often solves it.
+- 💻 If the PC version shows a white screen after launch, it is mostly due to an outdated graphics driver making WebGL unavailable; update the graphics driver.
+- 🤖 If Android install is blocked, check whether "Unknown sources" install is allowed.
 
-### 2.3 Where to look first
+### 2.3 Where to Look First
 
-After entering, your view should be surrounded by five areas. We break them down one by one in the next chapter; for now remember one line: **"Left picks material, center creates, right tunes parameters, top manages files, bottom switches views."**
+After entering, your view should be surrounded by five areas. We'll break them down one by one in the next chapter; for now remember one sentence: **"Left for materials, center for creation, right for parameters, top for files, bottom for viewpoint."**
 
-✏️ **Practice**: Against the sentence above, point out on screen where the five areas are: (top bar / left panel / canvas / right panel / bottom bar).
+✏️ **Try It**: Against the sentence below, point out on screen where each of the five areas is: (top bar / left panel / canvas / right panel / bottom bar).
 
 ---
 
-## Chapter 3 · The Whole Interface: The Five Areas in Front of You
+## Chapter 3: Interface Overview: The Five Areas Before You
 
-We split the interface into five blocks, each with its own job. Read along and find the matching position on screen.
+We divide the interface into five blocks, each with its own role. Please read along and find the corresponding positions on screen.
 
-### 3.1 Top bar (topmost)
+### 3.1 Top Bar (Topmost)
 
-A horizontal row of buttons, in three groups:
+A horizontal row of buttons, divided into three groups:
 
 - **File group**: New, Import, Export, Screenshot;
 - **Edit group**: Undo, Redo, Copy, Paste, Clone, Clear;
-- **Display group**: axis toggle, grid toggle, Settings.
+- **Display group**: Axis toggle, Grid surface toggle, Ground toggle, Settings.
 
-**Differences in the top bar across editions**:
+**Differences in the top bar across ends**:
 
-- 🖥️📱 **Web**: besides the buttons above, there is a "Fullscreen" button to make the page fill the screen.
-- 💻 **PC**: adds a `☰` **native menu button** (File, Edit, Extensions menus) and three self-drawn window buttons (minimize / maximize / close) at top-right; the "Fullscreen" button toggles **window fullscreen**.
-- 🤖 **Android**: **no "Fullscreen" button** — the app itself runs fullscreen, so keeping it would be pointless.
+- 🖥️📱 **Web version**: besides the above buttons, there is also a "Fullscreen" button to make the page fill the entire screen.
+- 💻 **PC version**: self-drawn **Minimize / Maximize / Close** window buttons at the top-right corner; pressing **F11** or clicking the title bar "Maximize" button toggles **window maximize / restore** (no separate "Fullscreen" button).
+- 🤖 **Android version**: **no "Fullscreen" button** — the app itself runs fullscreen, so keeping one is meaningless.
 
-💡 Most of these buttons have shortcuts (e.g. `Ctrl+Z` to undo), covered together in the Efficiency part later.
-⛔ 📱🤖 Touch forms have no physical keyboard; **tap the buttons directly**; the touch-only "Select all" / "Box select" buttons are in 3.5.
+💡 Most of these buttons have shortcuts (e.g., `Ctrl+Z` for undo), covered集中 in the efficiency section later.
+⛔ 📱🤖 The touch form has no physical keyboard, please **tap the button directly**; the touch-exclusive "Select All" / "Box Select" buttons are in 3.5.
 
-### 3.2 Left panel (grab material, pick tools)
+### 3.2 Left Panel (Get Materials, Pick Tools)
 
-Top to bottom, four zones:
+The left panel has four sections from top to bottom:
 
-1. **3D shapes**: 20 solids (cube, sphere, cylinder…);
-2. **2D shapes**: 20 planar shapes (circle, heart, arrow…), like stickers;
+1. **3D Shapes**: 20 solid shapes (cube, sphere, cylinder...);
+2. **2D Shapes**: 20 planar shapes (circle, heart, arrow...), like stickers;
 3. **Tools**: Select/Transform, 3D Brush, 2D Brush, Eraser, Add Text, Add Image;
-4. **Transform mode**: Translate, Rotate, Scale, and the uniform-scale lock.
+4. **Transform Mode**: Translate, Rotate, Scale, and Uniform Scale.
 
-### 3.3 Canvas (central stage)
+### 3.3 Canvas (Central Stage)
 
-All shapes display here. The operation differs by form:
+All shapes are displayed here. The operation method varies by form:
 
-- 🖥️💻 **Mouse (Web·Mouse / PC)**: **right-button** drag to rotate view, **scroll wheel** to zoom, **left-click** to select or place.
-- 📱🤖 **Touch (Web·Touch / Android)**: **single-finger** drag to rotate view, **two-finger** pinch to zoom / two-finger drag to pan, **single-finger tap** to select or place.
+- 🖥️💻 **Mouse end (Web · Mouse / PC)**: **right button** drag to rotate view, **scroll wheel** to zoom, **left button** to select or place.
+- 📱🤖 **Touch end (Web · Touch / Android)**: **single-finger** drag to rotate view, **two-finger** pinch to zoom and two-finger drag to pan, **single-finger tap** to select or place.
 
-💡 Full comparison in [Chapter 0 §0.3](jump:Chapter 0 · The Four Forms and How to Read This Book)'s input table.
+💡 Full comparison see the input method table in [Chapter 0 Section 0.3](jump:第0章 四种形态与本书读法).
 
-### 3.4 Right panel (tune parameters after selecting)
+### 3.4 Right Panel (Adjust Parameters After Selecting)
 
-Only when an object is selected does the right panel "come alive": change color, apply pattern, adjust opacity, set transform values, edit text… This is where you finely control your work.
+Only when an object is selected does the right panel "come alive": change color, apply pattern, adjust opacity, set transform values, edit text... This is where you finely control your work.
 
-### 3.5 Bottom bar (bottommost)
+### 3.5 Bottom Bar (Bottommost)
 
-A row of 7 view buttons: Perspective, Top, Bottom, Front, Back, Left, Right. One tap switches the angle.
+A row of 7 viewpoint buttons: Perspective, Top, Bottom, Front, Back, Left, Right. One click to switch angle and view the scene.
 
-📱🤖 **Touch forms add two more buttons**:
+📱🤖 **The touch end has two extra buttons**:
 
-- **"Select all"**: select all objects in the scene at once (replaces the mouse-side `Ctrl + A`);
-- **"Box select"**: tap to enter box-select mode, drag a rectangle with one finger to select a patch of objects. **Auto-exits after one box**, tap again to box once more.
+- **"Select All"**: select all objects in the scene with one click (replaces `Ctrl + A` on the mouse end);
+- **"Box Select"**: tap once to enter box-select mode, single-finger drag a rectangle to select a patch of objects. **Auto-exits after boxing**, need to tap again to box again.
 
-🖥️💻 Mouse forms hide these two buttons — because you can just press `Ctrl+A`, or directly left-drag to box-select; no extra button needed.
+🖥️💻 The mouse end does not show these two buttons — because you can press `Ctrl+A` directly, or left-drag to box-select directly, no extra buttons needed.
 
-### 3.6 Shortcut help: in "Settings → Quick Actions"
+### 3.6 Quick Actions Help: View in "Settings → Quick Actions"
 
-The interface does **not** permanently show the shortcut / gesture list. The mouse-side and touch-side operation guides are both gathered in the **"Settings → Quick Actions"** dialog:
+The interface does **not** permanently show the shortcuts / gestures list. The corresponding operation instructions for the mouse end and touch end are both集中 in the "Settings → Quick Actions" popup:
 
-- 🖥️💻 **Mouse**: the dialog shows a **"Keyboard shortcuts"** list;
-- 📱🤖 **Touch**: the dialog shows a **"Gesture operations"** table.
+- 🖥️💻 **Mouse end**: the popup shows the "**Keyboard Shortcuts**" list;
+- 📱🤖 **Touch end**: the popup shows the "**Gesture Operations**" comparison table.
 
-When you need it, click the top bar's "Settings" button and choose "Quick Actions".
+When you need to check, click the "Settings" button in the top bar and select "Quick Actions".
 
-💡 This is intentional: keeping help inside a dialog instead of a permanent panel avoids occupying creative space.
+💡 This is intentional: keeping help in a popup rather than a permanent panel avoids occupying creative space.
 
-### 3.7 What if the screen is narrow
+### 3.7 What If the Screen Is Narrow
 
-On a phone or narrow window (width below about 960 px), the left and right panels **auto-collapse**; tap the small edge button to expand. The design guarantees "usable on small screens too".
+On a phone or narrow window (width less than about 960 pixels), the left and right panels will **auto-collapse**; tap the small edge button to expand. The design ensures "usable even on a small screen".
 
-📱🤖 Touch forms usually enter already collapsed; open the left panel to grab material, then collapse it after placing, to get the largest canvas.
+📱🤖 The touch end usually enters already collapsed; first expand the left panel to get materials, collapse it again after placing, to get the maximum canvas space.
 
-❓ **Think**: Why put "tuning parameters" on the right and "picking material" on the left? Behind this is the "left-fetch, right-tune" habit shared by most design software — do you agree?
+❓ **Think About It**: Why put "adjust parameters" on the right and "pick materials" on the left? Behind this is the "left for materials, right for parameters" habit common to most design software — do you agree?
 
-✏️ **Practice**:
-- 🖥️💻 Hover the mouse over each top-bar button in turn and see if a tooltip appears.
-- 📱🤖 Long-press each top-bar button, observe the tip; then find where the bottom bar's "Select all" / "Box select" are.
+✏️ **Try It**:
+- 🖥️💻 Hover the mouse over each top-bar button in turn, see if a text tooltip appears.
+- 📱🤖 **Long-press** each top-bar button in turn, observe the prompt; then find where the bottom-bar "Select All" / "Box Select" are.
 
 ---
 
-## Chapter 4 · Coordinate System: The Three Lines Labeled X / Y / Z on the Page
+## Chapter 4: Coordinate System: The Three Lines Labeled X / Y / Z on the Web Page
 
-This is the most critical chapter of the book. Many people are put off by 3D software starting with "can't read the axes". Let's take it slow.
+This is the most critical chapter in the whole book. Much of the 3D software dropout starts with "can't understand the coordinate axes". Let's take it slow.
 
-### 4.1 Drop the "math coordinate axis" baggage first
+### 4.1 First, Drop the "Math Coordinate Axis" Baggage
 
-You may have seen three axes in math class and memorized the "right-hand rule". Forget it first. In this tool, **an axis is just an arrow with a color and a letter label**, answering one question: "Where is this thing in space, and which way does it face?"
+You may have seen three axes in math class, and memorized the "right-hand rule". Forget it for now. In this tool, **the coordinate axes are simply three colored, letter-labeled arrows**, used to answer one question: "Where is this thing in space, and which direction is it facing?"
 
-### 4.2 What you actually see on the page
+### 4.2 The Labels You Actually See on the Web Page
 
-Turn on the "axes" display (the 📐 button on the top bar); you will see three arrows, with **X, Y, Z** written at the ends, in different colors.
+Turn on the "Coordinate Axes" display (the 📐 button in the top bar), and you'll see three arrows, with **X, Y, Z** written at their ends, in different colors.
 
-> ⚠️ **Important**: The X/Y/Z written in this book and on the tool's **interface are the page labels**, which are not exactly the same as the axes used internally by the software. Ordinary readers **only need to look at the page labels**; the correspondence below is what you truly see on screen:
+> ⚠️ **Important**: The X/Y/Z written in this book and in this tool's **interface are the web-page labels**, which are not exactly the same as the axes used in the software's internal implementation. Ordinary readers **only need to look at the web-page labels**; the correspondence below is what you actually see on screen:
 
-| Page label | Arrow color | Direction | Everyday analogy |
+| Web label | Arrow color | Direction represented | Everyday analogy |
 | --- | --- | --- | --- |
-| **X** | 🔵 Blue | **front–back** (depth) | you "step forward / step back" |
-| **Y** | 🔴 Red | **left–right** | you "move left / move right" |
-| **Z** | 🟢 Green | **up–down** (height) | you "rise on tiptoe / squat down" |
+| **X** | 🔵 Blue | **Front-back** (depth) | You "step forward / step back" |
+| **Y** | 🔴 Red | **Left-right** | You "move left / move right" |
+| **Z** | 🟢 Green | **Up-down** (height) | You "rise on tiptoe / squat down" |
 
-In other words, on this page: **Z is the upward one (green), X is front–back (blue), Y is left–right (red).**
+In other words, in this web page: **Z is the upward one (green), X is front-back (blue), Y is left-right (red).**
 
-💡 A mnemonic: **"Blue front–back, red left–right, green up–down (Z to the sky)."**
+💡 Remember a rhyme: **"Blue front-back, red left-right, green up-down (Z to the sky)."**
 
-### 4.3 Why is "height" Z instead of Y?
+### 4.3 Why Is "Height" Z Instead of Y?
 
-In many 3D programs height is Y. But this tool's **page label** puts height as Z (the green one). You are not mistaken — **this page is simply labeled that way**. This book follows the "page labels" throughout; as long as you trust the colors and letters on screen, you won't get lost.
+In many 3D software, height is Y. But this tool's **page labels** mark height as Z (the green one). It's not that you remembered wrong — **this web page is just labeled this way**. This book follows "web-page labels" from start to finish; as long as you recognize the colors and letters on screen, you won't get confused.
 
-❓ **Think**: If you redesigned it, which letter would you make "height"? The letter is just a name; the key is that "name, color, and direction" three-way match.
+❓ **Think About It**: If you were to redesign it, which letter would you mark "height" as? The letter itself is just a name; the key is that "name, color, and direction" must match up.
 
-### 4.4 Ground and "height = 0"
+### 4.4 Ground and "Height = 0"
 
-The bottom of the stage is a **gridded ground**. The ground is the reference where "height is zero": anything placed on the ground has Z (height) = 0; lift it up and Z grows.
+At the bottom of the stage is a **grid ground**. The ground is the baseline of "height zero": anything placed on the ground has its Z (height) at 0; lift it up and Z increases.
 
-Under the page labels, the ground is the horizontal plane spanned by **X (front–back) and Y (left–right)**, written "Z = 0". You need not memorize the formula — just understand: **the ground is "where your feet stand", and up (green axis Z) is rising.**
+Under the web-page labels, the ground is the horizontal plane spanned by **X (front-back) and Y (left-right)**, written as the formula "Z = 0". You don't need to memorize the formula, just understand: **the ground is "where you stand", and upward (green axis Z) is rising.**
 
-### 4.5 Feel the three axes with your body
+### 4.5 Feel the Three Axes with Your Body
 
-Stand up and do three moves:
+Stand up and do three motions:
 - Step forward, step back → you move along **X (blue)**;
-- Cross left, cross right → you move along **Y (red)**;
+- Step left, step right → you move along **Y (red)**;
 - Rise on tiptoe, squat → you move along **Z (green)**.
 
-Lock this in your muscles; every "move object" operation later has a reference.
+Lock this into your muscles, and all later "move object" operations have a reference.
 
-✏️ **Practice**: Turn on the axes, switch to "Top" and "Front" views (bottom-bar buttons), and see whether the three arrows match your body sense. In Top view you see the X–Y plane; in Front view you see the X–Z plane.
+✏️ **Try It**: Turn on the coordinate axes, switch to "Top" and "Front" views respectively (bottom-bar buttons), and observe whether the directions of the three arrows match your body sense. In top view you see the X–Y plane; in front view you see the X–Z plane.
 
 ---
 
-## Chapter 5 · Let's Build: Your First 3D Work
+## Chapter 5: Hands-On: Your First 3D Work
 
-Reading without doing is fake skill. In this chapter we really make a small work you can screenshot and share: **a colored cube standing on the ground.**
+Watching without practicing is fake skill. In this chapter, we'll actually make a small work you can screenshot and post: **a colorful cube standing on the ground.**
 
-### 5.1 Step 1: Pick a shape
+### 5.1 Step 1: Pick a Shape
 
-1. Look at the left panel, find the "3D shapes" zone (📱🤖 if the panel is collapsed, tap the edge button to expand first);
-2. Click the first "Cube" (or any solid you like);
+1. Look at the left panel, find the "3D Shapes" section (📱🤖 if the touch-end panel is collapsed, first tap the edge small button to expand);
+2. Tap the first "Cube" (or any solid you like);
 3. You enter "placement mode":
-   - 🖥️💻 Mouse: after the cursor enters the canvas there is a **preview following the cursor**;
-   - 📱🤖 Touch: a finger has no "hover", so **no following preview** — it places wherever you tap.
+   - 🖥️💻 Mouse end: after the cursor enters the canvas there is a **preview following the cursor**;
+   - 📱🤖 Touch end: a finger has no "hover", so **no follow preview** — tap wherever to place there.
 
-### 5.2 Step 2: Drop it
+### 5.2 Step 2: Put It Down
 
-**Click once** on the central ground (📱🤖 single-finger tap). The cube "pops" onto the grid. Congratulations, your first 3D object is born.
+**Tap once** on the central ground (📱🤖 touch end is a **single-finger tap**). The cube "plops" onto the grid. Congratulations, your first 3D object is born.
 
-💡 If you didn't see the drop point clearly, don't worry — once you learn "select" next chapter you can move it anytime.
+💡 If you didn't see the landing point clearly, don't worry — you can move it anytime after learning "Select" in the next chapter.
 
-### 5.3 Step 3: Select it
+### 5.3 Step 3: Select It
 
-Click the "Select / Transform" tool on the left, then **single-click** that cube (📱🤖 single-finger tap). Arrows or a border appear around it, meaning "selected". The right panel lights up.
+Tap the "Select / Transform" tool in the left panel, then **click** that cube (📱🤖 touch end is a **single-finger tap**). Arrows or a border appear around it, meaning "it is selected". The right panel lights up now.
 
-### 5.4 Step 4: Color it
+### 5.4 Step 4: Color It
 
-In the right panel's "Color" zone:
+In the right panel "Color" section:
 
-- Click a **preset color** directly (e.g. bright orange) — the cube changes at once;
-- For more personality, use the "Picker" in custom color.
-⚠️ **Note**: if you click "no color" or drag opacity to 0.1, the object becomes transparent or even "invisible" — it is not gone, just adjust back.
+- Directly tap a **preset color** (e.g., bright orange), the cube changes color instantly;
+- For more personality, use the "Picker" function in custom colors.
+⚠️ **Note**: If you click "No Color" or drag opacity down to 0.1, the object becomes transparent or even a bit "invisible" — it hasn't disappeared, just adjust it back.
 
-### 5.5 Step 5: Move and rotate it
+### 5.5 Step 5: Move It, Rotate It
 
-Keep it selected, drag the arrows to move (blue front–back / red left–right / green up), drag the rings to rotate. Feel the three axes from Chapter 4.
+Keep it selected, drag the arrow to move (blue front-back / red left-right / green raise), drag the ring to rotate. Feel the three axes learned in Chapter 4.
 
-### 5.6 Step 6: Save the result
+### 5.6 Step 6: Save the Result
 
-Click "Screenshot" on the top bar (or `Ctrl+P`) to get a PNG. You can also "Export" JSON for backup, and "Import" next time to continue.
+Tap "Screenshot" in the top bar (or `Ctrl+P`) to get a PNG. You can also "Export" JSON as a backup, and "Import" next time to continue editing.
 
-✏️ **Practice**: Repeat the steps to make a small scene "a red cube to the left of a blue sphere", and screenshot it. Can you describe each object's position to a friend using body moves (front/back, left/right, up/down)?
+✏️ **Try It**: Repeat the above steps to make a small scene of "a red cube to the left of a blue ball", and screenshot to save it. Can you describe each object's position to a friend using body motions (front/back, left/right, up/down)?
 
 ---
 
-## Chapter 6 · Export & Share: Screenshots, Scene Export, and Backups
+## Chapter 6: Save and Share: Screenshot, Export, and Backup
 
-Of course you want to keep and show off what you made. This chapter covers four ways to "save", and when each fits.
+Of course you want to keep what you made, and show it off. This chapter covers four "save" methods and their applicable scenarios.
 
-### 6.1 Why "saving in time" is a good habit
+### 6.1 Why "Save Promptly" Is a Good Habit
 
-Closing the page, refreshing, or accidentally hitting Back can lose an un-exported scene. Get into the habit of "export JSON after finishing a stretch" — it will save you countless times.
+Closing the page, refreshing, or accidentally tapping the back key — an unexported scene is gone. Developing the habit of "export JSON after finishing a section" can save you countless times.
 
-💻 **The PC and Web editions are exceptions**: they have **auto-save and crash recovery**; after an unexpected close, reopening shows a "Recoverable session detected" dialog asking whether to restore the last auto-saved progress (including the object count). But this is only a "safety rope" — **it does not replace active exporting.**
+💻 **PC version and Web version are exceptions**: they have **auto-save and crash recovery** (by default auto-saves every 5 minutes, keeping the 10 most recent snapshots); after an unexpected close and reopen, a "Recovered unsaved session detected" dialog pops up, asking whether to restore the last auto-saved progress (with object count). But this is only a "safety rope" and **cannot replace active exporting**.
 
-### 6.2 Screenshot: photograph the work (Ctrl + P)
+### 6.2 Screenshot: Take a Photo of Your Work (Ctrl + P)
 
-"Screenshot" saves the current view as a **PNG image**.
+"Screenshot" saves the current画面 as a **PNG image**.
 
-- Fits: sharing to social media, making illustrations, handing someone "a preview";
-- Suggestion: before screenshotting, hide **axes and grid** via the top bar for a cleaner picture;
+- Suitable for: posting to social media, making illustrations, handing others a "preview";
+- Suggestion: before screenshotting, tap the top bar to **hide the coordinate axes and grid surface** for a cleaner画面;
 - Output size is the current canvas pixels.
 
-**Where does the image land? Differs by edition:**
+**Where does the image land? Varies by end:**
 
-| Form | How it lands |
+| Form | Landing method |
 | --- | --- |
-| 🖥️📱 Web | Goes through the browser **download**, into the system "Downloads" folder (mobile browsers may first pop a "save image" prompt) |
-| 💻 PC | Pops a **system save dialog**, where you choose folder and filename |
-| 🤖 Android | Saved to app storage, and can be sent directly via the **system Share** panel to WeChat / Gallery / other apps |
+| 🖥️📱 Web version | Goes through browser **download**, lands in the system "Downloads" folder (phone browsers may first pop up a "Save image" prompt) |
+| 💻 PC version | Pops up the **system save dialog**, where you can choose the folder and filename |
+| 🤖 Android version | Saved to app storage, and can be sent directly to WeChat / Gallery / other apps via the **system share** panel |
 
-💡 A screenshot only saves "the look", not editable data. To keep editing later, use "Export" below.
+💡 Screenshot only saves the "look", not re-editable data. To still be able to edit later, use "Export" below.
 
-### 6.3 Export scene: save the "editable project" (Ctrl + S)
+### 6.3 Export Scene: Save the "Editable Project" (Ctrl + S / `Export` button)
 
-"Export" generates a **JSON file** recording each object's position, color, parameters… Next time "Import" restores it exactly.
+"Export" generates a **JSON file**, recording each object's position, color, parameters... Next time "Import" restores it exactly.
 
-- Fits: half-finished works, works needing further polishing;
-- Filenames usually carry a timestamp; rename to something meaningful (e.g. `house_v1.json`).
+- Suitable for: half-finished works, works needing further polishing;
+- Filenames generally carry a timestamp; it's recommended to rename to something meaningful (e.g., `房子_v1.json`).
 
-Landing is the same as screenshot: 🖥️📱 Web via browser download; 💻 PC pops a system save dialog (choose folder); 🤖 Android saves to app storage and can share out.
+The landing method is the same as screenshot: 🖥️📱 Web version goes through browser download; 💻 PC version pops the system save dialog (can choose directory); 🤖 Android version stores to app storage and can share the export.
 
-> ✅ **Important**: This `.json` is **cross-edition compatible**. A project exported on your phone can be imported and continued on the PC edition, and vice versa.
+> ✅ **Important**: This `.json` is **universal across the three ends**. A project exported on your phone can be directly imported into the PC version to continue editing, and vice versa.
 
-### 6.4 Import: read the project back (Ctrl + O)
+💻 **PC version's file save (different from Web "Export")**: The PC desktop end manages the scene as a **local file**, rather than simply "export JSON":
+- **`Ctrl + S` = Save**: directly overwrites and writes to the currently open local scene file (if never saved to disk yet, pops "Save As" to let you choose a location);
+- **`Ctrl + Shift + S` = Save As**: saves the current scene as a **new** local file, the original file unaffected.
+> Web · Mouse end / Web · Touch end has no "current file" concept; `Ctrl + S` is the "Export Scene" from 6.3 (download a JSON), the two have different semantics, please note the distinction.
 
-Pick a previously exported `.json` and the scene rebuilds. ⚠️ Import **replaces** the current scene; remember to save your current work first.
+### 6.4 Import: Read the Project Back (Ctrl + O)
 
-How each edition picks the file:
+Select a previously exported `.json`, and the scene is rebuilt. ⚠️ Import will **replace** the current scene; remember to save your current work first.
 
-- 🖥️📱 **Web**: click "Import", pick in the browser's file chooser;
-- 💻 **PC**: besides clicking "Import", you can **drag the `.json` directly into the window**; the menu also has a "Recent" list, open with one click;
-- 🤖 **Android**: click "Import", locate your `.json` in the system file picker.
+How each end gets the file:
 
-### 6.5 New: start from scratch (Ctrl + N)
+- 🖥️📱 **Web version**: tap "Import", pick the file in the browser's file chooser popup;
+- 💻 **PC version** and 🖥️ **Web · Mouse** end: besides tapping "Import", you can also **directly drag the `.json` file into the window** (unsupported file types prompt "only scene files supported"); 💻 **PC version** additionally supports dragging **image files** into the window — dropped images are placed as image objects;
+- 🤖 **Android version**: tap "Import", locate your `.json` in the system file picker.
 
-"New" clears the whole scene. Dangerous, but safe when paired with "export backup first".
+### 6.5 New: Start from Scratch (Ctrl + N)
 
-### 6.6 🤖 Android-exclusive: the Back key won't let you "waste effort"
+"New" clears the entire scene. A dangerous operation, but safe when paired with "export backup first".
 
-When the Android edition's Back key exits the app, a confirmation appears with three options:
+### 6.6 🤖 Android Exclusive: The Back Key Won't Make You "Work for Nothing"
 
-- **Save and exit**: export the current scene first, then exit (recommended);
-- **Exit directly**: no save, use with caution;
-- **Cancel**: stay and keep editing.
+When the Android version presses the back key to exit the app, a confirmation dialog pops up with three options:
 
-💡 So on Android, accidentally hitting Back is not scary — but the habit of periodic exporting is still advised.
+- **Save and Exit**: export the current scene first, then exit (recommended);
+- **Exit Directly**: don't save, use with caution;
+- **Cancel**: stay and continue editing.
 
-### 6.7 A solid backup rhythm
+💡 So accidentally tapping the back key on Android isn't scary — but it's still recommended to develop the habit of periodic exporting.
 
-> Export once before starting → export again at key milestones (different filenames) → undo/redo anytime.
-> (🖥️💻 mouse: `Ctrl+Z`; 📱🤖 touch: tap the top bar's "Undo" button.)
+### 6.7 A Solid Backup Rhythm
 
-✏️ **Practice**: Save the "red cube + blue sphere" scene from Chapter 5 once by "Screenshot" and once by "Export", then "Import" it back and confirm the content matches.
-Advanced: if you have both a phone and a computer, try **exporting on one, importing on the other** to feel the cross-edition portability of the project file.
+> Export once before starting → export again at key nodes (with different filenames) → undo and roll back anytime.
+> (🖥️💻 Mouse end press `Ctrl+Z`; 📱🤖 Touch end tap the "Undo" button in the top bar.)
+
+✏️ **Try It**: Take the "red cube + blue ball" scene you made in Chapter 5, save one copy each via "Screenshot" and "Export", then read it back via "Import" to confirm the content matches.
+Advanced: if you have both a phone and a computer, try **exporting on one end and importing on the other**, to experience the cross-end universality of project files.
 
 ---
+# Part Two: Operation Basics
 
-# Part 2 · Basic Operations (select · transform · undo)
+## Chapter 7: The Art of Selecting Objects: Single, Multiple, and Box Selection
 
-## Chapter 7 · The Art of Selecting Objects: Single, Multi, and Box Select
+In the 3D world, **"select first, then operate"** is an iron rule. This chapter explains the small matter of "selecting" thoroughly.
 
-In the 3D world, **"select first, then operate"** is an iron rule. This chapter exhausts the small matter of "selecting".
+### 7.1 Why You Must Select First
 
-### 7.1 Why you must select first
+The parameters and transform arrows in the right panel are all "for the currently selected object." Without a selection, the tool doesn't know which object you want to modify. It's like you can't hand out the same award certificate—with only one name written on it—to the whole class; you have to call names first.
 
-The right panel's parameters and transform arrows are all "for the currently selected object". Without a selection, the tool doesn't know who you want to change. It's like you can't hand the whole class one award that has only one name on it — you must call the roll first.
+### 7.2 Single Selection: One Click
 
-### 7.2 Single select: one click
+With the "Select / Transform" tool, click once on an object. It highlights and shows controls, indicating "selected."
 
-With the "Select / Transform" tool, click once on an object. It highlights and shows controls, meaning "selected".
+- 🖥️💻 **Mouse/desktop**: **Left-click**;
+- 📱🤖 **Touch device**: **Single-finger tap** (tap and lift, don't drag).
 
-- 🖥️💻 **Mouse**: **left-click**;
-- 📱🤖 **Touch**: **single-finger tap** (tap and lift, don't drag).
-
-### 7.3 Multi-select: add a second, a third…
+### 7.3 Multiple Selection: Adding a Second, Third…
 
 | Form | How to multi-select |
 | --- | --- |
-| 🖥️💻 Web·Mouse / PC | Hold `Shift` and click other objects to **accumulate**; clicking an already-selected one **deselects** it |
-| 📱🤖 Web·Touch / Android | No `Shift` key, but **long-press** an object with one finger — if unselected it adds, if selected it removes (equivalent to mouse `Shift`-click); or use the bottom bar's "**Box select**" to circle a patch, or "**Select all**" to take everything |
+| 🖥️💻 Web·Mouse / PC | Hold `Shift` and click other objects to **accumulate** selections; clicking an already-selected object again **deselects** it |
+| 📱🤖 Web·Touch / Android | No `Shift` key, but you can **long-press** an object with one finger — if unselected it adds to selection, if selected it removes (equivalent to Shift-click on mouse/desktop); you can also use the bottom bar's "**Box Select**" to circle an area, or "**Select All**" to grab everything at once |
 
-💡 After multi-select, transforming moves all objects together as one whole, based on their "group center".
+💡 After multi-selecting, transforms apply to all objects as one group, based on their "group center."
 
-### 7.4 Box select: drag a rectangle
+### 7.4 Box Select: Drag a Rectangle
 
-Box select fits "grabbing a bunch at once", but the two editions start completely differently — this is the easiest place to get confused:
+Box select is great for "grabbing a bunch at once," but the two ends start completely differently—this is the easiest place to get confused:
 
-**🖥️💻 Mouse (Web·Mouse / PC)**
+**🖥️💻 Mouse/desktop (Web·Mouse / PC)**
 
-Hold **left-button on empty space and drag a rectangle**; objects inside are all selected. Available anytime, no mode switch needed.
+Hold left button on **empty space and drag out a rectangle**; objects inside the box are all selected. Available anytime, no mode switch needed.
 
-⚠️ Box select must start from "empty space". If you start the drag on an object, it becomes **moving that object**.
+⚠️ Box select must start from "empty space." If you start dragging on an object, it becomes **moving that object**.
 
-**📱🤖 Touch (Web·Touch / Android)**
+**📱🤖 Touch device (Web·Touch / Android)**
 
-A finger drag defaults to "rotate view", so you must first tell the program "I want to box-select now":
+Finger drag defaults to "rotate view," so you must first tell the program "I want to box-select now":
 
-1. Tap the bottom bar's "**Box select**" button; it turns blue, meaning box-select mode is on;
-2. **Drag a rectangle** with one finger, enclosing the objects to select;
-3. Release; selection done — **the box-select mode auto-closes** and the button returns to its original color.
+1. Tap the bottom bar's "**Box Select**" button; when it turns blue, you've entered box-select mode;
+2. **Drag out** a rectangle with one finger, enclosing the objects you want;
+3. Release; selection done — **box-select mode automatically turns off**, and the button returns to its original color.
 
-⚠️ **Important**: Touch box-select is **one-shot**. To box-select a second time, you must **tap "Box select" again**. This avoids accidental boxing when you meant to rotate.
+⚠️ **Important**: Box select on touch devices is **one-time only**. To box-select a second time consecutively, you must tap the "Box Select" button **again**. This avoids accidental box-selecting when you intend to rotate the view.
 
-### 7.5 Select all
+### 7.5 Select All
 
-Select every object in the scene at once. Handy with "Clear" or a whole-scene transform.
+Select all objects in the scene with one click. Convenient together with "Clear" or whole-scene transforms.
 
-- 🖥️💻 **Mouse**: press `Ctrl + A`;
-- 📱🤖 **Touch**: tap the bottom bar's "**Select all**" button.
+- 🖥️💻 **Mouse/desktop**: Press `Ctrl + A`;
+- 📱🤖 **Touch device**: Tap the bottom bar's "**Select All**" button.
 
-### 7.6 Cancel selection
+### 7.6 Deselect
 
-- **All four forms**: click empty canvas space;
-- 🖥️💻 **Mouse also**: press `Esc`.
+- **All four ends**: Click empty space on the canvas;
+- 🖥️💻 **Mouse/desktop also**: Press the `Esc` key.
 
-### 7.7 Selection hint: the screen "tells you what you selected"
+### 7.7 Selection Hint: The Screen "Tells You What You Selected"
 
-From this version on, every selection-state change floats a **lightweight hint bar** above the canvas (auto-disappears after a few seconds, won't block operation):
+From this version on, every time the selection state changes, a **lightweight hint bar** floats above the canvas (auto-disappears after a few seconds, won't block operations):
 
 | Situation | Hint content |
 | --- | --- |
-| Only 1 shape selected | `Selected "Cube"` (shows the object's name, wrapped in 「」) |
+| Only 1 shape selected | `Selected "Cube"` (shows the object's name, wrapped in brackets 「」) |
 | Only 1 text selected | `Selected "Text: actual content"` (object name + colon + text body) |
-| 2 or more selected | `Selected 5 objects` (shows the current total) |
-| Shift add / remove | Each click refreshes to the **current** count, e.g. 3 → 4 → 3 |
-| Cancel all selection | `Selection cleared` |
+| 2 or more selected | `Selected 5 objects` (shows current total) |
+| Shift add / remove | Refreshes to the **current** count on each click, e.g. 3 → 4 → 3 |
+| Deselect all | `Selection cleared` |
 
-💡 The most useful place for this hint is **box select** and **Shift clicking**: you needn't count one by one — a glance at the number tells you whether you over- or under-boxed.
+💡 The most useful scenario for this hint is **box select** and **Shift clicking**: you don't need to count one by one—a glance at the number tells you whether you over- or under-selected.
 
-### 7.8 Tapping a toolbar tool while selected: auto-deselect
+### 7.8 Clicking a Toolbar Tool While Selected: Auto-Exit Selection
 
-After selecting an object, if you click any of the following **5 tools** on the left panel, the editor first **auto-cancels the current selection**, then enters that tool, and hints `Exited selection mode`:
+After selecting an object, if you click any of the following **5 tools** in the left panel, the editor will first **automatically clear the current selection**, then enter that tool, and show the hint `Exited selection mode`:
 
 - Text
 - Image
@@ -682,2264 +704,2253 @@ After selecting an object, if you click any of the following **5 tools** on the 
 - 2D Brush
 - Eraser
 
-These 5 tools all "start drawing anew on the canvas"; keeping the old selection would only interfere.
+These 5 tools all involve "drawing fresh on the canvas," and keeping the old selection would only interfere.
 
-⚠️ For all other tools (the various 3D / 2D shape buttons), clicking **while an object is selected has no effect** — this is deliberate protection, to avoid accidentally dropping a new shape while you meant to tune parameters. To drop a new shape, cancel selection first (🖥️💻 `Esc` or click empty; 📱🤖 tap empty canvas).
+⚠️ Tools other than these (various 3D / 2D shape buttons) **won't take effect when clicked while an object is selected**—this is deliberate protection to avoid accidentally dropping a new shape when you intend to adjust parameters. To place a new shape, deselect first (🖥️💻 press `Esc` or click empty space; 📱🤖 tap empty canvas space).
 
-### 7.9 Can't select? Check these first
+### 7.9 Can't Select? Troubleshoot These First
 
 1. Are you still in "placement mode"? Switch back to the "Select / Transform" tool first;
-2. Is the object you want hidden behind another? Change the view (bottom bar) to get to the front;
-3. Is it transparent (opacity dragged to the lowest 0.1)? Adjust back first;
-4. Is it a 2D stroke? Some brush objects need the eraser or special logic; a normal click may not select them.
+2. Is the object you want to select hidden behind another? Change the viewpoint (bottom bar) to get to the front;
+3. Is it transparent (opacity lowered to the minimum 0.1)? Bring it back first;
+4. Is it a 2D stroke? Some brush objects require the eraser or special logic; a normal single click may not select them.
 
-❓ **Think**: Between multi-select and box-select, which fits "precisely pick three non-adjacent objects"? Which fits "select a whole row"?
+❓ **Think about it**: Between multi-select and box select, which suits "precisely picking three non-adjacent objects"? Which suits "selecting a whole row"?
 
-✏️ **Practice**: Place 5 different shapes, practice ① single-select one ② `Shift`-add up to three (watch the hint number change) ③ box-select a whole patch ④ `Ctrl+A` select all ⑤ click the "Text" tool and watch it auto-deselect.
+✏️ **Practice**: Place 5 different shapes, practice ① single-selecting one ② Shift-adding to three (watch the hint bar number change) ③ box-selecting a whole area ④ Ctrl+A to select all ⑤ clicking the "Text" tool and observing its auto-exit from selection.
 
 ---
 
-## Chapter 8 · The Transform Trio: Translate, Rotate, Scale
+## Chapter 8: The Transform Trio: Move, Rotate, Scale
 
-"Transform" is the most frequent action in 3D creation; at heart it is three things: **move position, turn direction, change size**.
+"Transform" is the most frequent action in 3D creation; essentially it's three things: **shift position, turn direction, change size**.
 
-### 8.1 What the three transforms are
+### 8.1 What Are the Three Transforms
 
-| Transform | Everyday analogy | On-screen control |
+| Transform | Real-life analogy | On-screen control |
 | --- | --- | --- |
-| Translate (move) | move a cup from left of desk to right | three colored arrows |
-| Rotate | turn the cup's mouth toward you | circle / arc handle |
-| Scale | make the cup bigger or smaller | square handle |
+| Translate (Move) | Move a cup from left of desk to right | Three colored arrows |
+| Rotate | Turn the cup mouth toward you | Circle / arc handles |
+| Scale | Make the cup bigger or smaller | Square handles |
 
-### 8.2 Translate: drag along the three axes
+### 8.2 Translate: Drag Along the Three Axes
 
-After selecting, colored arrows appear (page labels: Y red = left–right, Z green = height, X blue = front–back).
+After selecting an object, red, green, and blue arrows appear (web labels: Y red = left/right, Z green = height, X blue = front/back).
 
-- Drag the **red arrow** → move along Y (left–right);
-- Drag the **green arrow** → move up / down along Z (height);
-- Drag the **blue arrow** → move along X (front–back).
+- Drag the **red arrow** → move along Y (left/right);
+- Drag the **green arrow** → rise / lower along Z (height);
+- Drag the **blue arrow** → move along X (front/back).
 
-💡 Dragging only one arrow makes the object move in just that direction, never skewed. To move freely at an angle, drag the "planar square" between arrows.
+💡 Dragging only one arrow makes the object move in just that one direction, never pulled off course. To move freely at an angle, drag the "plane squares" between the arrows.
 
-### 8.3 Rotate: spin around an axis
+### 8.3 Rotate: Turn Around an Axis
 
 Switch to "Rotate" mode; the object is surrounded by rings:
 
-- Drag a ring → rotate around the corresponding axis. E.g. turning "front face" from facing forward to facing left is rotating around Z (the green height axis).
+- Drag a ring → rotate around the corresponding axis. For example, turning the "front face" from facing forward to facing left is rotating around Z (height green axis).
 
-⚠️ **Note**: Rotation is "around which axis". Mnemonic: spin around green axis (Z) = turn in place like a person; around blue axis (X, front–back) = nod like a person; around red axis (Y, left–right) = tilt your head sideways like a person.
+⚠️ **Note**: Rotation is "around which axis." Remember the mnemonic: rotate around green axis (Z) = like turning in place; rotate around blue axis (X, front/back) = like nodding; rotate around red axis (Y, left/right) = like tilting your head sideways.
 
-### 8.4 Scale: change size
+### 8.4 Scale: Change Size
 
-Switch to "Scale", drag handles to enlarge or shrink. Default is **uniform** (the lock is covered in Chapter 9).
+Switch to "Scale" and drag handles to enlarge or shrink. Default is **uniform** (locking is covered in Chapter 9).
 
-### 8.5 Want precision? Use the right-side numbers
+### 8.5 Want Precision? Use the Right-Side Values
 
-Dragging relies on feel; parameters rely on input. Each transform in the right panel has a number box:
+Dragging relies on feel; parameters rely on input. In the right panel, each transform has a number box:
 
-- Position: X / Y / Z three numbers (under page labels: front–back / left–right / height);
+- Position: three numbers X / Y / Z (web labels below: front/back / left/right / height);
 - Rotation: three angles;
 - Scale: ratio value.
 
-💡 For "very neatly aligned" layouts, typing the same value beats dragging by eye.
+💡 When doing "very aligned" layouts, entering identical values is far more accurate than eyeballing a drag.
 
-✏️ **Practice**: Place a cube, first drag the arrow to move it to the upper right; then in the right number boxes set X, Y, Z to integers (e.g. 2, 0, 3) and watch its precise landing.
-
----
-
-## Chapter 9 · Transform Modes and the Uniform Scale Lock
-
-Last chapter covered the actions; this chapter covers "how to switch modes" and "how to lock the ratio".
-
-### 9.1 Where to switch the three modes
-
-Below the right panel (after selecting an object) are three buttons "Translate / Rotate / Scale", also usable via shortcuts (detailed in the Efficiency part). After switching, the controls on the object change to the matching look.
-
-### 9.2 What is the uniform scale lock
-
-When scaling there is a "uniform scale lock" switch:
-
-- **On**: scales synchronously in every direction, the shape **does not deform** (sphere stays sphere, cube stays cube);
-- **Off**: you can **stretch on a single axis**, e.g. squash a sphere into an ellipse, or stretch a cube into a bar.
-
-⚠️ **Note**: The uniform-scale row only shows when "single object selected and uniform scale on". In multi-select it is disabled (use the transform controls for whole scaling).
-
-### 9.3 Text does not support uniform scaling
-
-When a **text object** is selected, you will find:
-
-- The right panel's "uniform scale" slider row is **hidden**;
-- The "uniform scale lock" checkbox is **hidden**;
-- The "Scale" button in the mode buttons turns **gray and unclickable** (if you were in scale mode, it auto-switches back to translate).
-
-Reason: text is a thin texture board generated in real time from typographic parameters (font size, font, weight, etc.); directly stretching it causes blurry, deformed glyphs. **To change text size, use the right panel's "Font size" parameter** — that is lossless.
-
-### 9.4 When to turn the lock off
-
-When you want a "squashed spacer", a "stretched pillar", a "flat elliptical lens" — turn off the lock and drag a single axis. This is the key from "standard body" to "personalized body".
-
-❓ **Think**: Why are "squashed sphere" and "standard sphere" two different visual languages in 3D? What objects does each suit?
-
-✏️ **Practice**: Place a sphere, turn off the uniform lock, and squash only along Z (the green height axis) to 0.3, getting a "flying saucer / flat disk" — feel single-axis scaling.
+✏️ **Practice**: Place a cube, first drag the arrow to move it to the upper right; then in the right-side number boxes change X, Y, Z to integers (e.g. 2, 0, 3) and observe its precise landing point.
 
 ---
 
-## Chapter 10 · Undo and History: The Confidence to Experiment
+## Chapter 9: Transform Modes and Uniform Scaling
 
-A beginner's biggest psychological block is "afraid to click wrong". This chapter gives you a calming pill.
+The previous chapter covered the actions; this chapter covers "how to switch modes" and "how to lock proportions."
 
-### 10.1 Undo and redo
+### 9.1 Where to Switch the Three Modes
+
+Below the right panel (after selecting an object) are three buttons "Translate / Rotate / Scale," and you can also use shortcuts (detailed in the Efficiency chapter). After switching, the controls on the object change to the corresponding look.
+
+### 9.2 What Is Uniform Scaling
+
+There is a "Uniform Scale" toggle when scaling:
+
+- **On**: scales synchronously in any direction, shape **does not distort** (sphere stays sphere, cube stays cube);
+- **Off**: allows **single-axis stretching**, e.g. squashing a sphere into an ellipse, or stretching a cube into a bar.
+
+⚠️ **Note**: The uniform scale field only shows when "single-selected and uniform scaling enabled." It's disabled when multi-selecting (use transform controls for whole-group scaling).
+
+### 9.3 Text Doesn't Support Uniform Scaling
+
+When selecting a **text object**, you'll find:
+
+- The "Uniform Scale" slider row in the right panel is entirely **hidden**;
+- The "Uniform Scale" checkbox is **hidden**;
+- The "Scale" button among the mode buttons turns **gray and unclickable** (if you're in scale mode, it auto-switches back to translate).
+
+Reason: text is a thin textured plate generated in real time from typographic parameters like font size, font family, and weight; directly stretching it causes blurry, distorted glyphs. **To change text size, use the "Font Size" parameter in the right panel**—that's lossless.
+
+### 9.4 When to Turn Off the Lock
+
+When you want a "flattened washer," "elongated pillar," or "flat elliptical lens," turn off the lock and drag a single axis. This is the key from "standard body" to "characterful body."
+
+❓ **Think about it**: Why are a "squashed sphere" and a "standard sphere" two different visual languages in 3D? What objects does each suit?
+
+✏️ **Practice**: Place a sphere, turn off the uniform lock, and squash only along Z (height green axis) to 0.3, getting a "flying saucer / flat disc," and feel single-axis scaling.
+
+---
+
+## Chapter 10: Undo and History: The Confidence to Experiment Freely
+
+A beginner's biggest mental block is "afraid of clicking wrong." This chapter gives you a reassurance.
+
+### 10.1 Undo and Redo
 
 - `Ctrl + Z`: undo the last step;
 - `Ctrl + Y`: redo.
 
-You can step back many times in a row, and step forward again with redo.
+You can step back multiple times consecutively, and also go forward again with redo.
 
-### 10.2 What is the "history stack"
+### 10.2 What Is the "History Stack"
 
-Internally the software keeps an **operation list** (like a browser's back history). Each important operation pushes one entry; undo pops the last one.
+The software internally keeps an **operation list** (like a browser's back history). Each important operation pushes one entry; undo pops the last one.
 
-⚠️ **Note**: History has a **step limit**. Very early operations may be "pushed out" of the list and become un-undoable — so export JSON backups at key milestones (see [Chapter 6](jump:Chapter 6 · Export & Share: Screenshots, Scene Export, and Backups)).
+⚠️ **Note**: History has a **step limit**. Very early operations may be "pushed out" of the list and become unrecoverable—so export a JSON backup at key nodes (see [Chapter 6](jump:Chapter 6 Saving and Sharing: Screenshot, Export, and Backup)).
 
-### 10.3 What enters history, what doesn't
+### 10.3 What Enters History, What Doesn't
 
-- **Enters history**: add/delete objects, recolor, transform, texturing — "changes to the work's content";
-- **Does not enter history**: merely rotating the view, zooming to observe (these are "how you look", not changes to the work itself).
+- **Enters history**: adding/removing objects, changing color, transforming, texturing—"changes to the work's content";
+- **Doesn't enter history**: merely rotating the view, zooming to observe (these are "how you look," not changing the work itself).
 
-So you can rotate and zoom freely to observe, without worrying that view changes pile up as undo steps.
+So you can freely rotate and look around without worrying that view changes get recorded as a pile of undo steps.
 
-### 10.4 The mindset of bold trial-and-error
+### 10.4 The Mindset of Bold Experimentation
 
-> Every operation is undoable + backups at key milestones = no real "messing up".
+> Every operation is undoable + key nodes have backups = there's no real "messing up."
 
-Pin this sentence in your heart and you will dare to click around.
+Keep this sentence in your heart, and you'll dare to click around.
 
-✏️ **Practice**: Do 5 different operations in a row (add object, recolor, move, scale, delete one), then hold `Ctrl+Z` to watch it rewind step by step, then `Ctrl+Y` to play forward — feel the "time machine".
+✏️ **Practice**: Do 5 different operations in a row (add object, change color, move, scale, delete one), then hold `Ctrl+Z` to watch it rewind step by step, then `Ctrl+Y` to play forward, and experience the "time machine."
 
 ---
 
-# Part 3 · The Shape Universe (how to use the 20 + 20 types)
+# Part Three: The Shape Universe
 
-## Chapter 11 · 3D Shapes Overview (how to classify the 20 types)
+3D creation, at its core, is "placing the right shape in the right position." This part first lays out all **40 shapes** for you, then clarifies the fundamental difference between 3D and 2D.
 
-### 11.1 What is a "3D shape"
+## Chapter 11: 3D Shape Overview (How the 20 Are Classified)
 
-A 3D shape has **volume** — it can catch light and shadow, block what is behind it, and be viewed from all around. This tool offers 20 solids, from the most common cube to the exotic torus knot.
+### 11.1 What Is a "3D Shape"
 
-### 11.2 The twenty at a glance
+A 3D shape has **volume**—it can catch light and shadow, can block what's behind it, and can be viewed from all around. This tool provides 20 solid shapes, from the most common cube to the exotic torus knot.
 
-| # | Key | Chinese name | Recognize at a glance | Unique parameter |
+### 11.2 Quick List of the Twenty
+
+| No. | Key name | Chinese name | Recognize at a glance | Unique parameters |
 | --- | --- | --- | --- | --- |
-| 1 | box | Cube | six square faces | length / width / height |
-| 2 | sphere | Sphere | round and bulgy | radius |
-| 3 | cylinder | Cylinder | two circles top & bottom, straight tube | radius / height |
-| 4 | cone | Cone | pointed top, round base | base radius / height |
-| 5 | torus | Torus | donut | outer radius / inner radius |
-| 6 | knot | Knot | braided ring | radius / tube thickness |
-| 7 | icosa | Icosahedron | 20 triangular faces | edge length |
-| 8 | octa | Octahedron | pointed top & bottom, bulgy middle | edge length |
-| 9 | dodeca | Dodecahedron | 12 pentagonal faces | edge length |
-| 10 | capsule | Capsule | round-ended column | radius / cylinder length |
-| 11 | pyramid | Square pyramid | square base, pointed top | base edge / height |
-| 12 | prism | Triangular prism | triangular column | base edge / height |
-| 13 | tube | Tube | curved pipe | span / arch height / tube radius / curve segments |
-| 14 | lathe | Lathe solid | vase / spinning-top shape | segments / base radius / mid radius / widest radius / height |
-| 15 | tetra | Tetrahedron | four-faced pyramid | base edge |
-| 16 | barrel | Barrel | cylinder with different top/bottom bores | top radius / bottom radius / height |
-| 17 | dome | Hemisphere | half an egg / half dome | radius |
-| 18 | helix | Open torus | a ring with a bite taken out | outer radius / inner radius / main sweep angle |
-| 19 | octaPrism | Octagonal prism | eight-sided straight column | base edge / height |
-| 20 | star3d | 3D star | thick star | outer radius / inner radius / point count / thickness |
+| 1 | box | Cube | Six square faces | Length / Width / Height |
+| 2 | sphere | Sphere | Round and bulgy | Radius |
+| 3 | cylinder | Cylinder | Two circles top and bottom, straight tube | Radius / Height |
+| 4 | cone | Cone | Pointed top, round base | Base radius / Height |
+| 5 | torus | Torus | Donut | Outer radius / Inner radius |
+| 6 | knot | Knot | Twisted ring | Radius / Tube thickness |
+| 7 | icosa | Regular icosahedron | 20 triangular faces | Edge length |
+| 8 | octa | Regular octahedron | Pointed top and bottom, bulging middle | Edge length |
+| 9 | dodeca | Regular dodecahedron | 12 pentagonal faces | Edge length |
+| 10 | capsule | Capsule | Round-ended pillar | Radius / Cylinder length |
+| 11 | pyramid | Regular square pyramid | Square base, pointed top | Base edge length / Height |
+| 12 | prism | Regular triangular prism | Triangular column | Base edge length / Height |
+| 13 | tube | Tube | Curved pipe | Span / Arch height / Tube radius / Bend segments |
+| 14 | lathe | Lathe solid | Vase / spinning-top shape | Segments / Base radius / Middle radius / Widest radius / Height |
+| 15 | tetra | Regular tetrahedron | Four-faced pyramid | Base edge length |
+| 16 | barrel | Barrel | Tube with possibly different top/bottom openings | Top radius / Bottom radius / Height |
+| 17 | dome | Hemisphere | Half an egg / semicircular dome | Radius |
+| 18 | helix | Open torus | A ring with a bite taken out | Outer radius / Inner radius / Main sweep angle |
+| 19 | octaPrism | Regular octagonal prism | Eight-sided straight column | Base edge length / Height |
+| 20 | star3d | 3D star | Thick star | Outer radius / Inner radius / Point count / Thickness |
 
-💡 **Where is the "unique parameter"?** After selecting an object, below the right panel's "Opacity" appears the shape's dedicated parameter sliders. Changing them **rebuilds the geometry in real time** and does not affect your already-set color, texture, or transform.
+💡 **Where are the "unique parameters"?** After selecting an object, below the right-panel "Opacity" appears the shape's专属 parameter sliders. Changes **rebuild the geometry in real time** and don't affect your already-set color, texture, or transform.
 
-### 11.3 Three ways to classify (help you locate among 20 fast)
+### 11.3 Three Classification Methods (Help You Locate Among the 20)
 
-- **By everyday familiarity**: box, sphere, cylinder, cone look most like real objects — beginners' first picks;
-- **By "geometric feel"**: the Platonic solids (icosa/octa/dodeca/tetra) feel very "math"; knot/helix/tube feel very "flowing";
-- **By use**: architecture uses box/cylinder/prism/pyramid/dome; decoration uses torus/star3d/heart (2D)/lightning (2D); organic modeling uses sphere/capsule/lathe/barrel.
+- **By everyday familiarity**: box, sphere, cylinder, cone look most like real-life objects—beginner picks;
+- **By "geometric feel" strength**: Platonic solids (icosa/octa/dodeca/tetra) feel very "mathematical"; knot/helix/tube feel very "flowing";
+- **By purpose**: for architecture use box/cylinder/prism/pyramid/dome; for decoration use torus/star3d/heart (2D)/lightning (2D); for organic modeling use sphere/capsule/lathe/barrel.
 
-### 11.4 How to pick your first
+### 11.4 How to Pick Your First
 
-Don't know which? First use **box** to build feel, then **sphere** to feel "curved light and shadow", finally **torus** to feel the 3D fun of "something passing through the middle".
+Don't know which to use? First practice with **box** to build feel, then use **sphere** to experience "curved shading," and finally use **torus** to feel the 3D fun of "something you can pass through the middle of."
 
-❓ **Think**: Among cube, sphere, and cone, which "holds the most with the least material"? This is actually a real-world problem (containers and tanks are designed around it).
+❓ **Think about it**: Of cube, sphere, and cone, which "holds the most stuff with the least material"? This is actually a real-world problem (shipping containers, storage tanks are designed around it).
 
 ---
 
-## Chapter 12 · 2D Shapes Overview (the 20 types and the "sticker" mindset)
+## Chapter 12: 2D Shape Overview (20 Kinds and the "Sticker" Mindset)
 
-### 12.1 What is 2D
+### 12.1 What Is 2D
 
 A 2D shape has **no thickness**, like a paper cutout, **lying flat on the ground** (XY plane, Z=0). It suits symbols, landmarks, and decorative patterns.
 
-### 12.2 The twenty one by one
+### 12.2 Introducing the Twenty One by One
 
-| Key | Chinese | Looks like / use | Unique parameter |
+| Key name | Chinese | Looks like / Use | Unique parameters |
 | --- | --- | --- | --- |
-| square2 | Square | floor tile, logo base | length / width |
-| circle2 | Circle | button, sun, dot | radius |
-| triangle | Isosceles triangle | warning, mountain tip | base length / height |
-| star | Star | rating, decoration | outer radius / inner radius / point count |
-| hexagon | Regular hexagon | honeycomb, nut, tech feel | edge length |
-| heart | Heart | love, like | width / height / cusp depth |
-| pentagon | Regular pentagon | house plan, badge | edge length |
-| octagon | Regular octagon | stop sign, manhole cover | edge length |
-| ellipse | Ellipse | lens, orbit | long axis / short axis |
-| parallelogram | Parallelogram | slant pull, perspective block | base length / height / skew |
-| trapezoid | Trapezoid | frustum, roof side | bottom width / top width / height |
-| diamond | Diamond | gem, pointer | edge length / inner angle A / inner angle B / diagonal p / diagonal q |
-| rightTri | Right triangle | ramp, right-angle mark | base length / height |
-| arrow | Arrow | pointing, flow | length / width |
-| crescent | Crescent | moon, hook | outer radius / inner radius / offset |
-| semicircle | Semicircle | arch, sector | radius |
-| ring2d | Ring (with hole) | bullseye, halo | outer radius / inner radius |
-| cross | Cross | medical, locating | length / arm width |
-| lightning | Lightning | energy, warning | height / width |
-| teardrop | Teardrop | tear, pendant | width / height / tip sharpness |
+| square2 | Square | Floor tile, marker base | Length / Width |
+| circle2 | Circle | Button, sun, dot | Radius |
+| triangle | Isosceles triangle | Warning, mountain peak | Base length / Height |
+| star | Star | Rating, decoration | Outer radius / Inner radius / Point count |
+| hexagon | Regular hexagon | Honeycomb, nut, tech feel | Edge length |
+| heart | Heart | Love, like | Width / Height / Heart-point indentation |
+| pentagon | Regular pentagon | House plan, badge | Edge length |
+| octagon | Regular octagon | Stop sign, manhole cover | Edge length |
+| ellipse | Ellipse | Lens, orbit | Major axis / Minor axis |
+| parallelogram | Parallelogram | Diagonal pull, perspective block | Base length / Height / Tilt amount |
+| trapezoid | Trapezoid | Frustum, roof side | Bottom width / Top width / Height |
+| diamond | Diamond | Gem, indicator | Edge length / Interior angle A / Interior angle B / Diagonal p / Diagonal q |
+| rightTri | Right triangle | Ramp, right-angle marker | Base length / Height |
+| arrow | Arrow | Pointing, flow | Length / Width |
+| crescent | Crescent | Moon, hook | Outer radius / Inner radius / Offset |
+| semicircle | Semicircle | Arch, sector | Radius |
+| ring2d | Ring (with hole) | Bullseye, halo | Outer radius / Inner radius |
+| cross | Cross | Medical, locating | Length / Arm width |
+| lightning | Lightning | Energy, warning | Height / Width |
+| teardrop | Teardrop | Tear drop, pendant | Width / Height / Tip sharpness |
 
-💡 **All 20 2D shapes now have unique parameters**. Before, heart / arrow / crescent / cross / lightning could only be scaled as a whole; now they can be sized precisely.
+💡 **All 20 2D shapes now have unique parameters**. In the past heart / arrow / crescent / cross / lightning could only be scaled as a whole; now they can all be sized precisely.
 
-💡 **Two easily-missed details**:
-- The **semicircle**'s flat edge now faces **up** (rotated 180° from the old version), making "arch" / "sunrise" more natural;
-- The **ring (ring2d)** parameter order is "outer radius first, inner radius second", consistent with the 3D torus; the inner radius is always auto-limited to be **smaller** than the outer radius.
+💡 **Two easily-overlooked details**:
+- The **semicircle**'s straight edge now faces **up** (rotated 180° as a whole compared to the old version), making "arch" / "sunrise" easier;
+- The **ring (ring2d)** parameter order is "outer radius first, inner radius after," consistent with the 3D torus; the inner radius is always auto-limited to be **smaller than** the outer radius.
 
-### 12.3 The "sticker mindset"
+### 12.3 The "Sticker Mindset"
 
-Think of 2D as a sticker stuck on the ground: it always "lies" there, never stands up. The benefit — in top view it is a clear symbol picture; combined with patterns and color, it can make floor guide lines, company logo floor decals, checkerboards, etc.
+Imagine 2D as a sticker stuck on the ground: it always "lies flat" and never stands up. The benefit—in a top-down view, it's a clear symbol diagram; combined with patterns and colors, it can make floor guide lines, company Logo floor decals, checkerboards, etc.
 
-### 12.4 Mind the occlusion
+### 12.4 Watch Out for Occlusion
 
-A 2D shape lies on the ground; if a 3D object presses on it, it gets hidden; from some angles the thin 2D "disappears" into a line. To be eye-catching, lift it a bit (along the Z green axis) or place it in open space.
+2D lies on the ground; if a 3D object presses down it will block it; from some angles the thin 2D "disappears" into a line. When you need it prominent, raise it slightly (along Z green axis) or place it in open space.
 
-✏️ **Practice**: Place square2, heart, arrow, star one each, switch to "Top" to see their clearest look; then switch to "Perspective" to see how they "lie" on the ground.
+✏️ **Practice**: Place square2, heart, arrow, star one each, switch to "Top View" to see their clearest look; then switch to "Perspective" to see how they "lie" on the ground.
 
 ---
 
-## Chapter 13 · Parameters of Every 3D Shape (1): Basic Solids
+## Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Bodies
 
-> This section covers the 10 most common solids one by one. Each follows "look / analogy / use / tip" in four parts, to build intuition.
+> This section covers 10 of the most common solids one by one. Each follows four segments—"Appearance / Analogy / Use / Tip"—to help you build intuition.
 
 ### 13.1 Cube box
-- **Parameters**: `length` / `width` / `height` (independent; you can directly make a cuboid without turning off the uniform lock to stretch).
-- **Look**: a right-angled body of six rectangular faces.
-- **Analogy**: courier box, die, brick.
-- **Use**: building walls, bases, and anything "squared off".
-- **Tip**: the most stable "foundation" shape; to make a low wall, just shrink `height` — more precise than scaling.
+- **Parameters**: `Length` / `Width` / `Height` (independent of each other; you can directly make a rectangular box without turning off the uniform lock to stretch).
+- **Appearance**: a right-angled body of six rectangular faces.
+- **Analogy**: shipping box, dice, brick.
+- **Use**: building walls, pedestals, and everything "square and upright."
+- **Tip**: the most stable "foundation" shape; to make a low wall, just reduce `Height`—more precise than scaling.
 
 ### 13.2 Sphere sphere
-- **Parameters**: `radius`.
-- **Look**: a perfect ball.
+- **Parameters**: `Radius`.
+- **Appearance**: perfect round ball.
 - **Analogy**: basketball, planet, bubble.
 - **Use**: head, celestial body, decorative ball.
-- **Tip**: a sphere spreads patterns/images most "flatly" — good for icon balls.
+- **Tip**: patterns/images spread most "evenly" on a sphere; good for icon-bearing balls.
 
 ### 13.3 Cylinder cylinder
-- **Parameters**: `radius` / `height` (same bore top & bottom, a true right cylinder; for different top/bottom bores use **barrel**).
-- **Look**: equal circles top & bottom, straight side.
-- **Analogy**: soda can, column, candle.
-- **Use**: beams, tube bodies, tower shafts.
-- **Tip**: remember the division of labor with barrel — **cylinder handles "one radius", barrel handles "two radii".**
+- **Parameters**: `Radius` / `Height` (same diameter top and bottom, a true right cylinder; want different top/bottom diameters? Use **barrel** instead).
+- **Appearance**: equal circles top and bottom, straight side wall.
+- **Analogy**: soda can, pillar, candle.
+- **Use**: beams and columns, tube body, tower body.
+- **Tip**: remember the division of labor with barrel—**cylinder handles "one radius," barrel handles "two radii."**
 
 ### 13.4 Cone cone
-- **Parameters**: `base radius` / `height`.
-- **Look**: round base, pointed top.
-- **Analogy**: ice-cream cone, traffic cone, tent tip.
-- **Use**: pointed roofs, indicator lights, each layer of a Christmas tree.
-- **Tip**: stack several cones with shrinking `base radius` to build a "layered tower".
+- **Parameters**: `Base radius` / `Height`.
+- **Appearance**: round base, pointed top.
+- **Analogy**: ice cream cone, traffic cone, tent tip.
+- **Use**: pointed roof, indicator light, each tier of a Christmas tree.
+- **Tip**: stack multiple cones with progressively smaller `Base radius` to build a "tiered tower."
 
 ### 13.5 Torus torus
-- **Parameters**: `outer radius` / `inner radius` (**directly describe the two rings you see**: how big the outer circle, how big the hole in the middle. The old "tube radius" is removed).
-- **Look**: donut with a hole in the middle.
+- **Parameters**: `Outer radius` / `Inner radius` (**directly describes the two circles you see**: how big the outer ring is, how big the hole in the middle is. The old version's "tube radius" is removed).
+- **Appearance**: donut with a hole in the middle.
 - **Analogy**: hula hoop, tire, ring.
 - **Use**: ring decoration, pipe elbow, halo.
-- **Tip**: `inner radius` is auto-limited to be smaller than `outer radius`; the closer they are, the thinner the ring, like a wire loop.
+- **Tip**: `Inner radius` is auto-limited to be smaller than `Outer radius`; the closer the two are, the thinner the ring, like a wire loop.
 
 ### 13.6 Knot knot
-- **Parameters**: `radius` / `tube thickness` (the `tube thickness` upper limit auto-follows `radius`, about 0.4×, to prevent self-intersecting into a blob).
-- **Look**: a ring braided like a plait.
+- **Parameters**: `Radius` / `Tube thickness` (`Tube thickness` upper limit auto-follows `Radius`, about 0.4× the radius, to prevent self-intersection into a clump).
+- **Appearance**: a ring braided like a twist.
 - **Analogy**: rope knot, energy symbol.
-- **Use**: tech-feel decoration, logo body.
-- **Tip**: complex form; suggest a single color or simple pattern to avoid messy texturing.
+- **Use**: tech-feel decoration, emblem主体.
+- **Tip**: complex shape; recommend solid color or simple pattern to avoid messy texturing.
 
-### 13.7 Icosahedron icosa
-- **Parameters**: `edge length` (**not radius** — directly gives the actual length of each edge, more geometrically intuitive).
-- **Look**: a near-spherical polyhedron of 20 equilateral triangles.
-- **Analogy**: soccer ball (close kin of the classic 32-panel), mineral crystal.
-- **Use**: gem, die, low-poly style ball.
-- **Tip**: representative of "low-poly" aesthetic; with a solid color it looks high-end.
+### 13.7 Regular icosahedron icosa
+- **Parameters**: `Edge length` (**not radius**—directly gives the actual length of each edge, more geometrically intuitive).
+- **Appearance**: near-spherical polyhedron made of 20 equilateral triangles.
+- **Analogy**: soccer ball (close relative of the classic 32-panel), mineral crystal.
+- **Use**: gem, dice, low-poly style ball.
+- **Tip**: representative of "low-poly" aesthetics; pairs with solid colors for a premium look.
 
-### 13.8 Octahedron octa
-- **Parameters**: `edge length`.
-- **Look**: pointed top & bottom, bulgy eight faces.
+### 13.8 Regular octahedron octa
+- **Parameters**: `Edge length`.
+- **Appearance**: pointed top and bottom, bulging into eight faces in the middle.
 - **Analogy**: diamond cut, double cone.
 - **Use**: crystal, gem, abstract sculpture.
-- **Tip**: rich light-and-shadow change when rotating; good as a "focus decoration".
+- **Tip**: rich light-and-shadow changes when rotated; good as a "focal decoration."
 
-### 13.9 Dodecahedron dodeca
-- **Parameters**: `edge length`.
-- **Look**: a spherical polyhedron of 12 pentagonal faces.
-- **Analogy**: magic stone, die (D12).
-- **Use**: mysterious symbols, ornaments.
-- **Tip**: at the same edge length, the dodecahedron looks "a size bigger" than the icosahedron, because its circumscribed-sphere radius coefficient is higher.
+### 13.9 Regular dodecahedron dodeca
+- **Parameters**: `Edge length`.
+- **Appearance**: sphere-like polyhedron of 12 regular pentagonal faces.
+- **Analogy**: magic stone, dice (D12).
+- **Use**: mysterious symbol, ornament.
+- **Tip**: at the same edge length, the regular dodecahedron looks "a size larger" than the regular icosahedron, because its circumscribed-sphere radius coefficient is higher.
 
 ### 13.10 Capsule capsule
-- **Parameters**: `radius` / `cylinder length` (total height = cylinder length + 2 × radius).
-- **Look**: a cylinder with hemispheres at both ends.
+- **Parameters**: `Radius` / `Cylinder length` (total height = cylinder length + 2 × radius).
+- **Appearance**: cylinder with hemispheres at both ends.
 - **Analogy**: capsule pill, running track, bowling pin.
-- **Use**: simplified human torso, hose, rounded column.
-- **Tip**: softer than a pure cylinder; common for characters or creatures.
+- **Use**: simplified human torso, soft tube, rounded pillar.
+- **Tip**: softer than a pure cylinder; commonly used for characters or creatures.
 
-✏️ **Practice**: Use box + cylinder + cone to build a "street lamp": cylinder as the pole, box as the lamp box, cone as the top shade. Feel the power of combining basics.
+✏️ **Practice**: Use box + cylinder + cone to assemble a "street lamp": cylinder for the pole, box for the lamp box, cone for the top cover. Feel the power of combining basic bodies.
 
 ---
 
-## Chapter 14 · Parameters of Every 3D Shape (2): Special Shapes
+## Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes
 
-### 14.1 Square pyramid pyramid
-- **Parameters**: `base edge` / `height` (the old "side count" is removed — it was always meant to be a **square** pyramid).
-- **Look**: square base + one pointed top.
-- **Analogy**: Egyptian pyramid, roof.
-- **Use**: towers, pointed-roof buildings, monuments.
-- **Tip**: this version recomputes its normals; the four slopes now show **clear planar light and shadow**, no more "mushed" lighting like the old version.
+### 14.1 Regular square pyramid pyramid
+- **Parameters**: `Base edge length` / `Height` (the old version's "side count" is removed—it was supposed to be a **regular square** pyramid anyway).
+- **Appearance**: square base + one pointed top.
+- **Analogy**: Egyptian pyramid, house roof.
+- **Use**: tower, pointed-roof building, monument.
+- **Tip**: this version recomputed its normals; the four slanted faces now show **clear planar shading**, no longer the old version's "mushed-together" lighting.
 
-### 14.2 Triangular prism prism
-- **Parameters**: `base edge` / `height`.
-- **Look**: a straight column with triangular cross-section.
-- **Analogy**: prism, road block, roof beam.
-- **Use**: triangular beam, wedge, tech component.
-- **Tip**: also fixed normals; the three sides are crisp; lay it horizontally as a "slope block".
+### 14.2 Regular triangular prism prism
+- **Parameters**: `Base edge length` / `Height`.
+- **Appearance**: straight column with equilateral triangular cross-section.
+- **Analogy**: triangular prism, road barrier, roof beam.
+- **Use**: triangular beam, wedge block, tech component.
+- **Tip**: also fixed the normals; the three side faces are now crisp-edged; lay it horizontally as a "slope block."
 
 ### 14.3 Tube tube
-- **Parameters**: `span` / `arch height` / `tube radius` / `curve segments`.
-- **Look**: a raised arched round pipe, both ends on the ground.
-- **Analogy**: arch bridge, rainbow, door handle.
-- **Use**: bridges, arches, decorative ribbons.
-- **Tip**: `span` is the horizontal distance between the two ends, `arch height` is how high the middle lifts — **their ratio decides "flat arch" vs "tall arch"**. The `tube radius` upper limit auto-tightens with span/arch height to avoid the pipe choking the arch hole. Larger `curve segments` = smoother, smaller = more faceted.
+- **Parameters**: `Span` / `Arch height` / `Tube radius` / `Bend segments`.
+- **Appearance**: a section of arched round pipe propped up, both ends on the ground.
+- **Analogy**: arch bridge, rainbow, door-shaped handle.
+- **Use**: bridge, archway, decorative ribbon.
+- **Tip**: `Span` is the horizontal distance between the two endpoints, `Arch height` is how high the middle lifts—**their ratio determines whether it's a "flat arch" or a "tall arch."** The `Tube radius` upper limit auto-tightens with span/arch height, to avoid the pipe getting so thick it blocks the arch opening. Larger `Bend segments` = smoother; smaller = more folded-line feel.
 
 ### 14.4 Lathe solid lathe
-- **Parameters**: `segments` (≥ 3) / `base radius` / `mid radius` / `widest radius` / `height`.
-- **Look**: a body turned from a profile around the central axis (vase / spinning-top shape).
+- **Parameters**: `Segments` (≥ 3) / `Base radius` / `Middle radius` / `Widest radius` / `Height`.
+- **Appearance**: a body spun from a profile line around the central axis (vase / spinning-top shape).
 - **Analogy**: vase, light bulb, spinning top, goblet.
-- **Use**: symmetric containers, vessels, sculpture.
-- **Tip**: the three radii control **bottom, waist, bulgiest point** respectively. For a "vase" let `widest radius` > `mid radius` > `base radius`; for a "spinning top" reverse it. `segments` controls circumferential precision, minimum 3 (then it looks like a triangular frustum).
+- **Use**: symmetric container, vessel, sculpture.
+- **Tip**: the three radii control the **bottom, waist, and bulging point** respectively. For a "vase," make `Widest radius` > `Middle radius` > `Base radius`; for a "spinning top," reverse it. `Segments` controls circumferential precision; minimum 3 segments (which then looks like a triangular frustum).
 
-### 14.5 Tetrahedron tetra
-- **Parameters**: `base edge`.
-- **Look**: the smallest polyhedron of 4 triangular faces.
+### 14.5 Regular tetrahedron tetra
+- **Parameters**: `Base edge length`.
+- **Appearance**: the smallest polyhedron of 4 equilateral triangular faces.
 - **Analogy**: triangular pyramid, crystal shard.
 - **Use**: rubble, low-poly decoration, sharp symbol.
 - **Tip**: few faces, hard edges; great for a "hardcore / tech" style.
 
 ### 14.6 Barrel barrel
-- **Parameters**: `top radius` / `bottom radius` / `height` (the old ambiguous "radius" is deleted).
-- **Look**: a cylinder whose top and bottom bores can differ.
+- **Parameters**: `Top radius` / `Bottom radius` / `Height` (the old version's ambiguous "radius" is deleted).
+- **Appearance**: a tube whose top and bottom openings can differ.
 - **Analogy**: wooden barrel, flower pot, paper cup, rocket mid-section.
-- **Use**: containers, fuselage, reservoir.
-- **Tip**: **this is the most flexible column** — equal radii = cylinder; smaller top = flower pot; larger top = paper cup; drag `top radius` near 0 to get a cone.
+- **Use**: container, fuselage, reservoir.
+- **Tip**: **this is the most flexible columnar body**—equal two radii = cylinder; top smaller than bottom = flower pot; top larger than bottom = paper cup; set `Top radius` near 0 to get a cone.
 
 ### 14.7 Hemisphere dome
-- **Parameters**: `radius`.
-- **Look**: half a sphere (upper half).
+- **Parameters**: `Radius`.
+- **Appearance**: half a ball (upper half).
 - **Analogy**: yurt roof, observatory, bell jar.
-- **Use**: roofs, covers, planetarium.
-- **Tip**: combine with box to make a "roofed hut"; flip it (rotate) and it is a "bowl".
+- **Use**: roof, cover, planetarium.
+- **Tip**: combine with box to make a "roofed cabin"; flip it (rotate) and it's a "bowl."
 
 ### 14.8 Open torus helix
-- **Parameters**: `outer radius` / `inner radius` / `main sweep angle` (the old "tube radius" is removed, now using the same outer/inner dual-radius as the torus).
-- **Look**: a ring with a bite taken out — an arc of the torus is cut away.
-- **Analogy**: C-shaped clasp, open bracelet, one loop of a spring.
+- **Parameters**: `Outer radius` / `Inner radius` / `Main sweep angle` (the old version's "tube radius" is removed, switching to the same inner/outer dual-radius as the torus).
+- **Appearance**: a ring with a bite taken out—a torus with an arc segment cut away.
+- **Analogy**: C-shaped clasp, open bracelet, one coil of a spring.
 - **Use**: dynamic decoration, vortex symbol, energy ring, clasp structure.
-- **Tip**: `main sweep angle` is "how many degrees this ring sweeps in total": 360° is a full torus, 270° is the classic C, 180° is a half-ring. **Changing this one parameter smoothly transitions from "closed" to "open".**
+- **Tip**: `Main sweep angle` is "how many degrees this ring sweeps in total": 360° is a complete torus, 270° is the classic C-shape, 180° is a half-ring. **Changing this one parameter smoothly transitions from "closed" to "open."**
 
-### 14.9 Octagonal prism octaPrism
-- **Parameters**: `base edge` / `height` (the old "radius" changed to the more intuitive edge length).
-- **Look**: a straight column of eight vertical faces.
+### 14.9 Regular octagonal prism octaPrism
+- **Parameters**: `Base edge length` / `Height` (the old version's "radius" changed to the more intuitive edge length).
+- **Appearance**: straight column with eight vertical side faces.
 - **Analogy**: octagonal column, lighthouse, well wall.
-- **Use**: regular columns, tower shaft, base.
-- **Tip**: more edged than a cylinder, rounder than a box; a good compromise.
+- **Use**: regular column, tower body, base.
+- **Tip**: more angular than a cylinder, rounder than a box; a good compromise feel.
 
 ### 14.10 3D star star3d
-- **Parameters**: `outer radius` / `inner radius` / `point count` / `thickness`.
-- **Look**: a star extruded into a thick solid.
+- **Parameters**: `Outer radius` / `Inner radius` / `Point count` / `Thickness`.
+- **Appearance**: a star extruded into a thick solid.
 - **Analogy**: medal, star pendant, badge, gear.
-- **Use**: reward symbol, decoration body, logo.
-- **Tip**: `point count` can be far more than 5 — set to 3 is a triangular star, enlarge it with "inner/outer radii close" and it becomes a **gear**. `inner radius` is auto-limited to be smaller than `outer radius`.
+- **Use**: reward symbol, decoration主体, Logo.
+- **Tip**: `Point count` can be far more than 5—set to 3 for a triangular star, or raise it with "inner/outer radii close" to become a **gear**. `Inner radius` is auto-limited to be smaller than `Outer radius`.
 
-❓ **Think**: If you could build a "robot" with no more than 4 kinds of 3D shapes, which 4 would you pick? Which body part each?
-
----
-
-## Chapter 15 · "Standing" vs "Lying": The Essential 3D/2D Difference
-
-### 15.1 Volume vs area
-
-- **3D has volume**: occupies space, casts shadow, can occlude each other. It "stands" on the ground, with height (Z green axis).
-- **2D has only area**: laid flat, zero thickness. It "lies" on the ground (Z=0).
-
-Understand this and you know why 3D objects can "stack like arhats" while 2D can only "pave the floor".
-
-### 15.2 Why one stands and one lies
-
-In code, 3D uses `seatOnGround` to drop the base to y=0 (page label Z=0); 2D uses `shape2D` rotated to the XZ plane (ground) and stuck to it. So:
-(Note: the earlier "ground / XY plane / Z=0" is the **page-interface label** wording; here `y=0` / `XZ plane` is the **Three.js internal coordinate** wording — both refer to the same ground, just different naming systems: Three.js internally uses the Y axis for "height", corresponding to this book's UI label green axis Z; internal X, Z axes correspond to this book's UI labels X (front–back), Y (left–right).)
-- Place a box, it naturally "sits" on the ground;
-- Place a heart, it naturally "sticks" to the ground.
-
-### 15.3 Mixing tricks
-
-- Want a 2D to "stand"? Rotate it 90° around the red axis (Y), and it goes from "lying" to "standing" — make a standee, a signboard;
-- Want a 3D to "lie down"? Rotate it to topple sideways, make a "fallen tree" / "leaning board";
-- Ground symbol (arrow for directions) + solid building is the most common scene combo.
-
-✏️ **Practice**: Place an arrow (2D), select it and rotate 90° around Y (red / left–right), watch it turn from a "lying ground-arrow" into a "standing direction sign". This is the free switch of "standing and lying".
+❓ **Think about it**: If asked to assemble a "robot" using no more than 4 kinds of 3D shapes, which 4 would you pick? What parts would each be?
 
 ---
 
-# Part 4 · Color & Material
+## Chapter 15: "Standing" vs "Lying": The Essential Difference Between 3D and 2D
 
-Color is the "mood" of a work. This part goes from "what is light" to the 27 presets, custom color picking, 12 patterns, and finally image textures and opacity.
+### 15.1 Volume vs Area
 
-## Chapter 16 · Color Basics: the Game between the Human Eye and Light
+- **3D has volume**: occupies space, can cast shadows, can occlude each other. It "stands" on the ground, with height (Z green axis).
+- **2D has only area**: laid out flat, zero thickness. It "lies" on the ground (Z=0).
 
-### 16.1 Color is not "inherent" to an object
+Understand this and you'll see why 3D objects can "stack like acrobats" while 2D can only "lay flooring."
 
-A red apple in the dark is black — you see red because light hits it and is "reflected" into your eyes. So **color = object + light**. This tool uses `MeshStandardMaterial` (light-reactive material); the scene has ambient light (intensity 1.0) and directional light (intensity 2.6), so objects show light and shadow.
+### 15.2 Why One Stands and One Lies
 
-💡 This is why the same color looks "darker" on the backlit face — the color didn't change, the light did.
+In code, 3D uses `seatOnGround` to drop the bottom face to y=0 (web label Z=0); 2D uses `shape2D` rotated to the XZ plane (ground) and stuck to the ground. So:
+(Note: the earlier "ground / XY plane / Z=0" is the wording of the **web interface labels**; here `y=0` / `XZ plane` is the wording of the **Three.js internal coordinate system**—both refer to the same ground, just different naming systems: internally Three.js uses the Y axis for "height," corresponding to this book's UI label green axis Z; internally the X, Z axes correspond to this book's UI labels X (front/back), Y (left/right).)
+- Place a box, and it naturally "sits" on the ground;
+- Place a heart, and it naturally "sticks" on the ground.
 
-### 16.2 RGB: screens mix three primaries
+### 15.3 Mixing Tips
 
-Displays mix all colors from **red (R), green (G), blue (B)** light. The preset `0xff0000` means "full red, no green/blue = pure red".
+- Want 2D to "stand up"? Rotate it 90° around the red axis (Y) and it goes from "lying" to "standing"—good for standing signs, billboards;
+- Want 3D to "lie down"? Rotate it to topple sideways, making a "fallen tree" or "leaning board";
+- Ground symbol (arrow pointing the way) + solid building is the most common scene combination.
 
-### 16.3 HSV: the intuition of the human brain picking colors
+✏️ **Practice**: Place an arrow (2D), select it and rotate 90° around Y (red/left-right), and observe it changing from a "ground-lying arrow" into a "standing direction sign." This is the free switch between "standing and lying."
 
-More than RGB, people prefer **Hue (H, which color), Saturation (S, how vivid), Value (V, how bright)**. When you drag the picker, you are actually tuning HSV.
+---
+# Part Four: Color and Material
 
-- Hue = red-orange-yellow-green-cyan-blue-purple around a loop;
-- low saturation → grayish; high saturation → vivid;
-- low value → dark; high → bright (even whitish).
+Color is the "mood" of a work. This chapter begins with "what is light," then covers 27 presets, custom color picking, 12 patterns, and finally image textures and opacity.
 
-### 16.4 Two hidden material parameters
+## Chapter 16: Color Basics: The Game of the Human Eye and Light
 
-A surface has `roughness` (rough / 0.6, larger = more matte) and `metalness` (metallic feel / 0.0, larger = more metal-like). Currently default leans "matte plastic". You change color; these two usually stay, but knowing they exist explains "why it's not a mirror reflection".
+### 16.1 Color is Not "Inherent" to an Object
 
-### 16.5 Opacity: let light pass through
+A red apple is black in the dark—you see red because light hits it and is "reflected" into your eyes. So **color = object + light**. This tool uses `MeshStandardMaterial` (a light-reactive material); only when the scene has ambient light (intensity 1.0) and directional light (intensity 2.6) will objects show light and shadow.
 
-Beyond color there is "transparent or not". Covered in detail in Chapter 20; note here: opacity 1 = solid, 0 = invisible.
+💡 This is why the same color looks "darker" on the backlit side—the color hasn't changed, there is simply less light.
 
-❓ **Think**: Why do hospitals use "low-saturation light blue / light green" for walls and scrubs? How does color saturation high/low affect mood?
+### 16.2 RGB: Screens Mix Three Primary Colors
 
-✏️ **Practice**: Place a white sphere, switch views, and see whether its backlit face darkens. That is the direct evidence of "light shapes color".
+Displays mix all colors using three beams of light: **Red (R), Green (G), Blue (B)**. In this tool's preset colors, `0xff0000` means "full red, no green or blue = pure red."
+
+### 16.3 HSV: The Intuition of the Human Brain for Picking Colors
+
+Compared to RGB, people are more used to choosing with **Hue (H, what color), Saturation (S, how vivid), Value (V, how bright)**. When you drag the color picker, you are actually adjusting HSV.
+
+- Hue = a full circle of red, orange, yellow, green, cyan, blue, purple;
+- Low saturation → grayish; high saturation → vivid;
+- Low value → dark; high value → bright (even whitish).
+
+### 16.4 Two Hidden Material Parameters
+
+An object's surface has `roughness` (roughness/0.6, larger = more matte) and `metalness` (metallic feel/0.0, larger = more like metal). The current default leans toward "matte plastic." You change the color; these two are generally left alone, but knowing they exist helps you understand "why it isn't a mirror reflection."
+
+### 16.5 Opacity: Letting Light Pass Through
+
+Beyond color, there is also "transparency or not." Chapter 20 covers this in detail; for now just remember: opacity 1 = solid, 0 = invisible.
+
+❓ **Think about it**: Why do hospital walls and surgical gowns often use "low-saturation light blue/light green"? How does color saturation affect people's emotions?
+
+✏️ **Practice**: Place a white sphere, switch to different viewpoints, and observe whether its backlit side darkens. This is direct evidence of "light shaping color."
 
 ---
 
-## Chapter 17 · 27 Preset Colors: One-click Coloring
+## Chapter 17: 27 Preset Colors: One-Click Coloring
 
-The fastest coloring is to click a preset directly. This tool has **27 built in**, grouped into four by the source comments:
+The fastest way to color is to click a preset directly. This tool has **27 built-in** colors, grouped into four sets per the source code comments:
 
-### 17.1 Black/White/Gray (1–3)
+### 17.1 Black, White, Gray (1–3)
 | Name | HEX | Looks like |
 | --- | --- | --- |
-| Black | `#000000` | ink, night, outline |
-| White | `#ffffff` | paper, snow, highlight |
-| Gray | `#888888` | cement, neutral background |
+| Black | `#000000` | Ink, night, outline |
+| White | `#ffffff` | Paper, snow, highlight |
+| Gray | `#888888` | Cement, neutral background |
 
-### 17.2 RGB primaries (4–6)
+### 17.2 RGB Primaries (4–6)
 | Red | Green | Blue |
 | --- | --- | --- |
 | `#ff0000` | `#00ff00` | `#0000ff` |
 
-### 17.3 CMY secondaries (7–9)
+### 17.3 CMY Secondaries (7–9)
 | Cyan | Magenta | Yellow |
 | --- | --- | --- |
 | `#00ffff` | `#ff00ff` | `#ffff00` |
 
-### 17.4 Extended colors (10–27, a softer modern palette)
+### 17.4 Extended Colors (10–27, softer modern palette)
 Bright red `#ff4444`, orange `#ff8800`, golden yellow `#ffcc00`, bright green `#44ff44`, teal `#00cc88`, bright blue `#4488ff`, purple `#8844ff`, rose `#ff44aa`, light cyan `#6ee7ff`, light purple `#c084fc`, light pink `#fb7185`, emerald `#34d399`, amber `#fbbf24`, sky blue `#60a5fa`, pink `#f472b6`, lavender `#a78bfa`, coral red `#f87171`, slate gray `#94a3b8`.
 
-💡 Presets are "safe palettes" tuned by designers; beginners clicking directly basically won't look bad. For brand colors, use custom in Chapter 18.
+💡 Preset colors are "safe palettes" tuned by designers; beginners who just click them basically won't go wrong. To make a brand color, use the custom method in Chapter 18.
 
-✏️ **Practice**: Color the "street lamp" from Chapter 13 with presets — pole in slate gray, lamp box in amber, top shade in coral red. Feel "palette is personality".
+✏️ **Practice**: Use preset colors to color the "street lamp" from Chapter 13—pole in slate gray, lamp box in amber, top cover in coral red. Feel how "color scheme is character."
 
 ---
 
-## Chapter 18 · Custom Color: HEX, HSV, and the Screen Color Picker
+## Chapter 18: Custom Colors: HEX, HSV, and the Screen Color Picker
 
 ### 18.1 What is HEX
 
-HEX is `#` followed by 6 hex digits, two per group for R, G, B. E.g. brand color `#1e90ff` (dodger blue). To precisely reproduce a color, typing HEX is most accurate.
+HEX is `#` followed by 6 hexadecimal digits, grouped in pairs representing R, G, B. For example, the brand color `#1e90ff` (dodger blue). To precisely reproduce a certain color, entering the HEX is the most accurate.
 
-### 18.2 How to drag the picker
+### 18.2 How to Drag the Picker
 
-Open the right panel's "Picker" button; a color window pops up with "big swatch + hue bar + HEX/RGB inputs":
-- Click / drag in the big swatch → pick **saturation + value** (left–right = density, up–down = brightness);
-- Drag the **hue bar** below → tune **hue** (red-orange-yellow-green-cyan-blue-purple around the loop);
-- For absolute precision, typing in the HEX or R/G/B boxes is steadiest.
+Click the "Picker" button in the right panel, and a color window pops up containing "a large color block + a hue bar + HEX/RGB input boxes":
+- Click / drag inside the large color block → select **saturation + value** (left-right controls intensity, up-down controls brightness);
+- Drag the **hue bar** below → adjust **hue** (a full circle of red, orange, yellow, green, cyan, blue, purple);
+- For absolute precision, directly entering numbers in the HEX or R/G/B boxes is the most reliable.
 
-💡 To find "same-hue light/dark", keep the **hue bar fixed** and only drag up–down in the swatch (change value) — the result is most harmonious.
+💡 To find "light and dark shades of the same color," keep the hue bar **fixed** and only drag up-down inside the large color block (changing value); the resulting palette is the most harmonious.
 
-### 18.3 Screen color picker (eyedropper)
+### 18.3 Screen Color Picker (Eyedropper)
 
-Some versions offer "pick color from screen": click the eyedropper, then click anywhere on the canvas (including another object's color, or the background) to sample that color. Great for "color taken from reality" palettes.
+Some releases offer "pick color from the screen": click the eyedropper, then click anywhere on the canvas (including other objects' colors, or the background) to sample that color. This is extremely convenient for "real-world-inspired" palettes.
 
-### 18.4 What is "no color" (NO_COLOR)
+### 18.4 What is "No Color" (NO_COLOR)
 
-In source there is a special marker `NO_COLOR = -1`. Selecting it makes the object **not apply a solid color** (often with an image texture or special material, giving a "no base color" effect).
+In the source code there is a special marker `NO_COLOR = -1`. Selecting it means the object **does not apply a solid-color shader** (often combined with image textures or special materials to produce a "no base color" effect).
 
-⚠️ **Note**: accidentally clicking "no color" makes the object look "uncolored / dark" — it's not broken, just pick a normal color again.
+⚠️ **Note**: Accidentally selecting "No Color" makes the object look "uncolored/dark"—it isn't broken, just pick a normal color again.
 
-✏️ **Practice**: Use HEX to input a color you like (e.g. `#ff6b6b`) onto a cube; then use the eyedropper to sample a color from somewhere on the page and compare the two.
+✏️ **Practice**: Use HEX to enter a color you like (e.g. `#ff6b6b`) and apply it to a cube; then use the eyedropper to sample a color from somewhere on the page, and compare the two.
 
 ---
 
-## Chapter 19 · 12 Patterns: Give the Surface a Story
+## Chapter 19: 12 Pattern Textures: Giving the Surface a Story
 
-Solid color is too flat; patterns give an object "content". This tool has **12 patterns** (`PATTERNS`) built in:
+Solid colors are too plain; patterns make objects "have content." This tool has **12 built-in patterns** (`PATTERNS`):
 
-| Pattern | Looks like / use |
+| Pattern | Looks like / Use |
 | --- | --- |
-| Solid | no pattern, cleanest |
-| Checker | chessboard, tablecloth, floor tile |
-| Stripe | zebra, warning, fabric |
-| Dot | polka-dot dress, candy |
-| Gradient | sky, metal transition |
-| Brick | wall, building |
-| Diagonal | speed, tech |
-| Wave | water ripple, silk |
-| Dot matrix | pixel, tech panel |
-| Cross | grid cloth, bandage |
-| Grid | graph paper, engineering |
-| Thread | vortex, threaded pipe |
+| Solid | No pattern, cleanest |
+| Checker | Chessboard, tablecloth, floor tiles |
+| Stripe | Zebra, warning, fabric |
+| Dot | Polka-dot dress, candy |
+| Gradient | Sky, metallic transition |
+| Brick | Wall, building |
+| Diagonal | Sense of speed, tech |
+| Wave | Water ripple, silk |
+| Dot matrix | Pixel, tech panel |
+| Cross | Mesh fabric, bandage |
+| Grid | Graph paper, engineering |
+| Thread | Vortex, threaded pipe |
 
-💡 A pattern is usually two layers "main color + pattern color", adjustable separately in the right panel, yielding endless surfaces.
+💡 A pattern's color is auto-derived from the current "main color" (when no color, the pattern color is white). The right panel has **no separate "pattern color" control**—changing the main color changes the whole color.
 
-⚠️ **Note**: complex patterns (e.g. brick, grid) stretched onto a low-poly sphere will "distort" — normal; for neatness, prefer box/cylinder which have more flat faces.
+⚠️ **Note**: Complex patterns (like brick, grid) applied to a low-poly sphere will "stretch and distort," which is normal; for neat results, prefer bodies with many flat faces such as box/cylinder.
 
-✏️ **Practice**: Place a box, try "brick" / "checker" / "stripe" in turn, and feel how a pattern instantly changes "what it looks like" (a wall vs a cloth vs a warning sign).
+✏️ **Practice**: Place a box and try "brick," "checker," "stripe" in turn, and feel how patterns instantly change "what it looks like" (a wall vs. a cloth vs. a warning sign).
 
 ---
 
-## Chapter 20 · Uploading Image Textures, Opacity & Wireframe
+## Chapter 20: Uploading Image Textures and Opacity
 
-### 20.1 Upload image: paste a photo onto the surface
+### 20.1 Upload Images: Paste a Photo onto the Surface
 
-Besides preset patterns, you can **upload your own image** (PNG/JPG) as a surface texture — company logo, photo, hand-drawing all work. Once pasted, the surface is "printed" with that image.
+Besides preset patterns, you can also **upload your own image** (PNG/JPG) as a surface texture—company logo, photo, or hand drawing all work. Once applied, the object's surface is "printed" with that image.
 
-- Fits: display boards with real photos, medal with printed logo, ground with a map;
-- Tip: the image is best square and clear; pasting on a box face is clearest.
+- Suitable for: display boards with real photos, medals imprinted with a logo, ground with a map pasted on;
+- Tip: The image is best square and clear; pasting it on the front face of a box is clearest.
 
 ### 20.2 Opacity
 
-The right panel can tune "opacity":
+The right panel can adjust "opacity":
 
-1 = fully solid;
+1 = completely solid;
 0.1 = almost invisible;
-in-between = semi-transparent (glass, ghost, watery feel).
+intermediate values = semi-transparent (glass, ghost, watery feel).
 
-💡 "Glass cover" / "ice" / "phantom" all rely on this. When semi-transparent, objects behind show through, enriching the layering at once.
+💡 Making "glass cover," "ice," or "phantom" all relies on this. When semi-transparent, objects behind show through, immediately enriching the sense of depth.
 
-### 20.3 Wireframe
+### 20.3 Combinations
 
-Turning on "wireframe", the object keeps only its skeleton lines (triangle mesh), no solid faces. Fits:
-- seeing structure (teaching, schematic);
-- making "wireframe tech-style" decoration;
-- checking whether the shape is what you want.
+- Pattern + semi-transparent = hazy gauze;
+- Solid color + high transparency = glass brick.
 
-### 20.4 Combos
+❓ **Think about it**: To represent "a piece of ice," how would you combine color, opacity, and pattern? And to represent "a semi-transparent brick wall," what effect would that be for?
 
-- pattern + semi-transparent = hazy gauze;
-- image + wireframe = infographic style;
-- solid color + high transparency = glass brick.
-
-❓ **Think**: To show "a piece of ice", how would you combine color, opacity, pattern? To show "a brick wall but semi-transparent", what effect is that for?
-
-✏️ **Practice**: Upload an image from your computer onto a flat box; then set that box's opacity to 0.5 and watch the "image goes semi-transparent" effect. Finally try wireframe to see the skeleton.
+✏️ **Practice**: Upload an image from your computer and paste it onto a flat box; then set this box's opacity to 0.5 and observe the "image becomes semi-transparent" effect.
 
 ---
 
-# Part 5 · Text & Image
+# Part Five: Text and Image
 
-Besides shapes, a scene needs "words" and "photos" to convey information. This part covers the two "content-type" objects: text and image.
+Besides shapes, the scene also needs "words" and "photos" to convey information. This part covers the two "content-type" objects: text and image.
 
-## Chapter 21 · Adding Text: Let the Scene Speak
+## Chapter 21: Adding Text: Let the Scene Speak
 
-### 21.1 Text is a "talking thin board"
+### 21.1 Text is a "Talking Thin Slab"
 
-Signs, names, hints, slogans… text gives a 3D scene semantics. A text object is essentially a "thin plane with words pasted on", and like a normal object it can be selected, moved, rotated, scaled, colored.
+Signs, names, hints, slogans… text gives a 3D scene semantics. A text object is essentially a "thin plane with text pasted on it," and like ordinary objects it can be selected, moved, rotated, scaled, and colored.
 
-### 21.2 Three steps to add text
+### 21.2 Three Steps to Add Text
 
-1. In the left panel's "Tools" pick "Add Text";
-2. Click once on the central ground; an **input box** pops up (placeholder "Input text······");
-3. Type, press **Enter** to confirm; the text lands on the ground; inside the input box, **Shift + Enter** makes a new line (multi-line text).
+1. In the left panel "Tools," select "Add Text";
+2. Click once on the central ground, and an **input box** pops up (placeholder prompt is "Input text······");
+3. Enter text and press **Enter** to confirm; the text lands on the ground. Pressing **Shift + Enter** inside the input box inserts a line break (multi-line text).
 
-💡 The placeholder "Input text······" only reminds you "type here"; it is not content and won't appear in the final work.
+💡 The placeholder prompt "Input text······" only reminds you to "type here"—it is not content itself and will not appear in the final work.
 
-### 21.3 Change content: double-click
+### 21.3 Change Content: Double-Click
 
-Want to edit after placing? **Double-click** the text object; the input box reappears, edit and press Enter. No need to delete and re-add.
+Want to change the words after placing? **Double-click** the text object, the input box pops up again, edit and press Enter. No need to delete and re-add.
 
-### 21.4 Text is also a full object
+### 21.4 Text is Also a Complete Object
 
-Text supports all regular operations: select, translate (blue front–back / red left–right / green up), rotate, scale, recolor, adjust opacity. "Glowing text" / "translucent text" all work.
+Text supports all regular operations: select, translate (blue front-back / red left-right / green up), rotate, scale, change color, adjust opacity. Making "glowing text" or "semi-transparent text" is all possible.
 
-✏️ **Practice**: Add a line "Welcome", move it to the scene entrance; then double-click to change it to "Welcome in", and feel the convenience of instant editing.
+✏️ **Practice**: Add a line "Welcome," move it to the scene entrance; then double-click to change it to "Welcome aboard," and feel the convenience of instant editing.
 
 ---
 
-## Chapter 22 · Font, Size, Weight, Vertical/Horizontal
+## Chapter 22: Font, Size, Weight, and Orientation
 
-After selecting text, the right panel shows text-exclusive controls. This tool offers **8 fonts** and several layout switches.
+After selecting text, the right panel shows text-specific controls. This tool provides **8 fonts** and several layout toggles.
 
-### 22.1 How to pick among eight fonts
+### 22.1 How to Choose Among the Eight Fonts
 
-| Font | Temperament / use |
+| Font | Temperament / Use |
 | --- | --- |
-| YaHei | modern, clear, default for Chinese |
-| Song | formal, bookish |
-| Kai | handwritten, traditional, plaque |
-| Hei | heavy, eye-catching title |
-| FangSong | official document, delicate |
-| Arial | western modern sans-serif |
-| Times | western serif, formal |
-| Courier | western monospace, code / typewriter feel |
+| YaHei | Modern, clear, default first choice for Chinese |
+| Song | Formal, bookish |
+| Kai | Handwritten feel, traditional, plaque |
+| Hei | Heavy, eye-catching title |
+| FangSong | Official document, delicate |
+| Arial | Western modern sans-serif |
+| Times | Western serif, formal |
+| Courier | Western monospace, code/typewriter feel |
 
-💡 Chinese content prefers the first five; pure English can use the last three for different temperaments.
+💡 For Chinese content, prefer the first five; for pure English, the last three express different temperaments.
 
-### 22.2 Font size (default 80)
+### 22.2 Font Size (default 80)
 
-Default font size is **80**, adjustable in the right panel. Too large easily "breaks" the scene scale; too small is unreadable.
+The default font size is **80**, adjustable in the right panel. Too large easily "breaks" the scene proportions; too small is hard to read.
 
-⚠️ **Note**: font size is relative to scene units and must match your shape size — pairing a 500-size font with a 1.2-unit cube makes the text far bigger than the object.
+⚠️ **Note**: Font size is relative to scene units and must match your shape sizes—giving a 1.2-unit cube a size-500 font means the text is far larger than the object.
 
-### 22.3 Weight (bold switch)
+### 22.3 Weight (Bold Toggle)
 
-One-click bold makes titles more prominent. With Hei / Kai, it makes a great "plaque feel".
+One-click bold makes titles more prominent. Combined with Hei/Kai, it makes a great "plaque feel."
 
-### 22.4 Horizontal / vertical
+### 22.4 Horizontal / Vertical Layout
 
-- **Horizontal**: normal one-line text, left to right;
-- **Vertical**: top to bottom, fits Chinese plaques, book titles, signs.
+- **Horizontal**: ordinary line of text, left to right;
+- **Vertical**: top to bottom, suitable for Chinese plaques, book titles, signs.
 
-💡 Combo suggestion: vertical + Kai + large size = traditional plaque; horizontal + Hei + medium size = modern sign.
+💡 Combination suggestion: vertical + Kai + large size = traditional plaque; horizontal + Hei + medium size = modern sign.
 
-⚠️ **Note**: overly long text may exceed the thin board width; press **Shift + Enter** in the input box to wrap, or shrink the size appropriately.
+⚠️ **Note**: Overly long text may exceed the thin slab's width; press **Shift + Enter** inside the input box to wrap, or appropriately reduce the font size.
 
-✏️ **Practice**: Make a vertical "Tea House" plaque (Kai, vertical, large size, wood color), and feel the "personality" of font combos.
+✏️ **Practice**: Make a "Tea House" vertical plaque (Kai, vertical, large size, wood color), and feel the "character" of font combinations.
 
 ---
 
-## Chapter 23 · Image Object: Bringing Photos into the 3D World
+## Chapter 23: Image Object: Put Photos into the 3D World
 
-### 23.1 Adding an image object
+### 23.1 Adding an Image Object
 
-Left panel "Tools" → "Add Image" → pick a local image file → click on the ground; the image appears as a **flat decal** (like a standing photo).
+In the left panel "Tools," select "Add Image" → choose a local image file → click on the ground, and the image appears as a **flat decal** (like a standing photo).
 
-### 23.2 Operate like a normal object
+### 23.2 Operate Like an Ordinary Object
 
-After selecting, you can move, rotate, scale. Lean it against a wall, lay it flat as floor decor, lift it as a sign.
+After selecting, it can be moved, rotated, and scaled. It can lean against a wall at an angle, lie flat as floor decoration, or be raised as a signboard.
 
-### 23.3 An image can also be a "texture"
+### 23.3 Images Can Also Be "Textures"
 
-Chapter 20 said an image can be "pasted" onto any 3D object's surface (as surface material). So the same image has two uses:
+Chapter 20 explained that images can be "pasted" onto any 3D object's surface (as a surface material). So the same image has two uses:
 
-- **As an independent decal**: a "photo" in the scene;
-- **As a surface texture**: printed on a box / cylinder etc. surface.
+- **As an independent decal**: as a "photo" in the scene;
+- **As a surface texture**: printed on the surface of objects like box / cylinder.
 
-### 23.4 Image vs 2D shape
+### 23.4 Image vs. 2D Shape
 
-| | Image object | 2D shape |
+| | Image Object | 2D Shape |
 | --- | --- | --- |
-| Content | your own photo / logo | software-generated shape |
-| Recolorable | generally as a whole texture | can change solid color / pattern |
-| Typical use | realistic photo, real logo | symbol, landmark, decoration |
+| Content | Your own photo / Logo | Software-generated shape |
+| Can recolor | Generally adjust as whole texture | Can change solid color / pattern |
+| Typical use | Realistic photo, real Logo | Symbol, landmark, decoration |
 
-Both are "thin", both can stand or lie; choose as needed.
+Both are "thin," both can stand or lie down—choose as needed.
 
-✏️ **Practice**: Import a photo of yours as a "flat decal" standing in the scene; then use the same image as a texture on a box face, and compare the two uses.
+✏️ **Practice**: Import a photo of yours and make a "flat decal" standing in the scene; then use the same image as a texture pasted on the front of a box, and compare the difference between the two uses.
 
 ---
 
-# Part 6 · Brush & Eraser
+# Part Six: Brush and Eraser
 
-The previous parts cover "standard shapes"; this part covers "freehand drawing" — the brush lets you draw lines in the scene like holding a pen, and the eraser lets you wipe them.
+The previous two parts covered "standard shapes"; this part covers "freehand drawing"—the brush lets you draw lines in the scene like holding a pen, and the eraser lets you erase them.
 
-## Chapter 24 · 2D Brush: Drawing Lines on the Ground
+## Chapter 24: 2D Brush: Drawing Lines on the Ground
 
-### 24.1 What is the 2D brush
+### 24.1 What is the 2D Brush
 
-The 2D brush draws **flat lines on the ground (XZ plane)**, like drawing on paper with a pen. It suits floor decals, paths, doodles, ground guides.
+The 2D brush draws **flat lines** on the **ground (XZ plane)**, like drawing on paper with a pen. It suits floor patterns, paths, doodles, and ground guidance.
 
-### 24.2 How to use
+### 24.2 How to Use
 
-1. Left panel "Tools" pick "2D Brush";
-2. On the central ground **hold left-button and drag**; release to finish one stroke;
-3. You can draw many strokes in a row.
+1. In the left panel "Tools," select "2D Brush";
+2. **Hold left button and drag** on the central ground; releasing completes one stroke;
+3. You can draw multiple strokes consecutively.
 
-### 24.3 Hold Shift to constrain a straight line
+### 24.3 Hold Shift to Constrain to a Straight Line
 
-While dragging, hold **Shift**; the line is **constrained to a straight line** (between two points). Great for "straight roads" / "regular edges".
+While dragging, hold **Shift** to **constrain the line into a straight line** (between two points). Great for drawing "straight roads" or "orderly edges."
 
-> Direction lock: after entering straight-line constraint, **until this stroke (left-button drawing) ends, the direction stays locked to the first-determined horizontal / vertical / 45° direction**, and won't change even if the mouse deviates midway. To change direction, release the left button and start a new stroke.
+> Direction lock: Once in constrained straight-line mode, **before this stroke (drawn with the left button held) ends, the direction stays locked to the first-determined horizontal / vertical / 45° direction**, and even if the mouse moves off course midway, it won't change. To change direction, release the left button and start a new stroke.
 
-### 24.4 The four brush properties
+### 24.4 The Four Brush Properties
 
-The right panel (when brush is active) can set:
+The right panel (when the brush is active) lets you set:
 
 | Property | Effect |
 | --- | --- |
-| Color | line color |
-| Thickness | how wide the line |
-| Opacity | how solid the line |
-| Min spacing | minimum distance between sample points; smaller = smoother & denser |
+| Color | Line color |
+| Thickness | How wide the line is |
+| Opacity | Whether the line is solid |
+| Min spacing | Minimum distance between sample points; smaller = smoother and denser points |
 
-💡 Smaller "min spacing" = finer line but more vertices; larger = sparser but more faceted. Shrink for fine curves, enlarge for sketching.
+💡 The smaller the "min spacing," the finer the line but the more vertices; larger saves resources but feels more polygonal. Reduce it for fine curves, increase it for sketches.
 
-### 24.5 Brush vs 2D shape
+### 24.5 Brush vs. 2D Shape
 
 - A 2D shape is a "standard shape" (circle, heart…), recolorable and re-patternable;
-- A 2D brush is "your hand-drawn arbitrary line", free but irregular.
+- A 2D brush is "any line you hand-draw," free but irregular.
 
-Use shapes for standard symbols, brush for casual doodles.
+Use shapes for standard symbols, use the brush for casual doodles.
 
-✏️ **Practice**: Use the 2D brush to draw an "∞" symbol on the ground, then hold Shift to draw a straight line through it — feel free line vs constrained line.
+✏️ **Practice**: Use the 2D brush to draw an "∞" symbol on the ground, then hold Shift to draw a straight line crossing it, and feel free line vs. constrained line.
 
 ---
 
-## Chapter 25 · 3D Brush and the Reference Plane
+## Chapter 25: 3D Brush and Reference Plane
 
-### 25.1 What is the 3D brush
+### 25.1 What is the 3D Brush
 
-The 3D brush draws **solid pipes in space** — not stuck to the ground, but "pipe lines" floating in the air. It lets you "paint in the air".
+The 3D brush draws **3D tubes in space**—not stuck to the ground, but "tube lines" floating in the air. It lets you "paint in the air."
 
-### 25.2 Reference plane: the first click decides "which layer to draw on"
+### 25.2 Reference Plane: The First Stroke Determines "Which Layer to Draw On"
 
-On the 3D brush's first click, a **semi-transparent "reference plane"** is determined. Subsequent drags reference this plane; lines land near it.
+On the 3D brush's first click, a **semi-transparent "reference plane"** is determined. Subsequent drags all reference this plane, and lines land near it.
 
-💡 Want to draw a **horizontal line**? First switch to "Top" view, click to set a horizontal reference plane; want a **vertical line**? Switch to "Front / Left / Right" to set a vertical plane. The plane's orientation decides the "dimension" you draw in.
+💡 Want to draw a **horizontal line**? First switch to "Top View," click to set a horizontal reference plane; want to draw a **vertical line**? Switch to "Front / Left / Right View" then set a vertical plane. The orientation of the reference plane determines the "dimension" you draw in.
 
-### 25.3 Draw on the plane, Shift to constrain a straight line
+### 25.3 Draw on the Plane, Shift Constrains to a Straight Line
 
-- Drag freely on the reference plane;
-- Hold **Shift** and drag to constrain to a straight line (consistent with the 2D brush's Shift constraint, but acting on the spatial pipe).
+- Drag freely on the reference plane to draw;
+- Hold **Shift** while dragging to constrain into a straight line (same as the 2D brush's Shift constraint, but acting on spatial tubes).
 
-> Direction lock: same as above; after Shift constrains the straight line, **the direction stays locked until the stroke ends**, cannot change midway; release and start a new stroke to change direction.
+> Direction lock: Same as above; after Shift constrains to a straight line, **the direction is locked until this stroke ends**, cannot be changed midway, and you must release and start a new stroke to change direction.
 
-### 25.4 Ball-cap ends
+### 25.4 Spherical Cap Endings
 
-Each stroke's two ends auto-add **ball-cap ends**, so the line is rounded and never breaks open, like a real pipe with end caps.
+Each stroke's two ends automatically get **spherical cap endings**, so the line's head and tail are rounded and sealed, like real tubes with end caps added.
 
 ### 25.5 Uses
 
 - Casually sculpt ribbons, connectors, energy beams;
-- Draw "dynamic lines" in a scene (more organic than placing standard bodies);
-- Make abstract art, circuit schematics.
+- Draw "dynamic lines" for the scene (more organic than placing standard bodies);
+- Make abstract art, circuit diagrams.
 
-❓ **Think**: Is the 3D brush's "reference plane" concept the same as a painter "stretching a sheet of paper first"? Why is this "virtual paper" especially needed in 3D?
+❓ **Think about it**: Is the 3D brush's "reference plane" concept the same as a painter "first mounting a sheet of paper"? Why is this "virtual paper" especially needed in 3D?
 
-✏️ **Practice**: Switch to "Top", use the 3D brush to set a horizontal reference plane and draw a wavy line; then switch to "Front" and draw another vertical line, to feel the dimensional difference of spatial lines.
-
----
-
-## Chapter 26 · Eraser: Whole vs Partial
-
-Mistakes must be erasable. This tool's eraser has two modes with different behaviors — tell them apart.
-
-### 26.1 Where to switch the two modes
-
-In the right panel's eraser properties there is "Eraser mode": **whole erase / partial erase**.
-
-### 26.2 Whole erase (default)
-
-Drag the eraser circle; whatever it touches gets **the whole object deleted** (the entire brush stroke, the entire shape). This is "bold" cleanup.
-
-💡 To quickly clear a whole 3D stroke or a whole shape, use whole mode — circle and delete.
-
-### 26.3 Partial erase
-
-With "partial erase" on:
-
-- **2D stroke**: only erases the **segment intersecting the eraser circle**, the rest remains (fine line repair);
-- **3D stroke**: likewise only erases the **trajectory points intersecting the eraser circle**, the rest remains (both 2D and 3D strokes support segment-by-segment partial erase);
-- **Other objects** (standard 3D/2D shapes, text, image): still **delete the whole object** (whole delete).
-
-⚠️ **Note**: partial mode only erases "brush strokes (2D and 3D)" segment by segment; for standard shapes, text, image, it still deletes the whole object. Don't expect partial mode to "gnaw off a corner of a cube".
-
-### 26.4 Eraser size
-
-Use the "Eraser size" slider to tune the eraser circle radius; both fine detail repair and large cleanup rely on it. Too small needs many passes; too large easily deletes neighbors by mistake.
-
-### 26.5 Erased-by-mistake is recoverable
-
-Objects deleted by the eraser enter history like other operations — press `Ctrl+Z` to get them back. So erase boldly.
-
-✏️ **Practice**: Use the 2D brush to draw a long curve, first turn on "partial erase" to wipe a small segment (the rest remains); then switch to "whole erase" and circle another stroke, watch it get deleted entirely. Compare the two modes.
+✏️ **Practice**: Switch to "Top View," use the 3D brush to set a horizontal reference plane, and draw a wavy line; then switch to "Front View" and draw another vertical line, feeling the dimensional difference of spatial lines.
 
 ---
 
-# Part 7 · Views & Observation
+## Chapter 26: Eraser: Whole and Partial
+
+Mistakes need to be erasable. This tool's eraser has two modes with different behaviors—be sure to distinguish them.
+
+### 26.1 Where to Switch the Two Modes
+
+In the right panel's eraser properties there is "Eraser Mode": **Whole Erase / Partial Erase**.
+
+### 26.2 Whole Erase (default)
+
+Drag the eraser circle; whatever it touches gets the **entire object deleted** (the whole brush stroke, the whole shape). This is "drastic" cleanup.
+
+💡 To quickly clear an entire 3D stroke or an entire shape, use whole mode—circle it and it's deleted.
+
+### 26.3 Partial Erase
+
+After enabling "Partial Erase":
+
+- **2D stroke**: only erases the **segment intersecting the eraser circle**, the rest remains (precise line editing);
+- **3D stroke**: likewise only erases the trajectory points **intersecting the eraser circle**, the rest remains (both 2D and 3D strokes support segment-by-segment partial erasing);
+- **Other objects** (standard 3D/2D shapes, text, image): still deletes the **entire object** (whole delete).
+
+⚠️ **Note**: Partial mode only erases "brush strokes (2D and 3D)" segment by segment; for standard shapes, text, and images, it still deletes the whole object. Don't expect partial mode to "bite off a corner of a cube."
+
+### 26.4 Eraser Size
+
+Use the "Eraser Size" slider to adjust the eraser circle radius, for both fine detail work and large-area cleanup. Too small a circle requires many erases; too large easily deletes neighbors by mistake.
+
+### 26.5 Erased Mistakes Can Be Recovered
+
+Objects deleted by the eraser, like other operations, go into history—press `Ctrl+Z` to bring them back. So erase boldly.
+
+✏️ **Practice**: Use the 2D brush to draw a long curve, first enable "Partial Erase" and erase a small segment of it (the rest remains); then switch to "Whole Erase" and circle another stroke, and watch it get deleted entirely. Compare the two modes.
+
+---
+
+# Part Seven: Viewpoint and Observation
 
 "Look from another angle" often makes things clear. This part covers how to observe and fix your viewing angle.
 
-## Chapter 27 · Seven Preset Views: See the World from Another Angle
+## Chapter 27: Seven Preset Viewpoints: See the World from Another Angle
 
-### 27.1 Why switch views
+### 27.1 Why Switch Viewpoints
 
-The human eye has only one angle, easily misjudging "front–back, left–right, who is higher". One-click view switch equals walking around the work. The bottom bar has **7 view buttons**.
+The human eye has only one angle, easily misjudging "front-back-left-right, who is higher or lower." One-click viewpoint switching is like walking a circle around the work. The bottom bar has **7 viewpoint buttons**.
 
-### 27.2 The seven views one by one
+### 27.2 The Seven Viewpoints One by One
 
-| View | You are like… | Main plane seen (page label) |
+| Viewpoint | You are like… | Main plane seen (web label) |
 | --- | --- | --- |
-| Perspective | standing and looking normally | near-big far-small, most natural |
-| Top | looking straight down from above | X (blue/front–back) × Y (red/left–right) plane |
-| Bottom | looking up from straight below | same as Top, but flipped |
-| Front | level gaze from straight front | Y (red/left–right) × Z (green/height) plane |
-| Back | level gaze from straight back | same as Front, reversed |
-| Left | level gaze from straight left | X (blue/front–back) × Z (green/height) plane |
-| Right | level gaze from straight right | same as Left, reversed |
+| Perspective | Standing and looking normally | Near large, far small, most natural |
+| Top | Looking down from directly above | X (blue/front-back) × Y (red/left-right) plane |
+| Bottom | Looking up from directly below | Same as top, but flipped |
+| Front | Looking level from directly front | Y (red/left-right) × Z (green/height) plane |
+| Back | Looking level from directly behind | Same as front, opposite direction |
+| Left | Looking level from directly left | X (blue/front-back) × Z (green/height) plane |
+| Right | Looking level from directly right | Same as left, opposite direction |
 
-💡 Remember the page labels: **X blue = front–back, Y red = left–right, Z green = height**. Top view sees "front–back × left–right" (the ground); Front view sees "left–right × height" (the elevation).
+💡 Remember the web labels: **X blue = front-back, Y red = left-right, Z green = height**. Top view sees "front-back × left-right" (the ground), front view sees "left-right × height" (the elevation).
 
-### 27.3 When to use which
+### 27.3 When to Use Which
 
-- **Perspective**: overall observation, screenshot showcase;
-- **Top**: precise placement, aligning a row of objects (ground top-view is most accurate);
-- **Front/Left/Right**: check "straight or not" / "aligned or not", make symmetric composition;
-- **Bottom/Back**: rare but can verify "back face / bottom face" as expected.
+- **Perspective**: overall observation, screenshot presentation;
+- **Top**: precise placement, aligning a row of objects (the ground top-view map is most accurate);
+- **Front/Left/Right**: check "straight or not," "aligned or not," make symmetric composition;
+- **Bottom/Back**: rare but can verify whether the "back/bottom face" is as expected.
 
-❓ **Think**: Why do architects draw "plan, elevation, side elevation"? Among these seven views, which correspond to those three engineering drawings?
+❓ **Think about it**: Why do architects draw "plan, elevation, side elevation"? Among these seven viewpoints, which correspond to these three engineering drawings?
 
-✏️ **Practice**: Place 3 different shapes, click Top, Front, Right respectively, and observe the "look" difference of the same scene under different views.
+✏️ **Practice**: Place 3 different shapes, then click top, front, and right views respectively, and observe the "appearance" difference of the same scene under different viewpoints.
 
 ---
 
-## Chapter 28 · Locking the View, Hiding Aids, and Fullscreen
+## Chapter 28: Hide Aids and Fullscreen
 
-### 28.1 Lock the current view
+### 28.1 Hide Coordinate Axes and Grid
 
-The top bar can "lock current view" (`lockCurrentView`): after locking, the camera **does not auto-rotate with your operations**, letting you focus on fine-tuning a fixed angle.
+The top bar has three toggles: "Coordinate Axes," "Grid Plane," "Ground":
 
-💡 When doing precise alignment, lock the view first, then adjust slowly; the picture won't "run away by itself".
+- Hide coordinate axes: remove the three lettered arrows;
+- Hide grid: remove the ground squares;
+- Toggle ground: control the display and hiding of the semi-transparent reference plane (the reference plane where objects land). When exporting a work or pursuing a clean image, you can hide them all.
 
-### 28.2 Hide axes and grid
+⚠️ **Note**: Before screenshotting / exporting a presentation image, it is recommended to **first hide the coordinate axes and grid** for a cleaner, more "finished" image. They are only aids and do not affect the work itself.
 
-The top bar has two switches "Axes" and "Grid surface":
-
-- Hide axes: remove the three letter-labeled arrows;
-- Hide grid: remove the ground squares.
-
-⚠️ **Note**: before screenshotting / exporting a showcase, it is advised to **hide axes and grid first** for a cleaner, more "finished" picture. They are only aids and don't affect the work itself.
-
-### 28.3 Fullscreen
+### 28.2 Fullscreen
 
 | Form | Fullscreen method |
 | --- | --- |
-| 🖥️📱 **Web** | Click the top bar's "Fullscreen" button; 🖥️ mouse side can also press **F11**. Enters **browser fullscreen**, page fills the screen |
-| 💻 **PC** | Click the top bar's "Fullscreen" button or press **F11**, entering **window fullscreen** (hides title bar and window buttons) |
-| 🤖 **Android** | **No fullscreen button** — the app itself runs fullscreen, no switch needed |
+| 🖥️📱 **Web version** | Click the top bar "Fullscreen" button; 🖥️ on mouse/desktop you can also press **F11**. This enters **browser fullscreen**, the page fills the screen |
+| 💻 **PC version** | No "Fullscreen" button; pressing **F11** or the title bar "Maximize" button is **window maximize / restore** (not true fullscreen) |
+| 🤖 **Android version** | **No fullscreen button**—the app itself runs in fullscreen, no switching needed |
 
-🖥️💻 Pressing **Esc** only closes controls / cancels selection, and does **not** exit fullscreen; to exit fullscreen press **F11** again or click "Fullscreen" again.
+🖥️ On web · mouse/desktop, pressing **Esc** only closes controls / cancels selection, and will **not** exit fullscreen; to exit fullscreen press **F11** again or click the "Fullscreen" button again. 💻 On the **PC version**, pressing **F11** is maximize/restore, and pressing **F11** again exits that state (PC has no "Fullscreen" button).
 
-### 28.4 A practical combo
+### 28.3 A Practical Combination
 
-> To produce a clean showcase image: hide axes + hide grid + switch to perspective + (🖥️📱💻 optional) fullscreen + screenshot.
+> To produce a clean presentation image: hide coordinate axes + hide grid + switch to perspective + (🖥️📱💻 optional) fullscreen + screenshot.
 
-✏️ **Practice**: Make a small scene, first hide axes/grid and screenshot a "clean image"; then show them and screenshot a "with-aids image", and compare the impression given to others.
+✏️ **Practice**: Make a small scene, first hide the coordinate axes/grid and take a "clean" screenshot; then show them and take a "with-aids" screenshot, and compare the difference in impression given to others.
 
 ---
+# Part Eight: Efficiency — Let Your Hands "Fly"
 
-# Part 8 · Efficiency · Shortcuts (let your hands fly)
-
-> If the previous seven parts are "learning moves", this part is "training internal strength". However skilled the moves, if every move requires dragging the right-side slider and every delete requires clicking a button, speed won't rise.
+> If the previous seven parts are "learning the moves," this part is "training the internal energy." No matter how well you know the moves, if you have to drag the slider on the right every time you move an object, or click a button every time you delete something, your speed will never pick up.
 >
-> Those who really use it smoothly almost never touch the sliders — they use **the keyboard**. This part frees you from "mouse dependency".
+> People who really use it smoothly hardly touch the sliders — they use the **keyboard**. This chapter frees you from "mouse dependency syndrome."
 
 > 📌 **How to read this part (important)**
-> - 🖥️💻 **Web·Mouse / PC**: this whole part applies and is key to your speedup — read carefully.
-> - 📱🤖 **Web·Touch / Android**: no physical keyboard, the keyboard shortcuts of Chapters 29, 31, 32 **don't apply**, and the app won't show the "Keyboard shortcuts" help section. Please **jump directly to [Chapter 30](jump:Chapter 30 · Mouse & Gesture Operations: All Four Forms)'s gesture table** — that is your efficiency tool.
->   (If you connect a physical keyboard to a tablet, shortcuts also work; read along.)
+> - 🖥️💻 **Web · Mouse / PC version**: Everything in this part applies and is key to speeding you up, so please read carefully.
+> - 📱🤖 **Web · Touch / Android version**: With no physical keyboard, the **keyboard shortcuts** in Chapters 29, 31, and 32 **do not apply**,
+>   and the app will not show a "keyboard shortcuts" help section. Please **skip directly to the gesture table in [Chapter 30](jump:第30章 鼠标与手势操作：四种形态都讲)** — that is your efficiency tool.
+>   (If you connect a physical keyboard to your tablet, the shortcuts also work, and you can read this part together with it.)
 
 ---
 
-## Chapter 29 · Why Learn Shortcuts: The Compound Interest of Efficiency
+## Chapter 29: Why Memorize Shortcuts: The Compound Interest of Efficiency
 
-### 29.1 An underrated fact
+### 29.1 An Underestimated Fact
 
-Do a small experiment: place a cube in the scene, then drag the "uniform scale" slider in its right-side properties panel back and forth 10 times with the mouse, then press the keyboard `+` / `-` keys 10 times.
+Do a small experiment: place a cube in the scene, then drag the "uniform scale" slider in its right-side properties panel back and forth 10 times with the mouse, then press the `+` / `-` keys 10 times.
 
-You will almost certainly find: **the keyboard is faster, more accurate, less tiring.**
+You will almost certainly find: **the keyboard is faster, more accurate, and less tiring.**
 
-Three reasons:
-1. **Hands don't leave the keyboard core** — eyes on the canvas, fingers on the letter keys; the brain needn't switch between "look at canvas → find panel → move mouse → drag slider".
-2. **Fixed step** — one arrow-key press moves the object exactly "0.1 grid"; 10 presses is exactly 1 grid. Drag the slider 10 times and you can't tell how far it moved.
-3. **Stackable, undoable** — every keyboard operation enters the history stack (see [Chapter 32](jump:Chapter 32 · Slider/Input & Ctrl Combos)); a wrong press is one `Ctrl+Z` away; slider dragging is continuous change, and undo often "jumps" harshly.
+There are three reasons:
+1. **Your hands never leave the core keyboard area** — your eyes stay on the canvas, your fingers on the letter keys, and your brain doesn't have to keep switching between "look at canvas → find panel → move mouse → drag slider."
+2. **There is a fixed step size** — press an arrow key once and the object moves exactly "0.1 grid"; press it 10 times and it's exactly 1 grid. Drag a slider 10 times and you have no idea how far it actually moved.
+3. **It can stack and be undone** — every keyboard operation goes into the history stack (see [Chapter 32](jump:第32章 滑动条/输入框 与 Ctrl 组合键)), and if you make a mistake, `Ctrl+Z` reverts it instantly; a slider drag is a continuous change, and undoing it often "jumps" quite abruptly.
 
-💡 **One-line mindset**: the mouse handles "select" and "draw", the keyboard handles "change" and "tune". Divide and conquer, double the efficiency.
+💡 **One-line mantra**: The mouse is for "selecting" and "drawing"; the keyboard is for "modifying" and "adjusting." Divide the work, and efficiency doubles.
 
-### 29.2 Shortcuts also have "occasions"
+### 29.2 Shortcuts Also Depend on "Context"
 
-This tool's shortcuts don't mean "one thing globally"; they **depend on whether an object is currently selected**:
+The shortcuts in this tool don't have "one global meaning" — instead, they **depend on whether an object is currently selected**:
 
-| Current state | What the arrow keys / A D W S do |
-| --- | --- |
-| **Nothing selected** | moves the **camera** (you orbit the scene) |
-| **Object selected** | moves **that object** (it moves/turns in the scene) |
+| Current state | What the arrow keys / A D W S are doing |
+|---|---|
+| **No object selected** | The **camera** moves (you are looking around the scene) |
+| **An object is selected** | That **object** moves (the object is moved/rotated in the scene) |
 
-The same `↑` key, when nothing is selected, is "camera pushes forward"; when something is selected, is "object walks forward". This distinction is the core of the whole shortcut system — engrave it first, or you'll be confused later.
+The same `↑` key, when nothing is selected, means "push the camera forward," and when something is selected, means "move the object forward." This distinction is the core of the entire shortcut system — make sure to engrave it in your mind first, or things will get confusing later.
 
-❓ **Think**: Why is "camera moves when nothing selected" a reasonable design? — Because then you're probably "finding an angle, seeing the whole", and letting the keyboard pan/rotate the view is more precise than dragging empty space (which is continuous, no step).
+❓ **Think about it**: Why is "camera moves when nothing is selected" a reasonable design? — Because at that moment you are probably "finding an angle, viewing the whole picture," and using the keyboard to pan/rotate the view directly is more precise than dragging empty space (dragging empty space is continuous and has no step size).
 
-### 29.3 First review the "axis language"
+### 29.3 Review the "Coordinate Axis Language" First
 
-All "along X / Y / Z axis" wording in this part follows the **page labels** (consistent with the axis labels you see on screen):
+All the "along X / Y / Z axis" phrasing in this part follows the **page labels** (which match the axis labels you see in the canvas):
 
-- **X axis (blue) = front–back** (blue ≈ "depth")
-- **Y axis (red) = left–right** (red ≈ "left–right")
-- **Z axis (green) = height, up is positive** (green ≈ "high")
+- **X axis (blue) = front-back direction** (blue ≈ "deep/depth")
+- **Y axis (red) = left-right direction** (red ≈ "left-right")
+- **Z axis (green) = height direction, positive upward** (green ≈ "height")
 
-> ⚠️ Reminder: this is the "page-label axis". The code internally uses another set (X red, Y green, Z blue, Y up), but what you see on the UI, in this manual, and in the help panel is always the labels above. Remember the label axes; don't be distracted by the internal implementation.
+> ⚠️ Reminder: This is the "page-labeled axis." Internally, the code uses a different set (X red, Y green, Z blue, Y upward), but what you see in the interface, in the manual, and in the help panel is always the set above. Just memorize the labeled axes — don't let the internal implementation confuse you.
 
-Remember this table; every later chapter "writes sentences" with it.
+Memorize this table; every chapter afterward is "making sentences" with it.
 
 ---
 
-## Chapter 30 · Mouse & Gesture Operations: All Four Forms
+## Chapter 30: Mouse and Gesture Operations: All Four Forms Covered
 
-This tool's "quick actions" **switch automatically with the device**:
+The "quick operations" in this tool **switch automatically based on device**:
 
-- 🖥️💻 **Web·Mouse and PC** → show and use "mouse operations" (30.1);
-- 📱🤖 **Web·Touch and Android** → show and use "gesture operations" (30.2).
+- 🖥️💻 **Web · Mouse and PC version** → shows and uses "mouse-related operations" (30.1);
+- 📱🤖 **Web · Touch and Android version** → shows and uses "gesture operations" (30.2).
 
-The two tables below are **exactly identical** to the "mouse operations" / "gesture operations" inside the app's "Settings → Quick Actions" — read against your own form.
+The two tables below are **exactly identical** to the "mouse-related operations" and "gesture operations" in the app's "Settings → Quick Operations." Please read them against the form you have.
 
-### 30.1 Mouse operations (🖥️ Web·Mouse / 💻 PC)
-
-| Operation | Description |
-| --- | --- |
-| Single left-click | select object/control |
-| Double left-click | edit text |
-| Long left-press | operate object/control |
-| Long right-press | rotate view |
-| Long wheel-press | pan view |
-| Scroll wheel | zoom view |
-
-### 30.2 Gesture operations (📱 Web·Touch / 🤖 Android)
+### 30.1 Mouse-Related Operations (🖥️ Web · Mouse / 💻 PC version)
 
 | Operation | Description |
-| --- | --- |
-| Single-finger tap | select object/control |
-| Single-finger double-tap | edit text |
-| Long single-finger press on object | add/remove select (equals Shift-click) |
-| Single-finger drag object | operate object/control |
-| Single-finger drag empty | rotate view |
-| Single-finger tap empty | cancel selection |
-| "Select all" button | select all objects |
-| "Box select" button | after on, single-finger drag to box-select objects |
-| Two-finger drag | pan view |
-| Two-finger pinch | zoom view |
-| Single tap Back key (🤖 **Android only**) | same as `Esc`: first close sticky notes / TOC / manual top-layer windows layer by layer, then close controls / cancel selection; when no window, tool, or selection, pop an **exit confirmation** |
+|---|---|
+| Single left click | Select object/control |
+| Double left click | Edit text |
+| Long press left button | Manipulate object/control |
+| Long press right button | Rotate view |
+| Long press scroll wheel | Pan view |
+| Scroll wheel | Zoom view |
 
-⚠️ 📱🤖 Only the **Android** touch form has the "single tap Back key" behavior (a phone browser/system Back key will **leave the page** or exit the app and won't trigger this logic). For Web·Touch outside apps, use the on-screen close button and the `Esc`-equivalent (single-finger tap empty to cancel selection).
+### 30.2 Gesture Operations (📱 Web · Touch / 🤖 Android version)
 
-### 30.3 Mouse ↔ gesture one-to-one table
+| Operation | Description |
+|---|---|
+| Single-finger tap | Select object/control |
+| Single-finger double tap | Edit text |
+| Single-finger long press on object | Add/remove selection (equivalent to Shift click) |
+| Single-finger drag object | Manipulate object/control |
+| Single-finger drag empty space | Rotate view |
+| Single-finger tap empty space | Cancel selection |
+| "Select All" button | Select all objects |
+| "Marquee" button | After enabling, single-finger drag to box-select objects |
+| Two-finger drag | Pan view |
+| Two-finger pinch | Zoom view |
+| Single click back key (🤖 **Android version only**) | Same effect as `Esc`: first close the topmost windows layer by layer (sticky notes / table of contents / manual, etc.), then close controls / cancel selection; when there are no windows, tools, or selections, a **exit confirmation** pops up |
 
-The two operation sets are essentially two input ways for the same thing:
+⚠️ 📱🤖 On the touch device, only the **Android version** has the "single click back key" behavior (the phone browser/system back key will **leave the page** or exit the app and will not trigger this logic). For web · touch outside mobile games, use the close buttons in the interface and the `Esc`-equivalent operation (single-finger tap empty space to cancel selection).
+
+### 30.3 Mouse ↔ Gesture One-to-One Mapping Table
+
+The two sets of operations are essentially the same thing via two different input methods:
 
 | Intent | 🖥️💻 Mouse | 📱🤖 Gesture |
-| --- | --- | --- |
-| Select | single left-click | single-finger tap |
-| Edit text | double left-click | single-finger double-tap |
-| Add/remove select | `Shift` + click | long single-finger press on object |
-| Operate object | long left-press drag | single-finger drag object |
-| Rotate view | long right-press | single-finger drag empty |
-| Pan view | long wheel-press | two-finger drag |
-| Zoom view | scroll wheel | two-finger pinch |
-| Select all | `Ctrl + A` | "Select all" button |
-| Box select | drag directly on empty | "Box select" button → single-finger drag |
-| Cancel / Back | `Esc` | single-finger tap empty |
+|---|---|---|
+| Select | Single left click | Single-finger tap |
+| Edit text | Double left click | Single-finger double tap |
+| Add / remove selection | `Shift` + click | Single-finger long press object |
+| Manipulate object | Long press left button drag | Single-finger drag object |
+| Rotate view | Long press right button | Single-finger drag empty space |
+| Pan view | Long press scroll wheel | Two-finger drag |
+| Zoom view | Scroll wheel | Two-finger pinch |
+| Select all | `Ctrl + A` | "Select All" button |
+| Marquee select | Drag directly in empty space | "Marquee" button → single-finger drag |
+| Cancel / back | `Esc` | Single-finger tap empty space |
 
-💡 Only the "input organ" differs. Touch forms have no keyboard; these gestures and the two exclusive buttons are your whole "quick actions".
+💡 Only the "input organ" differs. The touch device has no keyboard; these gestures and the two dedicated buttons are your entire set of "quick operations."
 
 ---
 
-## Chapter 31 · Single Keys & Shift Combos
+## Chapter 31: Single-Key Operations and Shift Combinations
 
-Keyboard shortcuts have one core rule: **depends on whether an object is selected**. The two tables below are **exactly identical** to the app's "Settings → Quick Actions" "single-key operations" / "Shift combos" — use directly.
+Keyboard shortcuts follow one core rule: **check whether an object is currently selected.** The two tables below are **exactly identical** to "single-key operations" and "Shift combinations" in the app's "Settings → Quick Operations" — use them directly as a reference.
 
-### 31.1 Single-key operations
+### 31.1 Single-Key Operations
 
 > When an object is selected: translate 0.1 grid (0.15 length) / rotate 5°; when not selected: view pan 0.1 grid / rotate 5°.
 
 | Key | When object selected | When not selected |
-| --- | --- | --- |
-| `↓` / `↑` | translate along X axis +/− | view back / front pan |
-| `→` / `←` | translate along Y axis +/− | view right / left pan |
-| `PgUp` / `PgDn` | translate along Z axis +/− | view up / down pan |
-| `A` / `D` | rotate around Z axis CW / CCW | view left / right rotate |
-| `W` / `S` | rotate around Y axis CW / CCW | view up / down rotate |
-| `E` / `Q` | rotate around X axis CW / CCW | — |
-| `+` / `-` | enlarge / shrink 5% | — |
-| `Esc` | cancel operation | close controls |
-| `F11` | fullscreen / exit fullscreen | (same) |
-| `Del` / `Backspace` | delete selected object | — |
+|---|---|---|
+| `↓` / `↑` | Translate ± along X axis | View pan back / forward |
+| `→` / `←` | Translate ± along Y axis | View pan right / left |
+| `PgUp` / `PgDn` | Translate ± along Z axis | View pan up / down |
+| `A` / `D` | Rotate clockwise / counterclockwise around Z axis | View rotate left / right |
+| `W` / `S` | Rotate clockwise / counterclockwise around Y axis | View rotate up / down |
+| `E` / `Q` | Rotate clockwise / counterclockwise around X axis | — |
+| `+` / `-` | Enlarge / shrink 5% | — |
+| `Esc` | Cancel operation | Close control |
+| `F11` | 🖥️📱 Fullscreen / exit fullscreen; 💻 Maximize / restore | (same as above) |
+| `Del` / `Backspace` | Delete selected object | — |
 
-✏️ **Practice**: Place a cube → select it and press `↑` to see it "walk forward"; cancel selection (click empty) and press `↑` again — this time the camera pushes forward. Same key, two identities.
+✏️ **Practice**: Place a cube → select it and press `↑` to see it "walk forward"; cancel selection (click empty space) and press `↑` again — this time the camera pushes forward. Same key, two identities.
 
-### 31.2 Shift combos
+### 31.2 Shift Combinations
 
 > When an object is selected: translate 1 grid (1.5 length) / rotate 90°; when not selected: view pan 1 grid / rotate 90°.
 
 | `Shift` + key | When object selected | When not selected |
-| --- | --- | --- |
-| `↓` / `↑`, `→` / `←`, `PgUp` / `PgDn` | translate 1 grid | view pan 1 grid |
-| `A` / `D`, `W` / `S`, `E` / `Q` | rotate 90° | view rotate 90° |
-| `+` / `-` | enlarge ×2 / shrink ×0.5 | — |
-| single left-click | add-select object (pick) | (same) |
-| long left-press (brush tool) | brush constrained-straight mode (stroke constrained horizontal / vertical / 45°, same effect as `Shift` constraint) | (same) |
+|---|---|---|
+| `↓` / `↑`, `→` / `←`, `PgUp` / `PgDn` | Translate 1 grid | View pan 1 grid |
+| `A` / `D`, `W` / `S`, `E` / `Q` | Rotate 90° | View rotate 90° |
+| `+` / `-` | Enlarge ×2 / shrink ×0.5 | — |
+| Single left click | Add object to selection (pick) | (same as above) |
+| Long press left button (brush tool) | — | Brush constrained straight-line mode (strokes constrained to horizontal / vertical / 45° while drawing, same effect as `Shift` constraint) |
 
-💡 Mnemonic: **normal keys nudge close, Shift keys snap into place**. First arrow-key to fine-tune roughly, then `Shift`+arrow for the final 1-grid big jump to align instantly; same for rotation — first `A` turns 5°, then `Shift+A` directly tops up to 90° to straighten.
+💡 Mantra: **Normal keys get close, Shift keys snap into place.** First press the arrow keys to fine-tune roughly, then `Shift`+arrow key for the final 1-grid big jump to instant alignment; same for rotation — first `A` to rotate 5°, then `Shift+A` to directly top up to 90° and straighten.
 
 ---
 
-## Chapter 32 · Slider/Input & Ctrl Combos
+## Chapter 32: Sliders/Input Boxes and Ctrl Combinations
 
-### 32.1 Slider / input box
+### 32.1 Sliders / Input Boxes
 
-When your cursor is in a slider or number input box, the keys below "change the number in that box" instead of controlling the object — the original shortcuts **temporarily fail**. This table is **exactly identical** to the app's "Settings → Quick Actions" "slider / input box".
+When your cursor is in a slider or numeric input box, the keys below "change the number in that box" instead of manipulating the object — the original shortcuts **temporarily fail**. This table is **exactly identical** to "sliders / input boxes" in the app's "Settings → Quick Operations."
 
 | Key | Slider | Input box |
-| --- | --- | --- |
-| `→` / `←` | increase / decrease | move cursor |
-| `↑` / `↓` | increase / decrease | increase / decrease |
-| `+` / `-` | — | input positive / negative sign |
-| `PgUp` / `PgDn` | large increase / decrease | scroll right panel up / down |
+|---|---|---|
+| `→` / `←` | Increase / decrease | Move cursor |
+| `↑` / `↓` | Increase / decrease | Increase / decrease |
+| `+` / `-` | — | Input positive / negative sign |
+| `PgUp` / `PgDn` | Large increase / decrease | Scroll right column up / down |
 
-⚠️ To use object shortcuts, first click empty canvas or an object to move focus out of the input box (see [Chapter 32.1](jump:Chapter 32 · Slider/Input & Ctrl Combos)).
+⚠️ To use object shortcuts, first click empty space in the canvas or the object to move focus away from the input box.
 
-### 32.2 Ctrl combos
+### 32.2 Ctrl Combinations
 
-| `Ctrl` + key | Combo |
-| --- | --- |
-| `A` | select all |
-| `N` | new scene |
-| `O` | import scene |
-| `S` | export scene |
-| `P` | screenshot / export image |
-| `Z` | undo |
-| `Y` | redo |
-| `C` | copy |
-| `V` | paste |
-| `D` | clone |
-| `Del` / `Backspace` | clear scene (pops "Clear scene? This is undoable." confirmation; after confirm clears; normal `Delete`/`Backspace` without `Ctrl` only deletes the selected object) |
+| `Ctrl` + key | Combination |
+|---|---|
+| `A` | Select all |
+| `N` | New scene |
+| `O` | Import scene |
+| `S` | Export scene |
+| `P` | Screenshot export image |
+| `Z` | Undo |
+| `Y` | Redo |
+| `C` | Copy |
+| `V` | Paste |
+| `D` | Clone |
+| `Del` / `Backspace` | Clear scene (pops "Confirm clear scene? This operation can be undone." confirmation box; after confirming, clears; normal `Delete`/`Backspace` without `Ctrl` only deletes selected objects) |
 
-⚠️ `Ctrl + Del` deletes all objects at once, but **pops a confirmation** and the clear is **undoable** (restore with `Ctrl + Z`). Still advised to `Ctrl + S` export a backup before clearing.
+⚠️ `Ctrl + Del` deletes all objects at once, but **a confirmation box pops up** and the clear operation **can be undone** (press `Ctrl + Z` to restore). Still, it is recommended to `Ctrl + S` to export a backup before clearing.
 
-### 32.3 Comprehensive drill: build a "small lighthouse" with pure keyboard
+### 32.3 Comprehensive Practice: Build a "Small Lighthouse" with Pure Keyboard
 
-String this part's lessons into a pipeline:
+String together everything learned in this part into a pipeline:
 
-1. Drag a **cylinder** from the panel into the scene (only mouse-draggable, accept it);
-2. Select it, `Shift + PgUp` a few times to "grow" it to a good position;
-3. `Ctrl + D` clone one as the "lamp room", `PgUp` to move to the column top;
-4. `Shift + A` to straighten the lamp room 90° (if needed);
+1. Drag a **cylinder** from the panel into the scene (mouse drag only, accept it);
+2. Select it, press `Shift + PgUp` a few times to "grow" it to a suitable height;
+3. `Ctrl + D` to clone one as the "lamp room," `PgUp` to move it to the top of the pillar;
+4. `Shift + A` to rotate the lamp room a full 90° (if needed);
 5. `Ctrl + A` select all, `Ctrl + S` save;
-6. Click "Front" button to straighten the view, `Ctrl + P` screenshot to deliver.
+6. Click the "Front View" button to straighten the view, `Ctrl + P` screenshot to deliver.
 
-Except placing the shape in step 1, the whole process barely touched the mouse panel — this is the end of "Efficiency": let your hands grow on the keyboard.
-
----
-
-✏️ **Part summary**: The essence of shortcuts is "mapping frequent actions to the most natural finger landing". Remember two main lines — **nothing selected = move camera, selected = move object**; remember three axes — **X front–back, Y left–right, Z height**; remember one accelerator — **Shift for big steps**. Next part covers "transform controls (the directly-draggable arrows)" and how they pair with the keyboard for smoother control.
+Except for placing the shape in step 1, you hardly touched the mouse panel — this is the destination of the "Efficiency" part: let your hands grow on the keyboard.
 
 ---
 
-# Part 9 · Transform Controls (the arrows that "talk")
+✏️ **Part Summary**: The essence of shortcuts is "mapping common actions to the most natural finger landing spots." Remember two main lines — **nothing selected = move camera, something selected = move object**; remember the three axes — **X front-back, Y left-right, Z height**; remember one accelerator — **Shift for big steps**. The next part talks about the "transform gizmo (those draggable arrows)" and how it works with the keyboard, to make your control even smoother.
 
-> Chapter 32 had you move objects around by keyboard — already fast. But the keyboard has "fixed step" — it suits precise, repeated moves, not "drag it by feel until it just touches another object".
+---
+
+# Part Nine: Transformation — The Arrows That "Talk"
+
+> In Chapter 32 you used the keyboard to move objects around — already very fast. But the keyboard has "fixed step size" — it suits precise, repetitive moves, but not jobs like "drag by feel until it just touches another object."
 >
-> The star of this part is the set of **colored arrows / rings / cubes** that appear on the selected object — technically called the "transform gizmo". It lets you "grab" the object with the mouse and drag.
+> The protagonist of this part is the set of **colored arrows / rings / cubes** that appear on the object after you select it, technically called the "transform gizmo." It lets you grab the object directly with the mouse and drag.
 
 ---
 
-## Chapter 33 · First Transform Controls: Three "Gripping Tools"
+## Chapter 33: First Meeting the Transform Gizmo: Three "Grip Tools"
 
-### 33.1 When they appear
+### 33.1 When It Appears
 
-As soon as you **select an object** (click it, selection box appears), a set of handles floats at the object's center. That is the transform control.
+As long as you **select an object** (click it once, and a selection box appears), a set of handles floats out from the object's center. This is the transform gizmo.
 
-It has three "skins" for three operations, switched by the right panel's "Transform mode" zone (a small zone with three square buttons ⇔ ↻ ⤢):
+It has three "skins," corresponding to three operations, switched by the right panel's "Transform Mode" area (a small area with three square buttons ⇔ ↻ ⤢):
 
-| Mode | Button icon | Handle look | What for |
-| --- | --- | --- | --- |
-| **Translate** | ⇔ | three **arrows** | move the object around |
-| **Rotate** | ↻ | three **rings** | turn the object around |
-| **Scale** | ⤢ | three **cubes** (small cubes at corners) | enlarge / shrink the object |
+| Mode | Button icon | Handle appearance | Used for |
+|---|---|---|---|
+| **Translate** | ⇔ | Three **arrows** | Move the object around |
+| **Rotate** | ↻ | Three **rings** | Rotate the object |
+| **Scale** | ⤢ | Three **cubes** (small cubes at corners) | Enlarge/shrink the object |
 
-Default enters **Translate** mode. To switch, click the matching button; a hint text ("translate / rotate / scale") floats at the bottom when switching.
+The default entry is **translate** mode. To switch modes, click the corresponding button; when switching, a hint text ("translate/rotate/scale") briefly floats at the bottom.
 
-💡 Trivia: transform controls and keyboard shortcuts are **two entrances to the same thing** — keyboard is "precise stepping", controls are "free dragging". They mix: first drag with controls roughly, then fine-tune a few grids with `↑`. Chapter 36 details their pairing.
+💡 Trivia: The transform gizmo and keyboard shortcuts are **two entry points to the same thing** — the keyboard is "precise stepping," the gizmo is "free dragging." The two can be mixed: first drag the gizmo roughly, then use the keyboard `↑` to fine-tune a few grids for alignment. Chapter 36 will specifically cover how the two cooperate.
 
-### 33.2 A "color trap" you must be told upfront
+### 33.2 A "Color Trap" That Must Be Clarified in Advance
 
-⚠️ **The most important reminder of the whole part — read this.**
+⚠️ **The most important reminder of the whole part — be sure to read this section.**
 
-The three **axis labels** in the scene use the "page-label colors":
-- **X = blue = front–back**
-- **Y = red = left–right**
+The three **coordinate axis labels** in the scene use the "page-labeled colors":
+- **X = blue = front-back**
+- **Y = red = left-right**
 - **Z = green = height**
 
-But the transform handles' coloring follows the **three.js code-axis convention** (red = X, green = Y, blue = Z), which **does not match** the colors above! So the handle colors must be translated like this:
+But the coloring of the gizmo handles follows the **three.js code-axis convention** (red=X, green=Y, blue=Z), which **does not match** the set above! So the handle colors you see should be translated like this:
 
-| Handle color | Code axis it actually means | Corresponding page-label axis | Means on screen |
-| --- | --- | --- | --- |
-| 🔴 red handle | code X | page **Y** | **left–right** move / around left–right axis |
-| 🟢 green handle | code Y | page **Z** | **height** (up–down) move / around height axis |
-| 🔵 blue handle | code Z | page **X** | **front–back** move / around front–back axis |
+| Handle color | Code axis it actually represents | Corresponding page-labeled axis | Means on the canvas |
+|---|---|---|---|
+| 🔴 Red handle | Code X | Page **Y** | **left-right** move / rotate around left-right axis |
+| 🟢 Green handle | Code Y | Page **Z** | **height** (up-down) move / rotate around height axis |
+| 🔵 Blue handle | Code Z | Page **X** | **front-back** move / rotate around front-back axis |
 
-> Can't remember? Remember one line: **red handle = left–right, green handle = up–down, blue handle = front–back** (read by page labels). Don't be fooled by its surface red/green/blue into applying the "scene axis label colors".
+> Can't remember? Just remember one line: **red handle = left-right, green handle = up-down, blue handle = front-back** (understood by page labels). Don't be fooled by its surface red/green/blue into matching the "scene axis label colors."
 
-✏️ **Practice (to verify)**: select a cube, switch to translate mode. First drag the **red arrow** — does the object slide left–right or front–back? — should be left–right. Then drag the **blue arrow** — front–back? Use this experiment to engrave the table in your brain; all later rotation/scale axes won't get messy.
+✏️ **Practice (for verification)**: Select a cube, switch to translate mode. First drag the **red arrow** — does the object slide "left-right" or "front-back"? — It should be left-right. Then drag the **blue arrow** — does it slide "front-back"? Use this experiment to engrave the table above into your brain, and all rotation/scale axes later won't get messed up.
 
-### 33.3 Can the view still move while dragging handles?
+### 33.3 Can the View Still Move While Dragging a Handle?
 
-Yes, and this is a very comfortable design of the tool:
+Yes, and this is a very comfortable design of this tool:
 
-- **Left-drag handle** = operate object;
-- **Right-drag** = rotate view (camera turns);
-- **Middle-drag** = pan view;
+- **Left-button drag handle** = manipulate object;
+- **Right-button drag** = rotate view (camera turns);
+- **Middle-button drag** = pan view;
 - **Scroll wheel** = zoom view.
 
-That is, you hold right-button with one hand to angle the object's side, while the other hand (or same hand switching keys) keeps dragging the handle — view and transform **don't fight**. No more "exit transform, turn view, re-enter" hassle.
+In other words, you can hold the right button with your left hand to turn an angle and look at the object's side, while your right hand (or same hand switching keys) continues to drag the handle — the view and the transform **don't conflict**. No more the hassle of "exit transform, turn view, re-enter."
 
 ---
 
-## Chapter 34 · Translate Mode: Drag Objects with the Arrow
+## Chapter 34: Translate Mode: "Grab" the Object with Arrows
 
-### 34.1 Three ways to drag
+### 34.1 Three Drag Methods
 
-In translate mode, besides the three axis arrows, the control also offers **two planar squares** (on the plane spanned by two axes). So you have three grips:
+In translate mode, besides the three axis arrows, the gizmo also provides **two plane squares** (lying on the plane spanned by two axes). So you have three ways to grab:
 
-1. **Grab a single arrow** (red/green/blue) → only moves straight along that one axis, most precise, won't skew;
-2. **Grab a planar square** (e.g. the face between red and green arrows) → slides freely within that plane, constrained by two axes;
-3. Want to freely "drag along the ground"? Switch to the matching plane then drag.
+1. **Grab a single arrow** (red/green/blue) → can only go straight along that one axis, most precise, won't stray;
+2. **Grab a plane square** (e.g., the face between the red and green arrows) → slide freely within this plane, constrained by both axes at once;
+3. Want to freely "drag along the ground"? First switch to the corresponding plane then drag.
 
-💡 Experience: for "precise alignment", always **grab a single arrow**, not a plane — planes easily carry the object off in an unwanted direction.
+💡 Experience: For "precise alignment," always **grab a single arrow**, not a plane — a plane easily takes the object off in an unwanted direction.
 
-### 34.2 How to read planes (with the color trap)
+### 34.2 How to Recognize Planes (Combined with the Color Trap)
 
-In translate mode, a plane is "the triangle/square region pinched by two adjacent arrows". By the Chapter 33.2 translation:
+The planes in translate mode are the "triangular/square regions pinched between adjacent two arrows." Following the translation in section 33.2:
 
-- red arrow (left–right) + green arrow (up–down) plane = **left–right × height** plane (object's "side");
-- green arrow (up–down) + blue arrow (front–back) plane = **height × front–back** plane (object's "front / back face");
-- red arrow (left–right) + blue arrow (front–back) plane = **left–right × front–back** plane = **ground** (the plane the object "stands on").
+- The plane pinched by red arrow (left-right) + green arrow (up-down) = **left-right × height** plane (the object's "side");
+- The plane pinched by green arrow (up-down) + blue arrow (front-back) = **height × front-back** plane (the object's "front/back face");
+- The plane pinched by red arrow (left-right) + blue arrow (front-back) = **left-right × front-back** plane = **ground** (the plane the object "stands on").
 
-✏️ **Practice**: Put the object on the ground, grab the "red + blue" plane square and drag — does it slide obediently along the ground, neither rising nor sinking? This is the steadiest posture for "translating on the ground".
+✏️ **Practice**: Place the object on the ground, grab the "red+blue" pinched plane square and drag — does it obediently slide along the ground, neither rising nor sinking? This is the most stable posture for "translating on the ground."
 
-### 34.3 Learn alongside keyboard translate
+### 34.3 Learn Alongside Keyboard Translation
 
-| Action wanted | Use control | Use keyboard (Ch 32) |
-| --- | --- | --- |
-| Precisely move 0.1 grid front–back | grab **blue arrow** drag | `↑`/`↓` |
-| Precisely move 0.1 grid left–right | grab **red arrow** drag | `←`/`→` |
-| Precisely rise / lower height | grab **green arrow** drag | `PgUp`/`PgDn` |
-| Big step 1 grid | drag arrow hard | `Shift`+arrow |
+| Action you want | Use gizmo | Use keyboard (Chapter 32) |
+|---|---|---|
+| Precisely move 0.1 grid front-back | Grab **blue arrow** and drag | `↑`/`↓` |
+| Precisely move 0.1 grid left-right | Grab **red arrow** and drag | `←`/`→` |
+| Precisely rise/fall in height | Grab **green arrow** and drag | `PgUp`/`PgDn` |
+| Big step move 1 grid | Gizmo grab arrow and drag hard | `Shift`+arrow key |
 
-💡 Mnemonic: **controls handle "feel", keyboard handles "precision"**. First drag with controls to ~90%, then fine-tune a few grids with `↑`/`←`/`PgUp` to snap to grid lines.
-
----
-
-## Chapter 35 · Rotate Mode: Rings Decide Which Axis to Spin Around
-
-### 35.1 Three rings = rotation around three axes
-
-Switch to rotate mode (↻); the object becomes three colored rings, each representing "rotate around that axis":
-
-| Ring color | Code axis | Page-label axis | Feel (recall Ch 32 analogy) |
-| --- | --- | --- | --- |
-| 🔴 red ring | code X | page **Y** (left–right axis) | like **pitch forward / back** a somersault |
-| 🟢 green ring | code Y | page **Z** (height axis) | like a **turntable / spinning top** in place |
-| 🔵 blue ring | code Z | page **X** (front–back axis) | like **falling left / right** a sideways roll |
-
-⚠️ Note the ring color vs "which axis to spin around" correspondence also uses the Chapter 33.2 translation table — **red ring around left–right axis, green ring around height axis (most common, for straightening), blue ring around front–back axis**.
-
-### 35.2 Dragging rings to rotate = keyboard A/D/W/S/E/Q, same thing
-
-In Chapter 32 you rotated objects by keyboard:
-- `A`/`D` rotate around the **height axis** (page Z, vertical axis);
-- `W`/`S` rotate around the **left–right axis** (page Y);
-- `E`/`Q` rotate around the **front–back axis** (page X).
-
-Corresponding to control rings:
-- keyboard `A`/`D` ↔ drag **green ring** (height axis);
-- keyboard `W`/`S` ↔ drag **red ring** (left–right axis);
-- keyboard `E`/`Q` ↔ drag **blue ring** (front–back axis).
-
-✏️ **Practice**: Select an object with a "front face", press `Shift + A` to turn it a full 90° (straighten), then switch to rotate mode and drag the **green ring** — you'll find the hand-drag also spins around the same vertical axis, and can stop at any angle (keyboard only jumps 5°/90°, controls can stop at intermediate values). They complement each other perfectly.
-
-### 35.3 Free rotation vs precise rotation
-
-- Control rings: can stop at **any angle**, good for "rotate until it looks comfortable";
-- Keyboard `Shift`+letter: only **90°** whole jumps, good for "must straighten, must be right angle";
-- Keyboard normal letter: only **5°** steps, good for "fine-tune a few degrees".
-
-💡 In practice: first drag with controls to roughly the angle → then `Shift+A` (green axis) tops up to exactly 90°/180°, most used for "must be straight" jobs like 3D text, building facades.
+💡 Mantra: **Gizmo handles "feel," keyboard handles "precision."** First drag with the gizmo to get close, then use keyboard `↑`/`←`/`PgUp` to fine-tune a few grids to snap to the grid lines.
 
 ---
 
-## Chapter 36 · Scale Mode: Square Handles and the "Uniform" Switch
+## Chapter 35: Rotate Mode: Rings Decide "Around Which Axis to Rotate"
 
-### 36.1 Square handles: pull one axis, or inflate whole
+### 35.1 Three Rings = Rotation Around Three Axes
 
-Switch to scale mode (⤢); small cube handles appear at the object's corners. Drag a single cube = **stretch/squash only along that one axis** (e.g. squash a sphere into an ellipsoid, stretch a column into a tall thin); drag the center cube = scale whole.
+Switch to rotate mode (↻), and the object becomes three colored rings, each representing "rotate around that axis":
 
-| Handle color | Page-label axis | Effect of dragging it |
-| --- | --- | --- |
-| 🔴 red cube | left–right (Y) | widen / narrow |
-| 🟢 green cube | height (Z) | taller / shorter |
-| 🔵 blue cube | front–back (X) | deeper / shallower |
+| Ring color | Code axis | Page-labeled axis | Look and feel (recall Chapter 32 metaphor) |
+|---|---|---|---|
+| 🔴 Red ring | Code X | Page **Y** (left-right axis) | Like a **forward dive / backward lean** somersault |
+| 🟢 Green ring | Code Y | Page **Z** (height axis) | Like a **turntable / spinning top** rotating in place |
+| 🔵 Blue ring | Code Z | Page **X** (front-back axis) | Like a **fall left / fall right** side roll |
 
-### 36.2 "Uniform scale" lock: the switch beginners most need on
+⚠️ Note the correspondence between ring color and "which axis to rotate around" — also apply the translation table from section 33.2: **red ring around left-right axis, green ring around height axis (most commonly used, for straightening), blue ring around front-back axis**.
 
-Below the right panel's transform-mode zone is a checkbox **"Uniform scale"** (checked by default). When checked, no matter which cube you drag, the object **scales proportionally whole**, won't deform — usually exactly what you want.
+### 35.2 Grabbing a Ring to Rotate Is the Same as Keyboard A/D/W/S/E/Q
 
-⚠️ Uncheck it, then drag a single cube, and the object "single-axis stretches" and deforms. This has creative uses (e.g. squashed spacers, stretched beams), but beginners easily uncheck by mistake and wonder "why is it crooked". When unsure, keep it checked.
+In Chapter 32 you rotated objects with the keyboard, which said:
+- `A`/`D` rotates around the **height axis** (page Z, vertical axis);
+- `W`/`S` rotates around the **left-right axis** (page Y);
+- `E`/`Q` rotates around the **front-back axis** (page X).
 
-### 36.3 Compare with keyboard scale, and "multi-select forbids scale"
+Corresponding to the gizmo rings:
+- Keyboard `A`/`D` ↔ drag **green ring** (height axis);
+- Keyboard `W`/`S` ↔ drag **red ring** (left-right axis);
+- Keyboard `E`/`Q` ↔ drag **blue ring** (front-back axis).
 
-| Want to | Use control | Use keyboard (Ch 32) |
-| --- | --- | --- |
-| Enlarge whole 5% | drag center cube (uniform checked) | `+` |
-| Shrink whole 5% | drag center cube | `-` |
-| Double / halve | drag center cube hard | `Shift`+`+` / `Shift`+`-` |
-| Single-axis squash | uncheck uniform, drag single cube | keyboard unsupported |
+✏️ **Practice**: Select an object with a "front face," press `Shift + A` to rotate it a full 90° (straighten), then switch to rotate mode and drag the **green ring** — you'll find your hand-drag also rotates around the same vertical axis, and can stop at any angle (the keyboard can only jump 5°/90°, the gizmo can stop at intermediate values). This is exactly complementary.
 
-⚠️ **Important limit**: when you select **multiple objects at once**, scale mode is **auto-disabled** (button grays out, and if you were in scale mode it auto-returns to translate). Same reason as keyboard `+`/`-` multi-select forbid-scale — forcing several differently-sized objects to scale together is weird.
+### 35.3 Free Rotation vs Precise Rotation
 
-💡 Then how to unify size when multi-selecting? Two paths: ① after `Ctrl + A`, handle them one by one with controls/keyboard; ② use methods other than "uniform scale" — e.g. first group them well, rely on translate to position rather than scale.
+- Gizmo ring: can stop at **any angle**, suitable for "rotate until it looks comfortable";
+- Keyboard `Shift`+letter: only **90°** full jumps, suitable for "must be straightened, must be right-angled";
+- Keyboard normal letter: only **5°** stepping, suitable for "fine-tune a few degrees."
 
-### 36.4 When transform controls "won't let you"
-
-Besides multi-select forbidding scale, there are other cases where the transform-mode buttons gray out and become unclickable:
-
-- When you are in a **brush / text / eraser** tool mode (these tools take over clicks; transform controls yield first);
-- When **editing text** (inline input box pops up), transform buttons temporarily disabled, restored after input;
-- **Text objects** themselves don't support uniform scale; selecting text hides the uniform-scale-related controls and disables scale mode, auto-returning to translate; images and brush strokes scale normally.
-
-⚠️ If you find the three mode buttons unclickable and gray, first check: are you still stuck in some tool without exiting? Press `Esc` or click the top "Select" class button to exit the tool, and the transform controls come alive.
-
-### 36.5 Controls and number boxes: two-way sync
-
-The right "Transform" zone also has corresponding **number sliders / input boxes** (position, rotation angle, scale value). They are **two-way synced** with the controls:
-- You drag controls, the number box follows in real time;
-- You directly input a precise value in the number box (e.g. rotation `45`, scale `2.5`), the object changes at once.
-
-💡 When you need "absolute precision" (e.g. rotation must be exactly 30°, scale exactly 1.5×), **direct number-box input** is far more reliable than dragging controls. Controls suit "finding the feel", number boxes suit "pinning the value".
+💡 Practice: First drag the gizmo to roughly the angle → then use `Shift+A` (green axis) to top up to exactly 90°/180°; most commonly used for "must be straight" jobs like 3D text and building facades.
 
 ---
 
-✏️ **Part summary**: Transform controls are the keyboard's "free-drag version". Remember three things — ① it has translate/rotate/scale three skins, corresponding to arrows/rings/cubes; ② **red handle = left–right, green = up–down, blue = front–back** (always translate by page labels, don't be fooled by surface color); ③ left-drag object, right/middle/wheel manage view, the three don't fight. Next part covers "grouping, alignment and distribution", taking you from "move single objects" to "arrange a big crowd".
+## Chapter 36: Scale Mode: Cube Handles and the "Uniform" Switch
+
+### 36.1 Cube Handles: Pull One Axis, or Expand as a Whole
+
+Switch to scale mode (⤢), and small cube handles appear at the object's corners. Dragging a single cube = **only stretch/compress along that one axis** (e.g., flatten a sphere into an ellipsoid, stretch a pillar into a tall thin one); dragging the center cube = scale as a whole.
+
+| Handle color | Page-labeled axis | Effect of dragging it |
+|---|---|---|
+| 🔴 Red cube | Left-right (Y) | Widen / narrow |
+| 🟢 Green cube | Height (Z) | Taller / shorter |
+| 🔵 Blue cube | Front-back (X) | Deeper / shallower |
+
+### 36.2 The "Uniform Scale" Lock: The Switch Newbies Most Should Turn On
+
+Below the right panel's transform mode area there is a checkbox **"Uniform Scale"** (checked by default). When checked, no matter which cube you drag, the object scales **as a whole proportionally** and won't be distorted — which is usually exactly what you want.
+
+⚠️ Uncheck it, then drag a single cube, and the object will be "unidirectionally stretched" and distorted. This has creative uses (e.g., flattened washers, elongated beams), but newbies easily turn it off by mistake and wonder "why is it skewed." When unsure, keep it checked.
+
+### 36.3 Compared with Keyboard Scaling, and "Multi-Select Scale Disabled"
+
+| What you want | Use gizmo | Use keyboard (Chapter 32) |
+|---|---|---|
+| Scale up 5% as a whole | Drag center cube (uniform checked) | `+` |
+| Scale down 5% as a whole | Drag center cube | `-` |
+| Double / halve | Drag center cube hard | `Shift`+`+` / `Shift`+`-` |
+| Unidirectional flatten | Uncheck uniform, drag single cube | Keyboard not supported |
+
+⚠️ **Important limitation**: When you select **multiple objects at once**, scale mode is **automatically disabled** (button greys out, and if you were in scale mode it auto-returns to translate). The reason is the same as keyboard `+`/`-` multi-select scale disable — forcing several differently-sized objects to scale together is weird.
+
+💡 So how to uniformly resize when multi-selecting? Two paths: ① After `Ctrl + A`, handle them one by one with the gizmo/keyboard; ② Use a method other than "Uniform Scale" — e.g., first group them well, and rely on translation for placement rather than scaling.
+
+### 36.4 When the Transform Gizmo "Won't Let You Use It"
+
+Besides multi-select scale disable, there are several other cases where the transform mode buttons grey out and become unclickable:
+
+- When you are in **brush / text / eraser** tool mode (these tools take over clicks themselves, the gizmo yields first);
+- When **editing text** (inline input box pops up), transform buttons are temporarily disabled and restored after input;
+- **Text objects** themselves don't support uniform scale; selecting text hides the uniform-scale related controls and disables scale mode, auto-switching back to translate; images and brush strokes can scale normally.
+
+⚠️ If you find the three mode buttons unclickable and grey, first check: are you still stuck in some tool and haven't exited? Press `Esc` or click the top "Select" type button to exit the tool, and the gizmo comes alive.
+
+### 36.5 Gizmo and Numeric Box: Two-Way Sync
+
+The right-side "Transform" area also has corresponding **numeric sliders/input boxes** (position, rotation angle, scale value). They are **two-way synced** with the gizmo:
+- You drag the gizmo, the numeric box changes in real time;
+- You directly enter a precise value in the numeric box (e.g., rotation `45`, scale `2.5`), and the object changes instantly.
+
+💡 When you need "absolute precision" (e.g., rotation must be exactly 30°, scale must be exactly 1.5×), **direct numeric box input** is far more reliable than dragging the gizmo. The gizmo suits "finding the feel," the numeric box suits "pinning the value."
 
 ---
 
-# Part 10 · Groups (managing a "crowd" at once)
+✏️ **Part Summary**: The transform gizmo is the "free-drag version" of the keyboard. Remember three things — ① It has three skins: translate/rotate/scale, corresponding to arrows/rings/cubes; ② **red handle = left-right, green = up-down, blue = front-back** (always translate by page labels, don't be fooled by surface colors); ③ Left-button drags object, right/middle/scroll-wheel handle view, the three don't conflict. The next part covers "grouping and grouping, alignment and distribution," taking you from "can move a single object" to "can arrange a large group of objects."
 
-> At the end of the last part I promised "grouping, alignment and distribution". I must come clean first: **this tool has no independent "group" button, nor a "one-click align/distribute" button** — it takes a lighter, more flexible route: **multi-select + transform-together + clone-array**.
+---
+
+# Part Ten: Group Portraits — Manage "A Group" of Objects at Once
+
+> At the end of the last part I promised to "cover grouping, alignment and distribution." Here I must come clean with you first: **this tool has no independent "group" button, nor a "one-click align/distribute" button** — it takes a lighter, more flexible route: **multi-select + transform together + clone array**.
 >
-> This part teaches you "how to efficiently manage a big crowd of objects". No silver bullet, but a set of sufficient "down-to-earth methods" that line up just as neatly.
+> This part teaches you "how to efficiently manage a large group of objects." There's no silver bullet, but there's a set of adequate 'low-tech methods' that still line things up neatly.
 
 ---
 
-## Chapter 37 · Selecting a Group: Understanding "Selection Sets"
+## Chapter 37: Select a Group at Once: Getting to Know the "Selection Set"
 
-### 37.1 Why multi-select
+### 37.1 Why Multi-Select
 
-Before, you "clicked one, changed one". But real creation is often a bunch of things: a row of trees, a column of lights, a ground of pebbles. If you tune 100 one by one, you'd go mad first.
+Before, you were "click one, modify one." But real creation is often a bunch of things: a row of trees, a column of lights, a ground of pebbles. If you adjust 100 one by one, you'd go crazy first.
 
-Solution: first select them all into a **"selection set"** at once, then operate uniformly. That is the meaning of multi-select.
+Solution: First select them all into a **"selection set"** at once, then operate uniformly. That's the meaning of multi-select.
 
-### 37.2 Three ways to multi-select
+### 37.2 Three Methods for Multi-Select
 
-| Method | How | Fits |
-| --- | --- | --- |
-| **Select all** | click "Select all" | select every object in the scene |
-| **Add / remove** | hold `Shift` then click object: click unselected = add in; click selected = kick out | pick specific few (e.g. "these two lights + that tree") |
-| **Box select** | on empty space **hold and drag**, pull a dashed rectangle, objects inside selected at once | a dense patch, too lazy to click one by one |
+| Method | How to operate | Suitable scenario |
+|---|---|---|
+| **Select all** | `Ctrl + A`, or tap the bottom "Select All" button on touch | Want to select all objects in the scene |
+| **Add / remove selection** | Hold `Shift` then click object: clicking an unselected one = add it; clicking a selected one = kick it out | Pick out specific few (e.g., "these two lights + that tree") |
+| **Marquee select** | In empty space **press and drag**, pull out a dashed box, objects inside the box are selected at once | A dense cluster of objects, too lazy to click one by one |
 
-✏️ **Practice**: Scatter 5 shapes in the scene. First `Ctrl + A` to see if all light up → click empty to cancel → hold `Shift` and click off 2 of them (gray out) → then drag a box on empty space, enclosing the remaining 3. Feel the "selection set" like a stack of sticky notes, add/remove at will.
+✏️ **Practice**: Place 5 shapes scattered in the scene. First `Ctrl + A` to see if all light up → click empty space to cancel → hold `Shift` and click off 2 of them (turn grey) → then drag a box in empty space to enclose the remaining 3. Feel the "selection set" like a stack of sticky notes, freely add/remove.
 
-💡 Box-select detail: mouse drags empty space to get the box; touch has no "drag empty" concept, so a dedicated "Box select" button was made — once on, single-finger drag boxes (a "box-select mode" hint shows at bottom when on). If the box hits no object, it gently hints "box select hit nothing", not silently failing.
+💡 Marquee detail: The box only appears when dragging empty space with the mouse; on touch there's no "drag empty space" concept, so a dedicated "Marquee" button was made — once opened, single-finger drag does marquee select (a "Marquee mode" hint shows at the bottom when opened). If the marquee hits no object, it will gently prompt "Marquee missed objects" — it won't fail silently.
 
-### 37.3 Selection "edge cases"
+### 37.3 "Edge Cases" of Selection
 
 - Click **empty space** (no drag) = cancel all selection;
-- During box select, if the box is **completely empty**, the selection set is cleared (equivalent to "deselect to none");
-- While **editing text** or in **brush / eraser** tool, selection logic yields to the tool, multi-select temporarily unavailable.
+- If the marquee is **completely empty**, the selection set is cleared (equivalent to "deselect all");
+- When **editing text** or in **brush/eraser** tool, selection logic yields to the tool, and multi-select is temporarily unavailable.
 
-❓ **Think**: Why can "Shift+click" both add and remove? — Because a selection set is not a binary "on/off", but a **set**. Clicking an existing element should remove it, clicking a non-existing one adds it. This "toggle" logic you'll meet everywhere later — file managers, email.
+❓ **Think about it**: Why can "Shift+click" both add and remove? — Because the selection set is not a binary "on/off," but a **set**. Clicking an existing element should remove it, clicking a non-existing one adds it. You'll encounter this "toggle" logic everywhere later, in file managers, email, etc.
 
 ---
 
-## Chapter 38 · Moving a Group: The Master Pivot of Multi-select
+## Chapter 38: Move a Group Together: The "Master Point" of Multi-Select Transform
 
-### 38.1 The invisible "master pivot"
+### 38.1 The Invisible "Master Point"
 
-When you select **multiple** objects, the tool won't hang the controls on any specific object (hanging on any would be unfair), but places an **invisible proxy point** at **the center of this crowd** (called `multiTransformProxy` in code).
+When you select **multiple** objects, the tool won't attach the gizmo to any specific object (attaching to any would be unfair), but instead places an **invisible proxy point** (called `multiTransformProxy` in code) at the **center of this group of objects**.
 
-The transform controls (arrows / rings) you see are actually hung on this "master pivot". When you drag it, the algorithm computes the move/rotate **delta** of the master pivot, then **sync-distributes** it to every selected object.
+The transform gizmo (arrows/rings) you see is actually attached to this "master point." When you drag it, the algorithm calculates the **delta** of the master point's move/rotation, then **syncs and distributes** it to every selected object.
 
-> In plain words: **you drag one invisible "master switch", and all selected things move together, keeping their relative positions unchanged.**
+> In plain words: **You drag an invisible "master switch," and all selected things move together, with their relative positions unchanged.**
 
-### 38.2 What multi-select can do
+### 38.2 What Multi-Select Can Do
 
-| Operation | Available in multi-select? | Note |
-| --- | --- | --- |
-| Translate together (drag arrow/plane) | ✅ available | whole crowd moves along an axis |
-| Rotate around center together (drag ring) | ✅ available | whole crowd rotates around group center, like nudging a turntable of pieces |
-| Scale together | ❌ disabled | in multi-select the scale-mode button grays out, auto-returns to translate |
+| Operation | Available with multi-select? | Description |
+|---|---|---|
+| **Translate** together (drag arrow/plane) | ✅ Available | Whole group moves along an axis as a whole |
+| **Rotate around center** together (drag ring) | ✅ Available | Whole group rotates around group center, like nudging a turntable of pieces |
+| **Scale** together | ❌ Disabled | In multi-select, scale mode button greys out, auto-returns to translate |
 
-✏️ **Practice**: Select 3 scattered objects → switch to rotate mode → drag the **green ring** (around height axis) → see if they "get twisted by one hand at once", circling the common center while keeping spacing. That is the joy of "group rotation".
+✏️ **Practice**: Select 3 scattered objects → switch to rotate mode → drag the **green ring** (around height axis) → see if they rotate "as if twisted together by one hand," circling around the common center, with spacing unchanged. This is the joy of "group rotation."
 
-### 38.3 Why multi-select can't scale together
+### 38.3 Why Multi-Select Can't Scale Together
 
-⚠️ This is an **intentional limit**, not a bug:
+⚠️ This is an **intentional limitation**, not a bug:
 
-- Several objects of different size/shape scaling together proportionally often looks weird (big becomes huge, small shrinks to sesame);
-- So the tool **directly disables scale mode** in multi-select, forcing you to "either scale one by one, or clone then adjust".
+- Several objects of different sizes and shapes scaling uniformly together often yields weird results (big ones become huge, small ones shrink to sesame);
+- So the tool **directly disables scale mode** in multi-select, forcing you to "either scale one by one, or clone first then adjust."
 
 💡 Alternatives:
-1. Want a crowd "all same size" — first `Ctrl + D` clone a row of identical ones; they were same size to begin with, then fine-tune one by one;
-2. Really need to scale a whole crowd — can **first select all, export JSON, change values then import**? Too troublesome. More practical: treat them as a "temporary group", use **individual scale + unified offset** to place.
+1. Want a group that's "the same size" — first `Ctrl + D` to clone a row of identical ones; they're already the same size, then fine-tune one by one;
+2. Really need to scale a whole group — could **select all, export JSON, change values then import**? Too much hassle. More practical: treat them as a "temporary group," place them with **individual scaling + unified offset**.
 
-### 38.4 Multi-select + Shift big-step, still handy
+### 38.4 Multi-Select + Shift Big Steps, Still Handy
 
-The `Shift` big-step (1 grid / 90°) from Chapter 32 **also works** for multi-select. After selecting a crowd, hold `Shift` and drag arrow keys, the whole crowd jumps 1 grid at a time — super useful for arrays (used next chapter).
+The `Shift` big step (1 grid / 90°) learned in Chapter 32 **also applies** to multi-select. After selecting a group, hold `Shift` and press arrow keys, the whole group jumps 1 grid at once — super useful for arranging arrays (used in the next chapter).
 
 ---
 
-## Chapter 39 · Mass Production: Copy, Clone, and "Arrays"
+## Chapter 39: Mass Production: Copy, Clone, and "Array"
 
-When making repeats, never hand-draw the 2nd, 3rd… Let "copy/clone" have the computer birth them for you.
+When making repeated objects, never hand-draw the 2nd, 3rd…… Let "copy/clone" have the computer generate them for you.
 
-### 39.1 Three ways to "birth a copy"
+### 39.1 Three Ways to "Spawn Copies"
 
 | Key | Name | Feature |
-| --- | --- | --- |
-| `Ctrl + C` | Copy | store selected object into **clipboard** (not appear immediately) |
-| `Ctrl + V` | Paste | **take out** from clipboard, paste near original position |
-| `Ctrl + D` | **Clone** | one step: copy in place and **auto-offset a bit** |
+|---|---|---|
+| `Ctrl + C` | Copy | Store selected object **into clipboard** (doesn't appear immediately) |
+| `Ctrl + V` | Paste | **Take out** from clipboard, paste near original position |
+| `Ctrl + D` | **Clone** | One step: copy in place and **auto-offset a bit** |
 
-💡 **The most used is `Ctrl + D`**. It's one fewer step than "copy → paste", and the cloned copy auto-offsets a bit, so you see it at once and can re-place at once — the standard for arrays.
+💡 **The most commonly used is `Ctrl + D`**. It's one step fewer than "copy → paste," and the cloned copy auto-offsets a bit, so you see it immediately and can reposition it right away — the standard for making arrays.
 
-✏️ **Practice**: Place 1 cube → `Ctrl + D` once, does a second one appear, slightly offset? → select the new one → press `→` to move to next cell → `Ctrl + D` again → `→`… a row fills in a few moves. Never touched the mouse panel.
+✏️ **Practice**: Place 1 cube → `Ctrl + D` once, does an extra one appear, slightly offset? → Select the new one → press `→` to move to the next grid → `Ctrl + D` again → `→` again…… a row fills up in a few moves. Never touched the mouse panel throughout.
 
-### 39.2 Use "clone + keyboard" for a neat array
+### 39.2 Arrange a Neat Array with "Clone + Keyboard"
 
-No "align/distribute" button? No problem, manually arrange with **grid step**, still neat:
+No "align/distribute" button? No problem, manually arrange with **grid step size**, still neat:
 
-1. Select an object, `Ctrl + D` clone;
-2. Press arrow keys to move it to **exactly 1 cell** (default step 0.1 grid = 10 presses; or `Shift`+arrow one press = 1 cell);
-3. Repeat `Ctrl + D` + arrow keys, a row emerges;
-4. After a row, `Ctrl + A` select the whole row, `Shift`+arrow to big-step the "whole row" to the next line, then keep cloning — a two-dimensional array (square) is there.
+1. Select an object, `Ctrl + D` to clone;
+2. Press arrow keys to move it to **exactly 1 grid** (default step 0.1 grid, press 10 times; or `Shift`+arrow key once = 1 grid);
+3. Repeat `Ctrl + D` + arrow key, and a row comes out;
+4. After a row, `Ctrl + A` the whole row, `Shift`+arrow key to big-step the "whole row" to the next line, then keep cloning — a two-dimensional array (matrix) is there.
 
-💡 **Circle-arrangement trick**: clone one → move it to a fixed radius from center → rotate the whole crowd around center (Ch 38) → clone once every angle turned. A few turns, a "ring array" emerges. This is the manual "distribute".
+💡 **Tip for arranging a circle**: Clone one → move it to a fixed radius from center → rotate the whole group around center (Chapter 38) → clone once every rotation by an angle. Rotate a few rounds, and a "ring array" comes out. This is the manual version of "distribution."
 
-### 39.3 Copy-paste edges
+### 39.3 Boundaries of Copy-Paste
 
-⚠️ Two hints you may hit (the tool pops small text):
-- **"Transform in progress, cannot copy/clone"**: if you are dragging controls (transform active), copy/clone buttons temporarily fail. Release (end drag) then press.
-- **"Please select an object first to copy"**: pressing `Ctrl + C` with nothing selected reminds you to select first. `Ctrl + V` with empty clipboard also hints "clipboard empty".
+⚠️ Two prompts you might hit (the tool pops small text):
+- **"Transform in progress, cannot copy/clone"**: If you're dragging the gizmo (transform active), the copy/clone buttons temporarily fail. Release (end drag) then press again.
+- **"Please select an object before copying"**: Pressing `Ctrl + C` with nothing selected prompts you to select first. When clipboard is empty, `Ctrl + V` also prompts "clipboard is empty."
 
-❓ **Think**: What's the underlying difference between clone and copy-paste? — Clone is "generate an offset copy on the spot", not relying on any intermediate storage; copy-paste is "store in clipboard first, then retrieve", so you can copy from scene A, switch to scene B and paste (this tool's clipboard is memory-level, shared within the same page). Understanding this, you know why sometimes `Ctrl + V` doesn't respond — the clipboard is probably empty.
+❓ **Think about it**: What's the underlying difference between clone and copy-paste? — Clone is "generate offset copy on the spot," not relying on any intermediate storage; copy-paste is "store to clipboard first, then retrieve," so you can copy from scene A, switch to scene B and paste (this tool's clipboard is memory-level, shared within the same page). Understanding this, you know why sometimes `Ctrl + V` doesn't respond — probably the clipboard is empty.
 
 ---
 
-## Chapter 40 · Export & Share: Taking Work Off-screen
+## Chapter 40: Save and Share: Let Your Work Leave the Screen
 
-The scene you worked hard to build, gone when you close the page? No — this tool can **export** to a file, **import** it back, **screenshot** to an image.
+A scene you painstakingly built disappears when you close the webpage? No — this tool can **export** to a file, **import** it back, and **screenshot** to an image.
 
-### 40.1 Three "save/load" keys
+### 40.1 Three "Save/Load" Keys
 
 | Key | Action | Product |
-| --- | --- | --- |
-| `Ctrl + S` | Export scene | a **JSON file** (full description of the scene) |
-| `Ctrl + O` | Import scene | read back a previously exported JSON |
-| `Ctrl + P` | Export image | a **PNG image** (photo of current canvas) |
+|---|---|---|
+| `Ctrl + S` | Export scene | A **JSON file** (complete description of the scene) |
+| `Ctrl + O` | Import scene | Read back a previously exported JSON |
+| `Ctrl + P` | Export image | A **PNG image** (photo of current canvas) |
 
-💡 Workflow: **build a stretch → `Ctrl + S` save → next day `Ctrl + O` read back to continue**. JSON is your "project file", PNG is your "result photo"; the two divide labor.
+💡 Workflow: **Build a bit → `Ctrl + S` to save → next day `Ctrl + O` to read back and continue**. JSON is your "project file," PNG is your "result photo" — the two divide the work.
 
-### 40.2 What exactly is stored in JSON
+### 40.2 What Exactly Is Stored in the JSON
 
 The exported JSON is not an image, but an **object list**, roughly recording:
 
-- each object's **type/shape** (sphere or text, length/width/height params);
-- each object's **transform** (position, rotation, scale — i.e. where it is, whether tilted, how big);
-- each object's **appearance** (color, pattern, opacity, texture);
-- the scene's **environment settings** (axes, grid visibility, etc.).
+- Each object's **type/shape** (sphere or text, length/width/height parameters);
+- Each object's **transform** (position, rotation, scale — i.e., where it is, whether tilted, how big);
+- Each object's **appearance** (color, pattern, transparency, texture);
+- The scene's **environment settings** (coordinate axes, grid plane show/hide, etc.).
 
-⚠️ Because it stores "parameters" not "pixels", you can **keep editing** after import — this is not a dead picture but a live project. This also explains why all earlier operations can enter the "history stack" to be undone: essentially they are all changing this parameter set.
+⚠️ Because it stores "parameters" rather than "pixels," you can **continue editing** after importing — this is not a dead image, but a living project. This also explains why all operations earlier can enter the "history stack" and be undone: essentially they're all modifying this set of parameters.
 
-### 40.3 Sharing and collaboration suggestions
+### 40.3 Sharing and Collaboration Suggestions
 
-- **Show a colleague the effect**: send PNG (`Ctrl + P`) fastest;
-- **Let a colleague continue editing**: send JSON (`Ctrl + S`), the other opens with `Ctrl + O` to edit;
-- **Cross-device**: send the JSON to cloud/WeChat, open the page on another computer, import — the scene goes with you.
-- ⚠️ Don't forget `Ctrl + Del` **clears the whole scene** with no confirmation. Backup with `Ctrl + S` before clearing; don't evaporate your hard work with one key.
+- **Show a colleague the effect**: Send PNG (`Ctrl + P`) fastest;
+- **Let a colleague continue editing**: Send JSON (`Ctrl + S`), the other party opens with `Ctrl + O` and can edit;
+- **Cross-device**: Send the JSON to cloud drive/WeChat, open the webpage on another computer and import — the scene travels with you.
+- ⚠️ Don't forget `Ctrl + Del` **clears the entire scene**, pops a "Confirm clear scene?" confirmation box, and the clear can be undone. Before clearing, `Ctrl + S` to back up first — don't evaporate your hard work with one key.
 
-### 40.4 Manual "align and distribute": neat without buttons
+### 40.4 Manual "Align and Distribute": Line Up Even Without Buttons
 
-Back to the promise at the part's opening — since there is no one-click align/distribute, here are three **purely manual** neat methods, combining what you've learned:
+Back to the promise at the part's opening — since there's no one-click align/distribute, here are three **purely manual** neatening methods, combined with what you've learned:
 
-1. **Rely on grid**: default move step 0.1 grid (=0.15 unit), integer presses = land exactly on grid lines. `Shift`+arrow one press = 1 cell, best for "snapping to grid lines".
-2. **Rely on clone**: as Chapter 39, clone + fixed step = equidistant array (that is "distribute").
-3. **Rely on view**: first click bottom "Front/Top" to straighten the object to a standard camera, then move along a single axis with keyboard, avoiding "crooked arrangement".
+1. **Rely on grid**: Default move step 0.1 grid (=0.15 units), pressing an integer number of times = precisely land on grid lines. `Shift`+arrow key once = 1 grid, best for "snapping to grid lines."
+2. **Rely on clone**: As in Chapter 39, clone + fixed step = equidistant array (this is "distribution").
+3. **Rely on view**: First click bottom "Front View/Top View" to straighten objects to standard camera position, then move along a single axis with keyboard, avoiding "crooked arrangement."
 
-✏️ **Comprehensive practice (part graduation)**: Use "cube + `Ctrl + D` clone + `Shift`+arrow" to lay out a 5×3 square; after `Ctrl + A` select all, `PgUp` to lift the whole to one cell off ground; `Ctrl + S` save. You can now "mass-produce + neatly arrange + save results".
-
----
-
-✏️ **Part summary**: This tool doesn't rely on "group/align" buttons, but on **multi-select + proxy master pivot + clone array** to manage crowds. Remember — three multi-select methods (select all / Shift add / box select), multi-select can translate & rotate but not scale, clone `Ctrl + D` is the array god-send, JSON is your live project file. Next part we do **comprehensive practice**: build a complete small scene from scratch (small house / small courtyard), stringing the skills of the previous ten parts into one line, experiencing the "last mile from beginner to mastery".
+✏️ **Comprehensive practice (part graduation work)**: Use "cube + `Ctrl + D` clone + `Shift`+arrow key" to arrange a 5×3 matrix; after `Ctrl + A` select all, `PgUp` to raise the whole group one grid off the ground; `Ctrl + S` to save. You can now "mass-produce + arrange neatly + save results."
 
 ---
 
-# Part 11 · Off-screen (share · collaborate · align)
+✏️ **Part Summary**: This tool doesn't rely on "group/align" buttons, but on **multi-select + proxy master point + clone array** to achieve group management. Remember — three multi-select methods (select all / Shift add / marquee), multi-select can translate and rotate but not scale, clone `Ctrl + D` is the array magic tool, JSON is your living project file. The next part is a **comprehensive practice**: build a complete small scene from scratch (small house / small yard), stringing together the skills of the previous ten parts into one line, experiencing the "last mile from beginner to master."
+# Part Eleven: Hands-On — Build a Complete Scene from Scratch
 
-> The previous ten parts have shown you all the "parts": shapes, color, patterns, text, brush, views, shortcuts, transform controls, multi-select clone.
+> In the first ten parts you have learned all the "parts": shapes, colors, patterns, text, brushes, viewpoints, shortcuts, transform gizmos, multi-select cloning.
 >
-> But knowing parts ≠ knowing how to build. This part teaches no new buttons; it strings your learned skills **into a pipeline** with four complete projects. Each gives "goal → breakdown → step-by-step → common pitfalls → advanced challenges".
+> But knowing how to use the parts ≠ knowing how to build something. This part introduces no new buttons; instead, it leads you to **string the skills you have learned into a pipeline** and make four complete projects. Each project gives "Goal → Breakdown → Step-by-step → Common Pitfalls → Advanced Challenges".
 >
-> ⚠️ Please **follow along and do it**. Watching ten times beats building once — this part's value is all on your mouse and keyboard.
+> ⚠️ Please **follow along and do it yourself**. Watching ten times is not as good as building once — the value of this part lies entirely in your mouse and keyboard.
 
 ---
 
-## Chapter 41 · Project 1: Build a Small House
+## Chapter 41: Project 1 — Build a Small House
 
-### 41.1 See the finished product first, then think how to break it down
+### 41.1 Look at the Finished Product First, Then Think About the Breakdown
 
-What we'll build is simple: a small house with roof, door, windows, standing on grass.
+What we are making is simple: a small house with a roof, a door, and windows, standing on a lawn.
 
-Don't rush to drag shapes. Spend 10 seconds on a question:
+Don't rush to drag shapes. Take 10 seconds to think about one question:
 
-❓ **Think**: A house, if you can only assemble it from "cube, cone, square pyramid, cylinder, plane" basic shapes, how would you break it down?
+❓ **Think about it**: A house — if you could only assemble it from basic shapes like "box, cone, pyramid, cylinder, square2" — how would you break it down?
 
-This is the core thinking of 3D creation — **break complex objects into combinations of simple geometries**. The pro term is "mass analysis", but plainly it's "building blocks".
+This is the most core thinking in 3D creation — **breaking a complex object into a combination of simple geometric bodies**. The technical term is "mass analysis," but basically it is just "building with blocks."
 
 Reference breakdown:
 
-| Part | What shape | Why |
-| --- | --- | --- |
-| Wall (main body) | `box` cube | a house is essentially a box |
-| Roof | `pyramid` square pyramid | square base, pointed top, fits square walls |
-| Door | `box` squashed thin board | sticks on wall, easier than 2D shape |
-| Window | `box` smaller thin board | same, can set semi-transparent as glass |
-| Chimney | `cylinder` | thin and tall, pokes from roof |
-| Grass ground | `square2` square | 2D lies on ground, as lawn |
+| Part | Which shape | Why |
+|---|---|---|
+| Wall (main body) | `box` cube | A house is essentially a box |
+| Roof | `pyramid` square pyramid | Square base with a pointed top, fits right onto the square wall |
+| Door | `box` flattened thin slab | Stuck on the wall surface, easier to place than a 2D shape |
+| Window | `box` smaller thin slab | Same as above; can be made semi-transparent to act as glass |
+| Chimney | `cylinder` cylinder | Thin and tall, poking out from the roof |
+| Ground lawn | `square2` square | 2D lying flat on the ground, acting as the lawn |
 
-💡 **Mindset**: any model first asks "what blocks does it consist of". Even cars, even robots — the thinking is identical.
+💡 **Key insight**: For any model, first ask "how many masses is it made of." Even for cars or robots, the thinking is exactly the same.
 
-### 41.2 Step 1: lay the foundation (lawn)
+### 41.2 Step 1: Lay the Foundation (Lawn)
 
-1. Left panel switch to **2D shapes**, drag a `square2` **square** to scene center;
-2. Select it, right panel pick a **green-ish** color;
-3. Pattern pick **checker** — looks like trimmed lawn texture from afar;
-4. Use **uniform scale** (right panel slider or `Shift + +`) to enlarge it clearly bigger than the house.
+1. Switch the left panel to **2D Shapes**, drag a `square2` **square** to the center of the scene;
+2. Select it, choose a **green** color in the right panel;
+3. Pick the **Grid** pattern — from a distance it looks like a trimmed lawn texture;
+4. Use **uniform scaling** (right panel slider or `Shift + +`) to enlarge it so it is clearly one size larger than the house.
 
-⚠️ **Pitfall**: 2D shapes are "flat stickers on the ground (Z=0)". If you find it "standing up", you probably accidentally rotated it with the rotate control — `Ctrl + Z` undo back, don't force-bend.
+⚠️ **Pitfall**: 2D shapes are "stickers lying flat on the ground (Z=0)." If you find it "standing up," you most likely rotated it by accident with the rotation gizmo — press `Ctrl + Z` to undo, don't force it back.
 
-✏️ Side practice: click the bottom "**Top**" button, look from straight above whether the lawn is big enough; then click "Perspective" back to normal view. This "switch view to check" habit is advised at every step after this part.
+✏️ Quick practice: Press the bottom **Top View** button to glance from directly above and check whether the lawn is large enough; then press **Perspective** to return to the normal view. This habit of "switching view to check" is recommended at every step from here on in this part.
 
-### 41.3 Step 2: stand the walls
+### 41.3 Step 2: Erect the Wall
 
-1. Switch to **3D shapes**, drag a `box` **cube** to lawn center;
-2. Select, use `PgUp` to lift it to **just sit on the ground** (base on ground, neither floating nor sunk);
-3. Right panel change to **beige / light yellow** (wall color);
-4. Pattern pick **brick** — instantly from "a block" to "a house wall".
+1. Switch to **3D Shapes**, drag a `box` **cube** to the center of the lawn;
+2. Select it, use `PgUp` to raise it so it **sits exactly on the ground** (bottom face flush with the ground, neither floating nor sunk in);
+3. Change the right panel to **beige / light yellow** (wall color);
+4. Pick the **Brick** pattern — instantly changes from "a block" to "a wall of a house."
 
-💡 **Trick to judge "on ground"**: click bottom "**Front**" button, level gaze from straight front — at a glance you see whether the object floats or sinks. In perspective it's easy to misjudge; Front never lies.
+💡 **The trick to telling "flush with the ground"**: Click the bottom **Front View** button, look straight from the front — at a glance you can tell whether the object is floating in the air or sunk into the ground. Under perspective view it is easy to be fooled, but front view never lies.
 
-⚠️ **Pitfall**: many beginners tune height in perspective and feel "weird" no matter what. Switch to Front, solved in two seconds.
+⚠️ **Pitfall**: Many beginners adjust height under perspective view and feel "something is off" no matter what. Switch to front view and it is solved in two seconds.
 
-### 41.4 Step 3: cap the roof
+### 41.4 Step 3: Cap the Roof
 
 1. Drag a `pyramid` **square pyramid**;
-2. Use `PgUp` to lift it **right above the walls**, so the cone base just presses on the wall top;
-3. Left/right/front/back not aligned? Use `↑↓←→` to fine-tune (0.1 grid step); for big numbers use `Shift +` arrow to jump a whole grid;
-4. Color change to **red-brown / dark gray** (tile color).
+2. Use `PgUp` to raise it **directly above the wall**, so the pyramid base just rests on the top of the wall;
+3. Left/right/front/back not aligned? Use `↑↓←→` for fine adjustment (0.1-unit step); for big differences use `Shift +` arrow key to jump a whole unit;
+4. Change the color to **reddish brown / dark gray** (tile color).
 
-❓ **Think**: Why use "square pyramid" not "cone" for the roof? — Because the wall is square. Square roof on square wall, edges seal tightly; cone on square wall, four corners show. **Shape matching is the key to "looking right".**
+❓ **Think about it**: Why use a "square pyramid" for the roof instead of a "cone"? — Because the wall is square. A square top matches a square wall so the edges fit perfectly; a cone on a square wall leaves the four corners exposed. **The matching of shapes is the key to "whether it looks right."**
 
-✏️ **Practice**: Deliberately switch to `cone` once, look from Front and Top, feel the awkward "exposed corners". Then `Ctrl + Z` switch back.
+✏️ **Practice**: Deliberately switch to `cone` and try once, look from front view and top view to feel the awkwardness of "exposed corners." Then `Ctrl + Z` to switch back.
 
-### 41.5 Step 4: cut door and windows
+### 41.5 Step 4: Cut Out Door and Windows
 
-Door/window method is "**squashed thin board stuck on the wall**":
+The method for door and windows is "**a flattened thin slab stuck on the wall surface**":
 
-1. Drag a `box`, first **uncheck "Uniform scale"** (Ch 36.2), stretch it into **a thin slice**;
-2. Re-check uniform scale (prevent later accidental deform);
-3. Use arrow keys to stick it **on the wall's front face** — note it should poke out a tiny bit, otherwise it "fights" the wall (see pitfall below);
-4. Color pick **dark brown** (wood door).
+1. Drag a `box`, first **uncheck "Uniform Scaling"** (Section 36.2), and stretch it into **a thin slice**;
+2. Re-check uniform scaling (to prevent accidental deformation later);
+3. Use the arrow keys to stick it **onto the front face of the wall** — note it should "protrude" slightly from the wall surface, otherwise it will "fight" with the wall (see pitfall below);
+4. Choose **dark brown** (wooden door).
 
-Windows same way, make two smaller thin boards, color **light blue**, and set **opacity to about 0.5** — glass feel appears at once (Ch 20.2).
+Windows are the same: make two smaller thin slabs, choose **light blue**, and set **opacity to around 0.5** — the glass feel appears immediately (Section 20.2).
 
 ⚠️ **Important pitfall: Z-fighting (flickering fight)**
-If the door board and wall are **exactly coplanar**, you see them flicker and intersect — this is not a bug, but two faces "fighting for position" at the same depth.
-**Solution**: use arrow keys to move the door out a small step (1–2 presses of 0.1 grid), letting it clearly "float" in front of the wall.
+If the door slab and the wall surface are **exactly coplanar**, you will see them flicker and interpenetrate — this is not a bug, it is two surfaces "fighting for position" at the same depth.
+**Solution**: Use the arrow keys to move the door outward a small step (1–2 steps of 0.1 unit is enough), so it clearly "floats" in front of the wall.
 
-💡 Don't redraw the second window — select the first, `Ctrl + D` clone, then `←` or `→` to the other side. This is Chapter 39's clone array making its first appearance in practice.
+💡 To make the second window, don't redraw — select the first one, `Ctrl + D` to clone, then use `←` or `→` to move it to the other side. This is the first appearance of the clone array from Chapter 39 in actual practice.
 
-### 41.6 Step 5: add chimney and wrap up
+### 41.6 Step 5: Add Chimney and Finish Up
 
-1. Drag `cylinder`, use uniform scale to thin it, `PgUp` to lift onto the roof slope, let it poke out a bit;
+1. Drag a `cylinder` **cylinder**, use uniform scaling to make it thin, use `PgUp` to raise it onto the slanted roof surface so it pokes out a bit;
 2. Color **dark gray**;
-3. Want more life? Clone a few `sphere` balls, pile at the chimney mouth as "smoke", and set opacity to 0.3.
+3. Want more life? Use `sphere` to clone a few and pile them at the chimney mouth as "smoke," and set opacity to 0.3.
 
-**Final checklist** (advised for every project):
-| Check item | How |
-| --- | --- |
-| Floating / sunk? | click "Front" level view |
-| Front–back interpenetration? | click "Left" or "Right" view |
-| Overall layout centered? | click "Top" overhead |
-| Does it look good? | click "Perspective" back to normal |
+**Final checklist** (recommended for every project):
 
-After confirming: `Ctrl + S` export JSON to save project, `Ctrl + P` screenshot a PNG to hand in.
+| Check item | How to check |
+|---|---|
+| Any floating / sunk into ground | Click **Front View** and look straight |
+| Any front/back interpenetration | Click **Left View** or **Right View** to look |
+| Is the overall layout centered | Click **Top View** to look from above |
+| Does the finished product look good | Click **Perspective** to return to normal view |
 
-### 41.7 Advanced challenges
+After confirming it is correct: `Ctrl + S` to export JSON and save the project, `Ctrl + P` to capture a PNG and submit your work.
 
-1. **Make a row of townhouses**: select the whole house (`Ctrl + A`) → `Ctrl + D` clone → `Shift +` arrow to move the whole away one grid → repeat three times. Note in multi-select clone the relative positions of the whole stay unchanged (Chapter 38's "master pivot" mechanism).
-2. **Change season**: change lawn pattern to "dot", color to white → snowfield; wall opacity to 0.4 → ice house.
-3. **Add a nameplate**: use Chapter 21's text tool, add a line "No.1" above the door, font "Hei", size shrunk to proportion with the house.
+### 41.7 Advanced Challenges
 
-⚠️ Reminder: text default size is **80**, while house blocks are usually only 1–2 units — directly adding text gives a "giant word bigger than the house". You must shrink the size (or scale the text whole) to harmonize. This is the most common frustration for beginners making signs; don't panic, just change the size.
+1. **Make a row of townhouses**: Select the whole house (`Ctrl + A`) → `Ctrl + D` to clone → `Shift +` arrow key to move the whole group one unit away → repeat three times. Note that when multi-select cloning, the relative positions of the whole group stay unchanged (the "master pivot" mechanism of Chapter 38).
+2. **Change seasons**: Change the lawn pattern to "Dots" and the color to white → becomes snowy ground; set the wall opacity to 0.4 → becomes an igloo.
+3. **Add a doorplate**: Use the text tool from Chapter 21 to add a line "No. 1" above the door, choose **Hei** font, and reduce the font size to be proportional to the house.
+
+⚠️ Reminder: The default font size for text is **80**, while house masses are usually only 1–2 units — adding text directly gives you a "giant character larger than the house." You must reduce the font size (or scale the text down as a whole) to make it harmonious. This is the most common frustration for beginners making signs; don't panic, just change the font size.
 
 ---
 
-## Chapter 42 · Project 2: Make a 3D Text Slogan
+## Chapter 42: Project 2 — Make a 3D Text Sign
 
-### 42.1 Goal and idea
+### 42.1 Goal and Approach
 
-Make a **slogan board standing in the scene**: backboard + text + decoration, e.g. "Welcome" / "Grand Opening" or a line you like.
+Make a **sign standing in the scene**: backing board + text + decoration, such as "Welcome," "Grand Opening," or a sentence you like.
 
-⚠️ First clarify an easily-misunderstood point: this tool's text is a "**thin board with words pasted**" (Ch 21.1), not truly thick extruded 3D text. So the "3D feel" we want relies on the combo of **backboard + text + layered placement**, not the text's own thickness.
+⚠️ First, clarify a point that is easily misunderstood: the text in this tool is a "**thin slab with text pasted on it**" (Section 21.1), not truly extruded 3D text with thickness. So the "3D feel" we want relies on the combo of **backing board + text + layered placement**, not on the thickness of the text itself.
 
-Understanding this, the idea is clear:
+Once you understand this, the approach becomes clear:
 
-| Layer | What | Role |
-| --- | --- | --- |
-| Backboard | `box` squashed thin board | give text a "support surface" |
-| Main text | text object | content body |
-| Shadow text | text object (dark, offset back a bit) | create thickness illusion |
-| Bracket | two `cylinder` | let the board "stand" on ground |
+| Layer | What to use | Purpose |
+|---|---|---|
+| Backing board | `box` flattened thin slab | Gives the text a "support surface" |
+| Main text | Text object | Content body |
+| Shadow text | Text object (dark color, offset backward a bit) | Creates the illusion of thickness |
+| Supports | Two `cylinder` | Make the sign "stand" on the ground |
 
-### 42.2 Step 1: make the backboard
+### 42.2 Step 1: Make the Backing Board
 
-1. Drag a `box`, uncheck "Uniform scale", squash into a **vertical thin board** (width > height > thickness);
-2. Re-check uniform scale;
-3. Use `PgUp` to lift it to eye height (a distance off ground, not on it);
-4. Color pick **dark** (dark blue / dark green / wood all work) — dark base with light text is clearest.
+1. Drag a `box`, uncheck "Uniform Scaling," flatten it into a **vertical thin slab** (width > height > thickness);
+2. Re-check uniform scaling;
+3. Use `PgUp` to raise it to eye level (a distance above the ground, not flush with it);
+4. Choose a **dark color** (dark blue / dark green / wood color all work) — dark background with light text is clearest.
 
-💡 **Color principle**: text and backboard must have a **value difference**. Dark base light text, or light base dark text, pick one. Same-value pairing (e.g. mid-gray base + mid-green text) blurs from afar — the most basic yet most overlooked rule in design.
+💡 **Color principle**: Text and backing board must have a **lightness difference**. Dark background with light text, or light background with dark text — pick one. Same-lightness pairings (like medium gray background + medium green text) blur together from a distance, which is the most basic yet most often overlooked rule in design.
 
-### 42.3 Step 2: type the text
+### 42.3 Step 2: Apply the Text
 
 1. Left panel "Tools" → "**Add Text**";
-2. Click in the scene, input box pops up (placeholder "Input text······");
-3. Input your slogan, press **Enter** to confirm;
-4. Select it, right panel tune:
-   - **Font**: "Hei" for modern, "Kai" for traditional;
-   - **Size**: default 80, usually need to **shrink** to match blocks (see 41.7 reminder);
-   - **Bold**: advised on for slogans, more eye-catching from afar;
-   - **Color**: pick a light color with strong contrast to the backboard.
+2. Click once in the scene, a input box pops up (placeholder "Enter text······");
+3. Enter your slogan, press **Enter** to confirm;
+4. Select it, adjust in the right panel:
+   - **Font**: For modern use "Hei", for traditional use "Kai";
+   - **Font size**: Default 80, usually needs to be **reduced** to match the masses (see the reminder in 41.7);
+   - **Bold**: Recommended for slogans, more eye-catching from afar;
+   - **Color**: Choose a light color with strong contrast to the backing board.
 
-5. Use arrow keys to move the text to the backboard's **front**, and remember to poke out a bit (prevent Z-fighting, same as 41.5).
+5. Use the arrow keys to move the text to the **front** of the backing board, and remember to protrude outward a bit (to prevent Z-fighting, same as Section 41.5).
 
-✏️ **Practice**: After typing, **double-click** it (Ch 21.3) to change the content to another sentence. Feel the convenience of "no need to delete and redo" — very handy when polishing copy.
+✏️ **Practice**: After entering the text, **double-click** it (Section 21.3) and change the content to another sentence. Feel the convenience of "no need to delete and redo" — this saves a lot of effort when repeatedly polishing copy.
 
-### 42.4 Step 3: make "shadow text" for thickness
+### 42.4 Step 3: Make "Shadow Text" for Thickness
 
-This is the core trick of the chapter — simple yet stunning:
+This is the core technique of this chapter — very simple yet extremely effective:
 
-1. Select the main text, `Ctrl + D` **clone** a copy;
-2. Change the clone to **dark** (a bit darker than the backboard, or pure black);
-3. Use arrow keys to move it **back and down 1–2 small steps** (0.1 grid step is enough);
-4. If it covers the main text, the front–back relation is reversed — just move the main text one step forward.
+1. Select the main text, `Ctrl + D` to **clone** a copy;
+2. Change this cloned copy to a **dark color** (a bit darker than the backing board, or pure black);
+3. Use the arrow keys to move it **backward and downward by 1–2 small steps each** (0.1-unit step is enough);
+4. If it covers the main text, the front/back relationship is reversed — just move the main text one step forward.
 
-Now from perspective view: dark text behind, bright text front, **visually it "floats"**. This is the "drop-shadow method" in graphic design, equally effective in 3D.
+Now looking from perspective view: dark text in back, bright text in front, **visually it "floats" up**. This is the "shadow method" in graphic design, and it works equally in 3D.
 
-❓ **Think**: Why does "back + down" offset work better than "back only"? — Because in reality light usually comes from **above**, the shadow naturally falls **below and behind** the object. An offset matching daily lighting experience makes the brain think it's "real".
+❓ **Think about it**: Why does offsetting "backward + downward" work better than "only backward"? — Because in reality light usually comes from **above**, and shadows naturally fall **below and behind** the object. An offset consistent with everyday lighting experience is what the brain considers "real."
 
-💡 Want stronger 3D? Clone the shadow text **two or three more times**, each progressively offset back a bit, color gradually deepening — becomes a "multi-layer extrusion" fake-thickness effect. More layers = heavier, but also easier to blur; about 3 layers is the sweet spot.
+💡 Want a stronger 3D feel? **Clone the shadow text two or three more times**, each offset slightly further back and gradually darker in color — this becomes a "multi-layer extrusion" fake-thickness effect. More layers = heavier feel, but also easier to blur; around 3 layers is the sweet spot.
 
-### 42.5 Step 4: add brackets, let the board stand
+### 42.5 Step 4: Add Supports to Make the Sign Stand
 
-1. Drag two `cylinder`, uniform scale to thin and long;
-2. Use `PgUp` / arrow keys to insert them at the **two sides below the backboard**, top end inserted into the backboard a bit (here **intentional interpenetration** is correct, hides the seam);
-3. Color pick **dark gray / wood**.
+1. Drag two `cylinder` **cylinders**, use uniform scaling to make them thin and long;
+2. Use `PgUp` / arrow keys to insert them into the **two lower sides** of the backing board, with the top end inserted slightly into the backing board (here **intentional interpenetration** is correct, it hides the seam);
+3. Choose **dark gray / wood color**.
 
-💡 Don't re-drag the second post — select the first, `Ctrl + D` clone, then `←` / `→` to the other side. **Symmetric things always use clone, always more accurate than hand-placing.**
+💡 Don't re-drag the second pillar — select the first one, `Ctrl + D` to clone, then use `←` / `→` to move it to the other side. **For symmetrical things always use cloning; it is always more accurate than hand-placing.**
 
-### 42.6 Step 5: horizontal vs vertical
+### 42.6 Step 5: Horizontal vs Vertical Layout
 
-The same sentence, a different layout gives a totally different temperament:
+The same sentence with a different layout has a completely different temperament:
 
-| Combo | Temperament | Fits |
-| --- | --- | --- |
-| Horizontal + Hei + bold | modern, commercial | shop sign, event banner |
-| Vertical + Kai + large size | traditional, solemn | plaque, academy, teahouse |
-| Horizontal + Times + no bold | western, formal | English sign, info board |
-| Horizontal + Courier | technical, retro | tech feel, typewriter style |
+| Combination | Temperament | Suitable for |
+|---|---|---|
+| Horizontal + Hei + Bold | Modern, commercial | Shop signs, event banners |
+| Vertical + Kai + Large font | Traditional, solemn | Plaques, academies, teahouses |
+| Horizontal + Times + not bold | Western, formal | English labels, info plates |
+| Horizontal + Courier | Technical, retro | Tech feel, typewriter style |
 
-✏️ **Practice (comparison experiment)**: Make two versions of the same "Tea" character — one horizontal Hei, one vertical Kai large size + wood backboard. Place side by side in the scene, look from "Front". You'll intuitively feel: **font and layout themselves speak**, content unchanged, temperament already worlds apart.
+✏️ **Practice (comparison experiment)**: Make two versions of the same character "茶" — one horizontal Hei, one vertical Kai with large font + wood-color backing board. Place them side by side in the scene and look from **Front View**. You will intuitively feel: **the font and layout themselves speak**, the content hasn't changed yet the temperament is worlds apart.
 
-### 42.7 Common pitfalls summary
+### 42.7 Common Pitfalls Summary
 
-| Phenomenon | Cause | Fix |
-| --- | --- | --- |
-| Text absurdly large, covers whole scene | default size 80 mismatches block scale | shrink size, or scale text object whole |
-| Text and backboard flicker intersect | coplanar (Z-fighting) | arrow keys move text out 1–2 steps |
-| Blurry from afar | insufficient value difference text/backboard | increase light–dark contrast, or bold the text |
-| Text exceeds backboard edge | copy too long | shrink size, or widen backboard |
-| Can't change size / arrow keys dead | cursor still in number input box | first click empty canvas (Ch 32.1) |
+| Phenomenon | Cause | Solution |
+|---|---|---|
+| Text absurdly large, covering the whole scene | Default font size 80, doesn't match mass scale | Reduce font size, or scale the text object as a whole |
+| Text and backing board flicker and interpenetrate | Both coplanar (Z-fighting) | Use arrow keys to move text outward 1–2 steps |
+| Blurs together from afar | Insufficient lightness difference between text and backing board | Increase light/dark contrast, or bold the text |
+| Text exceeds backing board edge | Copy too long | Reduce font size, or widen the backing board |
+| Can't change font size / arrow keys unresponsive | Cursor still in the number input box | First click on empty space in the canvas (Section 32.1) |
 
-### 42.8 Advanced challenges
+### 42.8 Advanced Challenges
 
-1. **Make a double-sided sign**: select the whole group (backboard + text + shadow) and clone, use `Shift + A` to turn 180°, place at the back, making a standing sign readable from both sides.
-2. **Glowing text effect**: set main text color bright yellow, backboard deep black, then put a semi-transparent (opacity 0.3) light-yellow thin board behind the text as "halo".
-3. **Link with Project 1**: place this sign in front of the Chapter 41 house, `Ctrl + S` save as one complete scene. You now have a complete small scene of "house + sign".
+1. **Make a double-sided sign**: Select the whole group (backing board + text + shadow) and clone, use `Shift + A` to rotate 180°, place it on the back, making a standing sign viewable from both sides.
+2. **Glowing text effect**: Set the main text color to bright yellow, the backing board to deep black, and place a semi-transparent (opacity 0.3) light yellow thin slab behind the text as a "halo."
+3. **Link with Project 1**: Place this sign in front of the small house from Chapter 41, `Ctrl + S` to save as a complete scene. You now have a complete small scene of "house + sign."
 
 ---
 
-## Chapter 43 · Project 3: Design a Logo / Icon
+## Chapter 43: Project 3 — Design a Badge / Icon
 
-### 43.1 Why a logo is "the best exercise"
+### 43.1 Why a Badge Is the "Best Exercise"
 
-The first two projects built "3D things". This one reverses — we make a logo that **looks like graphic design**, but implemented with 3D means.
+The first two projects were making "3D things." This one is the reverse — we will make a badge that **looks like graphic design**, but implemented with 3D means.
 
 It is an excellent exercise because:
-- Only needs **2D shapes** (the 20 from Ch 12), low shape burden;
-- Forces you to think about real design issues: **alignment, layering, color**;
-- The product, screenshot in "**Top**" view, is a clean icon, directly usable as avatar / Logo.
+- It can be done with only **2D Shapes** (the 20 kinds from Chapter 12), with low shape burden;
+- It forces you to think about real design issues like **alignment, layering, color matching**;
+- The finished product, when captured from **Top View**, is a clean icon that can be directly used as an avatar / Logo.
 
-❓ **Think**: The logos you've seen (car emblems, school crests, App icons) — how many elements do they usually consist of? — Usually no more than 3–4 layers: base shape + main graphic + accent + text. **Less is refined** — this is the iron rule of logo design.
+❓ **Think about it**: The badges you have seen (car logos, school emblems, App icons) — how many elements do they usually consist of? — Usually no more than 3–4 layers: base shape + main graphic + accent + text. **Less is refined** — this is the iron rule of badge design.
 
-### 43.2 Key premise: work in Top view
+### 43.2 Key Prerequisite: Work in Top View
 
-⚠️ This project please **operate entirely in "Top" view** (bottom view button).
+⚠️ For this project, please work **entirely in the "Top View" perspective** (bottom view button).
 
-Reason: a logo is a "front-facing" planar composition, and 2D shapes all lie flat on the ground (Z=0). Overhead from straight above, you see the finished look; in perspective there is near-big-far-small distortion, alignment by guess.
+Reason: A badge is a flat composition "viewed from the front," and all 2D shapes lie flat on the ground (Z=0). Looking down from directly above, what you see is the finished product; under perspective view there is near-large/far-small distortion, and alignment is pure guesswork.
 
-💡 This is a general experience: **do what you do, view it from that view.** Ground layout uses Top, height uses Front, whole effect uses Perspective. Don't force one view through the whole process.
+💡 This is a general lesson: **Do what you're making, view it from that perspective.** Use top view for ground layout, front view for adjusting height, perspective for overall effect. Don't force one view through the whole process.
 
-### 43.3 Step 1: base shape (outermost)
+### 43.3 Step 1: Base Shape (Outermost Layer)
 
-1. Left panel switch **2D shapes**, pick one as base:
+1. Switch left panel to **2D Shapes**, pick one as the base:
    - `circle2` circle → round badge, most versatile;
    - `hexagon` hexagon → tech, industrial feel;
-   - `octagon` octagon → steady, identity feel;
+   - `octagon` octagon → steady, emblem feel;
    - `pentagon` pentagon → shield, academy feel.
-2. Place at scene **center**;
-3. Uniform enlarge to proper size;
-4. Color pick **dark** (dark blue / dark green / wine red all pop).
+2. Place it at the **center** of the scene;
+3. Uniformly scale it to a suitable size;
+4. Choose a **dark color** (dark blue / dark green / wine red all look great).
 
-### 43.4 Step 2: inner layer and main graphic (create layering)
+### 43.4 Step 2: Inner Layer and Main Graphic (Create Layering)
 
-A logo's refinement, 80% comes from "**concentric layering**".
+Eighty percent of a badge's refinement comes from "**concentric layering**."
 
-1. Select the base, `Ctrl + D` **clone** a copy;
-2. **Uniform-scale** the clone smaller (`-` a few presses, or `Shift + -` halve);
-3. **Key**: use `PgUp` to lift it **a small step** — let it float a bit above the base;
+1. Select the base shape, `Ctrl + D` to **clone** a copy;
+2. Uniformly **scale down** the clone (`-` key a few times, or `Shift + -` to halve);
+3. **Key**: Use `PgUp` to raise it **a small step** — let it float slightly above the base shape;
 4. Switch to a **light color** (white / beige / bright gold).
 
-Now you have a "dark outer ring + light inner core" concentric structure.
+Now you have a concentric structure of "dark outer ring + light inner core."
 
-⚠️ **Inevitable pit**: if both 2D shapes are at Z=0, they flicker and intersect wildly (again Z-fighting, Ch 41.5). **When stacking 2D shapes, each layer must be lifted a small step with `PgUp`**, separating them in height. This is the most important operational discipline of the chapter.
+⚠️ **An inevitable pit**: If both 2D shapes are at Z=0, they will wildly flicker and interpenetrate (again Z-fighting, explained in Section 41.5). **When stacking 2D shapes, each layer must be raised a small step with `PgUp`** to separate them in height. This is the most important operational discipline of this chapter.
 
-💡 Remember the mantra: **each layer stacked, one step lifted.** Three layers = three different heights.
+💡 Remember the mantra: **Every time you stack a layer, raise a step.** Three layers of shapes = three different heights.
 
-Then place the main graphic (the logo's "protagonist"):
+Then place the main graphic (the "protagonist" of the badge):
 
 | Want to express | Which 2D shape |
-| --- | --- |
-| Honor, rating | `star` five-point star |
+|---|---|
+| Honor, rating | `star` five-pointed star |
 | Love, charity | `heart` heart |
 | Energy, speed | `lightning` lightning |
 | Medical, rescue | `cross` cross |
 | Direction, logistics | `arrow` arrow |
-| Nature, water | `teardrop` teardrop |
-| Night, quiet | `crescent` crescent |
+| Nature, water | `teardrop` water drop |
+| Night, tranquility | `crescent` crescent |
 | Tech, connection | `hexagon` hexagon |
 
-Place it, lift a step, tune to contrast color, center-align.
+Place it on, raise a step, set to a contrasting color, center-align.
 
-💡 Tip: `heart / arrow / crescent / cross / lightning` these all have **independent shape-parameter controls** (see Ch 12.2, e.g. heart's `scale`, arrow's `line thickness / arrow length / arrow width`), directly tunable. If you only want to change overall size, uniform scale or transform controls also work.
+💡 Tip: `heart / arrow / crescent / cross / lightning` these several **all have independent shape parameter controls** (see Section 12.2, such as the heart's `width/height/heart-tip indentation`, the arrow's `length/width`, the crescent's `outer radius/inner radius/offset`, etc.), which can directly adjust the shape. If you only want to change the overall size, you can also use uniform scaling or the transform gizmo.
 
-### 43.5 Step 3: how to align to center
+### 43.5 Step 3: How to Align to the Center
 
-This tool **has no "one-click center" button** (stated in Part 10), but a logo precisely demands alignment. Three manual alignment methods:
+This tool has **no "one-click center" button** (already mentioned in Part Ten), but badges precisely require the most alignment. Three manual alignment methods:
 
-1. **Rely on grid**: in Top view, the ground grid lines are your ruler. Align each layer's center to the **same grid intersection**, fine-tune with arrow keys (0.1 grid).
-2. **Rely on clone**: the cloned copy **only does uniform scale, not translation**, so its center stays in place — naturally concentric. This is the easiest move, strongly recommended.
-3. **Rely on number box**: the right panel's position number box (Ch 36.5) can input numbers directly. Fill each layer's horizontal position with the **same set of numbers**, that's absolutely precise centering.
+1. **Use the grid**: Under top view, the ground grid lines are your ruler. Align each layer's center to the **same grid intersection**, fine-tune with arrow keys (0.1 unit).
+2. **Use cloning**: The cloned copy **only does uniform scaling, no translation**, so its center stays in place — naturally concentric. This is the most effortless trick, highly recommended.
+3. **Use the number box**: The position number box in the right panel (Section 36.5) can directly input numbers. Fill each layer's horizontal position with **the same set of numbers** for absolutely precise centering.
 
-💡 **Best practice**: method 2 + method 3 combined. First clone to ensure concentric, finally use number box to double-check the numbers match. A hundred times more reliable than dragging the mouse.
+💡 **Best practice**: Method 2 + Method 3 combined. First clone to guarantee concentricity, then use the number box to double-check that the numbers are consistent. A hundred times more reliable than dragging the mouse.
 
-### 43.6 Step 4: add text ring / bottom text
+### 43.6 Step 4: Add Text Ring / Bottom Text
 
-1. "Add Text", input brand name or year;
-2. Size **shrink** (logo text usually small);
-3. Font: "Hei" for modern, "Times" for academy, "Song" for traditional;
-4. Lift to the **top layer** (one step higher than all shapes);
-5. Place below the logo or in the middle blank.
+1. "Add Text," enter the brand name or year;
+2. **Reduce** the font size (text in a badge is usually very small);
+3. Font: "Hei" for modern feel, "Times" for academy feel, "Song" for traditional feel;
+4. Raise to the **topmost layer** (one step higher than all shapes);
+5. Place at the bottom of the badge or in the middle blank space.
 
-⚠️ This tool's text **cannot arrange along an arc** (no "ring text"). For a similar effect, you'd have to split text into single chars, clone and rotate each — very laborious. Beginners are advised to directly use **horizontal text at the bottom**, equally professional.
+⚠️ This tool's text **cannot be arranged along an arc** (no "circular text" possible). For a similar effect, you can only break the text into individual characters, clone each and rotate to position — very laborious. Beginners are advised to directly use **horizontal text at the bottom**, which is equally professional.
 
-### 43.7 Step 5: export image
+### 43.7 Step 5: Export the Image
 
-1. Click "**Top**", center the logo in frame;
-2. If needed press `F11` fullscreen for a bigger cleaner picture;
-3. Want to remove distraction? Hide axes and grid (Ch 28) — this step is crucial, otherwise grid lines appear in the screenshot;
-4. `Ctrl + P` screenshot export PNG;
-5. `Ctrl + S` save a JSON project for later color changes.
+1. Click **Top View**, center the badge in the canvas;
+2. Press `F11` for fullscreen if needed, for a larger and cleaner canvas;
+3. Want to remove distractions? Hide the coordinate axes and grid plane (Chapter 28) — this step is crucial, otherwise there will be grid lines in the screenshot;
+4. `Ctrl + P` to capture and export PNG;
+5. `Ctrl + S` to save a JSON project for easy color changes later.
 
-💡 **Image-export trio**: Top + hide aids + fullscreen. Use this whenever you need a "clean finished image".
+💡 **Image export trio**: Top view + hide helpers + fullscreen. Use this for any occasion needing a "clean finished image."
 
-### 43.8 Color quick-reference (take and use)
+### 43.8 Color Cheat Sheet (Use Directly)
 
-| Style | Base | Inner | Main graphic | Text |
-| --- | --- | --- | --- | --- |
-| Business steady | dark blue | white | dark blue | white |
-| Natural eco | dark green | off-white | green | off-white |
-| Lively sport | bright orange | white | dark gray | white |
-| High-end luxury | pure black | gold | gold | gold |
-| Medical health | white | light blue | red cross | dark blue |
+| Style | Base color | Inner layer | Main graphic | Text |
+|---|---|---|---|---|
+| Business steady | Dark blue | White | Dark blue | White |
+| Natural eco | Dark green | Off-white | Green | Off-white |
+| Energetic sport | Bright orange | White | Dark gray | White |
+| High-end luxury | Pure black | Gold | Gold | Gold |
+| Medical health | White | Light blue | Red cross | Dark blue |
 
-⚠️ The most common beginner color mistake is **too many colors**. Keep a logo within **2–3 colors** and it instantly looks pro. To enrich layering, rely on **light–dark variation of the same hue** (Ch 18.2: fix the hue bar, only drag up–down in the big swatch), not adding more colors.
+⚠️ The most common color mistake for beginners is **too many colors**. Keep the badge within **2–3 colors** and it instantly looks professional. To enrich layers, rely on **light/dark variations of the same hue** (Section 18.2: fix the hue bar, only drag up/down in the big color block), rather than adding more colors.
 
-### 43.9 Advanced challenges
+### 43.9 Advanced Challenges
 
-1. **Make a series of icons**: select the logo and clone three copies, only change the main graphic (star / heart / lightning), leave everything else. You get a uniformly-styled icon set — exactly real brand design practice.
-2. **Add relief feel**: clone the main graphic a dark copy, offset to one side a small step, place it one layer below (i.e. the "shadow text" trick from 42.4 applied to shapes).
-3. **Make a solid badge**: under the whole logo pad a `cylinder` flat cylinder, switch back to perspective — the flat logo instantly becomes a "metal badge you can hold".
+1. **Make a set of series icons**: Select the whole badge and clone three copies, only change the main graphic (star / heart / lightning), leave everything else unchanged. You will get a set of stylistically consistent icons — exactly how real brand design is done.
+2. **Add embossed feel**: Clone the main graphic into a dark one, offset it slightly to one side, place it one layer below (i.e., apply the "shadow text" technique from 42.4 to the shape).
+3. **Make a physical medal**: Under the whole badge place a `cylinder` flat cylinder, switch back to perspective view — the flat badge instantly becomes a "metal medal you can hold in your hand."
 
 ---
 
-## Chapter 44 · Project 4: Comprehensive Scene "My Little Courtyard"
+## Chapter 44: Project 4 — Comprehensive Scene "My Small Courtyard"
 
-### 44.1 This chapter is the "graduation design"
+### 44.1 This Chapter Is the "Graduation Project"
 
-The first three projects each trained a skill: **block assembly** (house), **text layout** (slogan), **planar composition** (logo). This chapter **merges them all into one scene**, plus brush, image, semi-transparency and remaining skills, to make a complete work.
+The first three projects each practiced a different skill: **mass assembly** (house), **text layout** (slogan), **flat composition** (badge). This chapter combines them **all into one scene**, plus the remaining skills of brush, image, and semi-transparency, to make a complete work.
 
-Goal: a **cottage with a yard** — house, fence, path, trees, pool, nameplate, sky mood, all in one.
+Goal: A **small house with a courtyard** — house, fence, path, trees, pond, doorplate, sky atmosphere, all included.
 
-⚠️ This is the longest exercise in the book; advised to **do it in several sittings**, `Ctrl + S` save once after each part. The habit of "periodic saving" is worth more than any trick.
+⚠️ This is the longest exercise in the book; it is recommended to **do it in several sittings**, saving with `Ctrl + S` after each part. The habit of "periodic saving" is worth more than any trick.
 
-### 44.2 Creation flow: big before small, fix before decorate
+### 44.2 Creation Flow: Big Before Small, Fixed Before Decorated
 
-The biggest difference between pro flow and beginner is not hand speed, but **order**. Please strictly follow this order:
+The biggest difference between a professional flow and a beginner is not hand speed, but **order**. Please strictly follow this order:
 
-| Stage | Do what | Why this order |
-| --- | --- | --- |
-| ① Set ground | lay lawn, define yard range | first delimit the "stage", later has reference |
-| ② Place main body | put house (Project 1 result) | biggest object first, it decides overall scale |
-| ③ Divide zones | use brush to draw path direction | plan functional zones on empty land |
-| ④ Add mid pieces | trees, pool, fence | fill medium volume, enrich layers |
-| ⑤ Add small pieces | pebbles, flowers, nameplate | details last, avoid early judgment interference |
-| ⑥ Tune mood | color, opacity, view | unify tone, finish and export |
+| Stage | What to do | Why this order |
+|---|---|---|
+| ① Set ground | Lay lawn, define courtyard range | First define the "stage," so later there is reference |
+| ② Place main body | Put the house (result of Project 1) | Place the largest object first, it decides overall proportion |
+| ③ Divide zones | Use brush to draw the path direction | Plan functional areas on the empty ground |
+| ④ Add medium pieces | Trees, pond, fence | Fill medium volume, enrich layers |
+| ⑤ Add small pieces | Stones, flowers, doorplate | Add details last, avoid early interference with judgment |
+| ⑥ Adjust atmosphere | Color, opacity, viewpoint | Unify tone, finish and export image |
 
-❓ **Think**: Why "details last"? — Because details **interfere with your judgment of the whole**. A pile of pebbles there, you can hardly see if the house position is right. Fix the big relations first, details matter. In painting it's "whole to local", 3D same.
+❓ **Think about it**: Why "add details last"? — Because details **interfere with your judgment of the whole**. With a bunch of small stones sitting there, it is hard to see whether the house position is right. First lock the big relationships, then details have meaning. In painting this is called "whole to local," and 3D is the same.
 
-### 44.3 ① Lay the ground
+### 44.3 ① Lay the Ground
 
-1. 2D shape drag a `square2` square, enlarge as yard ground;
-2. Green + "checker" pattern = lawn;
-3. Switch "**Top**", confirm range big enough — **rather bigger**, later more things added, hard to change if small.
+1. 2D Shapes drag a `square2` square, enlarge it into the courtyard ground;
+2. Green + "Grid" pattern = lawn;
+3. Switch to **Top View**, confirm the range is large enough — **better slightly larger**, as you keep adding things later, a small space is hard to fix.
 
-💡 Advised to lay another bigger light-color base plate at the outermost ring (remember `PgDn` to make it **one step lower** than the lawn, avoid coplanar flicker), as "open space outside the yard", giving the picture more boundary sense.
+💡 Suggest laying a larger light-color base board on the outermost ring (remember to `PgDn` to make it **one step lower** than the lawn, to avoid coplanar flickering), as the "open ground outside the courtyard," giving the canvas more sense of boundary.
 
-### 44.4 ② Place the house
+### 44.4 ② Place the House
 
-Directly reuse Chapter 41's result:
+Directly reuse the result of Chapter 41:
 
-- If you saved the project, `Ctrl + O` import it;
-- No save is fine, rebuild by 41.2–41.6 (this time much faster).
+- If you saved the project, `Ctrl + O` to import it;
+- If not saved, no problem, rebuild following 41.2–41.6 (this time much faster).
 
-Placement advice: **don't put it dead center**. Place the house **toward the back, to one side** of the yard, leaving a large open space in front — more natural composition, also room for path and pool.
+Placement suggestion: **Don't put it dead center**. Place the house **toward the back and to one side** of the courtyard, leaving a large open space in front — this composition is more natural and leaves room for the path and pond.
 
-💡 **Composition tidbit**: placing the main body dead center looks stiff; slightly off-center is livelier. In photography it's "rule of thirds"; you can estimate position via the ground grid lines.
+💡 **Composition tidbit**: Placing the main subject in the center of the canvas looks stiff; shifting slightly off-center is more lively. In photography it is called the "rule of thirds," and you can use the ground grid lines to estimate position.
 
-### 44.5 ③ Draw the path with brush
+### 44.5 ③ Draw the Path with Brush
 
-This is the classic use of the brush tool (Ch 24) in practice:
+This is the classic use of the brush tool (Chapter 24) in practice:
 
 1. Left panel "Tools" → **2D Brush**;
 2. Set color (earth yellow / light gray) and line width (thicker, like a road);
-3. Drag from the yard entrance to the house door, draw a **slightly curved** line;
-4. After drawing exit the brush tool (press `Esc` or switch back to select).
+3. Drag from the courtyard entrance to the house door, draw a **slightly curved** line;
+4. After drawing, exit the brush tool (press `Esc` or switch back to select).
 
 ⚠️ **Two disciplines of the brush**:
-1. Brush strokes, once drawn, are "fixed" there, **cannot be finely shaped like shapes** — if drawn crooked, `Ctrl + Z` undo and redraw, don't try to fix;
-2. A brush stroke's shape **is set once drawn, cannot be finely tuned like standard shapes** (but the stroke object itself supports whole scaling).
+1. The brush stroke is "fixed" once drawn, **cannot be finely adjusted like a shape** — if drawn wrong, `Ctrl + Z` to undo and redraw, don't try to fix it;
+2. The shape of the brush stroke **is finalized once drawn and cannot be finely adjusted like a standard shape** (but the stroke object itself supports overall scaling).
 
-💡 Why should the path be "slightly curved" not straight? — straight lines look like blueprints, curved lines like life. This small detail makes the scene instantly "human".
+💡 Why should the path be "slightly curved" rather than straight? — A straight line looks like a blueprint, a curved line looks like life. This small detail instantly gives the scene a "human touch."
 
-✏️ **Practice**: First draw a straight road, look; `Ctrl + Z` undo, draw a curved one, compare. This "make two versions to compare" method is the fastest path to better aesthetics.
+✏️ **Practice**: First draw a straight road, take a look; `Ctrl + Z` to undo, then draw a curved one, and compare the feeling. This method of "make two versions to compare" is the fastest way to improve aesthetics.
 
-### 44.6 ④ Add trees, pool and fence
+### 44.6 ④ Add Trees, Pond, and Fence
 
 **Tree** (two-segment):
-1. `cylinder` thin and long → trunk, dark brown;
-2. `sphere` → canopy, green, `PgUp` to trunk top;
-3. Select trunk and canopy (`Shift` add-select, both selected) → `Ctrl + D` clone the whole tree → move elsewhere.
+1. `cylinder` cylinder, make thin and long → trunk, dark brown;
+2. `sphere` sphere → tree crown, green, `PgUp` to place on top of the trunk;
+3. Select trunk and crown (`Shift` to add-select, both selected) → `Ctrl + D` to clone the whole tree → move elsewhere.
 
-💡 Here uses Chapter 38's key mechanism: **in multi-select clone, the two parts' relative positions stay unchanged**, so what's copied is "a whole complete tree", won't fall apart. A row of trees only needs repeat "clone + `Shift +` arrow".
+💡 This uses the key mechanism of Chapter 38: **when multi-select cloning, the relative positions of the two parts stay unchanged**, so what is copied is "a whole complete tree," not falling apart. To plant a row of trees, just repeat "clone + `Shift +` arrow key."
 
-⚠️ Don't make all trees exactly the same size — after clone, casually use `+` / `-` to fine-tune each by about 5% size difference. Natural feel comes at once. **Regularity with a bit of randomness is the secret to making a scene look real.**
+⚠️ Don't make all trees exactly the same size — after cloning, casually use `+` / `-` to give each a ~5% size difference, and the natural feel comes immediately. **Regularity with a bit of randomness is the secret to making a scene look real.**
 
-**Pool**:
-1. 2D shape `ellipse` or `circle2`, lies on ground;
-2. `PgUp` lift **a small step** (don't coplanar with lawn);
-3. Light blue color, pattern "**wave**";
-4. **Opacity to 0.6** — semi-transparent water feel appears (Ch 20.2).
+**Pond**:
+1. 2D Shapes `ellipse` or `circle2` circle, lying flat on the ground;
+2. `PgUp` to raise **a small step** (don't be coplanar with the lawn);
+3. Light blue color, pattern "**Wave**";
+4. **Set opacity to 0.6** — the semi-transparent water feel appears (Section 20.2).
 
 **Fence** (textbook use of clone array):
-1. `box` squash into a thin tall board → one rail;
-2. `Ctrl + D` clone → `Shift +` arrow move a whole grid → `Ctrl + D` again → move again…
-3. Repeat until one side filled;
-4. After this side, `Shift` select the whole row → `Ctrl + D` clone the whole row → use `Shift + A` to turn **90°** → move to the yard's other side.
+1. `box` flattened into a long thin vertical slab → one rail;
+2. `Ctrl + D` to clone → `Shift +` arrow key to move one whole unit → `Ctrl + D` again → move again……
+3. Repeat until one side is filled;
+4. After filling this side, `Shift` to select the whole row → `Ctrl + D` to clone the whole row → use `Shift + A` to rotate **90°** → move to the other side of the courtyard.
 
-💡 Step 4 is the culmination of the book's first ten parts: **multi-select + clone + whole-group rotate 90°**, three skills at once. After this step, you can basically say "graduated".
+💡 Step 4 is the culmination of the first ten parts of this book: **multi-select + clone + rotate whole group 90°**, three skills used at once. After this step, you can basically say you have "graduated."
 
-### 44.7 ⑤ Add detail pieces
+### 44.7 ⑤ Add Detail Small Pieces
 
-- **Pebbles**: `sphere` or `dodeca` dodecahedron shrunk, clone a few scattered on both sides of the path, gray tones but **varying light–dark**;
-- **Flowers**: `star` five-point (2D) or small balls, bright color, dotted on the lawn;
-- **Nameplate**: Chapter 42's slogan board shrunk version, hung at the door, with house number;
-- **Photo wall**: use "Add Image" to place one of your own images (Ch 23), as a billboard in the yard.
+- **Stones**: `sphere` or `dodeca` dodecahedron scaled down, clone a few and scatter on both sides of the path, gray tones but **varying light/dark**;
+- **Flowers**: `star` five-pointed star (2D) or small balls, bright color, dotted on the lawn;
+- **Doorplate**: A scaled-down version of the sign from Chapter 42, hung at the door, with the house number written;
+- **Photo wall**: Use "Add Image" to place one of your own pictures (Chapter 23), as a display board in the courtyard.
 
-⚠️ Details must be **restrained**. Stop when "looks rich but not messy". Criterion: switch to "Top" overhead, if you can't tell primary from secondary at a glance, you added too much, delete some.
+⚠️ Details should be **restrained**. Stop when it looks "rich but not messy." Judgment standard: switch to **Top View** and look from above; if you can't tell the primary from secondary at a glance, you added too much, delete some.
 
-### 44.8 ⑥ Tune mood and export
+### 44.8 ⑥ Adjust Atmosphere and Export Image
 
-**Unify tone** (the step that most improves quality):
+**Unify color tone** (the step that most improves quality):
 
-| Wanted mood | How |
-| --- | --- |
-| Morning | overall lighter, cooler (light blue, off-white), slightly higher opacity |
-| Dusk | overall warmer (orange, brown, gold), deepen shadow-side color |
-| Fairy tale | high saturation (pink, cyan, bright yellow), pattern "dot" |
-| Minimal | only black/white/gray + one accent color |
+| Desired atmosphere | How to adjust |
+|---|---|
+| Morning | Overall lighter, cooler (light blue, off-white), slightly higher opacity |
+| Dusk | Overall warmer (orange, brown, gold), deepen the color on the shadow side |
+| Fairy tale | High saturation (pink, cyan, bright yellow), pattern "Dots" |
+| Minimal | Only black/white/gray + one accent color |
 
-💡 Use Ch 18.2's technique to unify tone: **fix the hue bar, only change value and saturation**, the whole scene's colors automatically "harmonize". This is the most labor-saving and effective coloring method.
+💡 Use the technique from Section 18.2 to unify tone: **fix the hue bar and only change lightness and saturation**, and the whole scene's colors will automatically "harmonize." This is the most effortless and effective way to match colors.
 
 **Export flow** (same as 43.7):
-1. Try all 7 views at bottom, pick the best-looking one (usually "Perspective" with slight downward angle);
-2. Hide axes and grid (Ch 28), picture instantly clean;
+1. Try all 7 viewpoints at the bottom, pick the best-looking one (usually "Perspective" with a slight downward angle);
+2. Hide the coordinate axes and grid plane (Chapter 28), the canvas is instantly clean;
 3. `F11` fullscreen;
 4. `Ctrl + P` screenshot;
 5. `Ctrl + S` save project.
 
-✏️ **Last practice**: Screenshot **three different views** of the same scene — Top (plan), Front (elevation), Perspective (effect). This is exactly the architect's standard three-piece delivery. You can already do it.
+✏️ **Final practice**: Capture **three images from different viewpoints** of the same scene — top view (plan layout), front view (elevation), perspective (render). This is exactly the standard trio architects use to deliver a proposal. You can already do it.
 
-### 44.9 Self-check list when stuck
+### 44.9 Self-Check List When Stuck
 
-When building big scenes it's easiest to "get messier as you go". When stuck, self-check by this table:
+When making large scenes it is easiest to "get messier as you go." When stuck, self-check using this table:
 
-| Symptom | Probably because | How to save |
-| --- | --- | --- |
-| Messier and messier, don't know what to do | didn't follow "big before small" order | stop, switch Top to see whole, fix big pieces first |
-| Things intersect flicker | coplanar (Z-fighting) | use `PgUp`/`PgDn` to separate layers |
-| Disproportion, something especially big | no reference | place a known-size object as "ruler", tune others to it |
-| Messy colors, looks cheap | too many color types | cut to under 3 colors, use light–dark for layers |
-| Can't select wanted object | blocked by another | change view then click, or move the blocker away first |
-| Arrow keys suddenly don't move object | not selected / cursor in input box | see Ch 32.1 three-step troubleshoot |
-| Accidentally all gone | mis-touched `Ctrl + Del` clear | `Ctrl + Z` undo; next time save first |
+| Symptom | Most likely because | How to save |
+|---|---|---|
+| Gets messier, don't know what to do | Didn't follow "big before small" order | Stop, switch to top view to see the whole, first lock the big pieces' positions |
+| Things interpenetrate and flicker | Coplanar (Z-fighting) | Use `PgUp`/`PgDn` to separate the layers |
+| Proportion off, something especially large | No reference object | Place a known-size object as a "ruler," adjust others to it |
+| Colors messy, looks cheap | Too many color types | Cut to within 3 colors, use light/dark for layers |
+| Can't select the wanted object | Blocked by another object | Switch viewpoint and click again, or move the blocker away first |
+| Arrow keys suddenly don't move object | Not selected / cursor in input box | See Section 32.1 troubleshooting trio |
+| Accidentally lost everything | Mistouched `Ctrl + Del` to clear | `Ctrl + Z` to undo; save first next time |
 
-### 44.10 Closing words: from "can use" to "can make"
+### 44.10 Closing Words: From "Can Use" to "Can Make"
 
 Look back at your journey:
 
-- In Part 1 you were still asking "what is 3D";
-- In Part 5 you learned to make the scene speak;
-- In Part 8 your hands left the mouse;
-- In Part 10 you could command a crowd of objects at once;
-- Now, you independently built a cottage with a yard.
+- In Part One you were still asking "what is 3D";
+- In Part Five you learned to make the scene speak;
+- In Part Eight your hands left the mouse;
+- In Part Ten you could command a group of objects at once;
+- Now, you independently completed a small house with a courtyard.
 
-The tool's buttons are limited (20 3D + 20 2D + 12 patterns + 8 fonts), but **combinations are infinite**. What truly decides a work's height was never how many buttons you know, but:
+The tool's buttons are limited (20 kinds of 3D + 20 kinds of 2D + 12 kinds of patterns + 8 kinds of fonts), but **combinations are infinite**. What truly decides the height of a work is never how many buttons you know, but:
 
-1. **Decomposition ability** — can see complex objects as combinations of simple geometries;
-2. **Sense of order** — big before small, fix before decorate;
+1. **Breakdown ability** — being able to see complex objects as combinations of simple geometric bodies;
+2. **Order awareness** — big before small, fixed before decorated;
 3. **Aesthetic judgment** — knowing when to stop.
 
-These three were exercised repeatedly across the four projects of this part. The rest is left to practice.
+These three are exactly what the four projects of this part repeatedly train. The rest is up to practice.
 
-💡 **Your next step**: find a photo you like (a room, a street corner, a toy), and try to "recreate" it with this tool. Don't worry if it doesn't match — **at the spot where it doesn't match, you'll meet problems truly your own, and that's where progress begins**.
-
----
-
-✏️ **Part summary**: The four projects correspond to four abilities — the house trains **block decomposition**, the slogan trains **text layout & fake-3D**, the logo trains **layering, alignment & color**, the courtyard trains **full pipeline & orchestration**. Three iron rules run throughout: **Z-fighting → lift a step**, **symmetry/repeat → use clone**, **what you do → view it from that view**. The next part is the book's last: troubleshooting, glossary, shortcut reference, and index — your hand-side lookup tools for future creation.
+💡 **Suggestion for your next step**: Find a photo you like (a room, a street corner, a toy), and try to "recreate" it with this tool. It's okay if it doesn't look alike — **at the places where it doesn't look alike, you will encounter problems that truly belong to you**, and that is where progress begins.
 
 ---
 
-# Part 12 · Off-screen (share · collaborate · align)
+✏️ **Summary of this part**: The four projects correspond to four abilities — the house trains **mass breakdown**, the slogan trains **text layout and fake 3D**, the badge trains **layered alignment and color matching**, the courtyard trains **complete flow and coordination**. The three iron rules throughout: **for Z-fighting, raise a step**, **for symmetry and repetition, use cloning**, **for what you're making, view it from that perspective**. The next part is the final part of the book: troubleshooting manual, glossary, shortcut cheat sheet, and index, as a handy reference tool for your future creation.
 
-> This part is a "reference book", not for reading from start to finish, but to **flip open when stuck**.
+---
+# Part Twelve: Troubleshooting and Appendix
+
+> This part is a "reference book" — not meant to be read from start to finish, but to be **consulted when you get stuck**.
 >
-> If in any earlier part you hit "huh, why is this wrong", first flip to Chapter 45's troubleshooting table; for a word's meaning flip to Chapter 46; for a forgotten shortcut flip to Chapter 47; to confirm a shape/pattern/font's name and look, flip to Chapter 48.
+> If at any point in the earlier parts you run into "huh, why isn't this working," first check Chapter 45's troubleshooting table; for the meaning of a term, check Chapter 46; for forgotten shortcuts, check Chapter 47; to confirm what a certain shape/pattern/font is called and looks like, check Chapter 48.
 >
-> The three tables (troubleshoot, shortcuts, index) are worth **bookmarking or printing** for hand-side use while creating.
+> The three tables (troubleshooting, shortcuts, index) are worth **bookmarking or printing** and keeping within reach while you create.
 
 ---
 
-## Chapter 45 · FAQ Troubleshooting
+## Chapter 45: Common Issues Troubleshooting Manual
 
-### 45.1 General troubleshooting
+### 45.1 General Troubleshooting
 
-Below is arranged by "phenomenon → most likely cause → fix". Most problems have a traceable cause; don't jump to "it's a bug".
+The table below is arranged as "what you see → most likely cause → how to fix." The vast majority of problems have a traceable cause — don't rush to assume it's a bug.
 
-| # | Phenomenon | Most likely cause | Fix |
-| --- | --- | --- | --- |
-| 1 | Arrow keys / `+`/`-` don't affect the object | object not selected, or cursor stuck in the right panel's number input box | click empty canvas, make sure object selected and input box defocused (Ch 32.1) |
-| 2 | Two faces flicker and interpenetrate | two coplanar faces (**Z-fighting**) | use `PgUp`/`PgDn` to lift/lower one face a step apart (Ch 41.5, 43.4) |
-| 3 | Text huge, covers whole scene | default text size **80**, far bigger than block scale | shrink font size, or scale the text object as a whole (Ch 21, 41.7, 42.3) |
-| 4 | Changed font size but arrow keys dead | cursor still in the number input box | click empty canvas to defocus the input box (Ch 32.1) |
-| 5 | `Ctrl+C`/`Ctrl+D`/`Ctrl+V` no response | transform control active, or object not selected | press `Esc` to exit the transform control, then select and operate (Ch 33, 39) |
-| 6 | `+`/`-` rejected in multi-select | multi-select **forbids uniform scaling** (hint "NoScaleMulti") | cancel multi-select and scale one by one, or drag handles with transform controls (Ch 36.4) |
-| 7 | Scale mode disabled after selecting text | **text does not support uniform scaling**, auto-switches to translate | change text size via the "font size" parameter (Ch 21); images and brush strokes scale normally (Ch 24, 36.4) |
-| 8 | Brush/shape drawn crooked, want to reshape | brush stroke hardens once drawn, can't fine-tune like a shape | `Ctrl+Z` undo and redraw (Ch 24, 44.5) |
-| 9 | Want to center but no "center" button | this tool **has no one-click center** | three ways: grid, clone-concentric, number box (Ch 43.5) |
-| 10 | Want text along an arc (ring text), can't | this tool **does not support ring text** | use horizontal text at bottom, or split into single chars and rotate each (Ch 43.6) |
-| 11 | How to tune some 2D shapes' shape params (heart/arrow/crescent/cross/lightning) | they each have **independent shape params** (heart `scale`, arrow `line width/length/width`, crescent `crescent degree/thickness`, cross `arm length/width`, lightning `amplitude/width`, see Ch 12.2) | tune directly in the right panel's matching shape params (Ch 12.2, 43.4) |
-| 12 | Accidentally deleted whole scene or important content | mistouched `Delete`, or cleared the scene | immediately `Ctrl+Z` undo; build the habit of periodic `Ctrl+S` (Ch 44.1) |
-| 13 | Import JSON "load failed" | file corrupted, or not this tool's format | confirm it's a `.json` exported by this tool's `Ctrl+S` (Ch 6) |
-| 14 | View button not lit, camera went dark after rotating | after free rotate the "perspective" button goes dark (normal) | click a view button to re-align (Ch 28) |
-| 15 | 📱🤖 touch only rotates view on drag, can't box-select | touch must **enter box-select mode first** | first tap the bottom "Box select" button (turns blue) then single-finger drag; **auto-exits after boxing**, tap again to box again (Ch 7.4) |
-| 16 | Changed global color but one object didn't change | that object has **independent color override**, or is "no color" | select it and change its color separately (Ch 18) |
-| 17 | Screen color picker unusable | the picker tool wasn't activated first | click the picker button in the color area then sample (Ch 18) |
-| 18 | Screenshot has grid lines / axes | didn't hide aids | hide axes and grid then `Ctrl+P` (Ch 28, 43.7) |
-| 19 | Cloned objects "fell apart" | didn't select the whole group before multi-clone | use `Shift` to select the entire group, then `Ctrl+D` (Ch 38) |
-| 20 | Rotated view/object direction reversed | mixed up axes: `A/D` around Z, `W/S` around Y, `Q/E` around X | follow the Ch 47 quick-reference, or `Shift`+arrow for a big-angle try (Ch 32, 34) |
+| No. | Symptom | Most Likely Cause | Solution |
+|---|---|---|---|
+| 1 | Arrow keys, `+`/`-` have no effect on the object | Object not selected, or cursor is in a right-panel numeric input box | Click on empty canvas first to ensure the object is selected and the input box has lost focus (Section 32.1) |
+| 2 | Two faces flicker and intersect each other | Two coplanar surfaces (**Z-fighting**) | Use `PgUp`/`PgDn` to raise/lower one surface by one step to separate them (Sections 41.5, 43.4) |
+| 3 | Text is so large it covers the entire scene | Default text font size is **80**, far larger than the block scale | Reduce the font size, or scale the text object as a whole (Chapters 21, 41.7, 42.3) |
+| 4 | After changing font size, arrow keys stop working | Cursor is still in the numeric input box | Click empty canvas to blur the input box (Section 32.1) |
+| 5 | `Ctrl+C`/`Ctrl+D`/`Ctrl+V` have no effect | Transform controls are active, or no object is selected | Press `Esc` to exit transform controls first, then select the object and operate (Chapters 33, 39) |
+| 6 | `+`/`-` rejected when multiple objects selected | **Overall scaling is forbidden** for multi-selection (prompt "NoScaleMulti") | Cancel multi-selection and scale one by one, or drag the handle with transform controls (Section 36.4) |
+| 7 | Scale mode disabled after selecting text | **Text does not support uniform scaling**, auto-switches back to translate | Change text size via the "font size" parameter (Chapter 21); images and brush strokes can both be scaled normally (Sections 24, 36.4) |
+| 8 | Brush/graphic drawn crooked, want to fix shape | Brush stroke is finalized once drawn, cannot be fine-tuned like a graphic | `Ctrl+Z` to undo and redraw (Sections 24, 44.5) |
+| 9 | Can't find a "center" button | This tool **has no one-click centering** | Three tricks: rely on the grid, rely on concentric cloning, rely on the numeric box (Section 43.5) |
+| 10 | Can't make text arranged along an arc (circular text) | This tool **does not support circular text** | Use horizontal text placed at the bottom, or break into individual characters and rotate/position each one (Section 43.6) |
+| 11 | How to adjust the shape parameters of certain 2D graphics (heart/arrow/crescent/cross/lightning) | They each have **independent shape parameters** (heart: `width/height/tip concavity`, arrow: `length/width`, crescent: `outer radius/inner radius/offset`, cross: `length/arm width`, lightning: `height/width`, etc., see Section 12.2) | Adjust directly in the corresponding shape parameter of the right panel (Sections 12.2, 43.4) |
+| 12 | Accidentally deleted the whole scene or important content | Slipped and hit `Delete`, or cleared the scene | Immediately `Ctrl+Z` to undo; also get into the habit of periodic `Ctrl+S` (Section 44.1) |
+| 13 | Importing JSON prompts "load failed" | File corrupted, or not a format exported by this tool | Confirm it is a `.json` exported by this tool via `Ctrl+S` (Chapter 6) |
+| 14 | View button not lit, goes out after camera rotates | After free rotation the "perspective" button goes out (normal behavior) | Click a view button to re-align (Chapter 28) |
+| 15 | 📱🤖 On touch device, dragging only rotates the view, can't draw a selection rectangle | Touch device requires **entering selection mode first** | Tap the bottom bar "select" button (turns blue) then drag with one finger; **selection auto-exits when done**, tap again to select again (Section 7.4) |
+| 16 | Changed global color, but one object didn't change | That object has an **independent color override**, or is in a "no color" state | Select it and change its color individually (Chapter 18) |
+| 17 | Screen eyedropper doesn't work | The eyedropper tool wasn't activated first | Click the eyedropper button in the color area before picking a color (Chapter 18) |
+| 18 | Screenshot contains grid lines / axes | Auxiliary elements not hidden | Hide axes and grid planes then `Ctrl+P` (Sections 28, 43.7) |
+| 19 | Cloned objects "fell apart" | The whole group wasn't selected before multi-cloning | Use `Shift` to select the entire group then `Ctrl+D` (Chapter 38) |
+| 20 | View/object rotation direction reversed | Mixed up the axes: `A/D` around Z, `W/S` around Y, `Q/E` around X | Follow the quick-reference table in Chapter 47, or try `Shift`+arrow keys for large angles (Chapters 32, 34) |
 
-💡 **First principle of troubleshooting**: 90% of "weirdness" has only three root causes — **not selected**, **cursor in input box**, **two faces coplanar**. Recite those three first, then check the table — saves half the time.
+💡 **First principle of troubleshooting**: 90% of "something's off" comes down to just three root causes — **object not selected**, **cursor in input box**, **two coplanar surfaces**. Recite these three first, then consult the table accordingly — saves half the time.
 
-### 45.2 Form-specific issues
+### 45.2 Platform-Specific Issues
 
-Most above are shared across all four forms. These below appear only on specific forms:
+Most of the table above applies to all four forms. The following only appear in specific forms:
 
-**🖥️📱 Web edition**
+**🖥️📱 Web Version**
 
-| Phenomenon | Cause | Fix |
-| --- | --- | --- |
-| Opens to a blank page | page resources not loaded, or browser too old | refresh; press `F12` to see red console errors; switch to a newer Chrome / Edge |
-| "WebGL not supported" | browser disabled hardware acceleration | enable "use hardware acceleration" in browser settings, restart |
-| 📱 panels fill the phone screen | narrow-screen auto-collapse didn't trigger | use landscape, or manually tap edge buttons to collapse panels |
-| 📱 phone Back key left the page directly | web edition can't intercept the browser Back key | use the on-screen close button instead; export important work first |
+| Symptom | Cause | Solution |
+|---|---|---|
+| Opens to a blank page | Page resources not fully loaded, or browser too old | Refresh; press `F12` to view red console errors; switch to a newer Chrome / Edge |
+| Prompts WebGL not supported | Browser has hardware acceleration disabled | Enable "Use hardware acceleration" in browser settings, restart browser |
+| 📱 On phone the panel fills the screen | Narrow-screen auto-collapse logic didn't trigger | Use landscape orientation, or manually tap the edge button to collapse the panel |
+| 📱 Pressing phone back key leaves the page directly | Web version cannot intercept the browser back key | Use the close button in the UI instead; export important works first |
 
-**💻 PC edition**
+**💻 PC Version**
 
-| Phenomenon | Cause | Fix |
-| --- | --- | --- |
-| "Unknown publisher" on install | installer is unsigned | click "More info" → "Run anyway"; common for personal open-source projects |
-| White screen after launch | outdated graphics driver, WebGL unavailable | update the graphics driver and restart |
-| Progress lost after abnormal close | — | PC edition has **crash recovery**; watch the restore prompt on reopen |
-| Drag file into window no response | dragged file isn't a `.json` project | only supports `.json` exported by this tool |
+| Symptom | Cause | Solution |
+|---|---|---|
+| Install prompts "unknown publisher" | Installer not digitally signed | Click "More info" → "Run anyway"; common for personal open-source projects |
+| White screen after launch | Graphics driver too old, WebGL unavailable | Update graphics driver then restart |
+| Last abnormal close lost progress | — | PC version has **crash recovery**; watch for the recovery prompt on reopen |
+| Dragging a file into the window does nothing | The dragged file isn't a `.json` project file | Only supports `.json` exported by this tool |
 
-**🤖 Android edition**
+**🤖 Android Version**
 
-| Phenomenon | Cause | Fix |
-| --- | --- | --- |
-| Can't install apk | "unknown sources" not allowed | Settings → Security → allow that app to install unknown apps |
-| No "Fullscreen" button | Android runs fullscreen by design | this is normal, no need to look |
-| Can't find exported file | it's in app storage | use the share panel after export to send directly, or a file manager to view the app folder |
-| Afraid Back key lost your work | — | a confirmation pops before exit; pick "**Save and exit**" |
-
----
-
-## Chapter 46 · Glossary
-
-A glossary for quick lookup. Entries marked `*` are terms specific to this tool.
-
-| English | One-line explanation |
-| --- | --- |
-| GRID_UNIT | the length of one ground cell; also the base of move step (0.1 cell / 1 cell) |
-| Z-up | this tool takes the Z axis as "up", unlike most 3D software using Y as "up" |
-| Z-fighting | flicker/intersection when two faces share the same depth and fight for position |
-| block analysis | the idea of breaking a complex object into simple-geometry combinations (building-block thinking) |
-| uniform scale | lock width/height/depth ratio and scale together, preventing deformation |
-| selection set | the currently selected group of objects (built via `Shift` add-select) |
-| master pivot | the shared control center of a multi-selected group (Ch 38) |
-| clone | duplicate an identical object (`Ctrl+D`) |
-| array | regular repeated clone arrangement (multiple `Ctrl+D` + arrow keys) |
-| transform controls | the three "gripping tools" in the scene: arrow/ring/cube handles |
-| translate mode | drag the object around with arrows |
-| rotate mode | use rings to decide which axis to spin around |
-| scale mode | enlarge/shrink with cube handles |
-| pattern / texture | the 12 procedural textures on an object's surface (not external images) |
-| opacity | 0.1 = almost fully transparent (slider floor, truly clear is impossible), 1 = fully opaque; semi-transparent for water, glass, halo |
-| wireframe | display mode showing only skeleton lines, not filling surfaces |
-| view / camera | 7 preset cameras: perspective/top/bottom/front/back/left/right |
-| brush stroke | the fixed line drawn by the brush tool; not fine-tunable or scalable after drawing |
-| eyedropper | sample a color from anywhere on the canvas |
-| history stack | the operation log behind undo/redo (Ch 10) |
+| Symptom | Cause | Solution |
+|---|---|---|
+| Cannot install apk | "Unknown sources" not allowed | Settings → Security → Allow this app to install unknown apps |
+| Can't find "fullscreen" button | Android version runs fullscreen by design | This is normal design, no need to look for it |
+| Can't find exported files | Stored in app storage | Use the **share** panel after export to send directly, or use a file manager to view the app directory |
+| Accidental back key press, afraid of losing work | — | A confirmation dialog pops up before exit; choose "**Save and Exit**" |
 
 ---
 
-## Chapter 47 · Quick Shortcut Reference
+## Chapter 46: Glossary (Chinese–English)
+
+A handy vocabulary list for quick lookup. Entries marked with `*` are terms specific to this tool.
+
+| Chinese | English | One-line explanation |
+|---|---|---|
+| Grid unit* | GRID_UNIT | Length of one ground cell, also the basis for move step size (0.1 cell / 1 cell) |
+| Z is up* | Z-up | This tool uses the Z axis as "up," unlike most 3D software that uses Y as "up" |
+| Coplanar flicker | Z-fighting | Flickering/intersection caused by two faces at the same depth fighting for position |
+| Block analysis | block analysis | The idea of breaking a complex object into a combination of simple geometries (building-block thinking) |
+| Uniform scale | uniform scale | Lock aspect ratio and scale together to prevent distortion |
+| Selection set* | selection set | The currently selected group of objects (formed via `Shift` add-select) |
+| Master pivot* | master pivot | The shared manipulation center of the whole group during multi-selection transform (Chapter 38) |
+| Clone | clone | Duplicate an identical copy of an object (`Ctrl+D`) |
+| Array* | array | Repeatedly cloning in a regular arrangement (multiple `Ctrl+D` + arrow keys) |
+| Transform controls | transform controls | The three "grip tools" in the scene: arrow/ring/box handles |
+| Translate mode | translate mode | Drag the object around with the arrow |
+| Rotate mode | rotate mode | Use the ring to decide which axis to rotate around |
+| Scale mode | scale mode | Use the box handle to enlarge/shrink |
+| Pattern / texture | pattern / texture | 12 procedural textures applied to object surfaces (not external textures) |
+| Opacity | opacity | 0.1 = nearly fully transparent (slider lower limit, cannot be truly fully transparent), 1 = fully opaque; semi-transparent for water, glass, glow |
+| View / camera | view / camera | 7 preset camera positions: perspective/top/bottom/front/back/left/right |
+| Brush stroke* | brush stroke | Finalized lines drawn by the brush tool; cannot be fine-tuned or scaled after drawing |
+| Screen eyedropper | eyedropper | Pick a color from anywhere on the canvas |
+| History stack | history stack | The operation log relied upon by undo/redo (Chapter 10) |
+
+---
+
+## Chapter 47: Keyboard Shortcut Quick Reference
 
 > All shortcuts are **case-insensitive**; `Ctrl` on Mac is `Cmd`.
-> Note: while the cursor is in an input box / dropdown, shortcuts fail — this is normal, not a bug (Ch 32.1).
+> Note: as long as the cursor is in an input box/dropdown, shortcuts become inactive — this is normal behavior, not a bug (Section 32.1).
 >
-> 📌 **Applicable forms**: keyboard shortcuts apply to 🖥️ **Web·Mouse** and 💻 **PC**.
-> 📱🤖 **Web·Touch / Android** have no physical keyboard; see 47.2's gesture table (unless an external keyboard is connected).
+> 📌 **Applicable forms**: Keyboard shortcuts apply to 🖥️ **Web · Mouse** and 💻 **PC Version**.
+> 📱🤖 **Web · Touch / Android Version** have no physical keyboard — see the gesture table in 47.2 (unless an external keyboard is connected).
 
-### 47.1 Mouse operations (🖥️ Web·Mouse / 💻 PC)
-
-| Operation | Description |
-| --- | --- |
-| Single left-click | select object/control |
-| Double left-click | edit text |
-| Long left-press | operate object/control |
-| Long right-press | rotate view |
-| Long wheel-press | pan view |
-| Scroll wheel | zoom view |
-
-### 47.2 Gesture operations (📱 Web·Touch / 🤖 Android)
+### 47.1 Mouse-Related Operations (🖥️ Web · Mouse / 💻 PC Version)
 
 | Operation | Description |
-| --- | --- |
-| Single-finger tap | select object/control |
-| Single-finger double-tap | edit text |
-| Long single-finger press on object | add/remove select (equals Shift-click) |
-| Single-finger drag object | operate object/control |
-| Single-finger drag empty | rotate view |
-| Single-finger tap empty | cancel selection |
-| "Select all" button | select all objects (equals `Ctrl+A`) |
-| "Box select" button | after on, single-finger drag to box-select; **auto-exits after boxing**, tap again to box again |
-| Two-finger drag | pan view |
-| Two-finger pinch | zoom view |
-| Single tap Back key (🤖 **Android only**) | layer-by-layer close sticky notes / TOC / manual → cancel selection → exit confirmation |
+|---|---|
+| Left click | Select object/control |
+| Left double click | Edit text |
+| Hold left button | Manipulate object/control |
+| Hold right button | Rotate view |
+| Hold scroll wheel | Pan view |
+| Scroll wheel | Zoom view |
 
-### 47.3 Single-key operations (🖥️💻 need keyboard)
+### 47.2 Gesture Operations (📱 Web · Touch / 🤖 Android Version)
 
-> When an object is selected: translate 0.1 grid (0.15 length) / rotate 5°; when not selected: view pan 0.1 grid / rotate 5°.
+| Operation | Description |
+|---|---|
+| Single-finger tap | Select object/control |
+| Single-finger double tap | Edit text |
+| Single-finger long press on object | Add/remove from selection (equivalent to Shift click) |
+| Single-finger drag object | Manipulate object/control |
+| Single-finger drag empty | Rotate view |
+| Single-finger tap empty | Cancel selection |
+| "Select All" button | Select all objects (equivalent to `Ctrl+A`) |
+| "Box Select" button | After enabled, single-finger drag to box-select; **auto-exits after selection**, tap again to select again |
+| Two-finger drag | Pan view |
+| Two-finger pinch | Zoom view |
+| Tap back key (🤖 **Android only**) | Close sticky notes / directory / manual layer by layer → cancel selection → exit confirmation |
 
-| Key | When object selected | When not selected |
-| --- | --- | --- |
-| `↓` / `↑` | translate along X axis +/− | view back / front pan |
-| `→` / `←` | translate along Y axis +/− | view right / left pan |
-| `PgUp` / `PgDn` | translate along Z axis +/− | view up / down pan |
-| `A` / `D` | rotate around Z axis CW / CCW | view left / right rotate |
-| `W` / `S` | rotate around Y axis CW / CCW | view up / down rotate |
-| `E` / `Q` | rotate around X axis CW / CCW | — |
-| `+` / `-` | enlarge / shrink 5% | — |
-| `Esc` | cancel operation | close controls |
-| `F11` | fullscreen / exit fullscreen | (same) |
-| `Del` / `Backspace` | delete selected object | — |
+### 47.3 Single-Key Operations (🖥️💻 Requires Keyboard)
 
-### 47.4 Shift combos
+> When an object is selected: translate 0.1 grid (0.15 length) / rotate 5°; when nothing selected: view pan 0.1 grid / rotate 5°.
 
-> When an object is selected: translate 1 grid (1.5 length) / rotate 90°; when not selected: view pan 1 grid / rotate 90°.
+| Key | When Object Selected | When Nothing Selected |
+|---|---|---|
+| `↓` / `↑` | Translate ± along X axis | View pan backward / forward |
+| `→` / `←` | Translate ± along Y axis | View pan right / left |
+| `PgUp` / `PgDn` | Translate ± along Z axis | View pan up / down |
+| `A` / `D` | Rotate clockwise / counterclockwise around Z | View rotate left / right |
+| `W` / `S` | Rotate clockwise / counterclockwise around Y | View rotate up / down |
+| `E` / `Q` | Rotate clockwise / counterclockwise around X | — |
+| `+` / `-` | Enlarge / shrink 5% | — |
 
-| `Shift` + key | When object selected | When not selected |
-| --- | --- | --- |
-| `↓` / `↑`, `→` / `←`, `PgUp` / `PgDn` | translate 1 grid | view pan 1 grid |
-| `A` / `D`, `W` / `S`, `E` / `Q` | rotate 90° | view rotate 90° |
-| `+` / `-` | enlarge ×2 / shrink ×0.5 | — |
-| single left-click | add-select object (pick) | (same) |
-| long left-press (brush tool) | brush constrained-straight mode (stroke constrained horizontal / vertical / 45°, same effect as `Shift` constraint) | (same) |
+> 📝 **Special handling when a "text object" is selected**: Text does not support uniform scaling; in this case `+` / `-` changes the **font size** (about ±10% each time, range 24–220) rather than scaling the object. To change overall size, use the "font size" parameter directly.
 
-### 47.5 Slider / input box
+| `Esc` | Cancel operation | Close control |
+| `F11` | 🖥️📱 Fullscreen / exit fullscreen; 💻 Maximize / restore | (same as above) |
+| `Del` / `Backspace` | Delete selected object | — |
 
-> Takes effect when the slider or input box is focused; original shortcuts temporarily fail.
+### 47.4 Shift Combinations
 
-| Key | Slider | Input box |
-| --- | --- | --- |
-| `→` / `←` | increase / decrease | move cursor |
-| `↑` / `↓` | increase / decrease | increase / decrease |
-| `+` / `-` | — | input positive / negative sign |
-| `PgUp` / `PgDn` | large increase / decrease | scroll right panel up / down |
+> When an object is selected: translate 1 grid (1.5 length) / rotate 90°; when nothing selected: view pan 1 grid / rotate 90°.
 
-### 47.6 Ctrl combos
+| `Shift` + Key | When Object Selected | When Nothing Selected |
+|---|---|---|
+| `↓` / `↑`, `→` / `←`, `PgUp` / `PgDn` | Translate 1 grid | View pan 1 grid |
+| `A` / `D`, `W` / `S`, `E` / `Q` | Rotate 90° | View rotate 90° |
+| `+` / `-` | Enlarge ×2 / shrink ×0.5 | — |
+| Left click | Add object to selection (point select) | (same as above) |
+| Hold left button (brush tool) | — | Brush straight-line constraint mode (drawn strokes constrained to horizontal / vertical / 45°, same effect as `Shift` constraint) |
 
-| `Ctrl` + key | Combo |
-| --- | --- |
-| `A` | select all |
-| `N` | new scene |
-| `O` | import scene |
-| `S` | export scene |
-| `P` | screenshot / export image |
-| `Z` | undo |
-| `Y` | redo |
-| `C` | copy |
-| `V` | paste |
-| `D` | clone |
-| `Del` | clear scene |
+### 47.5 Sliders / Input Boxes
+
+> Takes effect when a slider or input box is focused; original shortcuts are temporarily inactive.
+
+| Key | Slider | Input Box |
+|---|---|---|
+| `→` / `←` | Increase / decrease | Move cursor |
+| `↑` / `↓` | Increase / decrease | Increase / decrease |
+| `+` / `-` | — | Input positive / negative sign |
+| `PgUp` / `PgDn` | Large increase / decrease | Scroll right panel up / down |
+
+### 47.6 Ctrl Combinations
+
+| `Ctrl` + Key | Combination |
+|---|---|
+| `A` | Select all |
+| `N` | New scene |
+| `O` | Import scene |
+| `S` | Export scene |
+| `P` | Screenshot export image |
+| `Z` | Undo |
+| `Y` | Redo |
+| `C` | Copy |
+| `V` | Paste |
+| `D` | Clone |
+| `Del` | Clear scene |
 
 ---
 
-## Chapter 48 · Shape · Pattern · Color Index
+## Chapter 48: Graphics · Patterns · Color Index
 
-All the "material parts" of this tool live here. Color uses **preset palette + custom picker** (Ch 18); there is no fixed "color list", so only shapes, patterns, fonts, and views are listed here, with color usage advice.
+All of this tool's "material parts" are here. Coloring uses **preset palette + custom color picking** (Chapter 18); there is no fixed "color list" per se, so here we list only four categories: shapes, patterns, fonts, and views, with usage advice for colors.
 
-### 48.1 The 20 3D shapes
+### 48.1 20 3D Graphics
 
-| # | Internal id | Name | Typical use |
-| --- | --- | --- | --- |
-| 1 | `box` | Cube | wall, board, house body, steps — universal basic solid |
-| 2 | `sphere` | Sphere | tree canopy, planet, marble, head |
-| 3 | `cylinder` | Cylinder | pillar, can, trunk, chimney, bracket |
-| 4 | `cone` | Cone | pointed tower, ice-cream, signpost, beacon |
-| 5 | `torus` | Torus | donut, tire, ring, bracelet |
-| 6 | `knot` | Knot | trefoil art form, decoration |
-| 7 | `icosa` | Icosahedron | polyhedral crystal, sci-fi die |
-| 8 | `octa` | Octahedron | double-cone gem, crystal |
-| 9 | `dodeca` | Dodecahedron | 12-faced crystal, ornament |
-| 10 | `capsule` | Capsule | pill, joint, round-ended column |
-| 11 | `pyramid` | Square pyramid | pyramid, roof (square roof on square wall) |
-| 12 | `prism` | Triangular prism | triangular column, wedge, slope |
-| 13 | `tube` | Tube | bent pipe, hose, track |
-| 14 | `lathe` | Lathe solid | vase, bowl, bottle (lathe-turned body) |
-| 15 | `tetra` | Tetrahedron | four-faced pyramid, shard, crystal chip |
-| 16 | `barrel` | Barrel | wooden barrel, wine cask, drum |
-| 17 | `dome` | Hemisphere | dome, bowl lid, radome |
-| 18 | `helix` | Open torus | spring, spiral staircase, DNA feel |
-| 19 | `octaPrism` | Octagonal prism | octagonal column, lighthouse, pavilion column |
+| No. | Internal id | Chinese Name | Typical Use |
+|---|---|---|---|
+| 1 | `box` | Cube | Walls, slabs, house bodies, steps — the universal basic body |
+| 2 | `sphere` | Sphere | Tree crowns, planets, marbles, heads |
+| 3 | `cylinder` | Cylinder | Pillars, jars, trunks, chimneys, supports |
+| 4 | `cone` | Cone | Spiked towers, ice cream, road signs, beacon fires |
+| 5 | `torus` | Torus | Donut, tire, ring, bracelet |
+| 6 | `knot` | Knot | Trefoil knot art forms, decoration |
+| 7 | `icosa` | Icosahedron | Polyhedral crystal, sci-fi dice |
+| 8 | `octa` | Octahedron | Double-cone gem, crystal |
+| 9 | `dodeca` | Dodecahedron | Dodecahedral crystal, ornament |
+| 10 | `capsule` | Capsule | Pill, joint, round-ended column |
+| 11 | `pyramid` | Square pyramid | Pyramid, roof (square top with square wall) |
+| 12 | `prism` | Triangular prism | Triangular column, wedge, slope |
+| 13 | `tube` | Tube | Bent pipe, hose, track |
+| 14 | `lathe` | Lathe body | Vase, bowl, bottle (lathe-turned revolution body) |
+| 15 | `tetra` | Tetrahedron | Four-corner pyramid, fragment, crystal shard |
+| 16 | `barrel` | Barrel body | Wooden barrel, wine barrel, drum |
+| 17 | `dome` | Hemisphere | Dome, bowl lid, radome |
+| 18 | `helix` | Helical ring | Spring, spiral staircase, DNA feel |
+| 19 | `octaPrism` | Octagonal prism | Octagonal column, lighthouse, pavilion column |
 | 20 | `star3d` | 3D star | 3D star decoration, medal |
 
-💡 Among the 20, `box / sphere / cylinder / cone / pyramid` are the main forces of "block decomposition" (Ch 41); the rest are mostly decoration and accents.
+💡 Among the 20, `box / sphere / cylinder / cone / pyramid` are the mainstays of "block decomposition" (Chapter 41); the rest are mostly for decoration and accent.
 
-### 48.2 The 20 2D shapes (lie flat on the ground, as stickers / planes)
+### 48.2 20 2D Graphics (Lying flat on the ground, used as stickers/planes)
 
-| # | Internal id | Name | Note |
-| --- | --- | --- | --- |
-| 1 | `square2` | Square | lawn, base plate, most used |
-| 2 | `circle2` | Circle | base plate, pool |
+| No. | Internal id | Chinese Name | Remarks |
+|---|---|---|---|
+| 1 | `square2` | Square | Lawn, base plate, most commonly used |
+| 2 | `circle2` | Circle | Base, pool |
 | 3 | `triangle` | Equilateral triangle | |
-| 4 | `star` | Star (five-point) | |
-| 5 | `hexagon` | Regular hexagon | tech / industrial base |
-| 6 | `heart` | Heart | has `scale` etc. shape params (Ch 12.2) |
-| 7 | `pentagon` | Regular pentagon | shield / academy feel |
-| 8 | `octagon` | Regular octagon | steady identity feel |
-| 9 | `ellipse` | Ellipse | pool, lens |
+| 4 | `star` | Star (five-pointed) | |
+| 5 | `hexagon` | Regular hexagon | Tech/industrial base feel |
+| 6 | `heart` | Heart | Has `scale` and other shape parameters (Section 12.2) |
+| 7 | `pentagon` | Regular pentagon | Shield/academy feel |
+| 8 | `octagon` | Regular octagon | Stable emblem feel |
+| 9 | `ellipse` | Ellipse | Pool, lens |
 | 10 | `parallelogram` | Parallelogram | |
 | 11 | `trapezoid` | Trapezoid | |
 | 12 | `diamond` | Diamond | |
 | 13 | `rightTri` | Right triangle | |
-| 14 | `arrow` | Arrow | has `line width/length/width` params (Ch 12.2) |
-| 15 | `crescent` | Crescent | has `crescent degree/thickness` params (Ch 12.2) |
+| 14 | `arrow` | Arrow | Has `length/width` and other parameters (Section 12.2) |
+| 15 | `crescent` | Crescent | Has `outer radius/inner radius/offset` and other parameters (Section 12.2) |
 | 16 | `semicircle` | Semicircle | |
-| 17 | `ring2d` | Ring (2D) | unlike 3D `torus`, this is a flat ring |
-| 18 | `cross` | Cross | has `arm length/width` params (Ch 12.2) |
-| 19 | `lightning` | Lightning | has `amplitude/width` params (Ch 12.2) |
+| 17 | `ring2d` | Ring (2D) | Different from 3D `torus`; this is a flat ring |
+| 18 | `cross` | Cross | Has `arm length/arm width` and other parameters (Section 12.2) |
+| 19 | `lightning` | Lightning | Has `height/width` and other parameters (Section 12.2) |
 | 20 | `teardrop` | Teardrop | |
 
-💡 Items 6, 14, 15, 18, 19 (heart/arrow/crescent/cross/lightning) **each have independent shape params** (see Ch 12.2), tunable directly in the right panel; the rest are mostly polygons with "side count / angle" params.
+💡 No. 6, 14, 15, 18, 19 (heart/arrow/crescent/cross/lightning) **each have their own independent shape parameters** (see Section 12.2, e.g. heart is `width/height/tip concavity`, arrow is `length/width`, crescent is `outer radius/inner radius/offset`, lightning is `height/width`), adjustable directly in the right panel; the other 2D graphics are mainly polygons, with extra "side count/angle" parameters.
 
-### 48.3 The 12 patterns (textures)
+### 48.3 12 Patterns (Textures)
 
-| # | Name | Fits |
-| --- | --- | --- |
-| 1 | Solid | default, clean no texture |
-| 2 | Checker | lawn, floor tile, chessboard |
-| 3 | Stripe | fabric, awning, flag |
-| 4 | Dot | polka dot, snowfield (white + dots) |
-| 5 | Gradient | sky, background, glow |
-| 6 | Brick | wall (used in house, Ch 41) |
-| 7 | Diagonal | warning, speed |
-| 8 | Wave | water, fabric fold |
-| 9 | Dot matrix | tech feel, grid dots |
-| 10 | Cross | grid, engineering feel |
-| 11 | Grid | ground reference, tech base |
-| 12 | Thread | vortex, energy, vortex decoration |
+| No. | Chinese Name | Suitable Scene |
+|---|---|---|
+| 1 | Solid color | Default, clean without texture |
+| 2 | Grid | Lawn, floor tiles, chessboard |
+| 3 | Stripe | Fabric, awning, flag |
+| 4 | Dots | Polka-dot decoration, snowy ground (white + dots) |
+| 5 | Gradient | Sky, background, light feel |
+| 6 | Brick wall | Wall surface (used in house, Chapter 41) |
+| 7 | Diagonal | Warning, sense of speed |
+| 8 | Wave | Water surface, fabric folds |
+| 9 | Dot matrix | Tech feel, grid dots |
+| 10 | Cross | Grid, engineering feel |
+| 11 | Mesh | Ground reference, tech base |
+| 12 | Spiral | Vortex, energy, vortex decoration |
 
-💡 Patterns are **procedurally generated**, not relying on external images; color is unified by the right panel's "color", patterns only modulate light/dark or motif (Ch 19).
+💡 Patterns are **procedurally generated**, not dependent on external images; color is uniformly controlled by the right panel "color," with patterns only modulating light/dark or pattern (Chapter 19).
 
-### 48.4 The 8 fonts (text tool)
+### 48.4 8 Fonts (Text Tool)
 
-| # | Font | Style | Fits |
-| --- | --- | --- | --- |
-| 1 | YaHei | modern sans-serif | general, UI feel |
-| 2 | Song | serif | traditional, formal, bookish |
-| 3 | Kai | handwritten Kai | traditional, plaque, academy |
-| 4 | Hei | bold black sans-serif | slogan, eye-catching |
-| 5 | FangSong | FangSong | official document, solemn |
-| 6 | Arial | western sans-serif | English logo |
-| 7 | Times | Times New Roman serif | western formal, info board |
-| 8 | Courier | Courier New monospace | technical, retro, typewriter |
+| No. | Font Name | Style | Suitable For |
+|---|---|---|---|
+| 1 | YaHei | Modern sans-serif | General, UI feel |
+| 2 | Song | Serif | Traditional, formal, bookish |
+| 3 | Kai | Handwritten regular script | Traditional, plaque, academy |
+| 4 | Hei | Bold sans-serif | Slogan, eye-catching |
+| 5 | FangSong | Imitation Song | Official documents, solemn |
+| 6 | Arial | Western sans-serif | English signage |
+| 7 | Times | Times New Roman serif | Western formal, signboard |
+| 8 | Courier | Courier New monospace | Technical, retro, typewriter style |
 
-⚠️ Default size **80**, shrink to block scale (Ch 21, 42.3). Chinese fonts depend on system fonts; switching devices may fall back.
+⚠️ Default font size is **80**, needs to be reduced per block scale (Chapters 21, 42.3). Chinese fonts depend on system fonts and may fall back on different devices.
 
-### 48.5 The 7 views (bottom buttons)
+### 48.5 7 Views (Bottom Buttons)
 
-| # | View | Shows | Typical use |
-| --- | --- | --- | --- |
-| 1 | Perspective | oblique top-down 3D, free 360° rotate (default) | overall effect, render image |
-| 2 | Top | straight overhead | ground layout, logo, planar composition |
-| 3 | Bottom | straight underside | see bottom face, special composition |
-| 4 | Front | straight front level | judge ground/rest, elevation |
-| 5 | Back | straight rear level | see back face, symmetry check |
-| 6 | Left | straight left level | check left–right interpenetration |
-| 7 | Right | straight right level | check left–right interpenetration |
+| No. | View | What to See | Typical Use |
+|---|---|---|---|
+| 1 | Perspective | Oblique top-down 3D, free 360° rotation (default) | See overall effect, produce renderings |
+| 2 | Top | Straight-down overhead view | Ground layout, emblem, planar composition |
+| 3 | Bottom | Straight-up view from below | See underside, special composition |
+| 4 | Front | Straight-on front view | Judge ground-hugging/floating, elevation view |
+| 5 | Back | Straight-on rear view | See back, symmetry check |
+| 6 | Left | Straight-on left view | Check left-right intersection |
+| 7 | Right | Straight-on right view | Check left-right intersection |
 
-💡 **Core experience (one of the book's iron rules)**: view what you do from that view. Tune height with Front, see layout with Top, see whole with Perspective. After free rotate the "Perspective" button goes dark — normal.
+💡 **Core experience (one of the iron rules throughout the book)**: Use the view that matches what you're doing. Adjust height with front view, see layout with top view, see overall with perspective. After free rotation the "perspective" button goes out — normal behavior.
 
-### 48.6 Color usage advice
+### 48.6 Color Usage Advice
 
-This tool has no fixed "color number list"; colors come from **preset palette + custom picker + screen picker** (Ch 18):
+This tool has no fixed "color number table"; colors are obtained via **preset palette + custom color picking + screen eyedropper** (Chapter 18):
 
-- Prefer the **preset palette** for picking (grouped by hue, fixed hue bar, easiest to get harmonious colors);
-- Want a precise color? use **custom picker** (enter the color value);
-- Want "a color in the picture"? use the **screen picker** to sample it;
-- Color iron rule: **keep within 2–3 colors**, build layers via light–dark of the same hue — more pro than piling on colors (Ch 43.8).
+- Prefer the **preset palette** for color selection (grouped by hue, fixed hue bar, easiest to produce harmonious colors);
+- For precise colors use **custom color picking** (enter color value);
+- For "a certain color in the scene" use the **screen eyedropper** to pick it;
+- Color rule of thumb: **keep within 2–3 colors**, building layers via light/dark of the same hue — looks more professional than piling on colors (Section 43.8).
 
 ---
 
-# Part 13 · Sticky Notes · Multilingual
+# Part Thirteen: Sticky Notes · Multi-language
 
-By now you've mastered "how to use the tool". This part covers two "study companions": taking notes while reading, and the manual's own multilingual support.
+By now you've mastered "how to use the tool." This part covers two small things that "learn alongside you": sticky notes for jotting while reading, and the manual's own multi-language support.
 
-## Chapter 49 · Take Notes While Reading: Sticky Notes in the Manual
+## Chapter 49: Jot While You Read: Sticky Notes in the Manual
 
-While studying you often want to "mark a passage". The manual lets you **select a passage → add a sticky note**:
+While learning, you often want to "mark" a paragraph. The manual lets you **select a passage of text → add a sticky note**:
 
-1. While reading, select any text:
-   - 🖥️💻 **Mouse**: hold left-button and **drag-select**;
-   - 📱🤖 **Touch**: **long-press** the text to summon selection handles, drag both ends to adjust range;
-2. After release an "Add sticky" button appears; click it;
-3. The selected text is highlighted and recorded into the **sticky list**;
-4. Each item in the sticky list can be individually **deleted** — a confirmation pops before deleting, to avoid accidental loss.
+1. While reading the manual, select any text:
+   - 🖥️💻 **Mouse/desktop**: hold left button and **drag-select**;
+   - 📱🤖 **Touch device**: **long press** the text to bring up selection handles, drag both ends to adjust the range;
+2. After releasing, an "Add sticky note" button appears — tap it;
+3. The selected text is highlighted and recorded in the **sticky note list**;
+4. Each entry in the sticky note list can be individually **deleted** — a confirmation dialog appears before deletion to prevent accidental loss.
 
-> 💡 Sticky notes "follow the text": they bind to the sentence you selected, so later you can re-read "what I was thinking then".
+> 💡 Sticky notes "travel with the text": they bind to the sentence you selected, making it easy to revisit later "what was I thinking then."
 
-## Chapter 50 · Floating Sticky Windows: Pin a Note on Screen
+## Chapter 50: Let Sticky Notes "Float" on Screen
 
-If you don't want to flip back and forth in the sticky list, you can expand a note into a **floating sticky window**:
+If you don't want to keep flipping back to the sticky note list, you can **expand a note into a floating sticky window**:
 
-- The sticky window is a draggable floating card, hovering above the canvas without blocking operation;
-- The sticky window has two states, **read-only** and **edit**: read-only is like a sticky note, edit lets you change text;
-- When no longer needed, click the close button on the sticky (`closeSticky`); it disappears from the screen, but the note itself remains in the list.
+- The sticky window is a draggable floating card, hovering above the canvas without blocking operations;
+- The sticky window has two states: **read-only** and **edit**: read-only looks like a sticky note, edit lets you change the text;
+- When no longer needed, click the close button on the note (`closeSticky`) — it disappears from the screen, but the note itself remains in the list.
 
-### 50.1 💻 PC-exclusive: throw a note "out" of the main window
+### 50.1 Sticky Overlay and Operations (Consistent Across Four Forms)
 
-The PC edition can turn a note into a **truly independent system window**:
+When expanded, a sticky note is a **page-level topmost floating card** (not a separate system window); behavior is consistent across all four forms:
 
-- it is **always on top**, floating above all programs;
-- it can be dragged to a second monitor;
-- even if you switch to the browser to look things up, the note stays visible.
+- It is **always on top**, floating above the canvas, convenient for following tutorials while operating;
+- Can be repositioned, resized, and toggled "pin / unpin" (`manPin` / `manUnpin`);
+- Supports **maximize / restore** (`manMaximize` / `manRestore`);
+- Supports **export / import** notes (`manExport` / `manImport`), **select all** and **batch delete** (`manSelectAll` / `manBatchDel`);
+- The keys listed under "Settings → Quick Actions" trigger the above operations (PC version can also click the buttons on the window).
 
-This is especially useful for "watching a tutorial while operating". 🖥️📱🤖 The other three forms' notes can only float inside the app screen, not be dragged out.
+> 📌 Sticky notes on all four forms are in-page overlays — they cannot be dragged outside the app window, nor float above other programs.
 
-### 50.2 The order of closing notes (📱🤖 touch attention)
+### 50.2 Order of Closing Sticky Notes (📱🤖 Touch Device Note)
 
-🤖 On the Android edition, a **single tap of the Back key** will **first close notes one by one** (if a note has unsaved content it asks first), then close the TOC, then exit the manual, before finally asking whether to exit the app.
+🤖 When the Android version's **tap back key** is pressed, it will **first close sticky notes one by one** (if one has unsaved content, it asks you first), then close the directory, then exit the manual, and only at the end ask whether to exit the app.
 
-> 📌 Sticky notes suit "temporary hints": e.g. pin a parameter explanation aside, read while you work.
+> 📌 Sticky notes suit "temporary reminders": e.g. pin a parameter explanation beside you, to read while working.
 
-### 50.3 Quantity limit and batch management
+### 50.3 Quantity Limit and Batch Management
 
-- **At most 5 floating sticky windows open at once**: when exceeded the system **auto-closes the earliest opened one** to keep performance and UI clean. The note itself remains in the sticky list, not lost.
-- The sticky list supports **batch delete**: in the list you can check multiple notes and delete at once (again with a confirmation), no need to do it one by one.
+- **At most 5 floating sticky notes open at once**: when exceeded, the system **automatically closes the earliest opened one** to ensure performance and a clean interface. The note itself remains in the sticky note list and is not lost.
+- The sticky note list supports **batch deletion**: in the list you can check multiple notes at once and delete them (a confirmation dialog also appears before deletion), without operating one by one.
 
-## Chapter 51 · Multilingual: the Manual Also "Speaks" Your Language
+## Chapter 51: Multi-language: The Manual Also "Speaks" Your Language
 
 Both the interface and the manual support four languages:
 
@@ -2950,16 +2961,18 @@ Both the interface and the manual support four languages:
 | English | ✅ | ✅ |
 | Japanese | ✅ | ✅ |
 
-How to switch: choose the language in Settings; the interface text and manual body **switch together** to the matching language version. The manual's multilingual content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`.
+How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`.
 
-✅ **All four languages × all four forms connected**: whichever form you use and whichever language you pick, you read the same manual adapted across the three editions. 💻 The PC edition can also install extra language packs via the **Extension Center**.
+✅ **All four languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
 
-> ⚠️ About delete confirmation: all delete operations (sticky notes, scene objects) go through a **custom confirmation dialog** rather than the system native one, so it pops reliably even in **fullscreen / immersive mode**, never "clicked with no response".
+> ⚠️ About deletion confirmation: all deletion operations (sticky notes, scene objects) go through a **custom confirmation dialog** rather than a native system dialog, so it pops up reliably even in **fullscreen / immersive mode**, without "clicking does nothing."
 
 ---
 
-✅ **End of the book.** You have traversed: form recognition → 3D basics → shapes & color → text/brush/image → views → undo history → each shape explained → shortcuts & gestures → transform controls → multi-select & clone → four hands-on projects → sticky notes & multilingual → troubleshooting appendix.
+✅ **The book ends here.** You have walked through: form identification → 3D basics → graphics and colors → text, brush, and images → views → undo history → detailed explanation of each graphic → shortcuts and gestures → transform controls → multi-select and clone → four practical projects → sticky notes and multi-language → troubleshooting and appendix.
 
-🌐 **Don't forget**: your work can **relay freely among Web, PC, and Android** — draft on your phone, refine on your computer; the exported `.json` works across all three.
+🌐 **Don't forget**: your works can **freely hand off between the web version, PC version, and Android version** — draft on your phone, refine on your computer; the exported `.json` works across all three platforms.
 
-📌 **One last line**: tools go out of date, but "decompose — order — aesthetic" never do. Close the document and go build something of your own.
+📌 **One last sentence**: tools go out of date, but the three things — "decompose, sequence, aesthetics" — do not. Close the document and go build something of your own.
+
+<!-- __END__ -->
