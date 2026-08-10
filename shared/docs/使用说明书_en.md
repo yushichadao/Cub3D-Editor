@@ -19,8 +19,7 @@ No matter which end you use, the tool pops up a **Service Agreement and Privacy 
 
 - The page lists three documents — *Service Agreement*, *Disclaimer*, and *Privacy Policy* (click the links to view the full text);
 - You must **first read and check to agree to all terms**, then click **"Agree and Continue"** to enter the editor;
-- If you choose **"Disagree and Exit"**, the program will exit immediately and **the software cannot be used**;
-- If you entered but still want to back out, click **"Re-read"** to view the terms again.
+- If you choose **"Disagree and Exit"**, the program will exit immediately and **the software cannot be used**.
 
 > ⚠️ This is a mandatory pre-step: until you agree, no feature is available. Be sure to watch for this popup on first open — don't mistake it for a freeze.
 
