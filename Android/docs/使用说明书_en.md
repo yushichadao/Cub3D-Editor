@@ -19,7 +19,8 @@ No matter which end you use, the tool pops up a **Service Agreement and Privacy 
 
 - The page lists three documents — *Service Agreement*, *Disclaimer*, and *Privacy Policy* (click the links to view the full text);
 - You must **first read and check to agree to all terms**, then click **"Agree and Continue"** to enter the editor;
-- If you choose **"Disagree and Exit"**, the program will exit immediately and **the software cannot be used**.
+- If you choose **"Disagree and Exit"**, the program will try to exit immediately and **the software cannot be used**.
+  - On the Web version, most browsers block a script from closing a page you opened yourself; when that happens, an exit-failure panel **"You must agree to the terms to use the software"** appears — click **"Re-read"** to return to the agreement gate and read/agree again.
 
 > ⚠️ This is a mandatory pre-step: until you agree, no feature is available. Be sure to watch for this popup on first open — don't mistake it for a freeze.
 
@@ -2961,6 +2962,8 @@ Both the interface and the manual support four languages:
 | Japanese | ✅ | ✅ |
 
 How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`.
+
+💡 **How the language is chosen**: on **first launch** it is **auto-detected from your system language** — based on your OS/browser language setting, it automatically matches Simplified Chinese, Traditional Chinese, English, or Japanese; after that, if you switch languages manually, the app **remembers your choice and fully respects it**, and will not be overridden by the system language again. In short: the first time follows your system; later you use whatever language you pick.
 
 ✅ **All four languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
 
