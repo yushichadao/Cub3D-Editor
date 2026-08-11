@@ -11352,8 +11352,8 @@ function openManual(){
       if(!marks.length){ hideHandles(); floatEl.style.display='none'; return; }
       const arr = hilites(); const overlap = arr.some(h=>h.start!=null && h.start<cs.end && h.end>cs.start);
       const hiBtn = document.getElementById('manual-float-hi'); const cancelBtn = document.getElementById('manual-float-hicancel'); const expandBtn = document.getElementById('manual-float-hiexpand');
-      if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) cancelBtn.style.display=''; }
-      else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) cancelBtn.style.display='none'; }
+      if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; }
+      else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; }
       openManual._sel = { text: selectedText(), line: blockLineOf((nodeAtOffset(docEl, cs.start) || {}).node || docEl), start: cs.start, end: cs.end };
       floatEl.classList.remove('float-bottom');
       floatEl.style.display = 'flex';
