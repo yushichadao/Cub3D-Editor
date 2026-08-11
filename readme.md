@@ -25,9 +25,24 @@
 
 - **网页版（无需安装）**：打开 <https://yushichadao.github.io/Cub3D-Editor/>
 - **PC 版**：下载 `Cube3D-Studio-Setup-x.x.x-x64.exe`（安装版）或 `Cube3D-Studio-Portable-x.x.x-x64.exe`（便携版，免安装）
-- **Android 版**：允许"未知来源"后安装 `app-release.apk`
+- **Android 版**：允许"未知来源"后，在 Releases 中安装 `立方3D-v1.0.0-release.apk`
 
 导出为 `.json` 的工程文件在三端之间通用。
+
+---
+
+## 下载与发布
+
+各平台的打包产物（Windows 安装版 / 便携版、Android 安装包）通过 GitHub Releases 发布：
+
+- **Releases 页面**：<https://github.com/yushichadao/Cub3D-Editor/releases>
+- 当前版本：`v1.0.0`
+
+| 产物 | 说明 |
+| :--- | :--- |
+| `Cube3D-Studio-Setup-1.0.0-x64.exe` | Windows 安装版 |
+| `Cube3D-Studio-Portable-1.0.0-x64.exe` | Windows 便携版（免安装） |
+| `立方3D-v1.0.0-release.apk` | Android 安装包（release 签名） |
 
 ---
 
@@ -126,7 +141,7 @@ npm run dist:portable   # 仅便携版
 cd Android
 npm install
 npm run keystore        # 首次构建前生成签名密钥
-npm run apk:release     # 构建 app-release.apk
+npm run apk:release     # 构建 立方3D-v1.0.0-release.apk
 npm run apk:debug       # 调试包
 ```
 
