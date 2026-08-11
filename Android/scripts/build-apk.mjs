@@ -22,14 +22,6 @@ if (!['debug', 'release'].includes(mode)) {
   process.exit(1);
 }
 
-function appVersion() {
-  try {
-    return JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version || '1.0.0';
-  } catch {
-    return '1.0.0';
-  }
-}
-
 function main() {
   console.log(`[apk] JDK : ${JAVA_HOME}`);
   console.log(`[apk] SDK : ${ANDROID_HOME}`);
@@ -72,7 +64,7 @@ function main() {
   }
 
   mkdirSync(DIST, { recursive: true });
-  const target = path.join(DIST, `立方3D-v${appVersion()}-${mode}.apk`);
+  const target = path.join(DIST, 'Cub3D-Editor.apk');
   copyFileSync(built, target);
 
   const mb = (statSync(target).size / 1024 / 1024).toFixed(2);
