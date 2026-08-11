@@ -1,5 +1,9 @@
-docs: 第49章补充「扩充高亮/取消高亮」浮层按钮说明
+build: 打包两个PC exe与Android debug apk，纳入 releases/ 并清理临时文件
 
-说明网页触屏选区浮层在选区与已有高亮重叠时，会改为显示「取消高亮 /
-扩充高亮」，并解释二者作用。同步中/繁中/日/英四语言版，经 sync-shared.mjs
-分发到 Web/PC/Android 三端。
+- PC 端 electron-builder 产出双 exe：Cube3D-Studio-Setup（安装版）与
+  Cube3D-Studio-Portable（便携版）；
+- Android 端经 Capacitor 构建 app-debug.apk；
+- 成品统一放入仓库根 releases/（.gitignore 保持各端构建目录忽略，
+  仅 releases 纳入版本管理）；
+- 清理临时/垃圾文件：commit_msg.txt、build-debug.log、sync.log、
+  .git/COMMIT_MSG.tmp 等。

@@ -71,3 +71,8 @@ _z1.txt
 cap_diag*.log
 cap_update_diag*.log
 missing_terms.txt
+
+# ===== 发布产物统一放在仓库根 releases/ 目录（由 CI/本地打包生成，纳入版本管理）=====
+# 各端原始构建目录（dist/、android/app/build/ 等）仍按上方规则忽略，避免仓库体积膨胀；
+# 仅 releases/ 下的成品（*.exe、*.apk）入库。
+
