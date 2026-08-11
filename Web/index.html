@@ -6495,9 +6495,29 @@ function captureScreenshot() {
 }
 document.getElementById('btn-shot').addEventListener('click', captureScreenshot);
 
-/* 全屏切换：仅进入 / 退出全屏，绝不锁定屏幕方向。
-   方向完全交给用户系统设置决定（竖屏锁定 → 保持竖屏；横竖自动 → 跟随设备旋转），
-   不调用 screen.orientation.lock()，避免一律强制横屏。 */
+/* 全屏切换。
+   关键：进入全屏时锁定到「设备当前方向」，避免 Android Chrome / WebView 在
+   调用全屏 API 时强制切横屏（Chromium 已知行为）。锁定到当前方向即尊重用户
+   此刻的系统方向设置——竖屏锁定用户在竖屏下点全屏→锁竖屏；旋转开启用户在
+   持握方向下点全屏→锁定该方向。退出全屏时解除锁定，恢复系统设置。
+   不支持 screen.orientation 的浏览器（如 iOS Safari）会静默跳过，不报错。 */
+function _lockToCurrentOrientation() {
+  try {
+    const so = screen.orientation;
+    if (!so || !so.lock) return;
+    const t = (so.type || '').toLowerCase();
+    // 锁定到与当前一致的主方向（primary），secondary 不允许直接锁定
+    const target = t.indexOf('landscape') !== -1 ? 'landscape-primary' : 'portrait-primary';
+    const p = so.lock(target);
+    if (p && typeof p.catch === 'function') p.catch(() => {}); // 拒绝 / 不支持时忽略
+  } catch (e) { /* 忽略：不影响全屏本身 */ }
+}
+function _unlockOrientation() {
+  try {
+    const so = screen.orientation;
+    if (so && so.unlock) so.unlock();
+  } catch (e) { /* 忽略 */ }
+}
 function toggleFullscreen() {
   const fsEl = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
   if (!fsEl) {
@@ -6505,11 +6525,14 @@ function toggleFullscreen() {
     const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
     if (req) {
       const p = req.call(el);
-      if (p && typeof p.catch === 'function') p.catch(() => {}); // 用户拒绝或不支持时静默忽略
+      if (p && typeof p.catch === 'function') {
+        p.then(_lockToCurrentOrientation).catch(() => {}); // 进入成功后锁定当前方向
+      } else {
+        _lockToCurrentOrientation();
+      }
     }
-    // 触屏设备（如 iOS Safari）不支持普通元素的标准全屏 API：
-    // 不强制任何方向，交由系统自带的全屏手势处理，保持当前方向。
   } else {
+    _unlockOrientation(); // 先解除方向锁定，恢复系统设置
     const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
     if (exit) exit.call(document);
   }
@@ -11319,7 +11342,7 @@ function openManual(){
     function positionHandles(){
       const hs = openManual._hStart, he = openManual._hEnd; if(!hs || !he) return;
       const cs = openManual._csel;
-      if(cs && cs.anchorMode){ const r = offsetRect(cs.anchor); hs.style.left = r.left+'px'; hs.style.top = r.top+'px'; hs.style.display='block'; he.style.display='none'; return; }
+      if(cs && cs.anchorMode){ const r = offsetRect(cs.anchor); hs.style.left = r.left+'px'; hs.style.top = r.top+'px'; hs.style.display='block'; he.style.display='none'; positionFloat(); return; }
       const marks = docEl.querySelectorAll('mark.md-sel'); if(!marks.length){ hideHandles(); return; }
       const first = marks[0].getBoundingClientRect();
       const last = marks[marks.length-1].getBoundingClientRect();
@@ -11337,7 +11360,6 @@ function openManual(){
         hideHandles(); floatEl.style.display='none'; return;
       }
       wrapSelByOffsets(cs.start, cs.end);
-      if(cs.anchorMode){ const r = offsetRect(cs.anchor); openManual._hStart.style.left=r.left+'px'; openManual._hStart.style.top=r.top+'px'; openManual._hStart.style.display='block'; openManual._hEnd.style.display='none'; floatEl.style.display='none'; return; }
       showFloatFromMarks();
     }
     function showFloatFromMarks(){
@@ -11377,11 +11399,17 @@ function openManual(){
       let rect; try{ const r=document.createRange(); r.setStart(p.node, p.off); r.collapse(true); rect=r.getBoundingClientRect(); }catch(e){ rect={left:0,top:0,height:16}; }
       return { left: rect.left, top: rect.top + (rect.height||16)/2 - 12 };
     }
-    // 长按后不自动选词：仅在长按点显示「锚点手柄」，由用户拖动来决定选区范围
+    // 长按：先选中光标所在单词（start<end），立即显示两端手柄与浮层；同时进入锚点扫选模式，
+    // 用户可继续按住拖动从锚点向外扫出更大选区。松手后由 _anchorEnd 提交为普通选区。
     function startAnchor(caret){
       const node = caret.node; if(node.nodeType !== 3 || !docEl.contains(node)) return;
       const g = pointToOffset(node, caret.offset, docEl);
-      openManual._csel = { start: g, end: g, anchor: g, anchorMode: true };
+      const text = node.nodeValue, idx = caret.offset;
+      let s = idx, e = idx; const isWord = ch => /\S/.test(ch);
+      while(s > 0 && isWord(text[s-1])) s--;
+      while(e < text.length && isWord(text[e])) e++;
+      const gs = pointToOffset(node, s, docEl), ge = pointToOffset(node, e, docEl);
+      openManual._csel = { start: gs, end: ge, anchor: g, anchorMode: true };
       floatEl.style.display = 'none';
       renderCustomSel();
       dragAnchor();
@@ -11452,6 +11480,8 @@ function openManual(){
         window.removeEventListener('touchmove', openManual._anchorMove, {passive:false});
         window.removeEventListener('touchend', openManual._anchorEnd);
         window.removeEventListener('touchcancel', openManual._anchorEnd);
+        const cs = openManual._csel;
+        if(cs && cs.anchorMode){ cs.anchorMode = false; renderCustomSel(); } // 提交选区：显示两端手柄 + 浮层
       };
       // 已有选区时：拖动两端手柄调整选区边界
       openManual._hStart.addEventListener('touchstart', e=>dragHandle('start', e), {passive:false});
