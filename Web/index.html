@@ -6494,10 +6494,27 @@ function captureScreenshot() {
   renderer.render(scene, camera);
 }
 document.getElementById('btn-shot').addEventListener('click', captureScreenshot);
-document.getElementById('btn-fs').addEventListener('click', () => {
-  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-  else document.exitFullscreen();
-});
+
+/* 全屏切换：仅进入 / 退出全屏，绝不锁定屏幕方向。
+   方向完全交给用户系统设置决定（竖屏锁定 → 保持竖屏；横竖自动 → 跟随设备旋转），
+   不调用 screen.orientation.lock()，避免一律强制横屏。 */
+function toggleFullscreen() {
+  const fsEl = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  if (!fsEl) {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (req) {
+      const p = req.call(el);
+      if (p && typeof p.catch === 'function') p.catch(() => {}); // 用户拒绝或不支持时静默忽略
+    }
+    // 触屏设备（如 iOS Safari）不支持普通元素的标准全屏 API：
+    // 不强制任何方向，交由系统自带的全屏手势处理，保持当前方向。
+  } else {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+    if (exit) exit.call(document);
+  }
+}
+document.getElementById('btn-fs').addEventListener('click', toggleFullscreen);
 document.addEventListener('fullscreenchange', () => {
   const btn = document.getElementById('btn-fs');
   const d = (LANGS[currentLang] || LANGS['zh-CN']).dict;
@@ -10433,8 +10450,7 @@ window.addEventListener('keydown', (e) => {
   // ---- 功能键 ----
   if (e.key === 'F11') {
     e.preventDefault();
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
+    toggleFullscreen();
     return;
   }
   if (e.key === 'Delete' || e.key === 'Backspace') {
@@ -11256,7 +11272,17 @@ function openManual(){
     document.getElementById('manual-float-hicancel').addEventListener('click', cancelHlInSelection);
     document.getElementById('manual-float-hiexpand').addEventListener('click', expandHl);
     docEl.addEventListener('mousedown', e=>{ if(e.button===2){ const s=window.getSelection(); if(s && !s.isCollapsed) e.preventDefault(); } });
-    // 触屏长按：自绘选区 + 可拖动手柄（不使用原生 window.getSelection，避免触发 国产 ROM 超级拖放 / vivo 系统工具条）
+    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; block.scrollIntoView({behavior:'smooth',block:'start'}); flash(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
+    openManual._mo = new MutationObserver(()=>syncStickyVisibility());
+    openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
+  }
+
+  // 自定义选区：自绘手柄 + 浮层（触屏长按）。必须在 _built 守卫之外，
+  // 否则单页应用反复 openManual 时 _built 已为 true，初始化被跳过，手柄与浮层永不出现。
+  // 用 _selBound 保证事件只绑定一次；手柄与拖拽监听器只在首次创建。
+  function initCustomSelection(){
+    if(openManual._selBound) return;
+    openManual._selBound = true;
     // 禁用拖拽：避免国产 ROM（MIUI/ColorOS 等）把长按选区当成「超级拖放」拖走
     if(!openManual._dragGuard){
       openManual._dragGuard = true;
@@ -11438,10 +11464,8 @@ function openManual(){
       const range = sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)) return;
       const c = caretFromPoint(e.clientX, e.clientY); if(c) selectWordCustom(c);
     });
-    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; block.scrollIntoView({behavior:'smooth',block:'start'}); flash(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
-    openManual._mo = new MutationObserver(()=>syncStickyVisibility());
-    openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
   }
+  initCustomSelection();
 
   if(openManual._lang !== lang){ if(openManual._lang) closeAllStickies(); openManual._lang = lang; loadManual(lang); }
   else { restoreScroll(); docEl.querySelectorAll('.md-block').forEach(b=>b.classList.remove('flash')); }
