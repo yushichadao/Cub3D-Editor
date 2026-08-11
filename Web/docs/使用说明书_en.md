@@ -2912,7 +2912,7 @@ While learning, you often want to "mark" a paragraph. The manual lets you **sele
 
 1. While reading the manual, select any text:
    - 🖥️💻 **Mouse/desktop**: hold left button and **drag-select**;
-   - 📱 **Web · touch**: long press shows a selection anchor and two draggable handles; drag them to scan-select the text. To stay compatible with domestic ROMs (MIUI / ColorOS / vivo etc.) the "super drag" and the native long-press menu are disabled, so the system copy/share bar no longer appears — instead an in-app "sticky note / highlight / copy" overlay takes over;
+   - 📱 **Web · touch**: long press auto-selects the word under the cursor and pops an in-app "sticky note / highlight / copy" overlay (you can keep dragging to adjust the selection). To stay compatible with domestic ROMs (MIUI / ColorOS / vivo etc.) the "super drag" and the native long-press menu are disabled, so the system copy/share bar no longer appears;
    - 🤖 **Android**: long press shows a selection anchor and two draggable handles; drag them to scan-select the text. The system copy/share bar no longer appears — instead an in-app "sticky note / highlight / copy" overlay takes over;
 2. After releasing, an "Add sticky note" button appears — tap it;
 3. The selected text is highlighted and recorded in the **sticky note list**;
