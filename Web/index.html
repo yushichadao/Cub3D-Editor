@@ -90,6 +90,13 @@
   #three-canvas.tooling { cursor: none; }
   #three-canvas.grabbing { cursor: grabbing; }
 
+  /* 沉浸（伪全屏）模式：不调用浏览器原生全屏 API，仅隐藏界面元素让画布铺满视口。
+     这样可避免 Android Chrome 在进入原生全屏时强制切横屏，方向完全交给系统。 */
+  body.fs-immersive .topbar,
+  body.fs-immersive .panel-left,
+  body.fs-immersive .panel-right { display: none !important; }
+  body.fs-immersive #canvas-wrap { inset: 0; z-index: 1; }
+
   /* 顶部栏 */
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; height: 48px; z-index: 50;
@@ -6496,61 +6503,48 @@ function captureScreenshot() {
 document.getElementById('btn-shot').addEventListener('click', captureScreenshot);
 
 /* 全屏切换。
-   关键：进入全屏时锁定到「设备当前方向」，避免 Android Chrome / WebView 在
-   调用全屏 API 时强制切横屏（Chromium 已知行为）。锁定到当前方向即尊重用户
-   此刻的系统方向设置——竖屏锁定用户在竖屏下点全屏→锁竖屏；旋转开启用户在
-   持握方向下点全屏→锁定该方向。退出全屏时解除锁定，恢复系统设置。
-   不支持 screen.orientation 的浏览器（如 iOS Safari）会静默跳过，不报错。 */
-function _lockToCurrentOrientation() {
-  try {
-    const so = screen.orientation;
-    if (!so || !so.lock) return;
-    const t = (so.type || '').toLowerCase();
-    // 锁定到与当前一致的主方向（primary），secondary 不允许直接锁定
-    const target = t.indexOf('landscape') !== -1 ? 'landscape-primary' : 'portrait-primary';
-    const p = so.lock(target);
-    if (p && typeof p.catch === 'function') p.catch(() => {}); // 拒绝 / 不支持时忽略
-  } catch (e) { /* 忽略：不影响全屏本身 */ }
+   移动端（触屏 / 小屏）采用「沉浸模式」：仅给 <body> 加 .fs-immersive 隐藏顶栏与
+   侧栏，让画布铺满视口——不调用浏览器原生全屏 API，因此不会触发 Android Chrome
+   在进入原生全屏时强制切横屏的已知行为，方向完全交给用户系统设置。
+   桌面端仍使用原生全screen API（方向在桌面上无影响）。 */
+function _isMobile() {
+  return (('ontouchstart' in window) || navigator.maxTouchPoints > 0) &&
+         Math.min(window.innerWidth, window.innerHeight) < 820;
 }
-function _unlockOrientation() {
-  try {
-    const so = screen.orientation;
-    if (so && so.unlock) so.unlock();
-  } catch (e) { /* 忽略 */ }
+function _syncFsButton() {
+  const btn = document.getElementById('btn-fs');
+  const d = (LANGS[currentLang] || LANGS['zh-CN']).dict;
+  const active = document.fullscreenElement || document.body.classList.contains('fs-immersive');
+  btn.querySelector('.ic').textContent = active ? '⤢' : '⛶';
+  btn.querySelector('.lbl').textContent = active ? d.fsExit : d.fs;
+  btn.title = (active ? d.fsExit : d.fs) + ' (F11)';
 }
 function toggleFullscreen() {
-  const fsEl = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-  if (!fsEl) {
-    const el = document.documentElement;
-    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-    if (req) {
-      const p = req.call(el);
-      if (p && typeof p.catch === 'function') {
-        p.then(_lockToCurrentOrientation).catch(() => {}); // 进入成功后锁定当前方向
-      } else {
-        _lockToCurrentOrientation();
+  const nativeFs = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  const immersive = document.body.classList.contains('fs-immersive');
+  if (!nativeFs && !immersive) {
+    if (_isMobile()) {
+      // 移动端：沉浸模式（伪全屏），不触发浏览器原生全屏的强制横屏
+      document.body.classList.add('fs-immersive');
+      _syncFsButton();
+    } else {
+      // 桌面端：原生全屏
+      const el = document.documentElement;
+      const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+      if (req) {
+        const p = req.call(el);
+        if (p && typeof p.catch === 'function') p.catch(() => {});
       }
     }
   } else {
-    _unlockOrientation(); // 先解除方向锁定，恢复系统设置
+    if (immersive) document.body.classList.remove('fs-immersive');
     const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
-    if (exit) exit.call(document);
+    if (exit && nativeFs) exit.call(document);
+    _syncFsButton();
   }
 }
 document.getElementById('btn-fs').addEventListener('click', toggleFullscreen);
-document.addEventListener('fullscreenchange', () => {
-  const btn = document.getElementById('btn-fs');
-  const d = (LANGS[currentLang] || LANGS['zh-CN']).dict;
-  if (document.fullscreenElement) {
-    btn.querySelector('.ic').textContent = '⤢';
-    btn.querySelector('.lbl').textContent = d.fsExit;
-    btn.title = d.fsExit + ' (F11)';
-  } else {
-    btn.querySelector('.ic').textContent = '⛶';
-    btn.querySelector('.lbl').textContent = d.fs;
-    btn.title = d.fs + ' (F11)';
-  }
-});
+document.addEventListener('fullscreenchange', _syncFsButton);
 
 /* ===== 多语言 / 主题 / 设置页 ===== */
 
@@ -6582,7 +6576,7 @@ function applyLang() {
   });
   const fsBtn = document.getElementById('btn-fs');
   if (fsBtn) {
-    const fsKey = document.fullscreenElement ? 'fsExit' : 'fs';
+    const fsKey = (document.fullscreenElement || document.body.classList.contains('fs-immersive')) ? 'fsExit' : 'fs';
     const fsTxt = dict[fsKey] !== undefined ? dict[fsKey] : fallback[fsKey];
     if (fsTxt !== undefined) fsBtn.querySelector('.lbl').textContent = fsTxt;
   }
@@ -11331,34 +11325,24 @@ function openManual(){
       const marks = docEl.querySelectorAll('mark.md-sel'); if(!marks.length) return;
       let minLeft=Infinity, minTop=Infinity, maxRight=-Infinity;
       marks.forEach(m=>{ const r=m.getBoundingClientRect(); minLeft=Math.min(minLeft,r.left); minTop=Math.min(minTop,r.top); maxRight=Math.max(maxRight,r.right); });
-      const mrect = modal.getBoundingClientRect(); const card = modal.querySelector('.manual-card').getBoundingClientRect();
+      const mrect = modal.getBoundingClientRect();
       const fr = floatEl.getBoundingClientRect();
-      let left = maxRight + 8; let top = minTop;
-      if(left + fr.width > mrect.right - 8) left = mrect.right - 8 - fr.width;
-      if(left < mrect.left + 8) left = mrect.left + 8;
-      if(top < card.top + 8) top = card.top + 8;
+      let left = (maxRight - mrect.left) + 8;
+      let top = (minTop - mrect.top) - (fr.height || 36) - 8;
+      if(left + fr.width > mrect.width - 8) left = mrect.width - 8 - fr.width;
+      if(left < 8) left = 8;
+      if(top < 8) top = (minTop - mrect.top) + (marks[0].getBoundingClientRect().height) + 8;
       floatEl.style.left = left + 'px'; floatEl.style.top = top + 'px';
     }
     function positionHandles(){
-      const hs = openManual._hStart, he = openManual._hEnd; if(!hs || !he) return;
-      const cs = openManual._csel;
-      if(cs && cs.anchorMode){ const r = offsetRect(cs.anchor); hs.style.left = r.left+'px'; hs.style.top = r.top+'px'; hs.style.display='block'; he.style.display='none'; positionFloat(); return; }
-      const marks = docEl.querySelectorAll('mark.md-sel'); if(!marks.length){ hideHandles(); return; }
-      const first = marks[0].getBoundingClientRect();
-      const last = marks[marks.length-1].getBoundingClientRect();
-      hs.style.left = first.left + 'px'; hs.style.top = first.top + 'px';
-      he.style.left = last.left + 'px'; he.style.top = (last.top + last.height) + 'px';
-      hs.style.display='block'; he.style.display='block';
+      // 网页手机版以浮层为主，手柄不显示（满足「可以不做手柄」）
       positionFloat();
     }
     function renderCustomSel(){
       const cs = openManual._csel; if(!cs){ hideHandles(); floatEl.style.display='none'; return; }
       if(window.getSelection) window.getSelection().removeAllRanges(); // 清除可能残留的浏览器原生选区，避免与自定义选区叠加
       unwrapMarks(docEl, 'md-sel');
-      if(!(cs.end > cs.start)){
-        if(cs.anchorMode){ const r = offsetRect(cs.anchor); openManual._hStart.style.left=r.left+'px'; openManual._hStart.style.top=r.top+'px'; openManual._hStart.style.display='block'; openManual._hEnd.style.display='none'; floatEl.style.display='none'; return; }
-        hideHandles(); floatEl.style.display='none'; return;
-      }
+      if(!(cs.end > cs.start)){ hideHandles(); floatEl.style.display='none'; return; }
       wrapSelByOffsets(cs.start, cs.end);
       showFloatFromMarks();
     }
@@ -11399,8 +11383,8 @@ function openManual(){
       let rect; try{ const r=document.createRange(); r.setStart(p.node, p.off); r.collapse(true); rect=r.getBoundingClientRect(); }catch(e){ rect={left:0,top:0,height:16}; }
       return { left: rect.left, top: rect.top + (rect.height||16)/2 - 12 };
     }
-    // 长按：先选中光标所在单词（start<end），立即显示两端手柄与浮层；同时进入锚点扫选模式，
-    // 用户可继续按住拖动从锚点向外扫出更大选区。松手后由 _anchorEnd 提交为普通选区。
+    // 长按：立即选中光标所在单词（start<end），显示浮层 + 两端手柄。
+    // 若用户继续按住并拖动，则从「锚点」向外扫出更大选区；松手保留选区。
     function startAnchor(caret){
       const node = caret.node; if(node.nodeType !== 3 || !docEl.contains(node)) return;
       const g = pointToOffset(node, caret.offset, docEl);
@@ -11408,14 +11392,16 @@ function openManual(){
       let s = idx, e = idx; const isWord = ch => /\S/.test(ch);
       while(s > 0 && isWord(text[s-1])) s--;
       while(e < text.length && isWord(text[e])) e++;
+      if(e <= s){ // 点空白处：选邻近一个字符，至少让选区非空
+        e = Math.min(text.length, s + 1);
+      }
       const gs = pointToOffset(node, s, docEl), ge = pointToOffset(node, e, docEl);
-      openManual._csel = { start: gs, end: ge, anchor: g, anchorMode: true };
-      floatEl.style.display = 'none';
+      openManual._csel = { start: gs, end: ge, anchor: g };
       renderCustomSel();
       dragAnchor();
     }
     function dragAnchor(){
-      const cs = openManual._csel; if(!cs || !cs.anchorMode) return;
+      const cs = openManual._csel; if(!cs) return;
       window.addEventListener('touchmove', openManual._anchorMove, {passive:false});
       window.addEventListener('touchend', openManual._anchorEnd);
       window.addEventListener('touchcancel', openManual._anchorEnd);
@@ -11466,22 +11452,21 @@ function openManual(){
       openManual._hStart.style.display = 'none'; openManual._hEnd.style.display = 'none';
       // 锚点扫选：长按后按住锚点手柄拖动，从锚点向外扫出选区（函数引用稳定，addEventListener 幂等）
       openManual._anchorMove = ev => {
-        const cs = openManual._csel; if(!cs || !cs.anchorMode) return;
+        const cs = openManual._csel; if(!cs) return;
         ev.preventDefault();
         const t = ev.touches && ev.touches[0]; if(!t) return;
         const c = caretFromPoint(t.clientX, t.clientY); if(!c) return;
         const g = pointToOffset(c.node, c.offset, docEl);
         const maxLen = (docEl.textContent || '').length;
         const s = Math.min(cs.anchor, g), e = Math.max(cs.anchor, g);
-        openManual._csel = { start: s, end: e, anchor: cs.anchor, anchorMode: true };
+        openManual._csel = { start: s, end: e, anchor: cs.anchor };
         renderCustomSel();
       };
       openManual._anchorEnd = () => {
         window.removeEventListener('touchmove', openManual._anchorMove, {passive:false});
         window.removeEventListener('touchend', openManual._anchorEnd);
         window.removeEventListener('touchcancel', openManual._anchorEnd);
-        const cs = openManual._csel;
-        if(cs && cs.anchorMode){ cs.anchorMode = false; renderCustomSel(); } // 提交选区：显示两端手柄 + 浮层
+        renderCustomSel(); // 提交选区：显示两端手柄 + 浮层
       };
       // 已有选区时：拖动两端手柄调整选区边界
       openManual._hStart.addEventListener('touchstart', e=>dragHandle('start', e), {passive:false});
