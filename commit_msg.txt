@@ -1,9 +1,0 @@
-build: 打包两个PC exe与Android debug apk，纳入 releases/ 并清理临时文件
-
-- PC 端 electron-builder 产出双 exe：Cube3D-Studio-Setup（安装版）与
-  Cube3D-Studio-Portable（便携版）；
-- Android 端经 Capacitor 构建 app-debug.apk；
-- 成品统一放入仓库根 releases/（.gitignore 保持各端构建目录忽略，
-  仅 releases 纳入版本管理）；
-- 清理临时/垃圾文件：commit_msg.txt、build-debug.log、sync.log、
-  .git/COMMIT_MSG.tmp 等。

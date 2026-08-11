@@ -1,4 +1,4 @@
-package com.lifang.editor3d;
+package com.cub3deditor.app;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -38,5 +38,5 @@ if ($LASTEXITCODE -ne 0) { throw "adb install failed (exit $LASTEXITCODE)" }
 
 # 3) Launch App (developer debug entry)
 Write-Host "==> Launching App ..."
-& $adb shell am start -n com.lifang.editor3d/.MainActivity
+& $adb shell am start -n com.cub3deditor.app/.MainActivity
 Write-Host "==> Done. Open the manual on the phone, long-press text: handles + in-app float should appear immediately, with NO system copy/select/share bar."

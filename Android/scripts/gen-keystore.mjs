@@ -20,7 +20,7 @@ const ANDROID_DIR = path.join(ROOT, 'android');
 const KEYSTORE = path.join(ANDROID_DIR, 'release.keystore');
 const PROPS = path.join(ANDROID_DIR, 'keystore.properties');
 
-const ALIAS = 'lifang3d';
+const ALIAS = 'cub3deditor';
 
 function genPassword() {
   // 24 位强随机密码，避免使用弱口令
@@ -49,7 +49,7 @@ function main() {
     '-validity', '36500',
     '-storepass', storePassword,
     '-keypass', keyPassword,
-    '-dname', 'CN=Lifang 3D, OU=Editor, O=Lifang, L=Unknown, ST=Unknown, C=CN'
+    '-dname', 'CN=Cub3D Editor, OU=Editor, O=Cub3D, L=Unknown, ST=Unknown, C=CN'
   ];
 
   console.log('[keystore] 正在生成签名密钥…');
