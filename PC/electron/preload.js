@@ -77,40 +77,6 @@ const api = {
     onChanged: cb => on('langpack:changed', cb)
   },
 
-  runtime: {
-    list: force => invoke('runtime:list', force),
-    detect: (id, force) => invoke('runtime:detect', id, force),
-    setBin: (id, p) => invoke('runtime:set-bin', id, p),
-    installPackages: (id, pkgs, offline) => invoke('runtime:install-packages', id, pkgs, offline),
-    importPortable: id => invoke('runtime:import-portable', id),
-    openLibFolder: id => invoke('runtime:open-lib-folder', id),
-    openOfflineFolder: id => invoke('runtime:open-offline-folder', id),
-    onLog: cb => on('runtime:log', cb)
-  },
-
-  plugin: {
-    list: () => invoke('plugin:list'),
-    start: id => invoke('plugin:start', id),
-    stop: id => invoke('plugin:stop', id),
-    invoke: (id, command, payload) => invoke('plugin:invoke', id, command, payload),
-    enable: (id, on_) => invoke('plugin:enable', id, on_),
-    autostart: (id, on_) => invoke('plugin:autostart', id, on_),
-    logs: id => invoke('plugin:logs', id),
-    remove: id => invoke('plugin:remove', id),
-    installDir: () => invoke('plugin:install-dir'),
-    openFolder: id => invoke('plugin:open-folder', id),
-    openConsole: () => invoke('plugin:open-console'),
-    sdkPath: () => invoke('plugin:sdk-path'),
-    onLog: cb => on('plugin:log', cb),
-    onStatus: cb => on('plugin:status', cb),
-    onProgress: cb => on('plugin:progress', cb),
-    onChanged: cb => on('plugin:changed', cb),
-    onCommands: cb => on('plugin:commands', cb),
-    /** 主进程转发过来的 editor.* 调用；渲染层执行后回执 */
-    onEditorInvoke: cb => on('editor:invoke', cb),
-    replyEditor: payload => ipcRenderer.send('editor:result', payload)
-  },
-
   sticky: {
     create: note => invoke('sticky:create', note),
     close: id => invoke('sticky:close', id),

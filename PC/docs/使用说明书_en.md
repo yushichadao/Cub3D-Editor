@@ -306,7 +306,7 @@ Open the editor; the canvas in the center is a 3D stage. You pick a shape on the
 Traditional 3D software (like Blender, Maya) is powerful, but installers are often hundreds of megabytes, with densely packed interfaces. This tool turns the core capabilities into a lightweight engine, packaged into three versions:
 
 - 🖥️📱 **Web version**: open the URL and use it instantly, close and leave, takes no disk space;
-- 💻 **PC version**: install once, then **fully offline**, and can drag-drop files and install plugins;
+- 💻 **PC version**: install once, then **fully offline**, and can drag-and-drop files to open them;
 - 🤖 **Android version**: install on your phone, model something anytime on your commute.
 
 The shared benefits of all three:
@@ -2912,7 +2912,8 @@ While learning, you often want to "mark" a paragraph. The manual lets you **sele
 
 1. While reading the manual, select any text:
    - 🖥️💻 **Mouse/desktop**: hold left button and **drag-select**;
-   - 📱🤖 **Touch device**: **long press** the text to bring up selection handles, drag both ends to adjust the range;
+   - 📱 **Web · touch**: long press the text to bring up the system selection handles, drag both ends to adjust the range;
+   - 🤖 **Android**: long press shows a selection anchor and two draggable handles; drag them to scan-select the text. The system copy/share bar no longer appears — instead an in-app "sticky note / highlight / copy" overlay takes over;
 2. After releasing, an "Add sticky note" button appears — tap it;
 3. The selected text is highlighted and recorded in the **sticky note list**;
 4. Each entry in the sticky note list can be individually **deleted** — a confirmation dialog appears before deletion to prevent accidental loss.

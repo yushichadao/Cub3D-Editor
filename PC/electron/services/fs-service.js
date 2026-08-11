@@ -189,7 +189,7 @@ async function pickImage(win) {
 function readDropped(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   try {
-    if (['.l3d', '.json'].includes(ext)) {
+    if (['.json'].includes(ext)) {
       const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
       // 复用 classifyImport 与“打开”菜单一致，避免把便签备份/未知文件误当场景导入
       const kind = classifyImport(json);

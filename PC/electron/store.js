@@ -1,5 +1,5 @@
 'use strict';
-/** 轻量 JSON 配置存储：窗口状态、偏好、插件开关。无第三方依赖。 */
+/** 轻量 JSON 配置存储：窗口状态、偏好。无第三方依赖。 */
 const fs = require('fs');
 const path = require('path');
 const P = require('./paths');
@@ -8,8 +8,6 @@ const DEFAULTS = {
   window: { width: 1440, height: 900, x: null, y: null, maximized: false },
   ui: { theme: 'neon', lang: 'zh-CN', frameless: true, mica: true, zoom: 1 },
   editor: { autosaveEnabled: true, autosaveInterval: 120, restoreLastSession: true },
-  plugins: { enabled: {}, autoStart: {} },
-  runtimes: { custom: {} },
   offlineMode: false
 };
 

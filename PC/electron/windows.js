@@ -1,5 +1,5 @@
 'use strict';
-/** 窗口工厂：主窗口（无边框自绘）、便签窗、插件控制台。 */
+/** 窗口工厂：主窗口（无边框自绘）、便签窗。 */
 const { BrowserWindow, screen, shell, nativeTheme, ipcMain } = require('electron');
 const path = require('path');
 const P = require('./paths');
@@ -10,8 +10,6 @@ const { INDEX_URL, SCHEME } = require('./protocol');
 let mainWindow = null;
 /** @type {Map<string, BrowserWindow>} */
 const stickyWindows = new Map();
-/** @type {BrowserWindow|null} */
-let consoleWindow = null;
 
 const PRELOAD = path.join(__dirname, 'preload.js');
 
@@ -198,24 +196,6 @@ function closeStickyWindow(id) {
   if (win && !win.isDestroyed()) win.close();
 }
 
-/** 插件控制台：查看插件日志、运行时状态、库安装进度 */
-function createConsoleWindow() {
-  if (consoleWindow && !consoleWindow.isDestroyed()) { consoleWindow.focus(); return consoleWindow; }
-  consoleWindow = new BrowserWindow({
-    width: 980,
-    height: 640,
-    frame: false,
-    parent: mainWindow || undefined,
-    backgroundColor: '#0c0e16',
-    show: false,
-    webPreferences: baseWebPreferences()
-  });
-  consoleWindow.loadURL(`${SCHEME}://local/shell/console.html`);
-  consoleWindow.once('ready-to-show', () => consoleWindow.show());
-  consoleWindow.on('closed', () => { consoleWindow = null; });
-  return consoleWindow;
-}
-
 function getMain() { return mainWindow; }
 function broadcast(channel, payload) {
   for (const w of BrowserWindow.getAllWindows()) {
@@ -224,6 +204,6 @@ function broadcast(channel, payload) {
 }
 
 module.exports = {
-  createMainWindow, createStickyWindow, closeStickyWindow, createConsoleWindow,
+  createMainWindow, createStickyWindow, closeStickyWindow,
   getMain, broadcast, persistBounds, stickyWindows
 };

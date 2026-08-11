@@ -17,7 +17,7 @@ const store = require('./store');
 const proto = require('./protocol');
 const W = require('./windows');
 const ipc = require('./ipc');
-const pluginHost = require('./services/plugin-host');
+
 
 /* ------------------------------ 基础环境设置 ------------------------------ */
 
@@ -80,9 +80,6 @@ app.whenReady().then(() => {
   P.ensureDirs();
   proto.handle();
 
-  // 事件广播器交给插件宿主，用于把日志/状态推到所有窗口
-  pluginHost.init((channel, payload) => W.broadcast(channel, payload));
-
   ipc.register();
 
   // 应用不提供任何菜单栏 / 弹出菜单
@@ -94,8 +91,7 @@ app.whenReady().then(() => {
   win.webContents.once('did-finish-load', () => {
     const file = pickSceneFromArgv(process.argv);
     if (file) win.webContents.send('file:open-request', file);
-    // 延后启动自启插件，避免和首屏渲染抢资源
-    setTimeout(() => pluginHost.startAutoPlugins(), 1200);
+
   });
 
   win.webContents.on('render-process-gone', (_e, details) => {
@@ -121,7 +117,6 @@ app.on('window-all-closed', () => {
 });
 
 app.on('before-quit', () => {
-  try { pluginHost.stopAll(); } catch (_) {}
   try { store.flush(); } catch (_) {}
 });
 

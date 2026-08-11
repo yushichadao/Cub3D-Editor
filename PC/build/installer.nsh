@@ -8,29 +8,23 @@
 
 ; 欢迎页（左侧品牌图 + 右侧现代排版文案）
 !define MUI_WELCOMEPAGE_TITLE "立方三维设计工坊"
-!define MUI_WELCOMEPAGE_TEXT "离线桌面版 3D / 2D 场景编辑器$\r$\n支持多语言界面与多编程语言插件扩展$\r$\n$\r$\n点击「安装」开始，整个过程约需 1 分钟。"
+!define MUI_WELCOMEPAGE_TEXT "离线桌面版 3D / 2D 场景编辑器$\r$\n支持多语言界面$\r$\n$\r$\n点击「安装」开始，整个过程约需 1 分钟。"
 
 ; NSIS 安装脚本增强
-; 目标：安装完成后自动建立数据目录，卸载时保留用户作品与插件。
+; 目标：安装完成后自动建立数据目录，卸载时保留用户作品与语言包。
 
 !macro customInstall
   ; 建立用户数据目录（安装版数据位于 %APPDATA%）
   CreateDirectory "$APPDATA\立方三维设计工坊"
-  CreateDirectory "$APPDATA\立方三维设计工坊\plugins"
   CreateDirectory "$APPDATA\立方三维设计工坊\langpacks"
-  CreateDirectory "$APPDATA\立方三维设计工坊\runtimes"
-  CreateDirectory "$APPDATA\立方三维设计工坊\libs"
-  CreateDirectory "$APPDATA\立方三维设计工坊\offline"
-  CreateDirectory "$APPDATA\立方三维设计工坊\offline\python"
   CreateDirectory "$APPDATA\立方三维设计工坊\projects"
 
-  ; 注册 .l3d 文件图标与打开方式由 electron-builder 的 fileAssociations 处理，
-  ; 这里仅刷新 Shell 图标缓存，使关联立即生效
+  ; 刷新 Shell 图标缓存，使文件关联立即生效
   System::Call 'shell32.dll::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)'
 !macroend
 
 !macro customUnInstall
-  ; 不删除用户数据：作品、插件、语言包、已装的语言库都保留
+  ; 不删除用户数据：作品、语言包都保留
   ; 如需彻底清理，请手动删除 %APPDATA%\立方三维设计工坊
   System::Call 'shell32.dll::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)'
 !macroend

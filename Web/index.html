@@ -40,6 +40,9 @@
     -webkit-font-smoothing: antialiased;
     user-select: none;
   }
+  /* 禁用元素被系统拖拽：避免国产 ROM（MIUI/ColorOS 等）把长按选区当成「超级拖放」拖走 */
+  *, *::before, *::after { -webkit-user-drag: none !important; user-drag: none !important; }
+  [contenteditable], [contenteditable] * { -webkit-user-drag: none !important; }
   /* 阅读/笔记内容区：显式允许其所有后代被选择。
      全局 user-select:none 在移动端 WebView 下会抑制后代继承，
      必须用后代选择器逐一放行，移动端长按/拖拽选择手柄才能正常工作。 */
@@ -52,6 +55,15 @@
     user-select: text !important;
     -webkit-touch-callout: default !important;
     touch-action: auto;
+  }
+  /* 触屏：禁用原生选区与长按菜单（避免国产 ROM 超级拖放、vivo 系统工具条），改用自绘手柄选区 */
+  .touch-device .manual-doc, .touch-device .manual-doc *,
+  .touch-device .guide-doc, .touch-device .guide-doc *,
+  .touch-device .manual-note-text, .touch-device .manual-note-text *,
+  .touch-device .sticky-area, .touch-device .sticky-area * {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
   }
   /* 文字选择高亮：跟随主题，暗色下不再刺眼；统一外观避免"不一样大" */
   ::selection { background: color-mix(in srgb, var(--accent) 30%, var(--control-bg)); color: var(--text); }
@@ -794,7 +806,13 @@
 .md-block.hl { background: color-mix(in srgb, var(--warn) 16%, transparent); }
 .md-block.flash { animation: mdFlash 1.2s ease-out; }
 @keyframes mdFlash { 0%{background:color-mix(in srgb,var(--accent) 28%,transparent);} 100%{background:transparent;} }
-.manual-doc mark.md-hl { background: color-mix(in srgb, var(--warn) 85%, transparent); color:#1a1a1a; border-radius:3px; padding:0 1px; position:relative; z-index:1; }
+.manual-doc mark.md-hl { background: color-mix(in srgb, var(--warn) 85%, transparent); color:#1a1a1a; border-radius:3px; padding:0; position:relative; z-index:1; }
+.manual-doc mark.md-sel { background: color-mix(in srgb, var(--accent) 32%, transparent); color:inherit; border-radius:3px; padding:0; position:relative; z-index:1; }
+/* 自绘选区手柄：固定定位浮于内容之上，拖动可调整选区边界 */
+.manual-handle { position:fixed; width:24px; height:24px; transform:translate(-50%,-50%); z-index:120; touch-action:none; cursor:grab; background:transparent; }
+.manual-handle::after { content:''; position:absolute; left:50%; top:50%; width:16px; height:16px; transform:translate(-50%,-50%); border-radius:50%; border:2px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.45); }
+.manual-handle-start::after { background:var(--accent); }
+.manual-handle-end::after { background:var(--accent-2); }
 .manual-doc mark.md-jump { background: var(--accent); color:#fff; border-radius:3px; padding:0 1px; animation: mdJumpPulse 1.6s ease-out; }
 @keyframes mdJumpPulse { 0%,50%,100%{ filter:brightness(1);} 25%,75%{ filter:brightness(1.6);} }
   .md-block.search-hit { background: color-mix(in srgb, var(--accent-2) 14%, transparent); }
@@ -11092,23 +11110,34 @@ function renderBlock(b){
   return '';
 }
 function unwrapHighlights(root){ root.querySelectorAll('mark.md-hl').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
+function collectNodeRanges(root, start, end){
+  const out=[]; const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n;
+  while((n=tw.nextNode())){ const len=n.nodeValue.length; const s=Math.max(start,acc), e=Math.min(end,acc+len); if(e>s) out.push({node:n, s:s-acc, e:e-acc}); acc+=len; }
+  return out;
+}
 function wrapText(root, start, end, id){
   if(!(start>=0 && end>start)) return;
-  const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, startNode=null, startOff=0, endNode=null, endOff=0, n;
-  while((n=tw.nextNode())){ const len=n.nodeValue.length; if(startNode===null && acc+len>start){ startNode=n; startOff=start-acc; } if(endNode===null && acc+len>=end){ endNode=n; endOff=end-acc; break; } acc+=len; }
-  if(!startNode||!endNode) return; const range=document.createRange(); range.setStart(startNode,startOff); range.setEnd(endNode,endOff);
-  const mark=document.createElement('mark'); mark.className='md-hl'; if(id!=null) mark.dataset.hlId=id;
-  try { const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); } catch(e){}
+  const ranges=collectNodeRanges(root, start, end).reverse(); // 倒序：先包靠后的段，避免影响前面的节点
+  for(const r of ranges){
+    try{
+      const range=document.createRange(); range.setStart(r.node, r.s); range.setEnd(r.node, r.e);
+      const mark=document.createElement('mark'); mark.className='md-hl'; if(id!=null) mark.dataset.hlId=id;
+      const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark);
+    }catch(err){}
+  }
 }
 function wrapTempMark(root, start, end, cls){
   if(!(start>=0 && end>start)) return null;
-  const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n, startNode=null, startOff=0, endNode=null, endOff=0;
-  while((n=tw.nextNode())){ const len=n.nodeValue.length; if(startNode===null && acc+len>start){ startNode=n; startOff=start-acc; } if(endNode===null && acc+len>=end){ endNode=n; endOff=end-acc; break; } acc+=len; }
-  if(!startNode||!endNode) return null;
-  const range=document.createRange(); try{ range.setStart(startNode,startOff); range.setEnd(endNode,endOff); }catch(e){ return null; }
-  const mark=document.createElement('mark'); mark.className=cls;
-  try { const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); } catch(e){ return null; }
-  return mark;
+  const ranges=collectNodeRanges(root, start, end).reverse();
+  let last=null;
+  for(const r of ranges){
+    try{
+      const range=document.createRange(); range.setStart(r.node, r.s); range.setEnd(r.node, r.e);
+      const mark=document.createElement('mark'); mark.className=cls;
+      const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); last=mark;
+    }catch(err){ return null; }
+  }
+  return last;
 }
 function unwrapMarks(root, cls){ root.querySelectorAll('mark.'+cls).forEach(m=>{ const p=m.parentNode; if(!p) return; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
 function nodeAtOffset(root, off){ const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n; while((n=tw.nextNode())){ const len=n.nodeValue.length; if(acc+len>off) return n; acc+=len; } return null; }
@@ -11227,30 +11256,188 @@ function openManual(){
     document.getElementById('manual-float-hicancel').addEventListener('click', cancelHlInSelection);
     document.getElementById('manual-float-hiexpand').addEventListener('click', expandHl);
     docEl.addEventListener('mousedown', e=>{ if(e.button===2){ const s=window.getSelection(); if(s && !s.isCollapsed) e.preventDefault(); } });
-    // 移动端长按选词 → 弹出 便签/高亮/复制 浮层
-    function selectWordAt(x, y){
-      let range = null;
-      if(document.caretRangeFromPoint){ range = document.caretRangeFromPoint(x, y); }
-      else if(document.caretPositionFromPoint){ const p = document.caretPositionFromPoint(x, y); if(p){ range = document.createRange(); range.setStart(p.offsetNode, p.offset); range.collapse(true); } }
-      if(!range) return false;
-      let node = range.startContainer;
-      if(node.nodeType !== 3 || !docEl.contains(node)) return false;
-      const text = node.nodeValue, idx = range.startOffset;
-      let s = idx, e = idx;
-      const isWord = ch => /\S/.test(ch);
+    // 触屏长按：自绘选区 + 可拖动手柄（不使用原生 window.getSelection，避免触发 国产 ROM 超级拖放 / vivo 系统工具条）
+    // 禁用拖拽：避免国产 ROM（MIUI/ColorOS 等）把长按选区当成「超级拖放」拖走
+    if(!openManual._dragGuard){
+      openManual._dragGuard = true;
+      document.addEventListener('dragstart', e=>e.preventDefault(), true);
+      document.addEventListener('drag', e=>e.preventDefault(), true);
+      document.addEventListener('dragend', e=>e.preventDefault(), true);
+      window.addEventListener('dragstart', e=>e.preventDefault(), true);
+    }
+    function caretFromPoint(x, y){
+      if(document.caretPositionFromPoint){ const p=document.caretPositionFromPoint(x,y); if(p) return {node:p.offsetNode, offset:p.offset}; }
+      if(document.caretRangeFromPoint){ const r=document.caretRangeFromPoint(x,y); if(r) return {node:r.startContainer, offset:r.startOffset}; }
+      const s=document.elementsFromPoint(x,y); for(const el of s){ if(el.nodeType===3) return {node:el, offset:0}; if(el.tagName && /^(P|DIV|LI|TD|H[1-6]|SPAN|A|CODE|MARK|B|STRONG|EM)$/.test(el.tagName)){ const r=document.createRange(); r.selectNodeContents(el); r.collapse(false); return {node:el, offset:el.childNodes.length}; } }
+      return null;
+    }
+    function wrapSelByOffsets(s, e){
+      if(!(s>=0 && e>s)) return;
+      const ranges = collectNodeRanges(docEl, s, e).reverse();
+      for(const r of ranges){ try{ const range=document.createRange(); range.setStart(r.node,r.s); range.setEnd(r.node,r.e); const mark=document.createElement('mark'); mark.className='md-sel'; const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); }catch(err){} }
+    }
+    function selectedText(){ let t=''; docEl.querySelectorAll('mark.md-sel').forEach(m=>{ t+=m.textContent; }); return t; }
+    function hideHandles(){ const hs=openManual._hStart, he=openManual._hEnd; if(hs) hs.style.display='none'; if(he) he.style.display='none'; }
+    function positionFloat(){
+      const marks = docEl.querySelectorAll('mark.md-sel'); if(!marks.length) return;
+      let minLeft=Infinity, minTop=Infinity, maxRight=-Infinity;
+      marks.forEach(m=>{ const r=m.getBoundingClientRect(); minLeft=Math.min(minLeft,r.left); minTop=Math.min(minTop,r.top); maxRight=Math.max(maxRight,r.right); });
+      const mrect = modal.getBoundingClientRect(); const card = modal.querySelector('.manual-card').getBoundingClientRect();
+      const fr = floatEl.getBoundingClientRect();
+      let left = maxRight + 8; let top = minTop;
+      if(left + fr.width > mrect.right - 8) left = mrect.right - 8 - fr.width;
+      if(left < mrect.left + 8) left = mrect.left + 8;
+      if(top < card.top + 8) top = card.top + 8;
+      floatEl.style.left = left + 'px'; floatEl.style.top = top + 'px';
+    }
+    function positionHandles(){
+      const hs = openManual._hStart, he = openManual._hEnd; if(!hs || !he) return;
+      const cs = openManual._csel;
+      if(cs && cs.anchorMode){ const r = offsetRect(cs.anchor); hs.style.left = r.left+'px'; hs.style.top = r.top+'px'; hs.style.display='block'; he.style.display='none'; return; }
+      const marks = docEl.querySelectorAll('mark.md-sel'); if(!marks.length){ hideHandles(); return; }
+      const first = marks[0].getBoundingClientRect();
+      const last = marks[marks.length-1].getBoundingClientRect();
+      hs.style.left = first.left + 'px'; hs.style.top = first.top + 'px';
+      he.style.left = last.left + 'px'; he.style.top = (last.top + last.height) + 'px';
+      hs.style.display='block'; he.style.display='block';
+      positionFloat();
+    }
+    function renderCustomSel(){
+      const cs = openManual._csel; if(!cs){ hideHandles(); floatEl.style.display='none'; return; }
+      if(window.getSelection) window.getSelection().removeAllRanges(); // 清除可能残留的浏览器原生选区，避免与自定义选区叠加
+      unwrapMarks(docEl, 'md-sel');
+      if(!(cs.end > cs.start)){
+        if(cs.anchorMode){ const r = offsetRect(cs.anchor); openManual._hStart.style.left=r.left+'px'; openManual._hStart.style.top=r.top+'px'; openManual._hStart.style.display='block'; openManual._hEnd.style.display='none'; floatEl.style.display='none'; return; }
+        hideHandles(); floatEl.style.display='none'; return;
+      }
+      wrapSelByOffsets(cs.start, cs.end);
+      if(cs.anchorMode){ const r = offsetRect(cs.anchor); openManual._hStart.style.left=r.left+'px'; openManual._hStart.style.top=r.top+'px'; openManual._hStart.style.display='block'; openManual._hEnd.style.display='none'; floatEl.style.display='none'; return; }
+      showFloatFromMarks();
+    }
+    function showFloatFromMarks(){
+      const cs = openManual._csel; if(!cs){ hideHandles(); floatEl.style.display='none'; return; }
+      const marks = docEl.querySelectorAll('mark.md-sel');
+      if(!marks.length){ hideHandles(); floatEl.style.display='none'; return; }
+      const arr = hilites(); const overlap = arr.some(h=>h.start!=null && h.start<cs.end && h.end>cs.start);
+      const hiBtn = document.getElementById('manual-float-hi'); const cancelBtn = document.getElementById('manual-float-hicancel'); const expandBtn = document.getElementById('manual-float-hiexpand');
+      if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) cancelBtn.style.display=''; }
+      else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) cancelBtn.style.display='none'; }
+      openManual._sel = { text: selectedText(), line: blockLineOf((nodeAtOffset(docEl, cs.start) || {}).node || docEl), start: cs.start, end: cs.end };
+      floatEl.classList.remove('float-bottom');
+      floatEl.style.display = 'flex';
+      positionHandles();
+    }
+    function selectWordCustom(caret){
+      const node = caret.node; if(node.nodeType !== 3 || !docEl.contains(node)) return;
+      const text = node.nodeValue, idx = caret.offset;
+      let s = idx, e = idx; const isWord = ch => /\S/.test(ch);
       while(s > 0 && isWord(text[s-1])) s--;
       while(e < text.length && isWord(text[e])) e++;
-      if(e <= s) return false;
-      const r = document.createRange(); r.setStart(node, s); r.setEnd(node, e);
-      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
-      return true;
+      if(e <= s) return;
+      const gs = pointToOffset(node, s, docEl), ge = pointToOffset(node, e, docEl);
+      openManual._csel = { start: gs, end: ge };
+      renderCustomSel();
     }
-    let _lpTimer = null, _lpXY = null;
-    docEl.addEventListener('touchstart', e=>{ if(!isTouchMode() || e.touches.length !== 1) return; const t = e.touches[0]; _lpXY = {x:t.clientX, y:t.clientY}; clearTimeout(_lpTimer); _lpTimer = setTimeout(()=>{ _lpTimer = null; selectWordAt(_lpXY.x, _lpXY.y); onSelectionChange(); }, 450); }, {passive:true});
-    docEl.addEventListener('touchmove', e=>{ if(!_lpXY || !e.touches[0]) return; const t = e.touches[0]; if(Math.hypot(t.clientX - _lpXY.x, t.clientY - _lpXY.y) > 8){ clearTimeout(_lpTimer); _lpTimer = null; } }, {passive:true});
-    docEl.addEventListener('touchend', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
-    docEl.addEventListener('touchcancel', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
-    docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(!openManual._sel && (e.clientX || e.clientY)){ selectWordAt(e.clientX, e.clientY); } onSelectionChange(); });
+    function clearCustomSel(){
+      openManual._csel = null;
+      openManual._lpActive = false;
+      unwrapMarks(docEl, 'md-sel');
+      hideHandles();
+      floatEl.style.display = 'none';
+      openManual._sel = null;
+    }
+    function offsetRect(offset){
+      const p = nodeAtOffset(docEl, offset); if(!p) return {left:0, top:0, height:16};
+      let rect; try{ const r=document.createRange(); r.setStart(p.node, p.off); r.collapse(true); rect=r.getBoundingClientRect(); }catch(e){ rect={left:0,top:0,height:16}; }
+      return { left: rect.left, top: rect.top + (rect.height||16)/2 - 12 };
+    }
+    // 长按后不自动选词：仅在长按点显示「锚点手柄」，由用户拖动来决定选区范围
+    function startAnchor(caret){
+      const node = caret.node; if(node.nodeType !== 3 || !docEl.contains(node)) return;
+      const g = pointToOffset(node, caret.offset, docEl);
+      openManual._csel = { start: g, end: g, anchor: g, anchorMode: true };
+      floatEl.style.display = 'none';
+      renderCustomSel();
+      dragAnchor();
+    }
+    function dragAnchor(){
+      const cs = openManual._csel; if(!cs || !cs.anchorMode) return;
+      window.addEventListener('touchmove', openManual._anchorMove, {passive:false});
+      window.addEventListener('touchend', openManual._anchorEnd);
+      window.addEventListener('touchcancel', openManual._anchorEnd);
+    }
+    function dragHandle(which, e){
+      e.preventDefault(); e.stopPropagation();
+      if(!openManual._csel || openManual._csel.anchorMode) return;
+      const move = ev => {
+        const t = ev.touches && ev.touches[0]; if(!t) return;
+        const c = caretFromPoint(t.clientX, t.clientY); if(!c) return;
+        const g = pointToOffset(c.node, c.offset, docEl);
+        const cs = openManual._csel;
+        const maxLen = (docEl.textContent || '').length;
+        if(which === 'start'){ cs.start = Math.max(0, Math.min(g, cs.end - 1)); }
+        else { cs.end = Math.min(maxLen, Math.max(g, cs.start + 1)); }
+        renderCustomSel();
+      };
+      const end = () => { window.removeEventListener('touchmove', move, {passive:false}); window.removeEventListener('touchend', end); window.removeEventListener('touchcancel', end); };
+      window.addEventListener('touchmove', move, {passive:false});
+      window.addEventListener('touchend', end);
+      window.addEventListener('touchcancel', end);
+    }
+    let _lpTimer = null, _lpXY = null, _lpMoved = false;
+    docEl.addEventListener('touchstart', e=>{
+      if(!isTouchMode() || e.touches.length !== 1) return;
+      const t = e.touches[0]; _lpXY = {x:t.clientX, y:t.clientY}; _lpMoved = false;
+      if(openManual._csel){ clearCustomSel(); return; }
+      clearTimeout(_lpTimer);
+      _lpTimer = setTimeout(()=>{
+        _lpTimer = null;
+        if(_lpMoved) return;
+        const c = caretFromPoint(_lpXY.x, _lpXY.y);
+        if(c) startAnchor(c);
+      }, 500);
+    }, {passive:true});
+    docEl.addEventListener('touchmove', e=>{
+      if(!_lpXY || !e.touches[0]) return;
+      const t = e.touches[0]; if(Math.hypot(t.clientX - _lpXY.x, t.clientY - _lpXY.y) > 8){ _lpMoved = true; clearTimeout(_lpTimer); _lpTimer = null; }
+    }, {passive:true});
+    docEl.addEventListener('touchend', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; _lpXY = null; }, {passive:true});
+    docEl.addEventListener('touchcancel', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; _lpXY = null; }, {passive:true});
+    docEl.addEventListener('scroll', ()=>{ if(openManual._csel) positionHandles(); }, {passive:true});
+    // 创建可拖动手柄（固定定位，浮于内容之上）
+    if(!openManual._hStart){
+      openManual._hStart = document.createElement('div'); openManual._hStart.className = 'manual-handle manual-handle-start';
+      openManual._hEnd = document.createElement('div'); openManual._hEnd.className = 'manual-handle manual-handle-end';
+      document.body.appendChild(openManual._hStart); document.body.appendChild(openManual._hEnd);
+      openManual._hStart.style.display = 'none'; openManual._hEnd.style.display = 'none';
+      // 锚点扫选：长按后按住锚点手柄拖动，从锚点向外扫出选区（函数引用稳定，addEventListener 幂等）
+      openManual._anchorMove = ev => {
+        const cs = openManual._csel; if(!cs || !cs.anchorMode) return;
+        ev.preventDefault();
+        const t = ev.touches && ev.touches[0]; if(!t) return;
+        const c = caretFromPoint(t.clientX, t.clientY); if(!c) return;
+        const g = pointToOffset(c.node, c.offset, docEl);
+        const maxLen = (docEl.textContent || '').length;
+        const s = Math.min(cs.anchor, g), e = Math.max(cs.anchor, g);
+        openManual._csel = { start: s, end: e, anchor: cs.anchor, anchorMode: true };
+        renderCustomSel();
+      };
+      openManual._anchorEnd = () => {
+        window.removeEventListener('touchmove', openManual._anchorMove, {passive:false});
+        window.removeEventListener('touchend', openManual._anchorEnd);
+        window.removeEventListener('touchcancel', openManual._anchorEnd);
+      };
+      // 已有选区时：拖动两端手柄调整选区边界
+      openManual._hStart.addEventListener('touchstart', e=>dragHandle('start', e), {passive:false});
+      openManual._hEnd.addEventListener('touchstart', e=>dragHandle('end', e), {passive:false});
+    }
+    docEl.addEventListener('contextmenu', e=>{
+      if(e.target.closest('.manual-doc, .guide-doc')) e.preventDefault();
+      if(isTouchMode()) return; // 触屏长按由计时器处理
+      const sel = window.getSelection(); if(!sel || sel.isCollapsed) return;
+      const range = sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)) return;
+      const c = caretFromPoint(e.clientX, e.clientY); if(c) selectWordCustom(c);
+    });
     docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; block.scrollIntoView({behavior:'smooth',block:'start'}); flash(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
     openManual._mo = new MutationObserver(()=>syncStickyVisibility());
     openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
@@ -11546,7 +11733,7 @@ function openManual(){
   function addHlFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const arr=hilites(); arr.push({id:(openManual._hlSeq=(openManual._hlSeq||0)+1), start:s.start, end:s.end}); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHi')); }
 function cancelHlInSelection(){ const s=openManual._sel; if(!s) return; const arr=hilites(); const kept=arr.filter(h=>!(h.start!=null && h.start<s.end && h.end>s.start)); if(kept.length!==arr.length){ saveStore('hilites', kept); applyHighlights(); toast(T('manUnHl')); } floatEl.style.display='none'; }
 function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); const overlaps=arr.filter(h=>h.start!=null && h.start<s.end && h.end>s.start); if(!overlaps.length){ floatEl.style.display='none'; return; } const ns=Math.min(s.start, ...overlaps.map(h=>h.start)); const ne=Math.max(s.end, ...overlaps.map(h=>h.end)); const keepId=overlaps.reduce((a,b)=>(a.id<b.id?a:b)).id; arr=arr.map(h=> h.id===keepId ? {id:h.id, start:ns, end:ne} : h); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHiExpanded')); }
-  function onSelectionChange(){ const sel=window.getSelection(); if(!sel || sel.isCollapsed || sel.rangeCount===0){ floatEl.style.display='none'; openManual._sel=null; return; } const range=sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)){ floatEl.style.display='none'; openManual._sel=null; return; } const off=rangeToOffsets(range, docEl); const arr=hilites(); const overlap=arr.some(h=>h.start!=null && h.start<off[1] && h.end>off[0]); openManual._sel={ text: sel.toString(), line: blockLineOf((sel.anchorNode)||docEl), start: off[0], end: off[1] }; floatEl.style.display='flex'; const hiBtn=document.getElementById('manual-float-hi'); const cancelBtn=document.getElementById('manual-float-hicancel'); const expandBtn=document.getElementById('manual-float-hiexpand'); if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; } else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; } floatEl.classList.remove('float-bottom'); const rect=range.getBoundingClientRect(); const mrect=modal.getBoundingClientRect(); const card=modal.querySelector('.manual-card').getBoundingClientRect(); let left=rect.left+rect.width/2-mrect.left-60; let top=rect.top-mrect.top-38; const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top; left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top); floatEl.style.left=left+'px'; floatEl.style.top=top+'px'; }
+  function onSelectionChange(){ if(typeof openManual._csel!=='undefined' && openManual._csel) return; const sel=window.getSelection(); if(!sel || sel.isCollapsed || sel.rangeCount===0){ floatEl.style.display='none'; openManual._sel=null; return; } const range=sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)){ floatEl.style.display='none'; openManual._sel=null; return; } const off=rangeToOffsets(range, docEl); const arr=hilites(); const overlap=arr.some(h=>h.start!=null && h.start<off[1] && h.end>off[0]); openManual._sel={ text: sel.toString(), line: blockLineOf((sel.anchorNode)||docEl), start: off[0], end: off[1] }; floatEl.style.display='flex'; const hiBtn=document.getElementById('manual-float-hi'); const cancelBtn=document.getElementById('manual-float-hicancel'); const expandBtn=document.getElementById('manual-float-hiexpand'); if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; } else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; } floatEl.classList.remove('float-bottom'); const rect=range.getBoundingClientRect(); const mrect=modal.getBoundingClientRect(); const card=modal.querySelector('.manual-card').getBoundingClientRect(); let left=rect.left+rect.width/2-mrect.left-60; let top=rect.top-mrect.top-38; const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top; left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top); floatEl.style.left=left+'px'; floatEl.style.top=top+'px'; }
   function openToc(open){ tocEl.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.toggle('on', !!open); if(open){ notePanel.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }
   function openNote(open){ notePanel.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.toggle('on', !!open); if(open){ tocEl.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); } }
   function closeDrawers(){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); if(bottombarEl){ bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }

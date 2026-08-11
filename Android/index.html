@@ -803,7 +803,8 @@
 .md-block.hl { background: color-mix(in srgb, var(--warn) 16%, transparent); }
 .md-block.flash { animation: mdFlash 1.2s ease-out; }
 @keyframes mdFlash { 0%{background:color-mix(in srgb,var(--accent) 28%,transparent);} 100%{background:transparent;} }
-.manual-doc mark.md-hl { background: color-mix(in srgb, var(--warn) 85%, transparent); color:#1a1a1a; border-radius:3px; padding:0 1px; position:relative; z-index:1; }
+.manual-doc mark.md-hl { background: color-mix(in srgb, var(--warn) 85%, transparent); color:#1a1a1a; border-radius:3px; padding:0; position:relative; z-index:1; }
+.manual-doc mark.md-sel { background: color-mix(in srgb, var(--accent) 32%, transparent); color:inherit; border-radius:3px; padding:0; position:relative; z-index:1; }
   .manual-doc mark.search-hit { background: color-mix(in srgb, var(--accent-2) 60%, transparent); color:var(--text); border-radius:3px; padding:0 1px; position:relative; z-index:2; }
   .manual-doc mark.search-hit.cur { background: var(--accent-2); color:#fff; }
   .manual-doc mark.search-hit.flash { animation: searchFlash 1.4s ease-out; }
@@ -10563,23 +10564,36 @@ function renderBlock(b){
   return '';
 }
 function unwrapHighlights(root){ root.querySelectorAll('mark.md-hl').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
+// 将 [start,end]（相对 root 纯文本偏移）拆分为「落在每个文本节点内的子区间」，
+// 逐段包裹，避免一个 <mark> 跨多个块级元素（标题/段落/表格单元格）导致 DOM 结构错乱。
+function collectNodeRanges(root, start, end){
+  const out=[]; const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n;
+  while((n=tw.nextNode())){ const len=n.nodeValue.length; const s=Math.max(start,acc), e=Math.min(end,acc+len); if(e>s) out.push({node:n, s:s-acc, e:e-acc}); acc+=len; }
+  return out;
+}
 function wrapText(root, start, end, id){
   if(!(start>=0 && end>start)) return;
-  const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, startNode=null, startOff=0, endNode=null, endOff=0, n;
-  while((n=tw.nextNode())){ const len=n.nodeValue.length; if(startNode===null && acc+len>start){ startNode=n; startOff=start-acc; } if(endNode===null && acc+len>=end){ endNode=n; endOff=end-acc; break; } acc+=len; }
-  if(!startNode||!endNode) return; const range=document.createRange(); range.setStart(startNode,startOff); range.setEnd(endNode,endOff);
-  const mark=document.createElement('mark'); mark.className='md-hl'; if(id!=null) mark.dataset.hlId=id;
-  try { const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); } catch(e){}
+  const ranges=collectNodeRanges(root, start, end).reverse(); // 倒序：先包靠后的段，避免影响前面的节点
+  for(const r of ranges){
+    try{
+      const range=document.createRange(); range.setStart(r.node, r.s); range.setEnd(r.node, r.e);
+      const mark=document.createElement('mark'); mark.className='md-hl'; if(id!=null) mark.dataset.hlId=id;
+      const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark);
+    }catch(err){}
+  }
 }
 function wrapTempMark(root, start, end, cls){
   if(!(start>=0 && end>start)) return null;
-  const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n, startNode=null, startOff=0, endNode=null, endOff=0;
-  while((n=tw.nextNode())){ const len=n.nodeValue.length; if(startNode===null && acc+len>start){ startNode=n; startOff=start-acc; } if(endNode===null && acc+len>=end){ endNode=n; endOff=end-acc; break; } acc+=len; }
-  if(!startNode||!endNode) return null;
-  const range=document.createRange(); try{ range.setStart(startNode,startOff); range.setEnd(endNode,endOff); }catch(e){ return null; }
-  const mark=document.createElement('mark'); mark.className=cls;
-  try { const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); } catch(e){ return null; }
-  return mark;
+  const ranges=collectNodeRanges(root, start, end).reverse();
+  let last=null;
+  for(const r of ranges){
+    try{
+      const range=document.createRange(); range.setStart(r.node, r.s); range.setEnd(r.node, r.e);
+      const mark=document.createElement('mark'); mark.className=cls;
+      const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); last=mark;
+    }catch(err){ return null; }
+  }
+  return last;
 }
 function unwrapMarks(root, cls){ root.querySelectorAll('mark.'+cls).forEach(m=>{ const p=m.parentNode; if(!p) return; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
 function nodeAtOffset(root, off){ const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n; while((n=tw.nextNode())){ const len=n.nodeValue.length; if(acc+len>off) return n; acc+=len; } return null; }
@@ -10614,7 +10628,7 @@ function openManual(){
 
   if(!openManual._built){
     openManual._built = true;
-    async function hideManual(){ const ok=await closeAllStickies(); if(!ok) return; clearSearchHits(); searchInput.value=''; const tb=readEl.querySelector('.manual-toolbar'); if(tb) tb.classList.remove('search-open'); saveScroll(); modal.classList.remove('show'); var s=document.getElementById('settings-modal'); if(s) s.classList.add('show'); }
+    async function hideManual(){ clearCustomSel(); const ok=await closeAllStickies(); if(!ok) return; clearSearchHits(); searchInput.value=''; const tb=readEl.querySelector('.manual-toolbar'); if(tb) tb.classList.remove('search-open'); saveScroll(); modal.classList.remove('show'); var s=document.getElementById('settings-modal'); if(s) s.classList.add('show'); }
     function manualBackStep(){
       const layer=stickyLayer();
       const notes=Array.from(layer.querySelectorAll('.sticky-note'));
@@ -10675,6 +10689,10 @@ function openManual(){
     readEl.addEventListener('scroll', ()=>{ scheduleSaveScroll(); });
     docEl.addEventListener('scroll', ()=>{ if(isTouchMode()){ updateProgress(); updateTocActive(); } });
     floatEl.addEventListener('mousedown', e=>e.preventDefault());
+    // 触屏：阻止点击浮层时收起原生选区（否则选区消失、浮层随之隐藏，按钮点不到）。
+    // 阻止 touchstart 默认行为可保留选区，再用 touchend 触发按钮 click。
+    floatEl.addEventListener('touchstart', e=>e.preventDefault(), {passive:false});
+    floatEl.addEventListener('touchend', e=>{ const b=e.target.closest && e.target.closest('button'); if(b) b.click(); });
     document.getElementById('manual-toc-toggle').addEventListener('click', ()=>{ if(isTouchMode()) openToc(!tocEl.classList.contains('open')); else tocEl.classList.toggle('collapsed'); });
     if(bottombarEl){
       bottombarEl.querySelector('[data-act="toc"]').addEventListener('click', ()=>openToc(!tocEl.classList.contains('open')));
@@ -10695,7 +10713,7 @@ function openManual(){
     document.getElementById('manual-note-selall').addEventListener('change', e=>{ noteListEl.querySelectorAll('.note-check').forEach(c=>c.checked=e.target.checked); updateNoteCount(); });
     document.getElementById('manual-note-batchdel').addEventListener('click', batchDeleteNotes);
     document.getElementById('manual-float-hi').addEventListener('click', addHlFromSelection);
-    document.getElementById('manual-float-copy').addEventListener('click', ()=>{ const s=openManual._sel; copyText(s?s.text:getSelectionText()); floatEl.style.display='none'; });
+    document.getElementById('manual-float-copy').addEventListener('click', ()=>{ const s=openManual._sel; copyText(s?s.text:getSelectionText()); clearCustomSel(); });
     document.getElementById('manual-float-hicancel').addEventListener('click', cancelHlInSelection);
     document.getElementById('manual-float-hiexpand').addEventListener('click', expandHl);
     // 移动端长按选词 → 弹出 便签/高亮/复制 浮层
@@ -10716,15 +10734,182 @@ function openManual(){
       const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
       return true;
     }
-    let _lpTimer = null, _lpXY = null;
-    docEl.addEventListener('touchstart', e=>{ if(!isTouchMode() || e.touches.length !== 1) return; const t = e.touches[0]; _lpXY = {x:t.clientX, y:t.clientY}; clearTimeout(_lpTimer); _lpTimer = setTimeout(()=>{ _lpTimer = null; selectWordAt(_lpXY.x, _lpXY.y); onSelectionChange(); }, 450); }, {passive:true});
-    docEl.addEventListener('touchmove', e=>{ if(!_lpXY || !e.touches[0]) return; const t = e.touches[0]; if(Math.hypot(t.clientX - _lpXY.x, t.clientY - _lpXY.y) > 8){ clearTimeout(_lpTimer); _lpTimer = null; } }, {passive:true});
-    docEl.addEventListener('touchend', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
-    docEl.addEventListener('touchcancel', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
-    docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(!openManual._sel && (e.clientX || e.clientY)){ selectWordAt(e.clientX, e.clientY); } onSelectionChange(); });
+    // 触屏长按：自绘选区 + 可拖动手柄（不使用原生 window.getSelection，避免触发 vivo 系统工具条）。
+    // 长按命中文字后用「自定义选区」高亮，并在选区两端显示可拖动手柄；浮层仍为应用内 便签/高亮/复制。
+    let _lpTimer = null, _lpXY = null, _lpMoved = false;
+    docEl.addEventListener('touchstart', e=>{
+      if(!isTouchMode() || e.touches.length !== 1) return;
+      const t = e.touches[0]; _lpXY = {x:t.clientX, y:t.clientY}; _lpMoved = false;
+      if(openManual._csel){ clearCustomSel(); } // 已有自定义选区时点空白先清除；原生选区由 selectionchange 接管
+    }, {passive:true});
+    docEl.addEventListener('touchmove', e=>{ if(!_lpXY || !e.touches[0]) return; const t = e.touches[0]; if(Math.hypot(t.clientX - _lpXY.x, t.clientY - _lpXY.y) > 8){ _lpMoved = true; } }, {passive:true});
+    docEl.addEventListener('touchend', ()=>{ _lpXY = null; }, {passive:true});
+    docEl.addEventListener('touchcancel', ()=>{ _lpXY = null; }, {passive:true});
+    docEl.addEventListener('scroll', ()=>{ if(openManual._csel) positionHandles(); }, {passive:true});
+    // 创建可拖动手柄（固定定位，浮于内容之上）
+    if(!openManual._hStart){
+      openManual._hStart = document.createElement('div'); openManual._hStart.className = 'manual-handle manual-handle-start';
+      openManual._hEnd = document.createElement('div'); openManual._hEnd.className = 'manual-handle manual-handle-end';
+      document.body.appendChild(openManual._hStart); document.body.appendChild(openManual._hEnd);
+      openManual._hStart.style.display = 'none'; openManual._hEnd.style.display = 'none';
+      // 锚点扫选：长按后按住锚点手柄拖动，从锚点向外扫出选区（函数引用稳定，addEventListener 幂等）
+      openManual._anchorMove = ev => {
+        const cs = openManual._csel; if(!cs || !cs.anchorMode) return;
+        const t = ev.touches && ev.touches[0]; if(!t) return;
+        const c = caretFromPoint(t.clientX, t.clientY); if(!c) return;
+        const g = pointToOffset(c.node, c.offset, docEl);
+        cs.start = Math.min(cs.anchor, g); cs.end = Math.max(cs.anchor, g);
+        renderCustomSel();
+      };
+      openManual._anchorEnd = () => {
+        window.removeEventListener('touchmove', openManual._anchorMove, {passive:false});
+        window.removeEventListener('touchend', openManual._anchorEnd);
+        window.removeEventListener('touchcancel', openManual._anchorEnd);
+        const cs = openManual._csel;
+        if(cs && cs.anchorMode && cs.start < cs.end){ cs.anchorMode = false; renderCustomSel(); }
+        // 松手时仍无选区则保留锚点手柄（不出现选区），等待用户再次拖动或点空白处清除
+      };
+      openManual._hStart.addEventListener('touchstart', e=>{ if(openManual._csel && openManual._csel.anchorMode){ e.preventDefault(); e.stopPropagation(); dragAnchor(); } else { dragHandle('start', e); } }, {passive:false});
+      openManual._hEnd.addEventListener('touchstart', e=>dragHandle('end', e), {passive:false});
+    }
+    docEl.addEventListener('contextmenu', e=>{
+      e.preventDefault();
+      if(isTouchMode()) return; // 触屏长按由计时器处理，这里仅阻止系统菜单
+      const c = caretFromPoint(e.clientX, e.clientY); if(c && !openManual._csel){ selectWordCustom(c); }
+    });
     docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; block.scrollIntoView({behavior:'smooth',block:'start'}); flash(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
     openManual._mo = new MutationObserver(()=>syncStickyVisibility());
     openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
+  }
+
+  // ===== 触屏自定义选区（不使用原生 getSelection，避免 vivo 系统工具条；自绘可拖动手柄） =====
+  function caretFromPoint(x, y){
+    let range = null;
+    if(document.caretRangeFromPoint){ range = document.caretRangeFromPoint(x, y); }
+    else if(document.caretPositionFromPoint){ const p = document.caretPositionFromPoint(x, y); if(p){ range = document.createRange(); range.setStart(p.offsetNode, p.offset); range.collapse(true); } }
+    if(!range) return null;
+    let node = range.startContainer, off = range.startOffset;
+    if(!docEl.contains(node)) return null;
+    if(node.nodeType === 1){ // 元素节点：映射到相邻文本节点
+      const child = node.childNodes[off];
+      if(child && child.nodeType === 3) return {node:child, offset:0};
+      const tw = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null); let n;
+      while((n = tw.nextNode())){ if(docEl.contains(n)) return {node:n, offset:0}; }
+      return null;
+    }
+    return {node, offset:off};
+  }
+  function wrapSelByOffsets(s, e){
+    if(!(s>=0 && e>s)) return;
+    const ranges = collectNodeRanges(docEl, s, e).reverse();
+    for(const r of ranges){ try{ const range=document.createRange(); range.setStart(r.node,r.s); range.setEnd(r.node,r.e); const mark=document.createElement('mark'); mark.className='md-sel'; const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); }catch(err){} }
+  }
+  function selectedText(){ let t=''; docEl.querySelectorAll('mark.md-sel').forEach(m=>{ t+=m.textContent; }); return t; }
+  function hideHandles(){ const hs=openManual._hStart, he=openManual._hEnd; if(hs) hs.style.display='none'; if(he) he.style.display='none'; }
+  function positionFloat(){
+    const marks = docEl.querySelectorAll('mark.md-sel'); if(!marks.length) return;
+    let minLeft=Infinity, minTop=Infinity, maxRight=-Infinity;
+    marks.forEach(m=>{ const r=m.getBoundingClientRect(); minLeft=Math.min(minLeft,r.left); minTop=Math.min(minTop,r.top); maxRight=Math.max(maxRight,r.right); });
+    const mrect = modal.getBoundingClientRect(); const card = modal.querySelector('.manual-card').getBoundingClientRect();
+    let left=(minLeft+maxRight)/2-mrect.left-60; let top=minTop-mrect.top-38;
+    const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top;
+    left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top);
+    floatEl.style.left=left+'px'; floatEl.style.top=top+'px';
+  }
+  function positionHandles(){
+    const hs = openManual._hStart, he = openManual._hEnd; if(!hs || !he) return;
+    const cs = openManual._csel;
+    if(cs && cs.anchorMode){ const r = offsetRect(cs.anchor); hs.style.left = r.left+'px'; hs.style.top = r.top+'px'; hs.style.display='block'; he.style.display='none'; return; }
+    const marks = docEl.querySelectorAll('mark.md-sel'); if(!marks.length){ hideHandles(); return; }
+    const first = marks[0].getBoundingClientRect();
+    const last = marks[marks.length-1].getBoundingClientRect();
+    hs.style.left = first.left + 'px'; hs.style.top = first.top + 'px';
+    he.style.left = last.right + 'px'; he.style.top = last.bottom + 'px';
+    hs.style.display = 'block'; he.style.display = 'block';
+    positionFloat();
+  }
+  function renderCustomSel(){
+    const cs = openManual._csel; if(!cs){ hideHandles(); floatEl.style.display='none'; return; }
+    if(window.getSelection) window.getSelection().removeAllRanges(); // 清除可能残留的浏览器原生选区，避免与自定义选区叠加
+    unwrapMarks(docEl, 'md-sel');
+    if(!(cs.end > cs.start)){
+      if(cs.anchorMode){ const r = offsetRect(cs.anchor); openManual._hStart.style.left=r.left+'px'; openManual._hStart.style.top=r.top+'px'; openManual._hStart.style.display='block'; openManual._hEnd.style.display='none'; floatEl.style.display='none'; return; }
+      hideHandles(); floatEl.style.display='none'; return;
+    }
+    wrapSelByOffsets(cs.start, cs.end);
+    if(cs.anchorMode){ const r = offsetRect(cs.anchor); openManual._hStart.style.left=r.left+'px'; openManual._hStart.style.top=r.top+'px'; openManual._hStart.style.display='block'; openManual._hEnd.style.display='none'; floatEl.style.display='none'; return; }
+    showFloatFromMarks();
+  }
+  // 基于当前已存在的 mark.md-sel 显示浮层与手柄（不重新包裹，避免重复选区）
+  function showFloatFromMarks(){
+    const cs = openManual._csel; if(!cs){ hideHandles(); floatEl.style.display='none'; return; }
+    const marks = docEl.querySelectorAll('mark.md-sel');
+    if(!marks.length){ hideHandles(); floatEl.style.display='none'; return; }
+    const arr = hilites(); const overlap = arr.some(h=>h.start!=null && h.start<cs.end && h.end>cs.start);
+    const hiBtn = document.getElementById('manual-float-hi'); const cancelBtn = document.getElementById('manual-float-hicancel'); const expandBtn = document.getElementById('manual-float-hiexpand');
+    if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) cancelBtn.style.display=''; }
+    else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) cancelBtn.style.display='none'; }
+    openManual._sel = { text: selectedText(), line: blockLineOf(nodeAtOffset(docEl, cs.start) || docEl), start: cs.start, end: cs.end };
+    floatEl.classList.remove('float-bottom');
+    floatEl.style.display = 'flex';
+    positionHandles();
+  }
+  function selectWordCustom(caret){
+    const node = caret.node; if(node.nodeType !== 3 || !docEl.contains(node)) return;
+    const text = node.nodeValue, idx = caret.offset;
+    let s = idx, e = idx; const isWord = ch => /\S/.test(ch);
+    while(s > 0 && isWord(text[s-1])) s--;
+    while(e < text.length && isWord(text[e])) e++;
+    if(e <= s) return;
+    const gs = pointToOffset(node, s, docEl), ge = pointToOffset(node, e, docEl);
+    openManual._csel = { start: gs, end: ge };
+    renderCustomSel();
+  }
+  function clearCustomSel(){
+    openManual._csel = null;
+    openManual._lpActive = false;
+    unwrapMarks(docEl, 'md-sel');
+    hideHandles();
+    floatEl.style.display = 'none';
+    openManual._sel = null;
+  }
+  function offsetRect(offset){
+    const p = nodeAtOffset(docEl, offset); if(!p) return {left:0, top:0, height:16};
+    let rect; try{ const r=document.createRange(); r.setStart(p.node, p.off); r.collapse(true); rect=r.getBoundingClientRect(); }catch(e){ rect={left:0,top:0,height:16}; }
+    return { left: rect.left, top: rect.top + (rect.height||16)/2 - 12 };
+  }
+  // 长按后不自动选词：仅在长按点显示「锚点手柄」，由用户拖动来决定选区范围
+  function startAnchor(caret){
+    const node = caret.node; if(node.nodeType !== 3 || !docEl.contains(node)) return;
+    const g = pointToOffset(node, caret.offset, docEl);
+    openManual._csel = { start: g, end: g, anchor: g, anchorMode: true };
+    floatEl.style.display = 'none';
+    renderCustomSel();
+    dragAnchor();
+  }
+  function dragAnchor(){
+    const cs = openManual._csel; if(!cs || !cs.anchorMode) return;
+    window.addEventListener('touchmove', openManual._anchorMove, {passive:false});
+    window.addEventListener('touchend', openManual._anchorEnd);
+    window.addEventListener('touchcancel', openManual._anchorEnd);
+  }
+  function dragHandle(which, e){
+    e.preventDefault(); e.stopPropagation();
+    if(!openManual._csel || openManual._csel.anchorMode) return;
+    const move = ev => {
+      const t = ev.touches && ev.touches[0]; if(!t) return;
+      const c = caretFromPoint(t.clientX, t.clientY); if(!c) return;
+      const g = pointToOffset(c.node, c.offset, docEl);
+      const cs = openManual._csel;
+      const maxLen = (docEl.textContent || '').length;
+      if(which === 'start'){ cs.start = Math.max(0, Math.min(g, cs.end - 1)); }
+      else { cs.end = Math.min(maxLen, Math.max(g, cs.start + 1)); }
+      renderCustomSel();
+    };
+    const end = () => { window.removeEventListener('touchmove', move, {passive:false}); window.removeEventListener('touchend', end); window.removeEventListener('touchcancel', end); };
+    window.addEventListener('touchmove', move, {passive:false});
+    window.addEventListener('touchend', end);
+    window.addEventListener('touchcancel', end);
   }
 
   if(openManual._lang !== lang){ if(openManual._lang) closeAllStickies(); openManual._lang = lang; loadManual(lang); }
@@ -11017,13 +11202,13 @@ function openManual(){
       }
     }));
   }
-  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now()}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
+  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now()}); saveStore('notes', arr); renderNotes(); clearCustomSel(); openSticky(id, true); }
   function hilites(){ return loadStore('hilites', []); }
   function applyHighlights(){ unwrapHighlights(docEl); let arr=hilites(); let maxId=0; arr.forEach(h=>{ const n=parseInt(h.id,10); if(!isNaN(n)&&n>maxId) maxId=n; }); openManual._hlSeq=maxId; let changed=false; arr=arr.filter(h=>{ if(h.start==null){ const off=findTextOffsets(docEl, h.text); if(off){ h.start=off[0]; h.end=off[1]; changed=true; return true; } changed=true; return false; } return true; }); if(changed) saveStore('hilites', arr); arr.forEach(h=>wrapText(docEl, h.start, h.end, h.id)); }
-  function addHlFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const arr=hilites(); arr.push({id:(openManual._hlSeq=(openManual._hlSeq||0)+1), start:s.start, end:s.end}); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHi')); }
-function cancelHlInSelection(){ const s=openManual._sel; if(!s) return; const arr=hilites(); const kept=arr.filter(h=>!(h.start!=null && h.start<s.end && h.end>s.start)); if(kept.length!==arr.length){ saveStore('hilites', kept); applyHighlights(); toast(T('manUnHl')); } floatEl.style.display='none'; }
-function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); const overlaps=arr.filter(h=>h.start!=null && h.start<s.end && h.end>s.start); if(!overlaps.length){ floatEl.style.display='none'; return; } const ns=Math.min(s.start, ...overlaps.map(h=>h.start)); const ne=Math.max(s.end, ...overlaps.map(h=>h.end)); const keepId=overlaps.reduce((a,b)=>(a.id<b.id?a:b)).id; arr=arr.map(h=> h.id===keepId ? {id:h.id, start:ns, end:ne} : h); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHiExpanded')); }
-  function onSelectionChange(){ const sel=window.getSelection(); if(!sel || sel.isCollapsed || sel.rangeCount===0){ floatEl.style.display='none'; openManual._sel=null; return; } const range=sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)){ floatEl.style.display='none'; openManual._sel=null; return; } const off=rangeToOffsets(range, docEl); const arr=hilites(); const overlap=arr.some(h=>h.start!=null && h.start<off[1] && h.end>off[0]); openManual._sel={ text: sel.toString(), line: blockLineOf((sel.anchorNode)||docEl), start: off[0], end: off[1] }; floatEl.style.display='flex'; const hiBtn=document.getElementById('manual-float-hi'); const cancelBtn=document.getElementById('manual-float-hicancel'); const expandBtn=document.getElementById('manual-float-hiexpand'); if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; } else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; } floatEl.classList.remove('float-bottom'); const rect=range.getBoundingClientRect(); const mrect=modal.getBoundingClientRect(); const card=modal.querySelector('.manual-card').getBoundingClientRect(); let left=rect.left+rect.width/2-mrect.left-60; let top=rect.top-mrect.top-38; const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top; left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top); floatEl.style.left=left+'px'; floatEl.style.top=top+'px'; }
+  function addHlFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const arr=hilites(); arr.push({id:(openManual._hlSeq=(openManual._hlSeq||0)+1), start:s.start, end:s.end}); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; clearCustomSel(); toast(T('manHi')); }
+function cancelHlInSelection(){ const s=openManual._sel; if(!s) return; const arr=hilites(); const kept=arr.filter(h=>!(h.start!=null && h.start<s.end && h.end>s.start)); if(kept.length!==arr.length){ saveStore('hilites', kept); applyHighlights(); toast(T('manUnHl')); } floatEl.style.display='none'; clearCustomSel(); }
+function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); const overlaps=arr.filter(h=>h.start!=null && h.start<s.end && h.end>s.start); if(!overlaps.length){ floatEl.style.display='none'; clearCustomSel(); return; } const ns=Math.min(s.start, ...overlaps.map(h=>h.start)); const ne=Math.max(s.end, ...overlaps.map(h=>h.end)); const keepId=overlaps.reduce((a,b)=>(a.id<b.id?a:b)).id; arr=arr.map(h=> h.id===keepId ? {id:h.id, start:ns, end:ne} : h); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; clearCustomSel(); toast(T('manHiExpanded')); }
+  function onSelectionChange(){ if(openManual._csel) return; const sel=window.getSelection(); if(!sel || sel.isCollapsed || sel.rangeCount===0){ floatEl.style.display='none'; openManual._sel=null; return; } const range=sel.getRangeAt(0); if(!docEl.contains(range.commonAncestorContainer)){ floatEl.style.display='none'; openManual._sel=null; return; } const off=rangeToOffsets(range, docEl); const arr=hilites(); const overlap=arr.some(h=>h.start!=null && h.start<off[1] && h.end>off[0]); openManual._sel={ text: sel.toString(), line: blockLineOf((sel.anchorNode)||docEl), start: off[0], end: off[1] }; floatEl.style.display='flex'; const hiBtn=document.getElementById('manual-float-hi'); const cancelBtn=document.getElementById('manual-float-hicancel'); const expandBtn=document.getElementById('manual-float-hiexpand'); if(overlap){ if(hiBtn) hiBtn.style.display='none'; if(cancelBtn) cancelBtn.style.display=''; if(expandBtn) expandBtn.style.display=''; } else { if(hiBtn) hiBtn.style.display=''; if(cancelBtn) cancelBtn.style.display='none'; if(expandBtn) expandBtn.style.display='none'; } floatEl.classList.remove('float-bottom'); const rect=range.getBoundingClientRect(); const mrect=modal.getBoundingClientRect(); const card=modal.querySelector('.manual-card').getBoundingClientRect(); let left=rect.left+rect.width/2-mrect.left-60; let top=rect.top-mrect.top-38; const cLeft=card.left-mrect.left, cRight=card.right-mrect.left, cTop=card.top-mrect.top; left=Math.max(cLeft+8, Math.min(left, cRight-130)); top=Math.max(cTop+48, top); floatEl.style.left=left+'px'; floatEl.style.top=top+'px'; }
   function openToc(open){ tocEl.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.toggle('on', !!open); if(open){ notePanel.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }
   function openNote(open){ notePanel.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.toggle('on', !!open); if(open){ tocEl.classList.remove('open'); if(bottombarEl) bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); } }
   function closeDrawers(){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); if(bottombarEl){ bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }

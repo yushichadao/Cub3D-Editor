@@ -781,7 +781,7 @@
 .md-block.hl { background: color-mix(in srgb, var(--warn) 16%, transparent); }
 .md-block.flash { animation: mdFlash 1.2s ease-out; }
 @keyframes mdFlash { 0%{background:color-mix(in srgb,var(--accent) 28%,transparent);} 100%{background:transparent;} }
-.manual-doc mark.md-hl { background: color-mix(in srgb, var(--warn) 85%, transparent); color:#1a1a1a; border-radius:3px; padding:0 1px; position:relative; z-index:1; }
+.manual-doc mark.md-hl { background: color-mix(in srgb, var(--warn) 85%, transparent); color:#1a1a1a; border-radius:3px; padding:0; position:relative; z-index:1; }
 .manual-doc mark.md-jump { background: var(--accent); color:#fff; border-radius:3px; padding:0 1px; animation: mdJumpPulse 1.6s ease-out; }
 @keyframes mdJumpPulse { 0%,50%,100%{ filter:brightness(1);} 25%,75%{ filter:brightness(1.6);} }
   .md-block.search-hit { background: color-mix(in srgb, var(--accent-2) 14%, transparent); }
@@ -10803,23 +10803,34 @@ function renderBlock(b){
   return '';
 }
 function unwrapHighlights(root){ root.querySelectorAll('mark.md-hl').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
+function collectNodeRanges(root, start, end){
+  const out=[]; const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n;
+  while((n=tw.nextNode())){ const len=n.nodeValue.length; const s=Math.max(start,acc), e=Math.min(end,acc+len); if(e>s) out.push({node:n, s:s-acc, e:e-acc}); acc+=len; }
+  return out;
+}
 function wrapText(root, start, end, id){
   if(!(start>=0 && end>start)) return;
-  const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, startNode=null, startOff=0, endNode=null, endOff=0, n;
-  while((n=tw.nextNode())){ const len=n.nodeValue.length; if(startNode===null && acc+len>start){ startNode=n; startOff=start-acc; } if(endNode===null && acc+len>=end){ endNode=n; endOff=end-acc; break; } acc+=len; }
-  if(!startNode||!endNode) return; const range=document.createRange(); range.setStart(startNode,startOff); range.setEnd(endNode,endOff);
-  const mark=document.createElement('mark'); mark.className='md-hl'; if(id!=null) mark.dataset.hlId=id;
-  try { const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); } catch(e){}
+  const ranges=collectNodeRanges(root, start, end).reverse(); // 倒序：先包靠后的段，避免影响前面的节点
+  for(const r of ranges){
+    try{
+      const range=document.createRange(); range.setStart(r.node, r.s); range.setEnd(r.node, r.e);
+      const mark=document.createElement('mark'); mark.className='md-hl'; if(id!=null) mark.dataset.hlId=id;
+      const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark);
+    }catch(err){}
+  }
 }
 function wrapTempMark(root, start, end, cls){
   if(!(start>=0 && end>start)) return null;
-  const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n, startNode=null, startOff=0, endNode=null, endOff=0;
-  while((n=tw.nextNode())){ const len=n.nodeValue.length; if(startNode===null && acc+len>start){ startNode=n; startOff=start-acc; } if(endNode===null && acc+len>=end){ endNode=n; endOff=end-acc; break; } acc+=len; }
-  if(!startNode||!endNode) return null;
-  const range=document.createRange(); try{ range.setStart(startNode,startOff); range.setEnd(endNode,endOff); }catch(e){ return null; }
-  const mark=document.createElement('mark'); mark.className=cls;
-  try { const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); } catch(e){ return null; }
-  return mark;
+  const ranges=collectNodeRanges(root, start, end).reverse();
+  let last=null;
+  for(const r of ranges){
+    try{
+      const range=document.createRange(); range.setStart(r.node, r.s); range.setEnd(r.node, r.e);
+      const mark=document.createElement('mark'); mark.className=cls;
+      const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); last=mark;
+    }catch(err){ return null; }
+  }
+  return last;
 }
 function unwrapMarks(root, cls){ root.querySelectorAll('mark.'+cls).forEach(m=>{ const p=m.parentNode; if(!p) return; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
 function nodeAtOffset(root, off){ const tw=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null); let acc=0, n; while((n=tw.nextNode())){ const len=n.nodeValue.length; if(acc+len>off) return n; acc+=len; } return null; }
@@ -11450,7 +11461,6 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
 <div id="guide-src" style="display:none" aria-hidden="true"></div>
 
 <!-- 桌面版功能层：均等待 cube3d:ready 事件后再初始化；网页版中自动静默 -->
-<script src="shell/desktop-bridge.js"></script>
 <script src="shell/desktop-ui.js"></script>
 
 

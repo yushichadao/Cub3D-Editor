@@ -24,16 +24,11 @@ files:
   - "!dist/**"
   - "!scripts/**"
 
-# 需要被外部进程（Python / 其它语言解释器）直接读取的文件不能留在 asar 内
+# 需要被外部进程直接读取的文件不能留在 asar 内
 asar: true
-asarUnpack:
-  - electron/plugin-sdk/**
 
-# 内置插件与语言包放在 resources 下，用户可直接查看、复制、修改
+# 语言包放在 resources 下，用户可直接查看、复制、修改
 extraResources:
-  - from: plugins
-    to: plugins
-    filter: ["**/*"]
   - from: langpacks
     to: langpacks
     filter: ["**/*"]

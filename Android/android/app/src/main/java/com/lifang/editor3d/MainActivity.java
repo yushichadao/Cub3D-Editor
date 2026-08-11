@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -84,6 +87,43 @@ public class MainActivity extends BridgeActivity {
             }
         }
         registerBackInvoked();
+    }
+
+    // ---- 隐藏系统文字选区工具条（复制/全选/分享），保留 WebView 选择手柄与应用内浮层 ----
+    // API33+ 文字选区改走 TYPE_PRIMARY(CAB)，故对所有 ActionMode 统一拦截为「空菜单」。
+    // 本应用除 WebView 文字选区外没有其它 ActionMode，全部拦截是安全的。
+    // 返回 true + 空菜单：系统工具条不显示、选区与手柄保留，由应用内浮层（便签/高亮/复制）接管。
+    @Override
+    public ActionMode startActionMode(ActionMode.Callback callback) {
+        return super.startActionMode(wrapSelectionCallback(callback));
+    }
+
+    @Override
+    public ActionMode startActionMode(ActionMode.Callback callback, int type) {
+        return super.startActionMode(wrapSelectionCallback(callback), type);
+    }
+
+    private ActionMode.Callback wrapSelectionCallback(final ActionMode.Callback original) {
+        return new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                // 不填充任何菜单项：系统工具条不显示，但选区与手柄保留
+                return true;
+            }
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                if (menu != null) menu.clear();
+                return false;
+            }
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                if (original != null) original.onDestroyActionMode(mode);
+            }
+        };
     }
 
     // ---- 返回键：API33+ 预测手势通道 ----
