@@ -24,8 +24,8 @@
 ## 快速开始
 
 - **网页版（无需安装）**：打开 <https://yushichadao.github.io/Cub3D-Editor/>
-- **PC 版**：下载 `Cube3D-Studio-Setup-x.x.x-x64.exe`（安装版）或 `Cube3D-Studio-Portable-x.x.x-x64.exe`（便携版，免安装）
-- **Android 版**：允许"未知来源"后，在 Releases 中安装 `立方3D-v1.0.0-release.apk`
+- **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
+- **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor.apk`
 
 导出为 `.json` 的工程文件在三端之间通用。
 
@@ -33,16 +33,15 @@
 
 ## 下载与发布
 
-各平台的打包产物（Windows 安装版 / 便携版、Android 安装包）通过 GitHub Releases 发布：
+各平台的正式版安装包统一命名为通用名，置于仓库根 `dist/` 目录，随源码一同分发（当前版本 `v1.0.0`）：
 
-- **Releases 页面**：<https://github.com/yushichadao/Cub3D-Editor/releases>
-- 当前版本：`v1.0.0`
+| 产物 | 位置 | 说明 |
+| :--- | :--- | :--- |
+| `Cub3D-Editor-Setup.exe` | `dist/` | Windows 安装版 |
+| `Cub3D-Editor-Portable.exe` | `dist/` | Windows 便携版（免安装） |
+| `Cub3D-Editor.apk` | `dist/` | Android 安装包（release 签名，包名 `com.cub3deditor.app`） |
 
-| 产物 | 说明 |
-| :--- | :--- |
-| `Cube3D-Studio-Setup-1.0.0-x64.exe` | Windows 安装版 |
-| `Cube3D-Studio-Portable-1.0.0-x64.exe` | Windows 便携版（免安装） |
-| `立方3D-v1.0.0-release.apk` | Android 安装包（release 签名） |
+> 注：`dist/` 下仅上述三个正式安装包入库；各端 `dist/`、`build/` 等构建产物仍按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。
 
 ---
 
@@ -93,9 +92,9 @@ Cub3D Editor/
 │   └── three/              # Three.js 模块与示例
 ├── Web/                    # 网页版（GitHub Pages / Vercel）
 ├── PC/                     # Windows 桌面版（Electron + electron-builder）
-│   ├── electron/           # Electron 主进程
-│   └── langpacks/          # 语言包
+│   └── electron/           # Electron 主进程
 ├── Android/                # Android 版（Capacitor）
+│   └── android/            # Capacitor 原生工程（含 release.keystore 签名，不入库）
 ├── sync-shared.mjs         # 同步 shared/ → 各端 + 生成语言包
 ├── _i18n_en.mjs            # 英文文案生成
 ├── _i18n_ja.mjs            # 日文文案生成
@@ -139,12 +138,12 @@ npm run dist:portable   # 仅便携版
 ```powershell
 cd Android
 npm install
-npm run keystore        # 首次构建前生成签名密钥
-npm run apk:release     # 构建 立方3D-v1.0.0-release.apk
+npm run keystore        # 首次构建前生成签名密钥（CN=Cub3D Editor）
+npm run apk:release     # 构建 release 签名版 Cub3D-Editor.apk
 npm run apk:debug       # 调试包
 ```
 
-产物位于 `Android/dist/`。
+产物位于 `Android/dist/Cub3D-Editor.apk`（发布时复制到仓库根 `dist/`）。
 
 ---
 
