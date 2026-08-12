@@ -36,7 +36,7 @@ No matter which end you use, the tool pops up a **Service Agreement and Privacy 
 | Scope | Covers all editor features (interface, shapes, color, transform, text, brush, eraser, viewpoint, shortcuts, files, advanced topics and practice) |
 | Applicable forms | **Web (mouse) / Web (touch) / PC Desktop / Android** — all four forms fully covered |
 | Coordinate system convention | This book **always follows the axis labels actually shown on the interface** (page labels: X blue = front-back, Y red = left-right, Z green = height, Z axis points up). The internal code implementation axes differ from the page labels; ordinary readers need not concern themselves with this |
-| Reading suggestions | First read [Chapter 0: Four Forms and How to Read This Book](jump:第0章 四种形态与本书读法), and identify which end you are using; read the first four parts in order; the remaining eight parts can be consulted as needed. Be sure to do the "Think About It" and "Try It" at the end of each chapter |
+| Reading suggestions | First read [Chapter 0: Four Forms and How to Read This Book](jump:Chapter 0: Four Forms and How to Read This Book), and identify which end you are using; read the first four parts in order; the remaining eight parts can be consulted as needed. Be sure to do the "Think About It" and "Try It" at the end of each chapter |
 | Online address | [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/) (open the page to start practicing) |
 | Project repository | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (source code, installers, and this documentation are all here) |
 
@@ -64,86 +64,86 @@ Whenever the book encounters differences in operation across ends, one of the fo
 ## Full Table of Contents
 
 **Part Zero: Forms (Identify Your Version First)**
-- [Chapter 0: Four Forms and How to Read This Book](jump:第0章 四种形态与本书读法)
+- [Chapter 0: Four Forms and How to Read This Book](jump:Chapter 0: Four Forms and How to Read This Book)
 
 **Part One: Setting Sail (Zero-Basics Onboarding)**
-- [Chapter 1: Rethinking "3D": Starting from a Photo](jump:第1章 重新认识"三维"：从一张照片说起)
-- [Chapter 2: Prepare Your Tools: Opening This Tool](jump:第2章 工欲善其事：打开这个工具)
-- [Chapter 3: Interface Overview: The Five Areas Before You](jump:第3章 界面全景：你眼前的五块天地)
-- [Chapter 4: Coordinate System: The Three Lines Labeled X / Y / Z on the Web Page](jump:第4章 坐标系：网页上标着 X / Y / Z 的那三根线)
-- [Chapter 5: Hands-On: Your First 3D Work](jump:第5章 动手做：你的第一个三维作品)
-- [Chapter 6: Save and Share: Screenshot, Export, and Backup](jump:第6章 保存与分享：截图、导出与备份)
+- [Chapter 1: Rethinking "3D": Starting from a Photo](jump:Chapter 1: Rethinking "3D": Starting from a Photo)
+- [Chapter 2: Prepare Your Tools: Opening This Tool](jump:Chapter 2: Prepare Your Tools: Opening This Tool)
+- [Chapter 3: Interface Overview: The Five Areas Before You](jump:Chapter 3: Interface Overview: The Five Areas Before You)
+- [Chapter 4: Coordinate System: The Three Lines Labeled X / Y / Z on the Web Page](jump:Chapter 4: Coordinate System: The Three Lines Labeled X / Y / Z on the Web Page)
+- [Chapter 5: Hands-On: Your First 3D Work](jump:Chapter 5: Hands-On: Your First 3D Work)
+- [Chapter 6: Save and Share: Screenshot, Export, and Backup](jump:Chapter 6: Save and Share: Screenshot, Export, and Backup)
 
 **Part Two: Operating Basics (Select · Transform · Undo)**
-- [Chapter 7: The Art of Selecting Objects: Single, Multiple, and Box Selection](jump:第7章 选择对象的艺术：单选、多选与框选)
-- [Chapter 8: The Transform Trio: Move, Rotate, Scale](jump:第8章 变换三件套：移动、旋转、缩放)
-- [Chapter 9: Transform Modes and Uniform Scaling](jump:第9章 变换模式与等比缩放)
-- [Chapter 10: Undo and History: The Confidence to Experiment Boldly](jump:第10章 撤销与历史：大胆试错的底气)
+- [Chapter 7: The Art of Selecting Objects: Single, Multiple, and Box Selection](jump:Chapter 7: The Art of Selecting Objects: Single, Multiple, and Box Selection)
+- [Chapter 8: The Transform Trio: Move, Rotate, Scale](jump:Chapter 8: The Transform Trio: Move, Rotate, Scale)
+- [Chapter 9: Transform Modes and Uniform Scaling](jump:Chapter 9: Transform Modes and Uniform Scaling)
+- [Chapter 10: Undo and History: The Confidence to Experiment Boldly](jump:Chapter 10: Undo and History: The Confidence to Experiment Freely)
 
 **Part Three: The Shape Universe (How to Use 20 + 20 Types)**
-- [Chapter 11: 3D Shape Overview (How the 20 Types Are Categorized)](jump:第11章 3D 图形总览（20 种如何分类）)
-- [Chapter 12: 2D Shape Overview (20 Types and the "Sticker" Mindset)](jump:第12章 2D 图形总览（20 种与"贴纸"思维）)
-- [Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Solids](jump:第13章 每种 3D 图形参数详解（上）：基础体)
-- [Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes](jump:第14章 每种 3D 图形参数详解（下）：特种形状)
-- [Chapter 15: "Standing" vs "Lying": The Essential Difference Between 3D and 2D](jump:第15章 "站"与"躺"：3D 与 2D 的本质差异)
+- [Chapter 11: 3D Shape Overview (How the 20 Types Are Categorized)](jump:Chapter 11: 3D Shape Overview (How the 20 Are Classified))
+- [Chapter 12: 2D Shape Overview (20 Types and the "Sticker" Mindset)](jump:Chapter 12: 2D Shape Overview (20 Kinds and the "Sticker" Mindset))
+- [Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Solids](jump:Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Bodies)
+- [Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes](jump:Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes)
+- [Chapter 15: "Standing" vs "Lying": The Essential Difference Between 3D and 2D](jump:Chapter 15: "Standing" vs "Lying": The Essential Difference Between 3D and 2D)
 
 **Part Four: Color and Material**
-- [Chapter 16: Color Basics: The Game of Human Eyes and Light](jump:第16章 颜色入门：人眼与光的游戏)
-- [Chapter 17: 27 Preset Colors: One-Click Coloring](jump:第17章 27 种预设色：一键上色)
-- [Chapter 18: Custom Colors: HEX, HSV, and Screen Color Picker](jump:第18章 自定义颜色：HEX、HSV 与屏幕取色器)
-- [Chapter 19: 12 Pattern Textures: Giving Surfaces a Story](jump:第19章 12 种花纹贴图：让表面有故事)
-- [Chapter 20: Upload Image Textures and Opacity](jump:第20章 上传图片贴图与不透明度)
+- [Chapter 16: Color Basics: The Game of Human Eyes and Light](jump:Chapter 16: Color Basics: The Game of the Human Eye and Light)
+- [Chapter 17: 27 Preset Colors: One-Click Coloring](jump:Chapter 17: 27 Preset Colors: One-Click Coloring)
+- [Chapter 18: Custom Colors: HEX, HSV, and Screen Color Picker](jump:Chapter 18: Custom Colors: HEX, HSV, and the Screen Color Picker)
+- [Chapter 19: 12 Pattern Textures: Giving Surfaces a Story](jump:Chapter 19: 12 Pattern Textures: Giving the Surface a Story)
+- [Chapter 20: Upload Image Textures and Opacity](jump:Chapter 20: Uploading Image Textures and Opacity)
 
 **Part Five: Text and Images**
-- [Chapter 21: Adding Text: Let the Scene Speak](jump:第21章 添加文本：让场景会说话)
-- [Chapter 22: Font, Size, Weight, and Horizontal/Vertical Layout](jump:第22章 字体、字号、粗细与横竖排)
-- [Chapter 23: Image Objects: Putting Photos into the 3D World](jump:第23章 图片对象：把照片放进三维世界)
+- [Chapter 21: Adding Text: Let the Scene Speak](jump:Chapter 21: Adding Text: Let the Scene Speak)
+- [Chapter 22: Font, Size, Weight, and Horizontal/Vertical Layout](jump:Chapter 22: Font, Size, Weight, and Orientation)
+- [Chapter 23: Image Objects: Putting Photos into the 3D World](jump:Chapter 23: Image Object: Put Photos into the 3D World)
 
 **Part Six: Brush and Eraser**
-- [Chapter 24: 2D Brush: Drawing Lines on the Ground](jump:第24章 2D 画笔：在地面画线)
-- [Chapter 25: 3D Brush and Reference Plane](jump:第25章 3D 画笔与参考平面)
-- [Chapter 26: Eraser: Whole and Partial](jump:第26章 橡皮擦：整体与局部)
+- [Chapter 24: 2D Brush: Drawing Lines on the Ground](jump:Chapter 24: 2D Brush: Drawing Lines on the Ground)
+- [Chapter 25: 3D Brush and Reference Plane](jump:Chapter 25: 3D Brush and Reference Plane)
+- [Chapter 26: Eraser: Whole and Partial](jump:Chapter 26: Eraser: Whole and Partial)
 
 **Part Seven: Viewpoint and Observation**
-- [Chapter 27: Seven Preset Viewpoints: See the World from Another Angle](jump:第27章 七种预设视角：换个角度看世界)
-- [Chapter 28: Hide Helpers and Fullscreen](jump:第28章 隐藏辅助与全屏)
+- [Chapter 27: Seven Preset Viewpoints: See the World from Another Angle](jump:Chapter 27: Seven Preset Viewpoints: See the World from Another Angle)
+- [Chapter 28: Hide Helpers and Fullscreen](jump:Chapter 28: Hide Aids and Fullscreen)
 
 **Part Eight: Efficiency · Shortcuts (Make Your Hands "Fly")**
-- [Chapter 29: Why Memorize Shortcuts: The Compound Interest of Efficiency](jump:第29章 为什么要记快捷键：效率的复利)
-- [Chapter 30: Mouse and Gesture Operations: All Four Forms Explained](jump:第30章 鼠标与手势操作：四种形态都讲)
-- [Chapter 31: Single-Key Operations and Shift Combinations](jump:第31章 单键操作与 Shift 组合键)
-- [Chapter 32: Sliders/Input Boxes and Ctrl Combinations](jump:第32章 滑动条/输入框 与 Ctrl 组合键)
+- [Chapter 29: Why Memorize Shortcuts: The Compound Interest of Efficiency](jump:Chapter 29: Why Memorize Shortcuts: The Compound Interest of Efficiency)
+- [Chapter 30: Mouse and Gesture Operations: All Four Forms Explained](jump:Chapter 30: Mouse and Gesture Operations: All Four Forms Covered)
+- [Chapter 31: Single-Key Operations and Shift Combinations](jump:Chapter 31: Single-Key Operations and Shift Combinations)
+- [Chapter 32: Sliders/Input Boxes and Ctrl Combinations](jump:Chapter 32: Sliders/Input Boxes and Ctrl Combinations)
 
 **Part Nine: Transform Controls (Arrows That "Talk")**
-- [Chapter 33: First Encounter with Transform Controls: Three "Gripping Tools"](jump:第33章 初见变换控件：三件"抓握工具")
-- [Chapter 34: Translate Mode: "Grab" the Object with the Arrow and Move It](jump:第34章 平移模式：用箭头"抓"着物体走)
-- [Chapter 35: Rotate Mode: The Ring Decides "Which Axis to Rotate Around"](jump:第35章 旋转模式：圆环决定"绕哪根轴转")
-- [Chapter 36: Scale Mode: Box Handles and the "Uniform" Switch](jump:第36章 缩放模式：方块手柄与"等比"开关)
+- [Chapter 33: First Encounter with Transform Controls: Three "Gripping Tools"](jump:Chapter 33: First Meeting the Transform Gizmo: Three "Grip Tools")
+- [Chapter 34: Translate Mode: "Grab" the Object with the Arrow and Move It](jump:Chapter 34: Translate Mode: "Grab" the Object with Arrows)
+- [Chapter 35: Rotate Mode: The Ring Decides "Which Axis to Rotate Around"](jump:Chapter 35: Rotate Mode: Rings Decide "Around Which Axis to Rotate")
+- [Chapter 36: Scale Mode: Box Handles and the "Uniform" Switch](jump:Chapter 36: Scale Mode: Cube Handles and the "Uniform" Switch)
 
 **Part Ten: Group Management (Manage a "Group" of Objects at Once)**
-- [Chapter 37: Select a Group at Once: Understanding the "Selection Set"](jump:第37章 一次选中一群：认识"选择集")
-- [Chapter 38: Move a Group Together: The "Master Handle" of Multi-Select Transform](jump:第38章 一群一起动：多选变换的"主控点")
-- [Chapter 39: Mass Production: Copy, Clone, and "Array"](jump:第39章 量产：复制、克隆与"阵列")
+- [Chapter 37: Select a Group at Once: Understanding the "Selection Set"](jump:Chapter 37: Select a Group at Once: Getting to Know the "Selection Set")
+- [Chapter 38: Move a Group Together: The "Master Handle" of Multi-Select Transform](jump:Chapter 38: Move a Group Together: The "Master Point" of Multi-Select Transform)
+- [Chapter 39: Mass Production: Copy, Clone, and "Array"](jump:Chapter 39: Mass Production: Copy, Clone, and "Array")
 
 **Part Eleven: Works Leaving the Screen (Share · Collaborate · Align)**
-- [Chapter 40: Save and Share: Let Your Work Leave the Screen](jump:第40章 保存与分享：让作品离开屏幕)
+- [Chapter 40: Save and Share: Let Your Work Leave the Screen](jump:Chapter 40: Save and Share: Let Your Work Leave the Screen)
 
 **Part Twelve: Practice (Build a Complete Scene from Scratch)**
-- [Chapter 41: Project 1: Build a Small House](jump:第41章 项目一：搭一座小房子)
-- [Chapter 42: Project 2: Make a 3D Text Slogan](jump:第42章 项目二：制作立体字标语)
-- [Chapter 43: Project 3: Design a Badge / Icon](jump:第43章 项目三：设计一枚徽标 / 图标)
-- [Chapter 44: Project 4: Comprehensive Scene "My Little Courtyard"](jump:第44章 项目四：综合场景《我的小院》)
+- [Chapter 41: Project 1: Build a Small House](jump:Chapter 41: Project 1 — Build a Small House)
+- [Chapter 42: Project 2: Make a 3D Text Slogan](jump:Chapter 42: Project 2 — Make a 3D Text Sign)
+- [Chapter 43: Project 3: Design a Badge / Icon](jump:Chapter 43: Project 3 — Design a Badge / Icon)
+- [Chapter 44: Project 4: Comprehensive Scene "My Little Courtyard"](jump:Chapter 44: Project 4 — Comprehensive Scene "My Small Courtyard")
 
 **Part Thirteen: Troubleshooting and Appendix**
-- [Chapter 45: FAQ Troubleshooting Guide](jump:第45章 常见问题排查手册)
-- [Chapter 46: Glossary (Chinese-English)](jump:第46章 术语表（中英对照）)
-- [Chapter 47: Shortcut Quick Reference](jump:第47章 快捷键速查表)
-- [Chapter 48: Shape · Pattern · Color Index](jump:第48章 图形 · 花纹 · 颜色索引)
+- [Chapter 45: FAQ Troubleshooting Guide](jump:Chapter 45: Common Issues Troubleshooting Manual)
+- [Chapter 46: Glossary (Chinese-English)](jump:Chapter 46: Glossary (Chinese–English))
+- [Chapter 47: Shortcut Quick Reference](jump:Chapter 47: Keyboard Shortcut Quick Reference)
+- [Chapter 48: Shape · Pattern · Color Index](jump:Chapter 48: Graphics · Patterns · Color Index)
 
 **Part Fourteen: Sticky Notes · Multilingual**
-- [Chapter 49: Take Notes While Reading: Sticky Notes in the Manual](jump:第49章 边读边记：说明书里的便签)
-- [Chapter 50: Make Sticky Notes "Float" on Screen](jump:第50章 让便签"浮"在屏幕上)
-- [Chapter 51: Multilingual: The Manual Also "Speaks" Your Language](jump:第51章 多语言：说明书也会"说"你的语言)
+- [Chapter 49: Take Notes While Reading: Sticky Notes in the Manual](jump:Chapter 49: Jot While You Read: Sticky Notes in the Manual)
+- [Chapter 50: Make Sticky Notes "Float" on Screen](jump:Chapter 50: Let Sticky Notes "Float" on Screen)
+- [Chapter 51: Multilingual: The Manual Also "Speaks" Your Language](jump:Chapter 51: Multi-language: The Manual Also "Speaks" Your Language)
 
 ---
 
@@ -317,7 +317,7 @@ The shared benefits of all three:
 
 💡 This is important: **the same work can be接力 across ends**. Get a draft on your phone when inspired, refine it on the PC version at home.
 
-✏️ **Try It**: Confirm your form (see [Chapter 0](jump:第0章 四种形态与本书读法)), open the tool, and just see the central canvas and surrounding panels. Don't rush to operate — just "get familiar with the environment".
+✏️ **Try It**: Confirm your form (see [Chapter 0](jump:Chapter 0: Four Forms and How to Read This Book)), open the tool, and just see the central canvas and surrounding panels. Don't rush to operate — just "get familiar with the environment".
 
 ---
 
@@ -412,7 +412,7 @@ All shapes are displayed here. The operation method varies by form:
 - 🖥️💻 **Mouse end (Web · Mouse / PC)**: **right button** drag to rotate view, **scroll wheel** to zoom, **left button** to select or place.
 - 📱🤖 **Touch end (Web · Touch / Android)**: **single-finger** drag to rotate view, **two-finger** pinch to zoom and two-finger drag to pan, **single-finger tap** to select or place.
 
-💡 Full comparison see the input method table in [Chapter 0 Section 0.3](jump:第0章 四种形态与本书读法).
+💡 Full comparison see the input method table in [Chapter 0 Section 0.3](jump:Chapter 0: Four Forms and How to Read This Book).
 
 ### 3.4 Right Panel (Adjust Parameters After Selecting)
 
@@ -821,7 +821,7 @@ You can step back multiple times consecutively, and also go forward again with r
 
 The software internally keeps an **operation list** (like a browser's back history). Each important operation pushes one entry; undo pops the last one.
 
-⚠️ **Note**: History has a **step limit**. Very early operations may be "pushed out" of the list and become unrecoverable—so export a JSON backup at key nodes (see [Chapter 6](jump:Chapter 6 Saving and Sharing: Screenshot, Export, and Backup)).
+⚠️ **Note**: History has a **step limit**. Very early operations may be "pushed out" of the list and become unrecoverable—so export a JSON backup at key nodes (see [Chapter 6](jump:Chapter 6: Save and Share: Screenshot, Export, and Backup)).
 
 ### 10.3 What Enters History, What Doesn't
 
@@ -1568,7 +1568,7 @@ The top bar has three toggles: "Coordinate Axes," "Grid Plane," "Ground":
 > 📌 **How to read this part (important)**
 > - 🖥️💻 **Web · Mouse / PC version**: Everything in this part applies and is key to speeding you up, so please read carefully.
 > - 📱🤖 **Web · Touch / Android version**: With no physical keyboard, the **keyboard shortcuts** in Chapters 29, 31, and 32 **do not apply**,
->   and the app will not show a "keyboard shortcuts" help section. Please **skip directly to the gesture table in [Chapter 30](jump:第30章 鼠标与手势操作：四种形态都讲)** — that is your efficiency tool.
+>   and the app will not show a "keyboard shortcuts" help section. Please **skip directly to the gesture table in [Chapter 30](jump:Chapter 30: Mouse and Gesture Operations: All Four Forms Covered)** — that is your efficiency tool.
 >   (If you connect a physical keyboard to your tablet, the shortcuts also work, and you can read this part together with it.)
 
 ---
@@ -1584,7 +1584,7 @@ You will almost certainly find: **the keyboard is faster, more accurate, and les
 There are three reasons:
 1. **Your hands never leave the core keyboard area** — your eyes stay on the canvas, your fingers on the letter keys, and your brain doesn't have to keep switching between "look at canvas → find panel → move mouse → drag slider."
 2. **There is a fixed step size** — press an arrow key once and the object moves exactly "0.1 grid"; press it 10 times and it's exactly 1 grid. Drag a slider 10 times and you have no idea how far it actually moved.
-3. **It can stack and be undone** — every keyboard operation goes into the history stack (see [Chapter 32](jump:第32章 滑动条/输入框 与 Ctrl 组合键)), and if you make a mistake, `Ctrl+Z` reverts it instantly; a slider drag is a continuous change, and undoing it often "jumps" quite abruptly.
+3. **It can stack and be undone** — every keyboard operation goes into the history stack (see [Chapter 32](jump:Chapter 32: Sliders/Input Boxes and Ctrl Combinations)), and if you make a mistake, `Ctrl+Z` reverts it instantly; a slider drag is a continuous change, and undoing it often "jumps" quite abruptly.
 
 💡 **One-line mantra**: The mouse is for "selecting" and "drawing"; the keyboard is for "modifying" and "adjusting." Divide the work, and efficiency doubles.
 

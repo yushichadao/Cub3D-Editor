@@ -41,7 +41,8 @@
     user-select: none;
   }
   /* 禁用元素被系统拖拽：避免国产 ROM（MIUI/ColorOS 等）把长按选区当成「超级拖放」拖走 */
-  *, *::before, *::after { -webkit-user-drag: none !important; user-drag: none !important; }
+  /* user-drag 为非标准/无效属性，仅保留 WebKit/Blink 支持的 -webkit-user-drag */
+  *, *::before, *::after { -webkit-user-drag: none !important; }
   [contenteditable], [contenteditable] * { -webkit-user-drag: none !important; }
   /* 阅读/笔记内容区：显式允许其所有后代被选择。
      全局 user-select:none 在移动端 WebView 下会抑制后代继承，

@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>立方·三维图形设计工坊 — 离线优先的跨平台 3D/2D 场景编辑器</title>
+<meta name="description" content="Cub3D Editor：离线优先、无需账号的跨平台 3D/2D 场景编辑器。同一套代码覆盖网页、Windows、Android 三端四种形态。">
+<style>
+  :root{
+    --bg:#0e0f13; --bg-soft:#16181f; --panel:#181a21; --line:rgba(255,255,255,.09);
+    --accent:#5ad1c4; --accent-weak:rgba(90,209,196,.12);
+    --text:#eef0f3; --dim:#9aa0ab; --dim-2:#6f7581;
+    --radius:12px; --maxw:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","MS PGothic",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.6; overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent-weak);color:#fff}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+    background:var(--bg-soft);padding:1px 6px;border-radius:6px;color:var(--dim)}
+
+  /* ===== 容器 ===== */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:clamp(20px,5vw,40px)}
+  section{padding-block:clamp(90px,15vh,160px);position:relative}
+  .eyebrow{display:inline-block;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:18px}
+  .sec-title{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.01em;line-height:1.25;max-width:24ch;margin-bottom:36px;text-wrap:balance}
+  .sec-sub{color:var(--dim);max-width:62ch;font-size:15.5px;margin-top:14px;text-wrap:pretty;line-height:1.7}
+  .hero .tag{color:var(--dim)}
+
+  /* ===== 导航 ===== */
+  header{position:sticky;top:0;z-index:200;background:rgba(14,15,19,.8);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:.01em;flex:0 0 auto}
+  .brand .mark{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+    background:var(--accent);color:#0c1413;font-weight:800;font-size:15px}
+  .nav-links{display:flex;justify-content:center;gap:16px;align-items:center;flex:1 1 auto;min-width:0;padding:0 14px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{color:var(--dim);font-size:14px;transition:color .2s;white-space:nowrap;flex:0 0 auto}
+  .nav-links a:hover{color:var(--text)}
+  .lang{display:flex;gap:2px;background:var(--bg-soft);border:1px solid var(--line);border-radius:8px;padding:2px}
+  .lang button{border:0;background:transparent;color:var(--dim);font-size:12.5px;font-weight:600;
+    padding:5px 9px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit}
+  .lang button.active{background:var(--accent);color:#0c1413}
+  .menu-btn{display:none;background:var(--bg-soft);border:1px solid var(--line);color:var(--text);
+    width:40px;height:36px;border-radius:8px;font-size:17px;cursor:pointer}
+
+  /* ===== Hero ===== */
+  .hero{padding-top:clamp(56px,12vh,120px);padding-bottom:clamp(56px,12vh,120px)}
+  .hero h1{font-size:clamp(36px,6vw,64px);font-weight:800;line-height:1.12;letter-spacing:-.02em;
+    max-width:20ch;margin-bottom:20px;text-wrap:balance}
+  .hero .tag{font-size:clamp(15px,2vw,18px);max-width:54ch;margin-top:0;text-wrap:pretty;line-height:1.7}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:9px;font-weight:600;
+    font-size:15px;cursor:pointer;transition:background .2s,border-color .2s,transform .15s;border:1px solid transparent}
+  .btn-primary{background:var(--accent);color:#0c1413}
+  .btn-primary:hover{transform:translateY(-1px);background:#6fe0d3}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .hero-note{margin-top:36px;font-size:13px;color:var(--dim-2);display:flex;gap:22px;flex-wrap:wrap}
+  .hero-note span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.85}
+
+  /* ===== 设备识别横幅 ===== */
+  .detect{margin-top:40px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--panel);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .detect .ico{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;
+    background:var(--bg-soft);border:1px solid var(--line);font-size:18px;flex:0 0 auto}
+  #detectText{flex:1 1 240px;min-width:200px;line-height:1.6}
+  .detect b{color:var(--accent)}
+  .detect .go{margin-left:auto;flex:0 0 auto}
+
+  /* ===== 平台卡片 ===== */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:36px}
+  .cards>*{min-width:0}
+  .card{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);
+    padding:24px 22px;transition:border-color .2s,background .2s;display:flex;flex-direction:column}
+  .card:hover{border-color:var(--accent);background:var(--bg-soft)}
+  .card .pic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:22px;
+    background:var(--bg-soft);border:1px solid var(--line)}
+  .card h3{font-size:17px;margin:16px 0 8px;font-weight:650;min-height:2.4em}
+  .card p{color:var(--dim);font-size:14px;min-height:5em;line-height:1.65;text-wrap:pretty}
+  .card .acts{padding-top:18px;display:flex;flex-direction:column;gap:8px}
+  .lbtn{display:flex;align-items:center;justify-content:center;width:100%;gap:8px;padding:11px 14px;border-radius:8px;
+    font-weight:600;font-size:14px;cursor:pointer;transition:.2s;border:1px solid var(--line);background:var(--bg-soft);color:var(--text)}
+  .lbtn:hover{border-color:var(--accent);color:var(--accent)}
+  .lbtn.main{background:var(--accent);color:#0c1413;border:0}
+  .lbtn.main:hover{background:#6fe0d3;color:#0c1413}
+
+  /* ===== 功能 ===== */
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:36px}
+  .feat-grid>*{min-width:0}
+  .feat{border:1px solid var(--line);border-radius:var(--radius);padding:22px;background:var(--panel);transition:.2s}
+  .feat:hover{border-color:var(--accent);background:var(--bg-soft)}
+  .feat .fi{font-size:22px;margin-bottom:14px;opacity:.9}
+  .feat h4{font-size:15.5px;margin-bottom:8px;font-weight:650}
+  .feat p{color:var(--dim);font-size:14px;line-height:1.65;text-wrap:pretty}
+
+  /* ===== 版本对比 ===== */
+  .cmp-scroll{overflow-x:auto;margin-top:36px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+  table.cmp{width:100%;border-collapse:collapse;min-width:620px}
+  table.cmp th,table.cmp td{padding:13px 16px;text-align:center;border-bottom:1px solid var(--line);font-size:14px}
+  table.cmp thead th{background:var(--bg-soft);font-size:14.5px;font-weight:650}
+  table.cmp th:first-child,table.cmp td:first-child{text-align:left;color:var(--text);font-weight:600}
+  table.cmp tbody tr:last-child td{border-bottom:0}
+  table.cmp tbody tr:hover{background:var(--bg-soft)}
+  .yes{color:var(--accent);font-weight:700}
+  .part{color:var(--dim);font-weight:700}
+  .no{color:var(--dim-2)}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px;color:var(--dim);font-size:13px}
+  .legend i{font-style:normal;font-weight:700;margin-right:6px}
+
+  /* ===== 解决方案 ===== */
+  .sol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:36px}
+  .sol-grid>*{min-width:0}
+  .sol{border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;background:var(--panel)}
+  .sol .si{font-size:26px;margin-bottom:12px}
+  .sol h3{font-size:18px;margin-bottom:10px;font-weight:650}
+  .sol p{color:var(--dim);font-size:14.5px;line-height:1.7;text-wrap:pretty}
+  .sol .pill{display:inline-block;margin-top:16px;font-size:12.5px;color:var(--accent);
+    border:1px solid var(--line);padding:5px 12px;border-radius:7px;background:var(--bg-soft)}
+
+  /* ===== 作者 ===== */
+  .author{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;
+    border:1px solid var(--line);border-radius:var(--radius);padding:34px;background:var(--panel)}
+  .avatar{width:96px;height:96px;border-radius:14px;display:grid;place-items:center;font-size:38px;font-weight:800;
+    background:var(--accent);color:#0c1413}
+  .author h3{font-size:22px;font-weight:700}
+  .author .role{color:var(--accent);font-weight:600;margin:4px 0 12px;font-size:14px}
+  .author p{color:var(--dim);max-width:60ch;font-size:14.5px;line-height:1.7;text-wrap:pretty}
+  .author .meta{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .tag-soft{font-size:12px;color:var(--dim);border:1px solid var(--line);padding:5px 11px;border-radius:7px}
+  .gh{display:inline-flex;align-items:center;gap:7px;background:var(--bg-soft);border:1px solid var(--line);
+    padding:8px 14px;border-radius:8px;font-weight:600;font-size:13.5px;transition:.2s}
+  .gh:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ===== 页脚 ===== */
+  footer{border-top:1px solid var(--line);padding:40px 0 56px;margin-top:0;background:var(--bg)}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center;
+    color:var(--dim-2);font-size:13px}
+  .foot a{color:var(--dim);transition:color .2s}
+  .foot a:hover{color:var(--accent)}
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+
+  /* ===== 场景卡片 ===== */
+  .scn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:36px}
+  .scn-grid>*{min-width:0}
+  .scn{border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;background:var(--panel);transition:border-color .2s,background .2s}
+  .scn:hover{border-color:var(--accent);background:var(--bg-soft)}
+  .scn .si{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:22px;
+    background:var(--bg-soft);border:1px solid var(--line);margin-bottom:16px}
+  .scn h3{font-size:17px;margin-bottom:8px;font-weight:650}
+  .scn p{color:var(--dim);font-size:14px;line-height:1.65;text-wrap:pretty}
+
+  /* ===== 快速上手步骤 ===== */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px;counter-reset:step}
+  .steps>*{min-width:0}
+  .step{border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;background:var(--panel);position:relative;transition:border-color .2s,background .2s}
+  .step:hover{border-color:var(--accent);background:var(--bg-soft)}
+  .step .num{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.08em;
+    width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--accent-weak);margin-bottom:14px}
+  .step h3{font-size:16px;margin-bottom:8px;font-weight:650}
+  .step p{color:var(--dim);font-size:14px;line-height:1.65;text-wrap:pretty}
+
+  /* ===== 路线图 ===== */
+  .road{display:flex;flex-direction:column;gap:0;margin-top:36px;border-left:1px solid var(--line);padding-left:26px}
+  .road-item{position:relative;padding:0 0 30px 0}
+  .road-item:last-child{padding-bottom:0}
+  .road-item::before{content:"";position:absolute;left:-33px;top:4px;width:13px;height:13px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--accent)}
+  .road-item.done::before{background:var(--accent)}
+  .road-item .rt{font-size:15px;font-weight:650;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .road-item .tag-soft{font-size:11.5px;padding:3px 9px}
+  .road-item p{color:var(--dim);font-size:14px;line-height:1.65;margin-top:6px;max-width:64ch;text-wrap:pretty}
+
+  /* ===== FAQ ===== */
+  .faq{display:flex;flex-direction:column;gap:12px;margin-top:36px}
+  .faq details{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);overflow:hidden}
+  .faq summary{cursor:pointer;padding:17px 20px;font-weight:600;font-size:15px;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:14px;transition:color .2s}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary:hover{color:var(--accent)}
+  .faq summary .ar{color:var(--accent);font-size:18px;transition:transform .25s;flex:0 0 auto}
+  .faq details[open] summary .ar{transform:rotate(45deg)}
+  .faq details .ans{padding:0 20px 18px;color:var(--dim);font-size:14px;line-height:1.7;text-wrap:pretty}
+
+  /* ===== 更新日志 ===== */
+  .log{display:flex;flex-direction:column;gap:16px;margin-top:36px}
+  .log-item{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:22px 24px}
+  .log-item .lh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .log-item .ver{font-size:16px;font-weight:700;color:var(--accent)}
+  .log-item .date{font-size:12.5px;color:var(--dim-2)}
+  .log-item ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .log-item li{color:var(--dim);font-size:14px;line-height:1.6;padding-left:18px;position:relative}
+  .log-item li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.7}
+
+  /* ===== 滚动揭示 ===== */
+  .reveal{opacity:0;transform:translateY(22px) scale(.985);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1);will-change:opacity,transform}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+  .reveal.d4{transition-delay:.32s}.reveal.d5{transition-delay:.40s}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.reveal.d1,.reveal.d2,.reveal.d3,.reveal.d4,.reveal.d5{transition-delay:0s}}
+
+  /* ===== 卡片光标光晕（活起来）===== */
+  .card,.feat,.scn,.step,.sol{position:relative;overflow:hidden}
+  .card::after,.feat::after,.scn::after,.step::after,.sol::after{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:0;
+    transition:opacity .35s ease;
+    background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%),rgba(90,209,196,.14),transparent 60%);
+  }
+  .card:hover::after,.feat:hover::after,.scn:hover::after,.step:hover::after,.sol:hover::after{opacity:1;transition:opacity .1s}
+  .card:hover,.feat:hover,.scn:hover,.step:hover,.sol:hover{transform:translateY(-3px);box-shadow:0 10px 30px -12px rgba(90,209,196,.28)}
+
+  /* ===== 按钮辉光 ===== */
+  .btn-primary{box-shadow:0 6px 20px -8px rgba(90,209,196,.5)}
+  .btn-primary:hover{box-shadow:0 10px 28px -8px rgba(90,209,196,.7)}
+  .lbtn.main{box-shadow:0 6px 20px -8px rgba(90,209,196,.5)}
+  .lbtn.main:hover{box-shadow:0 10px 28px -8px rgba(90,209,196,.7)}
+
+  /* ===== Hero 背景微光 ===== */
+  .hero{overflow:hidden}
+  .hero::before{content:"";position:absolute;top:-18%;right:-10%;width:60vw;height:60vw;max-width:680px;max-height:680px;
+    background:radial-gradient(circle,rgba(90,209,196,.16),transparent 62%);filter:blur(8px);
+    pointer-events:none;z-index:0;animation:floatGlow 14s ease-in-out infinite}
+  .hero::after{content:"";position:absolute;bottom:-22%;left:-12%;width:48vw;height:48vw;max-width:520px;max-height:520px;
+    background:radial-gradient(circle,rgba(90,209,196,.08),transparent 64%);pointer-events:none;z-index:0;
+    animation:floatGlow 18s ease-in-out infinite reverse}
+  .hero>*{position:relative;z-index:1}
+  @keyframes floatGlow{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-4%) scale(1.08)}}
+
+  /* ===== Hero 入场（分层错峰）===== */
+  .hero .eyebrow,.hero h1,.hero .tag,.hero .cta-row,.hero .hero-note,.hero .detect{
+    opacity:0;transform:translateY(24px);animation:rise .8s cubic-bezier(.22,.61,.36,1) forwards}
+  .hero .eyebrow{animation-delay:.05s}.hero h1{animation-delay:.16s}.hero .tag{animation-delay:.27s}
+  .hero .cta-row{animation-delay:.38s}.hero .hero-note{animation-delay:.49s}.hero .detect{animation-delay:.6s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ===== 路线图节点呼吸 ===== */
+  .road-item.done::before{animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(90,209,196,.5)}70%{box-shadow:0 0 0 8px rgba(90,209,196,0)}}
+
+  /* ===== 导航高亮（scrollspy）===== */
+  .nav-links a{position:relative}
+  .nav-links a.active{color:var(--text)}
+  .nav-links a.active::after{content:"";position:absolute;left:22px;right:22px;bottom:-19px;height:2px;
+    background:var(--accent);border-radius:2px}
+  @media(prefers-reduced-motion:reduce){
+    .hero::before,.hero::after{animation:none}
+    .hero .eyebrow,.hero h1,.hero .tag,.hero .cta-row,.hero .hero-note,.hero .detect{animation:none;opacity:1;transform:none}
+    .road-item.done::before{animation:none}
+    .card:hover,.feat:hover,.scn:hover,.step:hover,.sol:hover{transform:none}
+  }
+
+  /* ===== 日语专项：行高放宽（CJK 无词间空格，紧行高会贴字）===== */
+  html[lang="ja"] .hero h1{line-height:1.34;text-wrap:wrap;word-break:auto-phrase}
+  html[lang="ja"] .sec-title{line-height:1.5;text-wrap:wrap;word-break:auto-phrase}
+  html[lang="ja"] .hero .tag,
+  html[lang="ja"] .sec-sub{line-height:1.95}
+  html[lang="ja"] .card h3,
+  html[lang="ja"] .feat h4,
+  html[lang="ja"] .scn h3,
+  html[lang="ja"] .step h3,
+  html[lang="ja"] .sol h3,
+  html[lang="ja"] .author h3{line-height:1.45}
+  html[lang="ja"] .card p,
+  html[lang="ja"] .feat p,
+  html[lang="ja"] .scn p,
+  html[lang="ja"] .step p,
+  html[lang="ja"] .sol p,
+  html[lang="ja"] .author p{line-height:1.95}
+  html[lang="ja"] .faq summary{line-height:1.5}
+  html[lang="ja"] .faq details .ans{line-height:1.9}
+  html[lang="ja"] .log-item li{line-height:1.9}
+  html[lang="ja"] .road-item p{line-height:1.9}
+  html[lang="ja"] .eyebrow{letter-spacing:.08em}
+
+  /* ===== 响应式 ===== */
+  @media(max-width:1099px){
+    .nav{height:64px}
+    .nav-links{position:fixed;top:64px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;flex:0 0 auto;min-width:0;overflow:visible;
+      background:var(--bg);border-bottom:1px solid var(--line);border-radius:0 0 16px 16px;
+      padding:8px 0 16px;box-shadow:0 20px 48px rgba(0,0,0,.45);
+      transform:translateY(-130%);transition:transform .25s;z-index:100}
+    .nav-links.open{transform:none}
+    .nav-links a{padding:16px 28px;font-size:15px;width:100%;margin:0;border-radius:0;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap}
+    .nav-links a:last-child{border-bottom:0}
+    .nav-links a:hover{color:var(--text);background:var(--bg-soft)}
+    .menu-btn{display:flex;align-items:center;justify-content:center;width:42px;height:38px;margin-left:8px}
+
+    .author{grid-template-columns:1fr;text-align:center;justify-items:center}
+    .author .meta{justify-content:center}
+    .detect .go{margin-left:0;width:100%}
+    .detect .go .btn{width:100%;justify-content:center}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#features" data-i18n="nav.features">功能特性</a>
+      <a href="#scenarios" data-i18n="nav.scenarios">使用场景</a>
+      <a href="#quickstart" data-i18n="nav.quickstart">快速上手</a>
+      <a href="#versions" data-i18n="nav.versions">版本对比</a>
+      <a href="#platforms" data-i18n="nav.platforms">下载与打开</a>
+      <a href="#roadmap" data-i18n="nav.roadmap">路线图</a>
+      <a href="#faq" data-i18n="nav.faq">常见问题</a>
+      <a href="#author" data-i18n="nav.author">关于作者</a>
+    </nav>
+    <div style="display:flex;gap:12px;align-items:center;flex:0 0 auto">
+      <div class="lang" id="lang">
+        <button data-lang="zh-CN" class="active">简</button>
+        <button data-lang="zh-TW">繁</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ja">日</button>
+      </div>
+      <button class="menu-btn" id="menuBtn" aria-label="menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <span class="eyebrow" data-i18n="hero.eyebrow">离线优先 · 跨平台 3D/2D 场景编辑器</span>
+      <h1 data-i18n="hero.title">立方·三维图形设计工坊</h1>
+      <p class="tag" data-i18n="hero.tag">同一套代码，覆盖网页、Windows、Android 三端，四种使用形态。</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" id="heroCta" href="Web/index.html"><span id="heroCtaText" data-i18n="hero.ctaWeb">在浏览器中打开</span></a>
+        <a class="btn btn-ghost" href="#platforms" data-i18n="hero.ctaAll">查看全部下载</a>
+      </div>
+      <div class="hero-note">
+        <span><i class="dot"></i><span data-i18n="note.free">完全免费</span></span>
+        <span><i class="dot"></i><span data-i18n="note.account">无需账号</span></span>
+        <span><i class="dot"></i><span data-i18n="note.local">数据本地保存</span></span>
+        <span><i class="dot"></i><span data-i18n="note.sync">工程文件三端互通</span></span>
+      </div>
+      <div class="detect" id="detect">
+        <div class="ico">🛰️</div>
+        <div id="detectText" data-i18n="detect.default">正在识别您的设备…</div>
+        <a class="btn btn-primary go" id="detectCta" href="Web/index.html"><span data-i18n="detect.go">前往推荐版本</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLATFORMS -->
+  <section id="platforms" class="wrap">
+    <span class="eyebrow reveal" data-i18n="platforms.eyebrow">三种平台 · 四种形态</span>
+    <h2 class="sec-title reveal" data-i18n="platforms.title">选择适合你的方式</h2>
+    <p class="sec-sub reveal" data-i18n="platforms.sub">无论手机、平板、电脑还是浏览器，都能找到对应的入口。下方按钮会直接打开网页或下载安装包。</p>
+    <div class="cards">
+      <div class="card reveal">
+        <div class="pic">🖱️</div>
+        <h3 data-i18n="plat1.name">网页版 · 鼠标</h3>
+        <p data-i18n="plat1.desc">浏览器直接打开，无需安装。适配台式机、笔记本。</p>
+        <div class="acts">
+          <a class="lbtn main" href="Web/index.html" data-i18n="plat1.btn">立即打开</a>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="pic">📱</div>
+        <h3 data-i18n="plat2.name">网页版 · 触屏</h3>
+        <p data-i18n="plat2.desc">手机/平板浏览器，或 URL 加 <code>?touch</code> 切换触控布局。</p>
+        <div class="acts">
+          <a class="lbtn main" href="Web/index.html?touch" data-i18n="plat2.btn">触屏模式打开</a>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="pic">🪟</div>
+        <h3 data-i18n="plat3.name">PC 桌面版 · Windows</h3>
+        <p data-i18n="plat3.desc">Windows 安装版 / 便携版（免安装）。崩溃恢复、自动保存等增强。</p>
+        <div class="acts">
+          <a class="lbtn main" href="dist/Cub3D-Editor-Setup.exe" data-i18n="plat3.setup">下载安装版</a>
+          <a class="lbtn" href="dist/Cub3D-Editor-Portable.exe" data-i18n="plat3.portable">下载便携版</a>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="pic">🤖</div>
+        <h3 data-i18n="plat4.name">Android 移动版</h3>
+        <p data-i18n="plat4.desc">安卓手机/平板安装包（release 签名）。全屏、分享导出等增强。</p>
+        <div class="acts">
+          <a class="lbtn main" href="dist/Cub3D-Editor.apk" data-i18n="plat4.btn">下载 .apk</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="wrap">
+    <span class="eyebrow reveal" data-i18n="features.eyebrow">核心能力</span>
+    <h2 class="sec-title reveal" data-i18n="features.title">从涂鸦到参数化建模</h2>
+    <p class="sec-sub reveal" data-i18n="features.sub">一套工具覆盖 3D 与 2D 创作全流程，并在不同平台提供专属增强。</p>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="fi">🎨</div><h4 data-i18n="f1.t">绘制与形状</h4><p data-i18n="f1.d">画笔、橡皮擦（整体/局部）、形状工具，支持 3D 与 2D。</p></div>
+      <div class="feat reveal"><div class="fi">🧊</div><h4 data-i18n="f2.t">对象操作</h4><p data-i18n="f2.d">移动、旋转、缩放；撤销/重做、复制/粘贴/克隆。</p></div>
+      <div class="feat reveal"><div class="fi">🌈</div><h4 data-i18n="f3.t">材质编辑</h4><p data-i18n="f3.d">预设与自定义颜色、图案/纹理贴图。</p></div>
+      <div class="feat reveal"><div class="fi">🔤</div><h4 data-i18n="f4.t">文字框</h4><p data-i18n="f4.d">多字体、横排/竖排，自由标注你的场景。</p></div>
+      <div class="feat reveal"><div class="fi">📐</div><h4 data-i18n="f5.t">视图辅助</h4><p data-i18n="f5.d">坐标轴、网格、地面参考面、线框模式。</p></div>
+      <div class="feat reveal"><div class="fi">💾</div><h4 data-i18n="f6.t">离线优先</h4><p data-i18n="f6.d">无需账号，数据本地保存；<code>.json</code> 工程三端互通。</p></div>
+      <div class="feat reveal"><div class="fi">🖥️</div><h4 data-i18n="f7.t">PC 版增强</h4><p data-i18n="f7.d">原生文件对话框（系统级打开/保存）、独立桌面窗口运行、离线安装。</p></div>
+      <div class="feat reveal"><div class="fi">📲</div><h4 data-i18n="f8.t">Android 版增强</h4><p data-i18n="f8.d">返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。</p></div>
+      <div class="feat reveal"><div class="fi">🌐</div><h4 data-i18n="f9.t">四语言界面</h4><p data-i18n="f9.d">简体中文、繁體中文、English、日本語，切换同步更新。</p></div>
+    </div>
+  </section>
+
+  <!-- SCENARIOS -->
+  <section id="scenarios" class="wrap">
+    <span class="eyebrow reveal" data-i18n="scenarios.eyebrow">谁在用</span>
+    <h2 class="sec-title reveal" data-i18n="scenarios.title">适合这些场景</h2>
+    <p class="sec-sub reveal" data-i18n="scenarios.sub">无论是灵感速记、教学演示还是正式设计，都能找到合适的入口与节奏。</p>
+    <div class="scn-grid">
+      <div class="scn reveal d1"><div class="si">✏️</div><h3 data-i18n="scn1.t">灵感速记</h3><p data-i18n="scn1.d">通勤路上用手机随手勾勒 3D 草图，回家用电脑继续精修。</p></div>
+      <div class="scn reveal d2"><div class="si">🎓</div><h3 data-i18n="scn2.t">教学演示</h3><p data-i18n="scn2.d">课堂或分享中用几何体、文字框直观讲解空间结构。</p></div>
+      <div class="scn reveal d3"><div class="si">🧩</div><h3 data-i18n="scn3.t">游戏与原型</h3><p data-i18n="scn3.d">快速拼搭关卡、道具或界面原型，导出 .json 随时迭代。</p></div>
+      <div class="scn reveal d4"><div class="si">🗺️</div><h3 data-i18n="scn4.t">空间规划</h3><p data-i18n="scn4.d">用网格与坐标轴做简单的布局示意，离线即可完成。</p></div>
+    </div>
+  </section>
+
+  <!-- QUICKSTART -->
+  <section id="quickstart" class="wrap">
+    <span class="eyebrow reveal" data-i18n="quickstart.eyebrow">三步上手</span>
+    <h2 class="sec-title reveal" data-i18n="quickstart.title">几分钟开始创作</h2>
+    <p class="sec-sub reveal" data-i18n="quickstart.sub">无需注册、无需联网，打开就能画。</p>
+    <div class="steps">
+      <div class="step reveal d1"><div class="num">1</div><h3 data-i18n="qs1.t">打开编辑器</h3><p data-i18n="qs1.d">点开网页版或安装桌面/安卓版，无需账号即可进入画布。</p></div>
+      <div class="step reveal d2"><div class="num">2</div><h3 data-i18n="qs2.t">绘制与编辑</h3><p data-i18n="qs2.d">用画笔、形状工具搭建，移动/旋转/缩放对象，添加文字与材质。</p></div>
+      <div class="step reveal d3"><div class="num">3</div><h3 data-i18n="qs3.t">保存与接力</h3><p data-i18n="qs3.d">导出 .json 工程，在手机、电脑、安卓之间自由互通继续。</p></div>
+    </div>
+  </section>
+
+  <!-- VERSIONS -->
+  <section id="versions" class="wrap">
+    <span class="eyebrow reveal" data-i18n="versions.eyebrow">版本对比</span>
+    <h2 class="sec-title reveal" data-i18n="versions.title">各版本能力一览</h2>
+    <p class="sec-sub reveal" data-i18n="versions.sub">三端共享同一套核心引擎，绝大多数功能完全一致；差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。</p>
+    <div class="cmp-scroll reveal">
+      <table class="cmp">
+        <thead>
+          <tr><th data-i18n="cmp.cap">能力</th><th data-i18n="cmp.web">网页版</th><th data-i18n="cmp.pc">PC 版 (Windows)</th><th data-i18n="cmp.android">Android 版</th></tr>
+        </thead>
+        <tbody id="cmpBody"><!-- 由 JS 渲染 --></tbody>
+      </table>
+    </div>
+    <div class="legend reveal">
+      <span><i class="yes">✓</i><span data-i18n="leg.yes">完整支持</span></span>
+      <span><i class="part">~</i><span data-i18n="leg.part">部分支持</span></span>
+      <span><i class="no">—</i><span data-i18n="leg.no">不适用</span></span>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap" class="wrap">
+    <span class="eyebrow reveal" data-i18n="roadmap.eyebrow">接下来</span>
+    <h2 class="sec-title reveal" data-i18n="roadmap.title">发展路线图</h2>
+    <p class="sec-sub reveal" data-i18n="roadmap.sub">诚实标注进度：已完成的能力不会反复宣传，规划中的会明确说明。</p>
+    <div class="road">
+      <div class="road-item done reveal d1">
+        <div class="rt"><span data-i18n="road.rel.t">已发布：三端覆盖</span><span class="tag-soft" data-i18n="road.rel.tag">已完成</span></div>
+        <p data-i18n="road.rel.d">网页（鼠标/触屏）、Windows 桌面、Android 移动版齐备，共享同一套核心引擎与 .json 工程互通。</p>
+      </div>
+      <div class="road-item reveal d2">
+        <div class="rt"><span data-i18n="road.feat.t">持续打磨核心能力</span><span class="tag-soft" data-i18n="road.feat.tag">进行中</span></div>
+        <p data-i18n="road.feat.d">在保持离线优先与隐私友好的前提下，持续完善绘制、材质、文字与视图辅助等创作体验。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="wrap">
+    <span class="eyebrow reveal" data-i18n="faq.eyebrow">常见问题</span>
+    <h2 class="sec-title reveal" data-i18n="faq.title">你可能想问</h2>
+    <div class="faq">
+      <details class="reveal d1" open><summary><span data-i18n="faq.q1">需要注册账号吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a1">不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。</div></details>
+      <details class="reveal d2"><summary><span data-i18n="faq.q2">三个平台的功能一样吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a2">绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。</div></details>
+      <details class="reveal d3"><summary><span data-i18n="faq.q3">工程文件能在设备间通用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a3">可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。</div></details>
+      <details class="reveal d4"><summary><span data-i18n="faq.q5">支持哪些语言？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a5">界面支持简体中文、繁體中文、English、日本語四种语言，切换时文案同步更新。</div></details>
+    </div>
+  </section>
+
+  <!-- CHANGELOG -->
+  <section id="changelog" class="wrap">
+    <span class="eyebrow reveal" data-i18n="changelog.eyebrow">更新记录</span>
+    <h2 class="sec-title reveal" data-i18n="changelog.title">更新记录</h2>
+    <div class="log">
+      <div class="log-item reveal">
+        <div class="lh"><span class="date" data-i18n="log.v1.date">2026 · 首发</span></div>
+        <ul>
+          <li data-i18n="log.v1.1">网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备</li>
+          <li data-i18n="log.v1.2">绘制/形状、对象变换、材质、文字框、视图辅助等核心能力</li>
+          <li data-i18n="log.v1.3">离线优先、本地存储、.json 工程三端互通</li>
+          <li data-i18n="log.v1.4">四语言界面与崩溃恢复 / 自动保存</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTHOR -->
+  <section id="author" class="wrap">
+    <span class="eyebrow reveal" data-i18n="author.eyebrow">关于</span>
+    <h2 class="sec-title reveal" data-i18n="author.title">关于作者与项目</h2>
+    <div class="author reveal">
+      <div class="avatar">Y</div>
+      <div>
+        <h3 data-i18n="author.name">Yushichadao</h3>
+        <div class="role" data-i18n="author.role">独立开发者 · Cub3D Editor 作者</div>
+        <p data-i18n="author.bio">致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。</p>
+        <div class="meta">
+          <a class="gh" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener">⭐ GitHub 仓库</a>
+          <span class="tag-soft" data-i18n="author.tools">本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成</span>
+          <span class="tag-soft" data-i18n="author.license">许可证：木兰宽松许可证第2版 (MulanPSL-2)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="brand" style="margin-bottom:8px"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></div>
+      <div data-i18n="footer.copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
+    </div>
+    <div class="foot-links">
+      <a href="Web/index.html" data-i18n="footer.app">进入编辑器</a>
+      <a href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="footer.repo">GitHub</a>
+      <a href="#platforms" data-i18n="footer.download">下载</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============ 多语言文案 ============ */
+const T = {
+  "zh-CN":{
+    brand:"Cub3D Editor",
+    "nav.features":"功能特性","nav.versions":"版本对比","nav.platforms":"下载与打开","nav.author":"关于作者",
+    "hero.eyebrow":"离线优先 · 跨平台 3D/2D 场景编辑器",
+    "hero.title":"立方·三维图形设计工坊","hero.title2":"Cub3D Editor",
+    "hero.sub":"离线优先的跨平台 3D/2D 场景编辑器",
+    "hero.tag":"同一套代码，覆盖网页、Windows、Android 三端，四种使用形态。",
+    "hero.ctaWeb":"在浏览器中打开","hero.ctaAll":"查看全部下载",
+    "note.free":"完全免费","note.account":"无需账号","note.local":"数据本地保存","note.sync":"工程文件三端互通",
+    "detect.default":"正在识别您的设备…","detect.go":"前往推荐版本",
+    "platforms.eyebrow":"三种平台 · 四种形态","platforms.title":"选择适合你的方式",
+    "platforms.sub":"无论手机、平板、电脑还是浏览器，都能找到对应的入口。下方按钮会直接打开网页或下载安装包。",
+    "plat1.name":"网页版 · 鼠标","plat1.desc":"浏览器直接打开，无需安装。适配台式机、笔记本。","plat1.btn":"立即打开",
+    "plat2.name":"网页版 · 触屏","plat2.desc":"手机/平板浏览器，或 URL 加 ?touch 切换触控布局。","plat2.btn":"触屏模式打开",
+    "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安装版 / 便携版（免安装）。崩溃恢复、自动保存等增强。","plat3.setup":"下载安装版","plat3.portable":"下载便携版",
+    "plat4.name":"Android 移动版","plat4.desc":"安卓手机/平板安装包（release 签名）。全屏、分享导出等增强。","plat4.btn":"下载 .apk",
+    "features.eyebrow":"核心能力","features.title":"从涂鸦到参数化建模","features.sub":"一套工具覆盖 3D 与 2D 创作全流程，并在不同平台提供专属增强。",
+    "f1.t":"绘制与形状","f1.d":"画笔、橡皮擦（整体/局部）、形状工具，支持 3D 与 2D。",
+    "f2.t":"对象操作","f2.d":"移动、旋转、缩放；撤销/重做、复制/粘贴/克隆。",
+    "f3.t":"材质编辑","f3.d":"预设与自定义颜色、图案/纹理贴图。",
+    "f4.t":"文字框","f4.d":"多字体、横排/竖排，自由标注你的场景。",
+    "f5.t":"视图辅助","f5.d":"坐标轴、网格、地面参考面、线框模式。",
+    "f6.t":"离线优先","f6.d":"无需账号，数据本地保存；.json 工程三端互通。",
+    "f7.t":"PC 版增强","f7.d":"原生文件对话框（系统级打开/保存）、独立桌面窗口运行、离线安装。",
+    "f8.t":"Android 版增强","f8.d":"返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。",
+    "f9.t":"四语言界面","f9.d":"简体中文、繁體中文、English、日本語，切换同步更新。",
+    "versions.eyebrow":"版本对比","versions.title":"各版本能力一览","versions.sub":"三端共享同一套核心引擎，绝大多数功能完全一致；差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。其中“全屏”在 Android 上仅为贴合状态栏的视觉全屏（非原生沉浸全屏）。",
+    "cmp.cap":"能力","cmp.web":"网页版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
+    "leg.yes":"完整支持","leg.part":"部分支持","leg.no":"不适用",
+    "author.eyebrow":"关于","author.title":"关于作者与项目","author.name":"Yushichadao","author.role":"独立开发者 · Cub3D Editor 作者",
+    "author.bio":"致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。",
+    "author.tools":"本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成","author.license":"许可证：木兰宽松许可证第2版 (MulanPSL-2)",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载",
+    "detect.windows":"检测到您正在使用 Windows，推荐下载 PC 桌面版。",
+    "detect.android":"检测到您正在使用 Android，推荐下载 Android 移动版。",
+    "detect.other":"未识别到具体系统，推荐使用网页版。",
+    "nav.scenarios":"使用场景","nav.quickstart":"快速上手","nav.roadmap":"路线图","nav.faq":"常见问题",
+    "scenarios.eyebrow":"谁在用","scenarios.title":"适合这些场景","scenarios.sub":"无论是灵感速记、教学演示还是正式设计，都能找到合适的入口与节奏。",
+    "scn1.t":"灵感速记","scn1.d":"通勤路上用手机随手勾勒 3D 草图，回家用电脑继续精修。",
+    "scn2.t":"教学演示","scn2.d":"课堂或分享中用几何体、文字框直观讲解空间结构。",
+    "scn3.t":"游戏与原型","scn3.d":"快速拼搭关卡、道具或界面原型，导出 .json 随时迭代。",
+    "scn4.t":"空间规划","scn4.d":"用网格与坐标轴做简单的布局示意，离线即可完成。",
+    "quickstart.eyebrow":"三步上手","quickstart.title":"几分钟开始创作","quickstart.sub":"无需注册、无需联网，打开就能画。",
+    "qs1.t":"打开编辑器","qs1.d":"点开网页版或安装桌面/安卓版，无需账号即可进入画布。",
+    "qs2.t":"绘制与编辑","qs2.d":"用画笔、形状工具搭建，移动/旋转/缩放对象，添加文字与材质。",
+    "qs3.t":"保存与接力","qs3.d":"导出 .json 工程，在手机、电脑、安卓之间自由互通继续。",
+    "roadmap.eyebrow":"接下来","roadmap.title":"发展路线图","roadmap.sub":"诚实标注进度：已完成的能力不会反复宣传，规划中的会明确说明。",
+    "road.rel.t":"已发布：三端覆盖","road.rel.tag":"已完成",    "road.rel.d":"网页（鼠标/触屏）、Windows 桌面、Android 移动版齐备，共享同一套核心引擎与 .json 工程互通。",
+    "road.feat.t":"持续打磨核心能力","road.feat.tag":"进行中","road.feat.d":"在保持离线优先与隐私友好的前提下，持续完善绘制、材质、文字与视图辅助等创作体验。",
+    "faq.eyebrow":"常见问题","faq.title":"你可能想问",
+    "faq.q1":"需要注册账号吗？","faq.a1":"不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。",
+    "faq.q2":"三个平台的功能一样吗？","faq.a2":"绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。",
+    "faq.q3":"工程文件能在设备间通用吗？","faq.a3":"可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。",
+    "faq.q5":"支持哪些语言？","faq.a5":"界面支持简体中文、繁體中文、English、日本語四种语言，切换时文案同步更新。",
+    "changelog.eyebrow":"更新记录","changelog.title":"更新记录",
+    "log.v1.date":"2026 · 首发",
+    "log.v1.1":"网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备",
+    "log.v1.2":"绘制/形状、对象变换、材质、文字框、视图辅助等核心能力",
+    "log.v1.3":"离线优先、本地存储、.json 工程三端互通",
+    "log.v1.4":"四语言界面与崩溃恢复 / 自动保存"
+  },
+  "zh-TW":{
+    brand:"Cub3D Editor",
+    "nav.features":"功能特性","nav.versions":"版本對比","nav.platforms":"下載與開啟","nav.author":"關於作者",
+    "hero.eyebrow":"離線優先 · 跨平台 3D/2D 場景編輯器",
+    "hero.title":"立方・3D 設計工坊","hero.title2":"Cub3D Editor",
+    "hero.sub":"離線優先的跨平台 3D/2D 場景編輯器",
+    "hero.tag":"同一套程式碼，涵蓋網頁、Windows、Android 三端，四種使用形態。",
+    "hero.ctaWeb":"在瀏覽器中開啟","hero.ctaAll":"查看全部下載",
+    "note.free":"完全免費","note.account":"無需帳號","note.local":"資料本機保存","note.sync":"工程檔案三端互通",
+    "detect.default":"正在識別您的裝置…","detect.go":"前往推薦版本",
+    "platforms.eyebrow":"三種平台 · 四種形態","platforms.title":"選擇適合你的方式",
+    "platforms.sub":"無論手機、平板、電腦還是瀏覽器，都能找到對應的入口。下方按鈕會直接開啟網頁或下載安裝檔。",
+    "plat1.name":"網頁版 · 滑鼠","plat1.desc":"瀏覽器直接開啟，無須安裝。適配桌上型電腦、筆電。","plat1.btn":"立即開啟",
+    "plat2.name":"網頁版 · 觸控","plat2.desc":"手機/平板瀏覽器，或 URL 加 ?touch 切換觸控佈局。","plat2.btn":"觸控模式開啟",
+    "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安裝版 / 免安裝版。崩潰復原、自動儲存等增強。","plat3.setup":"下載安裝版","plat3.portable":"下載免安裝版",
+    "plat4.name":"Android 行動版","plat4.desc":"安卓手機/平板安裝檔（release 簽章）。全螢幕、分享匯出等增強。","plat4.btn":"下載 .apk",
+    "features.eyebrow":"核心能力","features.title":"從塗鴉到參數化建模","features.sub":"一套工具涵蓋 3D 與 2D 創作全流程，並在不同平台提供專屬增強。",
+    "f1.t":"繪製與形狀","f1.d":"畫筆、橡皮擦（整體/局部）、形狀工具，支援 3D 與 2D。",
+    "f2.t":"物件操作","f2.d":"移動、旋轉、縮放；復原/重做、複製/貼上/克隆。",
+    "f3.t":"材質編輯","f3.d":"預設與自訂顏色、圖案/紋理貼圖。",
+    "f4.t":"文字框","f4.d":"多字體、橫排/直排，自由標註你的場景。",
+    "f5.t":"視圖輔助","f5.d":"座標軸、網格、地面參考面、線框模式。",
+    "f6.t":"離線優先","f6.d":"無須帳號，資料本機保存；.json 工程三端互通。",
+    "f7.t":"PC 版增強","f7.d":"原生檔案對話方塊（系統級開啟/儲存）、獨立桌面視窗運行、離線安裝。",
+    "f8.t":"Android 版增強","f8.d":"返回鍵確認、原生儲存/開啟對話方塊（系統文件選擇器）、全螢幕與狀態列整合。",
+    "f9.t":"四語言介面","f9.d":"簡體中文、繁體中文、English、日本語，切換同步更新。",
+    "versions.eyebrow":"版本對比","versions.title":"各版本能力一覽","versions.sub":"三端共享同一套核心引擎，絕大多數功能完全一致；差異僅來自安裝方式，以及 Android 的原生儲存/開啟對話方塊與返回鍵。其中「全螢幕」在 Android 上僅為貼合狀態列的視覺全螢幕（非原生沉浸全螢幕）。",
+    "cmp.cap":"能力","cmp.web":"網頁版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
+    "leg.yes":"完整支援","leg.part":"部分支援","leg.no":"不適用",
+    "author.eyebrow":"關於","author.title":"關於作者與專案","author.name":"Yushichadao","author.role":"獨立開發者 · Cub3D Editor 作者",
+    "author.bio":"致力於打造離線優先、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。",
+    "author.tools":"本網站由 TRAE 與 CodeBuddy 工具 AI 輔助生成","author.license":"授權條款：木蘭寬鬆授權條款第2版 (MulanPSL-2)",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載",
+    "detect.windows":"偵測到您正在使用 Windows，推薦下載 PC 桌面版。",
+    "detect.android":"偵測到您正在使用 Android，推薦下載 Android 行動版。",
+    "detect.other":"未識別到具體系統，推薦使用網頁版。",
+    "nav.scenarios":"使用場景","nav.quickstart":"快速上手","nav.roadmap":"路線圖","nav.faq":"常見問題",
+    "scenarios.eyebrow":"誰在用","scenarios.title":"適合這些場景","scenarios.sub":"無論是靈感速記、教學演示還是正式設計，都能找到合適的入口與節奏。",
+    "scn1.t":"靈感速記","scn1.d":"通勤路上用手機隨手勾勒 3D 草圖，回家用電腦繼續精修。",
+    "scn2.t":"教學演示","scn2.d":"課堂或分享中用幾何體、文字框直觀講解空間結構。",
+    "scn3.t":"遊戲與原型","scn3.d":"快速拼搭關卡、道具或介面原型，匯出 .json 隨時迭代。",
+    "scn4.t":"空間規劃","scn4.d":"用網格與座標軸做簡單的佈局示意，離線即可完成。",
+    "quickstart.eyebrow":"三步上手","quickstart.title":"幾分鐘開始創作","quickstart.sub":"無需註冊、無需聯網，打開就能畫。",
+    "qs1.t":"打開編輯器","qs1.d":"點開網頁版或安裝桌面/安卓版，無需帳號即可進入畫布。",
+    "qs2.t":"繪製與編輯","qs2.d":"用畫筆、形狀工具搭建，移動/旋轉/縮放物件，新增文字與材質。",
+    "qs3.t":"儲存與接力","qs3.d":"匯出 .json 工程，在手機、電腦、安卓之間自由互通繼續。",
+    "roadmap.eyebrow":"接下來","roadmap.title":"發展路線圖","roadmap.sub":"誠實標註進度：已完成的能力不會反覆宣傳，規劃中的會明確說明。",
+    "road.rel.t":"已發布：三端覆蓋","road.rel.tag":"已完成","road.rel.d":"網頁（滑鼠/觸控）、Windows 桌面、Android 移動版齊備，共享同一套核心引擎與 .json 工程互通。",
+    "road.feat.t":"持續打磨核心能力","road.feat.tag":"進行中","road.feat.d":"在保持離線優先與隱私友好的前提下，持續完善繪製、材質、文字與視圖輔助等創作體驗。",
+    "faq.eyebrow":"常見問題","faq.title":"你可能想問",
+    "faq.q1":"需要註冊帳號嗎？","faq.a1":"不需要。Cub3D Editor 離線優先，所有資料保存在本地裝置，無需任何帳號即可使用。",
+    "faq.q2":"三個平台的功能一樣嗎？","faq.a2":"絕大多數功能完全一致，共享同一套核心引擎。差異僅來自安裝方式，以及 Android 的原生儲存/開啟對話方塊與返回鍵。Android 的「全螢幕」僅為貼合狀態列的視覺全螢幕。",
+    "faq.q3":"工程檔案能在裝置間通用嗎？","faq.a3":"可以。匯出的 .json 工程檔案在網頁、Windows、Android 三端之間通用，可在手機起草、電腦精修之間自由接力。",
+    "faq.q5":"支援哪些語言？","faq.a5":"介面支援簡體中文、繁體中文、English、日本語四種語言，切換時文案同步更新。",
+    "changelog.eyebrow":"更新記錄","changelog.title":"更新記錄",
+    "log.v1.date":"2026 · 首發",
+    "log.v1.1":"網頁（滑鼠/觸控）、Windows 桌面、Android 移動版三端齊備",
+    "log.v1.2":"繪製/形狀、物件變換、材質、文字框、視圖輔助等核心能力",
+    "log.v1.3":"離線優先、本地儲存、.json 工程三端互通",
+    "log.v1.4":"四語言介面與崩潰復原 / 自動儲存"
+  },
+  "en":{
+    brand:"Cub3D Editor",
+    "nav.features":"Features","nav.versions":"Compare","nav.platforms":"Get It","nav.author":"Author",
+    "hero.eyebrow":"Offline-first · Cross-platform 3D/2D Scene Editor",
+    "hero.title":"Cube · 3D Design Workshop","hero.title2":"Cub3D Editor",
+    "hero.sub":"An offline-first, cross-platform 3D/2D scene editor",
+    "hero.tag":"One codebase across Web, Windows and Android — four usage modes in total.",
+    "hero.ctaWeb":"Open in Browser","hero.ctaAll":"See All Downloads",
+    "note.free":"Completely free","note.account":"No account needed","note.local":"Data stays local","note.sync":"Projects sync across devices",
+    "detect.default":"Detecting your device…","detect.go":"Go to recommended",
+    "platforms.eyebrow":"3 Platforms · 4 Modes","platforms.title":"Pick what fits you",
+    "platforms.sub":"Whether phone, tablet, PC or browser — there is an entry for each. Buttons open the web app or download the installer directly.",
+    "plat1.name":"Web · Mouse","plat1.desc":"Open directly in a browser, no install. For desktop and laptop.","plat1.btn":"Open Now",
+    "plat2.name":"Web · Touch","plat2.desc":"Phones/tablets, or add ?touch to the URL for the touch layout.","plat2.btn":"Open Touch Mode",
+    "plat3.name":"PC · Windows","plat3.desc":"Windows setup / portable (no install). Crash recovery, autosave and more.","plat3.setup":"Download Setup","plat3.portable":"Download Portable",
+    "plat4.name":"Android","plat4.desc":"Android phone/tablet package (release-signed). Fullscreen, share-export and more.","plat4.btn":"Download .apk",
+    "features.eyebrow":"Core Capabilities","features.title":"From doodles to parametric modeling","features.sub":"One toolset for the whole 3D & 2D pipeline, with platform-specific extras.",
+    "f1.t":"Draw & Shapes","f1.d":"Brush, eraser (whole/partial), shape tools for both 3D and 2D.",
+    "f2.t":"Object Ops","f2.d":"Move, rotate, scale; undo/redo, copy/paste/clone.",
+    "f3.t":"Materials","f3.d":"Preset & custom colors, patterns / texture maps.",
+    "f4.t":"Text Box","f4.d":"Multiple fonts, horizontal / vertical layout.",
+    "f5.t":"View Aids","f5.d":"Axes, grid, ground plane, wireframe mode.",
+    "f6.t":"Offline-first","f6.d":"No account; data saved locally; .json projects work on all platforms.",
+    "f7.t":"PC Extras","f7.d":"Native file dialogs (system open/save), standalone desktop window, offline install.",
+    "f8.t":"Android Extras","f8.d":"Back-key confirm, native save/open dialogs (system document picker), fullscreen & status bar integration.",
+    "f9.t":"4 Languages","f9.d":"Simplified Chinese, Traditional Chinese, English, Japanese — synced on switch.",
+    "versions.eyebrow":"Version Compare","versions.title":"Capability at a glance","versions.sub":"All three platforms share the same core engine, so most features are identical. Differences come only from install method, plus Android's native save/open dialogs and back key. Note: on Android, \"fullscreen\" is only a visual fit to the status bar (not a native immersive fullscreen).",
+    "cmp.cap":"Capability","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
+    "leg.yes":"Full support","leg.part":"Partial","leg.no":"Not applicable",
+    "author.eyebrow":"About","author.title":"About the Author & Project","author.name":"Yushichadao","author.role":"Independent Developer · Creator of Cub3D Editor",
+    "author.bio":"Building offline-first, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.",
+    "author.tools":"This site was AI-assisted by TRAE & CodeBuddy tools","author.license":"License: Mulan Permissive Software License v2 (MulanPSL-2)",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download",
+    "detect.windows":"We detected Windows — the PC desktop edition is recommended.",
+    "detect.android":"We detected Android — the Android edition is recommended.",
+    "detect.other":"Could not detect your OS — the Web version is recommended.",
+    "nav.scenarios":"Use cases","nav.quickstart":"Quick start","nav.roadmap":"Roadmap","nav.faq":"FAQ",
+    "scenarios.eyebrow":"Who's using it","scenarios.title":"Perfect for these scenarios","scenarios.sub":"Whether it's a quick idea sketch, a teaching demo, or formal design, there's a fitting entry point and pace for you.",
+    "scn1.t":"Quick idea sketch","scn1.d":"Rough out a 3D sketch on your phone during your commute, then refine it on your computer at home.",
+    "scn2.t":"Teaching demo","scn2.d":"Use geometric shapes and text boxes to visually explain spatial structures in class or during a talk.",
+    "scn3.t":"Games & prototypes","scn3.d":"Quickly assemble levels, props, or UI prototypes and export .json for iterative tweaking anytime.",
+    "scn4.t":"Space planning","scn4.d":"Use grids and axes to lay out simple diagrams, all doable offline.",
+    "quickstart.eyebrow":"Three steps to start","quickstart.title":"Start creating in minutes","quickstart.sub":"No registration, no internet needed — just open and draw.",
+    "qs1.t":"Open the editor","qs1.d":"Launch the Web version or install the desktop/Android version — no account needed to enter the canvas.",
+    "qs2.t":"Draw & edit","qs2.d":"Build with the brush and shape tools, move/rotate/scale objects, and add text and materials.",
+    "qs3.t":"Save & hand off","qs3.d":"Export your .json project and seamlessly continue across phone, PC, and Android.",
+    "roadmap.eyebrow":"What's next","roadmap.title":"Development roadmap","roadmap.sub":"We're honest about progress: shipped features won't be re-advertised, and planned ones are clearly marked.",
+    "road.rel.t":"Released: three-platform coverage","road.rel.tag":"Done","road.rel.d":"Web (mouse/touch), Windows desktop, and Android mobile are all available, sharing the same core engine with .json project interoperability.",
+    "road.feat.t":"Continuously refining core capabilities","road.feat.tag":"In progress","road.feat.d":"While keeping an offline-first, privacy-friendly approach, we keep improving the creative experience for drawing, materials, text, and view aids.",
+    "faq.eyebrow":"FAQ","faq.title":"You might be wondering",
+    "faq.q1":"Do I need to register an account?","faq.a1":"No. Cub3D Editor is offline-first; all data is stored on your local device and works without any account.",
+    "faq.q2":"Are the three platforms identical in features?","faq.a2":"The vast majority of features are exactly the same, sharing the same core engine. Differences come only from the install method, and from Android's native save/open dialogs and back key confirm. Android's \"Fullscreen\" is only a visual fullscreen that fits the status bar.",
+    "faq.q3":"Can project files be used across devices?","faq.a3":"Yes. Exported .json project files work across Web, Windows, and Android, letting you freely hand off between drafting on your phone and refining on your computer.",
+    "faq.q5":"Which languages are supported?","faq.a5":"The UI supports four languages — Simplified Chinese, Traditional Chinese, English, and Japanese — with text syncing on switch.",
+    "changelog.eyebrow":"Changelog","changelog.title":"What's new",
+    "log.v1.date":"2026 · First release",
+    "log.v1.1":"Web (mouse/touch), Windows desktop, and Android mobile — all three platforms available",
+    "log.v1.2":"Core capabilities: drawing/shapes, object transforms, materials, text boxes, view aids",
+    "log.v1.3":"Offline-first, local storage, .json project interoperability across three platforms",
+    "log.v1.4":"Four-language UI and crash recovery / auto-save"
+  },
+  "ja":{
+    brand:"Cub3D Editor",
+    "nav.features":"機能","nav.versions":"バージョン比較","nav.platforms":"入手する","nav.author":"作者",
+    "hero.eyebrow":"オフライン優先 · クロスプラットフォーム 3D/2D シーンエディタ",
+    "hero.title":"Cube · 3Dデザイン\u200bワークショップ","hero.title2":"Cub3D Editor",
+    "hero.sub":"オフライン優先のクロスプラットフォーム 3D/2D シーンエディタ",
+    "hero.tag":"1つのコードベースが Web・Windows・Android の3プラットフォーム、計4形態に対応。",
+    "hero.ctaWeb":"ブラウザで開く","hero.ctaAll":"すべてのダウンロード",
+    "note.free":"完全無料","note.account":"アカウント不要","note.local":"データはローカル保存","note.sync":"シーンは端末間共有",
+    "detect.default":"デバイスを判別中…","detect.go":"おすすめへ",
+    "platforms.eyebrow":"3プラットフォーム・4形態","platforms.title":"あなたに合う方法を",
+    "platforms.sub":"スマホ・タブレット・PC・ブラウザのいずれでも入り口があります。ボタンでWebアプリを開くか、インストーラを直接ダウンロードします。",
+    "plat1.name":"Web・マウス","plat1.desc":"ブラウザですぐ開く、インストール不要。デスクトップ・ノート向け。","plat1.btn":"今すぐ開く",
+    "plat2.name":"Web・タッチ","plat2.desc":"スマホ/タブレット、またはURLに ?touch を付けてタッチレイアウト。","plat2.btn":"タッチモードで開く",
+    "plat3.name":"PC・Windows","plat3.desc":"Windows インストーラ / ポータブル（インストール不要）。クラッシュ復旧・自動保存など。","plat3.setup":"インストーラを取得","plat3.portable":"ポータブルを取得",
+    "plat4.name":"Android","plat4.desc":"Android スマホ/タブレット向けパッケージ（リリース署名）。全画面・共有書き出しなど。","plat4.btn":" .apk を取得",
+    "features.eyebrow":"主要機能","features.title":"落書きからパラメトリック建模まで","features.sub":"3Dと2Dの制作全体をカバーし、プラットフォームごとに専用強化を提供。",
+    "f1.t":"描画と図形","f1.d":"ブラシ、消しゴム（全体/部分）、図形ツール。3D/2D対応。",
+    "f2.t":"オブジェクト操作","f2.d":"移動・回転・拡大縮小。元に戻す/やり直し、コピー/貼り付け/複製。",
+    "f3.t":"マテリアル編集","f3.d":"プリセット/カスタム色、パターン/テクスチャマップ。",
+    "f4.t":"テキストボックス","f4.d":"複数フォント、横書き/縦書き。",
+    "f5.t":"表示補助","f5.d":"座標軸、グリッド、地面参照面、ワイヤーフレーム。",
+    "f6.t":"オフライン優先","f6.d":"アカウント不要、データはローカル保存。.json は端末間で共通。",
+    "f7.t":"PC 向け強化","f7.d":"ネイティブファイルダイアログ（システム開く/保存）、単体デスクトップ窓、オフライン導入。",
+    "f8.t":"Android 向け強化","f8.d":"戻るキー確認、ネイティブ保存/開くダイアログ（システム文書ピッカー）、全画面とステータスバー統合。",
+    "f9.t":"4言語対応","f9.d":"簡体字中国語・繁体字中国語・English・日本語。切替で同期。",
+    "versions.eyebrow":"バージョン比較","versions.title":"対応機能一覧","versions.sub":"3プラットフォームは同じコアエンジンを共有し、ほとんどの機能は同一です。違いはインストール方式と、Android のネイティブ保存/開くダイアログと戻るキーのみ。なお Android の「全画面」はステータスバーに合わせる視覚的なもの（ネイティブな没入全画面ではありません）。",
+    "cmp.cap":"機能","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
+    "leg.yes":"完全対応","leg.part":"一部対応","leg.no":"該当なし",
+    "author.eyebrow":"について","author.title":"作者とソフトウェアについて","author.name":"Yushichadao","author.role":"独立開発者・Cub3D Editor 作者",
+    "author.bio":"オフライン優先でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。",
+    "author.tools":"本サイトは TRAE と CodeBuddy ツールで AI 補助生成","author.license":"ライセンス：木蘭緩和ライセンス第2版 (MulanPSL-2)",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード",
+    "detect.windows":"Windows を検出しました。PC デスクトップ版をおすすめします。",
+    "detect.android":"Android を検出しました。Android 版をおすすめします。",
+    "detect.other":"OS を特定できませんでした。Web 版をおすすめします。",
+    "nav.scenarios":"ユースケース","nav.quickstart":"クイックスタート","nav.roadmap":"ロードマップ","nav.faq":"よくある質問",
+    "scenarios.eyebrow":"こんな方に","scenarios.title":"こんな場面で活躍","scenarios.sub":"ひらめきのメモ、授業のデモ、本格的なデザインまで、ぴったりの入り口とペースが見つかります。",
+    "scn1.t":"ひらめきメモ","scn1.d":"通勤中にスマホで3Dスケッチをさっと描き、帰宅後にPCで仕上げる。",
+    "scn2.t":"授業・プレゼン","scn2.d":"教室や共有時に、図形やテキストボックスで空間構造を直感的に説明。",
+    "scn3.t":"ゲームとプロトタイプ","scn3.d":"ステージ・アイテム・UI原型を手早く組み、.jsonを書き出して何度でも改善。",
+    "scn4.t":"空間プランニング","scn4.d":"グリッドと座標軸で簡単なレイアウトを示し、オフラインで完了。",
+    "quickstart.eyebrow":"3ステップ","quickstart.title":"数分で創作開始","quickstart.sub":"登録不要、通信不要。開くだけで描ける。",
+    "qs1.t":"エディタを開く","qs1.d":"Web版を開くか、デスクトップ/Android版をインストール。アカウント不要でキャンバスへ。",
+    "qs2.t":"描画と編集","qs2.d":"ブラシや図形ツールで組み立て、オブジェクトを移動/回転/拡縮し、テキストボックスとマテリアルを追加。",
+    "qs3.t":"保存と引き継ぎ","qs3.d":".jsonシーンを書き出し、スマホ・PC・Android間で自由に共有して続行。",
+    "roadmap.eyebrow":"今後の予定","roadmap.title":"開発ロードマップ","roadmap.sub":"進捗は正直に表示：公開済み機能は繰り返し宣伝せず、計画中は明記する。",
+    "road.rel.t":"公開済み：3プラットフォーム対応","road.rel.tag":"完了",    "road.rel.d":"Web（マウス/タッチ）、Windows デスクトップ、Android モバイルがそろい、同じコアエンジンと .json シーン共有を実現。",
+    "road.feat.t":"コア機能を継続的に磨く","road.feat.tag":"進行中","road.feat.d":"オフライン優先とプライバシー配慮を保ちつつ、描画・マテリアル・テキストボックス・表示補助などの体験を継続的に改善。",
+    "faq.eyebrow":"よくある質問","faq.title":"気になるかも",
+    "faq.q1":"アカウント登録は必要ですか？","faq.a1":"いいえ。Cub3D Editor はオフライン優先で、すべてのデータはローカル端末に保存され、アカウント不要で使えます。",
+    "faq.q2":"3つのプラットフォームで機能は同じですか？","faq.a2":"ほとんどの機能は完全に同一で、同じコアエンジンを共有。違いはインストール方式と、Android のネイティブ保存/開くダイアログと戻るキーのみ。Android の「全画面」はステータスバーに合わせる視覚的なものです。",
+    "faq.q3":"シーンファイルは端末間で共有できますか？","faq.a3":"はい。書き出した .json シーンは Web・Windows・Android の3端末間で共通。スマホで下書き、PCで仕上げ、と自由に引き継げます。",
+    "faq.q5":"対応言語は？","faq.a5":"簡体字中国語・繁体字中国語・English・日本語の4言語。切替でテキストが同期します。",
+    "changelog.eyebrow":"更新履歴","changelog.title":"更新履歴",
+    "log.v1.date":"2026・初回リリース",
+    "log.v1.1":"Web（マウス/タッチ）、Windows デスクトップ、Android モバイルの3プラットフォームがそろう",
+    "log.v1.2":"描画/図形、トランスフォーム、マテリアル、テキストボックス、表示補助などのコア機能",
+    "log.v1.3":"オフライン優先、ローカル保存、.json シーンの3端末間共有",
+    "log.v1.4":"4言語UIとクラッシュ復旧 / 自動保存"
+  }
+};
+
+/* 版本对比数据： w=网页, p=PC, a=Android  (Y=完整支持, N=不适用) */
+const CMP = [
+  ["cmp.r_install","N","Y","Y"],   // 安装方式：仅 PC/Android 需安装
+  ["cmp.r_draw","Y","Y","Y"],
+  ["cmp.r_transform","Y","Y","Y"],
+  ["cmp.r_material","Y","Y","Y"],
+  ["cmp.r_text","Y","Y","Y"],
+  ["cmp.r_view","Y","Y","Y"],
+  ["cmp.r_undo","Y","Y","Y"],
+  ["cmp.r_offline","Y","Y","Y"],
+  ["cmp.r_json","Y","Y","Y"],
+  ["cmp.r_fullscreen","Y","Y","P"],                 // Web 靠浏览器原生全屏 / PC 为 Electron 原生 / Android 仅 CSS 贴合状态栏(非全屏 API)，标 P=部分
+  ["cmp.r_crash","Y","Y","Y"],                      // 崩溃恢复 + 5 分钟自动保存，Web 注释与 PC 版一致
+  ["cmp.r_sticky","Y","Y","Y"],                     // 置顶便签窗，Web 基座含 manPin 置顶逻辑
+  ["cmp.r_drag","N","Y","Y"],                       // 拖放打开 .json 工程：Web·PC 基座含 drop 处理；Android 已用 initROMAntiDrag 禁用，标 N
+  ["cmp.r_lang","Y","Y","Y"],
+  ["cmp.r_nativeSave","N","Y","Y"],                 // 原生保存/打开对话框：PC 系统文件框 + Android 文档选择器（Web 为浏览器 <input>）
+  ["cmp.r_back","N","N","Y"]                        // 返回键确认：仅 Android backButton
+];
+const CMPLABEL = {
+  "zh-CN":{"cmp.r_install":"安装方式","cmp.r_draw":"画笔/橡皮/形状","cmp.r_transform":"对象变换","cmp.r_material":"材质/纹理","cmp.r_text":"文字框","cmp.r_view":"坐标轴/网格/地面/线框","cmp.r_undo":"撤销重做/复制克隆","cmp.r_offline":"离线/本地存储","cmp.r_json":".json 工程互通","cmp.r_fullscreen":"全屏运行","cmp.r_crash":"崩溃恢复 / 自动保存","cmp.r_sticky":"置顶便签窗","cmp.r_drag":"拖放打开工程","cmp.r_lang":"四语言界面(简/繁/英/日)","cmp.r_nativeSave":"原生保存/打开对话框","cmp.r_back":"返回键确认"},
+  "zh-TW":{"cmp.r_install":"安裝方式","cmp.r_draw":"畫筆/橡皮/形狀","cmp.r_transform":"物件變換","cmp.r_material":"材質/紋理","cmp.r_text":"文字框","cmp.r_view":"座標軸/網格/地面/線框","cmp.r_undo":"復原重做/複製克隆","cmp.r_offline":"離線/本機儲存","cmp.r_json":".json 工程互通","cmp.r_fullscreen":"全螢幕執行","cmp.r_crash":"崩潰復原 / 自動儲存","cmp.r_sticky":"置頂便利貼窗","cmp.r_drag":"拖放開啟工程","cmp.r_lang":"四語言介面(簡/繁/英/日)","cmp.r_nativeSave":"原生儲存/開啟對話方塊","cmp.r_back":"返回鍵確認"},
+  "en":{"cmp.r_install":"Install method","cmp.r_draw":"Brush/eraser/shapes","cmp.r_transform":"Object transform","cmp.r_material":"Materials/textures","cmp.r_text":"Text box","cmp.r_view":"Axes/grid/ground/wire","cmp.r_undo":"Undo-redo/copy-clone","cmp.r_offline":"Offline/local storage","cmp.r_json":".json project sync","cmp.r_fullscreen":"Fullscreen","cmp.r_crash":"Crash recovery / autosave","cmp.r_sticky":"Sticky-note window","cmp.r_drag":"Drag-open project","cmp.r_lang":"4 languages","cmp.r_nativeSave":"Native save/open dialog","cmp.r_back":"Back-key confirm"},
+  "ja":{"cmp.r_install":"インストール方式","cmp.r_draw":"ブラシ/消しゴム/図形","cmp.r_transform":"トランスフォーム","cmp.r_material":"マテリアル/テクスチャ","cmp.r_text":"テキストボックス","cmp.r_view":"座標軸/グリッド/地面/ワイヤ","cmp.r_undo":"元に戻す/複製","cmp.r_offline":"オフライン/ローカル保存","cmp.r_json":".json 共有","cmp.r_fullscreen":"全画面","cmp.r_crash":"クラッシュ復旧 / 自動保存","cmp.r_sticky":"付箋ウィンドウ","cmp.r_drag":"ドラッグで開く","cmp.r_lang":"4言語(簡/繁/英/日)","cmp.r_nativeSave":"ネイティブ保存/開くダイアログ","cmp.r_back":"戻るキー確認"}
+};
+const SYM = {Y:'<span class="yes">✓</span>', P:'<span class="part">~</span>', N:'<span class="no">—</span>'};
+
+/* ============ 语言应用 ============ */
+let cur = localStorage.getItem('cub3d_lang')
+      || (navigator.language||'zh-CN').slice(0,7)
+      || 'zh-CN';
+if(!T[cur]) cur = cur.startsWith('zh') ? (cur.includes('TW')||cur.includes('HK')||cur.includes('Hant')?'zh-TW':'zh-CN')
+            : (cur.startsWith('ja')?'ja': cur.startsWith('en')?'en':'zh-CN');
+if(!T[cur]) cur='zh-CN';
+
+function applyLang(lang){
+  cur = lang; localStorage.setItem('cub3d_lang', lang);
+  document.documentElement.lang = lang;
+  const dict = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(dict[k]!=null) el.innerHTML = dict[k];
+  });
+  document.title = (dict["hero.title"]||"Cub3D Editor") + " — " + (dict["hero.sub"]||"");
+  // 对比表重渲
+  const labels = CMPLABEL[lang];
+  const body = document.getElementById('cmpBody');
+  body.innerHTML = CMP.map(([k,w,p,a])=>
+    `<tr><td>${labels[k]}</td><td>${SYM[w]}</td><td>${SYM[p]}</td><td>${SYM[a]}</td></tr>`).join('');
+  // 语言按钮高亮
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  // 重新识别（文案依赖语言）
+  detectDevice();
+}
+document.getElementById('lang').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(b) applyLang(b.dataset.lang);
+});
+
+/* ============ 设备识别 ============ */
+function detectDevice(){
+  const ua = navigator.userAgent;
+  let type='other';
+  if(/Android/i.test(ua)) type='android';
+  else if(/Windows NT/i.test(ua)) type='windows';
+
+  const dict = T[cur];
+  document.getElementById('detectText').innerHTML =
+     (dict['detect.'+type]||dict['detect.other']);
+  const cta = document.getElementById('detectCta');
+  const heroCta = document.getElementById('heroCta');
+  const heroText = document.getElementById('heroCtaText');
+
+  const map = {
+    windows:{url:'dist/Cub3D-Editor-Setup.exe', t:'hero.ctaWin'},
+    android:{url:'dist/Cub3D-Editor.apk', t:'hero.ctaAnd'},
+    other:{url:'Web/index.html', t:'hero.ctaWeb'}
+  };
+  // 额外 hero 文案
+  const extra = {
+    "zh-CN":{hero:{windows:"下载 Windows 版",android:"下载 Android 版",other:"在浏览器打开"}},
+    "zh-TW":{hero:{windows:"下載 Windows 版",android:"下載 Android 版",other:"在瀏覽器開啟"}},
+    "en":{hero:{windows:"Download for Windows",android:"Download for Android",other:"Open in Browser"}},
+    "ja":{hero:{windows:"Windows 版を取得",android:"Android 版を取得",other:"ブラウザで開く"}}
+  };
+  const m = map[type]; const label = (extra[cur]&&extra[cur].hero[type]) || dict['hero.ctaWeb'];
+  heroCta.href = m.url; heroText.textContent = label;
+  cta.href = m.url;
+}
+
+/* ============ 移动端菜单 ============ */
+document.getElementById('menuBtn').addEventListener('click', ()=>{
+  document.getElementById('navLinks').classList.toggle('open');
+});
+document.querySelectorAll('#navLinks a').forEach(a=>a.addEventListener('click',()=>{
+  document.getElementById('navLinks').classList.remove('open');
+}));
+
+/* ============ 滚动揭示 ============ */
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ============ 卡片光标光晕 ============ */
+document.querySelectorAll('.card,.feat,.scn,.step,.sol').forEach(card=>{
+  card.addEventListener('pointermove', e=>{
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX-r.left)+'px');
+    card.style.setProperty('--my', (e.clientY-r.top)+'px');
+  });
+});
+
+/* ============ 导航高亮（scrollspy）============ */
+(function(){
+  const links = [...document.querySelectorAll('#navLinks a')];
+  const ids = links.map(a=>a.getAttribute('href')).filter(h=>h&&h.startsWith('#')).map(h=>h.slice(1));
+  const secs = ids.map(id=>document.getElementById(id)).filter(Boolean);
+  if(!secs.length) return;
+  const spy = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        const id = e.target.id;
+        links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+id));
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px', threshold:0});
+  secs.forEach(s=>spy.observe(s));
+})();
+
+/* 初始化 */
+applyLang(cur);
+</script>
+</body>
+</html>
