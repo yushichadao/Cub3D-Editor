@@ -43,7 +43,7 @@
 | `Cub3D-Editor-Portable.exe` | `dist/` | Windows 便携版（免安装） |
 | `Cub3D-Editor.apk` | `dist/` | Android 安装包（release 签名，包名 `com.cub3deditor.app`） |
 
-> 注：`dist/` 下仅上述三个正式安装包入库；各端 `dist/`、`build/` 等构建产物仍按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。
+> 注：仅仓库根 `dist/` 下的上述三个正式安装包随源码入库；各端自身的 `dist/`、`build/`、`node_modules/` 仍按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。
 
 ---
 
@@ -165,6 +165,16 @@ npm run apk:debug       # 调试包
 - `/dist/` → 安装包下载
 
 无需手动构建；修改上述任一目录并推送即触发部署。
+
+本地预览（从仓库根启动静态服务器即可同时看到宣传页与编辑器）：
+
+```powershell
+# 任意静态服务器均可，例如 Python 内置服务器：
+python -m http.server 8090
+# 浏览器访问：
+#   宣传页  http://localhost:8090/
+#   编辑器  http://localhost:8090/Web/
+```
 
 ---
 
