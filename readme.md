@@ -104,6 +104,8 @@ Cub3D Editor/
 ├── _i18n_en.mjs            # 英文文案生成
 ├── _i18n_ja.mjs            # 日文文案生成
 ├── _i18n_zh-TW.mjs         # 繁体中文文案生成
+├── _i18n_ko.mjs            # 韩文文案生成
+├── _i18n_ru.mjs            # 俄文文案生成（简体中文为内置默认，无需对应脚本）
 └── check_manual.mjs        # 说明书 ↔ 界面文案一致性校验
 ```
 
