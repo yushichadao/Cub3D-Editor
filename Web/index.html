@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<title>立方·三维图形设计工坊</title>
+<title>Cub3D Editor</title>
 <style>
   :root {
     --bg-deep: #0c0e16;
@@ -118,8 +118,10 @@
     border-radius:3px; transform: translate(7px,7px);
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .top-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; }
+  .top-actions { display: block; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; min-width: 0; flex: 1 1 0; }
   .top-actions::-webkit-scrollbar { display: none; }
+  /* 内层按内容宽度排布，不压缩；外层负责横向滚动 */
+  .top-actions-inner { display: flex; gap: 4px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; width: max-content; min-width: 100%; }
   .top-btn {
     height: 30px; padding: 0 9px; font-size: 12px;
     color: var(--text); background: var(--control-bg);
@@ -1087,6 +1089,7 @@
 <header class="topbar">
   <div class="brand"><div class="logo"></div><span data-i18n="aboutName">立方·三维设计工坊</span></div>
   <div class="top-actions">
+    <div class="top-actions-inner">
     <button class="top-btn" id="btn-new" data-i18n-title="titleNew"><span class="ic">✨</span><span class="lbl" data-i18n="new">新建</span></button>
     <button class="top-btn" id="btn-import" data-i18n-title="titleImport"><span class="ic">📥</span><span class="lbl" data-i18n="import">导入</span></button>
     <button class="top-btn" id="btn-export" data-i18n-title="titleExport"><span class="ic">📤</span><span class="lbl" data-i18n="export">导出</span></button>
@@ -1105,6 +1108,7 @@
     <div class="top-btn-sep"></div>
     <button class="top-btn" id="btn-settings" data-i18n-title="titleSettings"><span class="ic">⚙</span><span class="lbl" data-i18n="settings">设置</span></button>
     <button class="top-btn primary" id="btn-fs" data-i18n-title="titleFS"><span class="ic">⛶</span><span class="lbl" data-i18n="fs">全屏</span></button>
+  </div>
   </div>
 </header>
 
@@ -1956,7 +1960,7 @@ kbdSliderPgSel:'大幅增/减',
   statusBrush2d:'2D 画笔：按住左键在地面上绘制 · 右键平移视角 · 滚轮缩放',
   brushConstrainOn:'已进入约束直线（水平 / 垂直 / 45°）', brushConstrainOff:'已取消约束直线',
   statusEraser:'橡皮擦：拖拽或点击擦除 · 整体擦除=将对象整条删除；局部擦除=仅擦除圈内笔迹（可分节）· 右键平移视角',
-  appTitle:'3D 编辑器',
+  appTitle:'Cub3D Editor',
   // 说明书阅读器
   tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manPrevCh:'上一章', manNextCh:'下一章', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
   manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方"同意并继续"。如不同意，请选择"不同意并退出"，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', manExportFail:'导出失败', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', recoveryTitle:'检测到未保存的会话', toastImportUnsupported:'不支持的文件类型，仅支持 .scene JSON 格式的3D场景文件，是否返回空白场景？', toastImportSticky:'导入的是便签备份文件，而非3D场景文件，是否返回空白场景？', toastDropOnlyScene:'不支持的文件类型，请拖入 .scene 场景文件', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出',
@@ -10972,21 +10976,14 @@ const topbarEl = document.querySelector('.topbar');
 const topActionsEl = document.querySelector('.top-actions');
 if (topbarEl) {
   topbarEl.addEventListener('wheel', (e) => {
-    // 仅当鼠标在按钮区(.top-actions)内且按钮区有溢出时，用滚轮横向滚动
-    if (topActionsEl && topActionsEl.contains(e.target) && topActionsEl.scrollWidth > topActionsEl.clientWidth) {
-      e.preventDefault();
-      topActionsEl.scrollLeft += e.deltaY !== 0 ? e.deltaY : e.deltaX;
-    } else {
-      // 其他区域：将滚轮事件转发到画布，触发视野缩放
-      e.preventDefault();
-      canvas.dispatchEvent(new WheelEvent('wheel', {
-        deltaY: e.deltaY,
-        deltaX: e.deltaX,
-        clientX: e.clientX,
-        clientY: e.clientY,
-        bubbles: true,
-        cancelable: true
-      }));
+    // 指针在顶栏时：滚轮一律用于左右滑动按钮区，绝不缩放视角
+    e.preventDefault();
+    e.stopPropagation();
+    if (topActionsEl) {
+      const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+      const maxScroll = topActionsEl.scrollWidth - topActionsEl.clientWidth;
+      // 始终滚动；若内容未溢出（已到边界），对画布无副作用
+      topActionsEl.scrollLeft = Math.max(0, Math.min(maxScroll, topActionsEl.scrollLeft + delta));
     }
   }, { passive: false });
 }
