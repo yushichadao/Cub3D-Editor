@@ -2954,7 +2954,7 @@ When expanded, a sticky note is a **page-level topmost floating card** (not a se
 
 ## Chapter 51: Multi-language: The Manual Also "Speaks" Your Language
 
-Both the interface and the manual support four languages:
+Both the interface and the manual support five languages:
 
 | Language | Interface | Manual |
 | --- | --- | --- |
@@ -2967,7 +2967,7 @@ How to switch: choose the language in Settings, and the interface text and manua
 
 💡 **How the language is chosen**: on **first launch** it is **auto-detected from your system language** — based on your OS/browser language setting, it automatically matches Simplified Chinese, Traditional Chinese, English, or Japanese; after that, if you switch languages manually, the app **remembers your choice and fully respects it**, and will not be overridden by the system language again. In short: the first time follows your system; later you use whatever language you pick.
 
-✅ **All four languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
+✅ **All five languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
 
 > ⚠️ About deletion confirmation: all deletion operations (sticky notes, scene objects) go through a **custom confirmation dialog** rather than a native system dialog, so it pops up reliably even in **fullscreen / immersive mode**, without "clicking does nothing."
 

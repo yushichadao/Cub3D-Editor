@@ -42,7 +42,7 @@
   };
 
   function refreshManualMap() {
-    var codes = ['zh-CN', 'zh-TW', 'en', 'ja'].concat(window.__cube3dExtraCodes || []);
+    var codes = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko'].concat(window.__cube3dExtraCodes || []);
     codes.forEach(function (code) {
       D.langpack.manualUrl(code).then(function (r) {
         if (r && r.ok && r.url) window.__desktopManualMap[code] = r.url;

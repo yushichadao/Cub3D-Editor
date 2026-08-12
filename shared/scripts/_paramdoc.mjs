@@ -1,4 +1,4 @@
-// 文档辅助：从 index.html 抽取 SHAPE_PARAMS / PARAM_LABEL_MAP 与四语言包，
+// 文档辅助：从 index.html 抽取 SHAPE_PARAMS / PARAM_LABEL_MAP 与五语言包，
 // 输出各语言的「图形 -> 参数」清单，供使用说明书更新参考。
 // 用法：node scripts/_paramdoc.mjs [zh|en|ja|tw|all]
 import fs from 'node:fs';

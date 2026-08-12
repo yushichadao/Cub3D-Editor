@@ -4,6 +4,8 @@
 //   1) docs     <- shared/docs      -> Web/docs, PC/docs, Android/www/docs, Android/.../assets/public/docs
 //   2) infra    <- shared/infra     -> Web/, PC/, Android/  （LICENSE, server.js, server.ps1, vercel.json）
 //   3) scripts  <- shared/scripts   -> Web/scripts, PC/scripts, Android/scripts
+//   4) language <- shared/language  -> Web/language, PC/language, Android/language, Android 原生 assets（Android/www 由 build-www.mjs 生成）
+//      新增语言只需把语言包放入 shared/language 并运行本脚本，即可同步到各端。
 // 平台专属文件（lang-override.js、index.html、各端 build-*.mjs、_genicon.mjs 等）不在此同步，保持各端独立。
 //
 // 用法：在仓库根目录执行 `node sync-shared.mjs`
@@ -21,6 +23,8 @@ const MANUAL_FILES = [
   '使用说明书_en.md',
   '使用説明書_ja.md',
   '使用說明書_zh-TW.md',
+  '사용설명서_ko.md',
+  '使用说明书_ru.md',
 ];
 const DOCS_DESTS = [
   path.join(ROOT, 'Web', 'docs'),
@@ -44,6 +48,15 @@ const SCRIPTS_DESTS = [
   path.join(ROOT, 'Web', 'scripts'),
   path.join(ROOT, 'PC', 'scripts'),
   path.join(ROOT, 'Android', 'scripts'),
+];
+
+// 4) 语言包（三端逐字节一致）
+const LANG_SRC = path.join(ROOT, 'shared', 'language');
+const LANG_DESTS = [
+  path.join(ROOT, 'Web', 'language'),
+  path.join(ROOT, 'PC', 'language'),
+  path.join(ROOT, 'Android', 'language'),
+  path.join(ROOT, 'Android', 'android', 'app', 'src', 'main', 'assets', 'public', 'language'),
 ];
 
 async function exists(p) {
@@ -76,7 +89,7 @@ async function main() {
 
   // 4) 国际化：将弹窗文案与扩展后的法律全文写入各平台语言包（en / ja / zh-TW）
   //    复用独立脚本 _i18n_en.mjs / _i18n_ja.mjs / _i18n_zh-TW.mjs（亦可单独运行）
-  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW']) {
+  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW', '_i18n_ru']) {
     try {
       await import('./' + lang + '.mjs');
       console.log(`[sync-shared] 国际化（${lang}）执行完成。`);
@@ -84,6 +97,12 @@ async function main() {
       console.error(`[sync-shared] 国际化（${lang}）失败：`, e.message);
     }
   }
+
+  // 5) 语言包同步：以 shared/language 为单一源，覆盖到各端（含新增语言，如 ko.js）。
+  //    必须先于语言包同步执行上面的国际化，确保各端拿到的是最新法律全文。
+  const langFiles = (await fs.readdir(LANG_SRC)).filter((f) => f.endsWith('.js'));
+  for (const f of langFiles) await syncFile(LANG_SRC, f, LANG_DESTS);
+  console.log('[sync-shared] 语言包同步完成。');
 
   console.log('[sync-shared] 完成：共享资源已统一同步到各端，并完成法律文本国际化。');
 }

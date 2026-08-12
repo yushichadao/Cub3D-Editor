@@ -25,7 +25,7 @@ const { dialog } = require('electron');
 const P = require('../paths');
 
 /** 内置在 language/ 目录下、由 index.html 直接 <script> 引入的语言 */
-const BUILTIN_CODES = ['zh-CN', 'zh-TW', 'en', 'ja'];
+const BUILTIN_CODES = ['zh-CN', 'zh-TW', 'en', 'ja', 'ko', 'ru'];
 
 function readPackFile(file) {
   try {
@@ -100,7 +100,9 @@ function list() {
     { code: 'zh-CN', label: '简体中文' },
     { code: 'zh-TW', label: '繁體中文' },
     { code: 'en', label: 'English' },
-    { code: 'ja', label: '日本語' }
+    { code: 'ja', label: '日本語' },
+    { code: 'ko', label: '한국어' },
+    { code: 'ru', label: 'Русский' }
   ].filter(b => !installed.some(i => i.code === b.code))
    .map(b => ({ ...b, version: '内置', author: '', description: '随应用分发', keys: 0, builtin: true, hasManual: true, removable: false }));
   return [...builtins, ...installed];
@@ -120,7 +122,9 @@ function resolveManual(code) {
     'zh-CN': 'docs/使用说明书.md',
     'en': 'docs/使用说明书_en.md',
     'ja': 'docs/使用説明書_ja.md',
-    'zh-TW': 'docs/使用說明書_zh-TW.md'
+    'zh-TW': 'docs/使用說明書_zh-TW.md',
+    'ko': 'docs/사용설명서_ko.md',
+    'ru': 'docs/使用说明书_ru.md'
   };
   const rel = builtinMap[code] || builtinMap['zh-CN'];
   return 'app://local/' + rel.split('/').map(encodeURIComponent).join('/');
