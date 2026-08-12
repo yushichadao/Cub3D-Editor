@@ -118,7 +118,7 @@
     border-radius:3px; transform: translate(7px,7px);
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .top-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; }
+  .top-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; }
   .top-actions::-webkit-scrollbar { display: none; }
   .top-btn {
     height: 30px; padding: 0 9px; font-size: 12px;
@@ -631,13 +631,11 @@
     .brand span { display: none; }
     .top-actions {
       flex: 1 1 0; min-width: 0; overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap; gap: 4px;
-      justify-content: flex-start;
+      justify-content: flex-end;
       scrollbar-width: none; -ms-overflow-style: none;
       -webkit-overflow-scrolling: touch;
       padding: 0 2px;
     }
-    /* 未溢出时靠右对齐（auto 外边距吸收剩余空间）；溢出时规范会自动将其归零，不影响左滑 */
-    .top-actions > :first-child { margin-left: auto; }
     .top-actions::-webkit-scrollbar { display: none; }
     .top-btn { height: 30px; padding: 0 8px; font-size: 12px; flex-shrink: 0; }
     .top-btn-sep { width: 1px; height: 18px; background: var(--bb-sep); flex-shrink: 0; margin: 0 2px; }
