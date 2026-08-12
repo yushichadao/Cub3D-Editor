@@ -12,8 +12,9 @@
 
 | 形态 | 平台 | 入口 | 典型设备 |
 | :--- | :--- | :--- | :--- |
-| 网页·鼠标 | Web | 浏览器直接打开 | 台式机、笔记本 |
-| 网页·触屏 | Web | 浏览器触摸设备，或 URL 加 `?touch` | 手机、平板浏览器 |
+| 网页·鼠标 | Web（编辑器） | 浏览器直接打开 `/Web/` | 台式机、笔记本 |
+| 网页·触屏 | Web（编辑器） | 浏览器触摸设备，或 URL 加 `?touch` | 手机、平板浏览器 |
+| 官网首页 | 宣传页 | 访问站点根 `/` | 任意浏览器 |
 | PC 桌面版 | Windows | `.exe` 安装版 / 便携版 | Windows 电脑 |
 | Android 移动版 | Android | `.apk` 安装 | 安卓手机、平板 |
 
@@ -23,7 +24,8 @@
 
 ## 快速开始
 
-- **网页版（无需安装）**：打开 <https://yushichadao.github.io/Cub3D-Editor/>
+- **官方网站（宣传页）**：<https://yushichadao.github.io/Cub3D-Editor/> —— 产品介绍、四语言切换、下载入口
+- **网页版编辑器（无需安装）**：<https://yushichadao.github.io/Cub3D-Editor/Web/>
 - **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
 - **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor.apk`
 
@@ -84,13 +86,14 @@ node sync-shared.mjs
 
 ```
 Cub3D Editor/
+├── index.html              # 宣传页 / 官网首页（四语言，内联 i18n，由 Pages 发布到站点根）
 ├── shared/                 # 各端共享的「单一源」
 │   ├── docs/               # 四语言说明书源文件
 │   ├── language/           # 界面语言文案
 │   ├── infra/              # 三端一致的基础设施（LICENSE、server 等）
 │   ├── scripts/            # 共享脚本
 │   └── three/              # Three.js 模块与示例
-├── Web/                    # 网页版（GitHub Pages / Vercel）
+├── Web/                    # 网页版编辑器（由 Pages 发布到 /Web/）
 ├── PC/                     # Windows 桌面版（Electron + electron-builder）
 │   └── electron/           # Electron 主进程
 ├── Android/                # Android 版（Capacitor）
@@ -135,6 +138,12 @@ npm run dist:portable   # 仅便携版
 
 ### Android 版（.apk）
 
+环境要求：JDK 17 与 Android SDK（build-tools 34、Android Platform 34、platform-tools）。
+
+`scripts/env-android.mjs` 按以下顺序探测工具链：
+1. 环境变量 `JAVA_HOME` / `ANDROID_HOME`
+2. 默认回退到用户目录下的 `dev-tools`：`~/dev-tools/jdk17` 与 `~/dev-tools/android-sdk`
+
 ```powershell
 cd Android
 npm install
@@ -143,7 +152,19 @@ npm run apk:release     # 构建 release 签名版 Cub3D-Editor.apk
 npm run apk:debug       # 调试包
 ```
 
+> 注：若本机启用了文件删除防护（如部分 IDE 会拦截 `cap sync` 的批量删除），构建时请临时关闭该防护（例如设置 `CODEBUDDY_SAFE_DELETE_ENABLED=0`），否则 `cap sync` 会中断。
+
 产物位于 `Android/dist/Cub3D-Editor.apk`（发布时复制到仓库根 `dist/`）。
+
+### 部署到 GitHub Pages
+
+仓库根 `index.html`（宣传页）、`Web/`（编辑器）与 `dist/`（下载）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
+
+- `/` → 宣传页（产品介绍、四语言切换、下载入口）
+- `/Web/` → 网页版编辑器
+- `/dist/` → 安装包下载
+
+无需手动构建；修改上述任一目录并推送即触发部署。
 
 ---
 
@@ -172,7 +193,7 @@ node check_manual.mjs    # 核对说明书中的界面名词是否与代码一�
 
 ## 许可证
 
-见各端 `LICENSE` 文件。
+木兰宽松许可证第 2 版（Mulan Permissive Software License v2，MulanPSL-2）。见各端 `LICENSE` 文件，或仓库根 `LICENSE`。
 
 ---
 
