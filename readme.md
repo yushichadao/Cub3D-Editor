@@ -35,15 +35,23 @@
 
 ## 下载与发布
 
-各平台的正式版安装包统一命名为通用名，置于仓库根 `dist/` 目录，随源码一同分发（当前版本 `v1.0.0`）：
+各平台的正式版安装包统一命名为通用名，**作为 GitHub Releases 附件发布，不再随源码入库**（当前版本 `v1.0.0`）：
 
-| 产物 | 位置 | 说明 |
-| :--- | :--- | :--- |
-| `Cub3D-Editor-Setup.exe` | `dist/` | Windows 安装版 |
-| `Cub3D-Editor-Portable.exe` | `dist/` | Windows 便携版（免安装） |
-| `Cub3D-Editor.apk` | `dist/` | Android 安装包（release 签名，包名 `com.cub3deditor.app`） |
+| 产物 | 说明 |
+| :--- | :--- |
+| `Cub3D-Editor-Setup.exe` | Windows 安装版 |
+| `Cub3D-Editor-Portable.exe` | Windows 便携版（免安装） |
+| `Cub3D-Editor.apk` | Android 安装包（release 签名，包名 `com.cub3deditor.app`） |
 
-> 注：仅仓库根 `dist/` 下的上述三个正式安装包随源码入库；各端自身的 `dist/`、`build/`、`node_modules/` 仍按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。
+下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮会跳转到最新 Release 的对应附件。
+
+> 注：安装包不再进 git，因此 `.git` 不会再因反复打包而膨胀；各端自身的 `dist/`、`build/`、`node_modules/` 按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。发布新版本请运行仓库根 `release.mjs`（自动构建三端产物并上传为 Release 附件）：
+>
+> ```powershell
+> node release.mjs          # 默认按 package.json 的 version 发布，如 v1.0.0
+> node release.mjs 1.1.0    # 指定版本
+> node release.mjs --replace # 已存在同名 Release 时删除重建
+> ```
 
 ---
 
@@ -158,17 +166,18 @@ npm run apk:debug       # 调试包
 
 > 注：若本机启用了文件删除防护（如部分 IDE 会拦截 `cap sync` 的批量删除），构建时请临时关闭该防护（例如设置 `CODEBUDDY_SAFE_DELETE_ENABLED=0`），否则 `cap sync` 会中断。
 
-产物位于 `Android/dist/Cub3D-Editor.apk`（发布时复制到仓库根 `dist/`）。
+产物位于 `Android/dist/Cub3D-Editor.apk`（发布时由 `release.mjs` 自动收集为 Release 附件）。
 
 ### 部署到 GitHub Pages
 
-仓库根 `index.html`（宣传页）、`Web/`（编辑器）与 `dist/`（下载）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
+仓库根 `index.html`（宣传页）与 `Web/`（编辑器）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
 
-- `/` → 宣传页（产品介绍、六语言切换、下载入口）
+- `/` → 宣传页（产品介绍、六语言切换、下载入口跳转至 Release）
 - `/Web/` → 网页版编辑器
-- `/dist/` → 安装包下载
 
-无需手动构建；修改上述任一目录并推送即触发部署。
+安装包通过 GitHub Releases 分发（见上方「下载与发布」），不在此 Pages 站点内。
+
+无需手动构建；修改 `index.html` / `Web/` / `shared/` 并推送即触发部署。
 
 本地预览（从仓库根启动静态服务器即可同时看到宣传页与编辑器）：
 

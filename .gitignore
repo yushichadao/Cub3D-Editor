@@ -12,13 +12,10 @@ node_modules/
 **/node_modules/
 
 # ===== 各端构建产物 / 打包输出 =====
-# 构建产物 dist（各端 Web/PC 等）保持忽略；根 dist/ 仅正式版安装包（通用名）入库
+# 所有 dist 目录（含仓库根 dist/）一律忽略：正式安装包改为 GitHub Releases 附件，
+# 不再随源码入库，避免历史体积膨胀（每个 ~95MB 的 exe 反复入库会撑大 .git）。
 **/dist/
 dist/*
-!/dist/
-!dist/Cub3D-Editor-Setup.exe
-!dist/Cub3D-Editor-Portable.exe
-!dist/Cub3D-Editor.apk
 dist-build/
 **/dist-build/
 www/
