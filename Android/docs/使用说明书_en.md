@@ -81,10 +81,10 @@ Whenever the book encounters differences in operation across ends, one of the fo
 - [Chapter 10: Undo and History: The Confidence to Experiment Boldly](jump:Chapter 10: Undo and History: The Confidence to Experiment Freely)
 
 **Part Three: The Shape Universe (How to Use 20 + 20 Types)**
-- [Chapter 11: 3D Shape Overview (How the 20 Types Are Categorized)](jump:Chapter 11: 3D Shape Overview (How the 20 Are Classified))
-- [Chapter 12: 2D Shape Overview (20 Types and the "Sticker" Mindset)](jump:Chapter 12: 2D Shape Overview (20 Kinds and the "Sticker" Mindset))
-- [Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Solids](jump:Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Bodies)
-- [Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes](jump:Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes)
+- [Chapter 11: 3D Shape Overview (How the 20 Types Are Categorized)](jump:Chapter 11: 3D Shape Overview（How the 20 Are Classified）)
+- [Chapter 12: 2D Shape Overview (20 Types and the "Sticker" Mindset)](jump:Chapter 12: 2D Shape Overview（20 Kinds and the "Sticker" Mindset）)
+- [Chapter 13: Detailed Parameters of Each 3D Shape (Part 1): Basic Solids](jump:Chapter 13: Detailed Parameters of Each 3D Shape（Part 1）: Basic Bodies)
+- [Chapter 14: Detailed Parameters of Each 3D Shape (Part 2): Special Shapes](jump:Chapter 14: Detailed Parameters of Each 3D Shape（Part 2）: Special Shapes)
 - [Chapter 15: "Standing" vs "Lying": The Essential Difference Between 3D and 2D](jump:Chapter 15: "Standing" vs "Lying": The Essential Difference Between 3D and 2D)
 
 **Part Four: Color and Material**
@@ -136,7 +136,7 @@ Whenever the book encounters differences in operation across ends, one of the fo
 
 **Part Thirteen: Troubleshooting and Appendix**
 - [Chapter 45: FAQ Troubleshooting Guide](jump:Chapter 45: Common Issues Troubleshooting Manual)
-- [Chapter 46: Glossary (Chinese-English)](jump:Chapter 46: Glossary (Chinese–English))
+- [Chapter 46: Glossary (Chinese-English)](jump:Chapter 46: Glossary（Chinese–English）)
 - [Chapter 47: Shortcut Quick Reference](jump:Chapter 47: Keyboard Shortcut Quick Reference)
 - [Chapter 48: Shape · Pattern · Color Index](jump:Chapter 48: Graphics · Patterns · Color Index)
 
@@ -451,6 +451,21 @@ On a phone or narrow window (width less than about 960 pixels), the left and rig
 ✏️ **Try It**:
 - 🖥️💻 Hover the mouse over each top-bar button in turn, see if a text tooltip appears.
 - 📱🤖 **Long-press** each top-bar button in turn, observe the prompt; then find where the bottom-bar "Select All" / "Box Select" are.
+
+### 3.8 Theme: Give the Interface a New "Outfit"
+
+In **Settings → Theme**, **12 theme colors** are available — click one and it takes effect immediately, with instant preview and no restart:
+
+| Theme | Name | Theme | Name |
+| --- | --- | --- | --- |
+| Neon | Neon Amethyst | Gray | Onyx Slate |
+| Sunset | Ember Glow | Light | Azure White |
+| Forest | Verdant Pine | Aurora | Night Violet |
+| Ember | Ember Red | Bubblegum | Mauve Rose |
+| Slate | Golden Amber | Paper | Cream White |
+| Sky | Mint Green | Blossom | Pale Yellow |
+
+💡 Your choice is **remembered**: the current theme stays active on the next launch and is never overridden by the system.
 
 ---
 
@@ -2954,7 +2969,7 @@ When expanded, a sticky note is a **page-level topmost floating card** (not a se
 
 ## Chapter 51: Multi-language: The Manual Also "Speaks" Your Language
 
-Both the interface and the manual support five languages:
+Both the interface and the manual support six languages:
 
 | Language | Interface | Manual |
 | --- | --- | --- |
@@ -2962,12 +2977,14 @@ Both the interface and the manual support five languages:
 | Traditional Chinese | ✅ | ✅ |
 | English | ✅ | ✅ |
 | Japanese | ✅ | ✅ |
+| Korean | ✅ | ✅ |
+| Russian | ✅ | ✅ |
 
-How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`.
+How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`.
 
 💡 **How the language is chosen**: on **first launch** it is **auto-detected from your system language** — based on your OS/browser language setting, it automatically matches Simplified Chinese, Traditional Chinese, English, or Japanese; after that, if you switch languages manually, the app **remembers your choice and fully respects it**, and will not be overridden by the system language again. In short: the first time follows your system; later you use whatever language you pick.
 
-✅ **All five languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
+✅ **All six languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
 
 > ⚠️ About deletion confirmation: all deletion operations (sticky notes, scene objects) go through a **custom confirmation dialog** rather than a native system dialog, so it pops up reliably even in **fullscreen / immersive mode**, without "clicking does nothing."
 
