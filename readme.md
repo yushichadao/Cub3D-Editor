@@ -14,7 +14,6 @@
 | :--- | :--- | :--- | :--- |
 | 网页·鼠标 | Web（编辑器） | 浏览器直接打开 `/Web/` | 台式机、笔记本 |
 | 网页·触屏 | Web（编辑器） | 浏览器触摸设备，或 URL 加 `?touch` | 手机、平板浏览器 |
-| 官网首页 | 宣传页 | 访问站点根 `/` | 任意浏览器 |
 | PC 桌面版 | Windows | `.exe` 安装版 / 便携版 | Windows 电脑 |
 | Android 移动版 | Android | `.apk` 安装 | 安卓手机、平板 |
 
@@ -166,18 +165,17 @@ npm run apk:debug       # 调试包
 
 > 注：若本机启用了文件删除防护（如部分 IDE 会拦截 `cap sync` 的批量删除），构建时请临时关闭该防护（例如设置 `CODEBUDDY_SAFE_DELETE_ENABLED=0`），否则 `cap sync` 会中断。
 
-产物位于 `Android/dist/Cub3D-Editor.apk`（发布时由 `release.mjs` 自动收集为 Release 附件）。
+产物位于 `Android/dist/Cub3D-Editor.apk`（发布时复制到仓库根 `dist/`）。
 
 ### 部署到 GitHub Pages
 
-仓库根 `index.html`（宣传页）与 `Web/`（编辑器）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
+仓库根 `index.html`（宣传页）、`Web/`（编辑器）与 `dist/`（下载）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
 
-- `/` → 宣传页（产品介绍、六语言切换、下载入口跳转至 Release）
+- `/` → 宣传页（产品介绍、六语言切换、下载入口）
 - `/Web/` → 网页版编辑器
+- `/dist/` → 安装包下载
 
-安装包通过 GitHub Releases 分发（见上方「下载与发布」），不在此 Pages 站点内。
-
-无需手动构建；修改 `index.html` / `Web/` / `shared/` 并推送即触发部署。
+无需手动构建；修改上述任一目录并推送即触发部署。
 
 本地预览（从仓库根启动静态服务器即可同时看到宣传页与编辑器）：
 
