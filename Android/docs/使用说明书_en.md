@@ -37,7 +37,8 @@ No matter which end you use, the tool pops up a **Service Agreement and Privacy 
 | Applicable forms | **Web (mouse) / Web (touch) / PC Desktop / Android** — all four forms fully covered |
 | Coordinate system convention | This book **always follows the axis labels actually shown on the interface** (page labels: X blue = front-back, Y red = left-right, Z green = height, Z axis points up). The internal code implementation axes differ from the page labels; ordinary readers need not concern themselves with this |
 | Reading suggestions | First read [Chapter 0: Four Forms and How to Read This Book](jump:Chapter 0: Four Forms and How to Read This Book), and identify which end you are using; read the first four parts in order; the remaining eight parts can be consulted as needed. Be sure to do the "Think About It" and "Try It" at the end of each chapter |
-| Online address | [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/) (open the page to start practicing) |
+| Online address | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (open the page to start practicing) |
+| Official website | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （Product intro, six-language switch, download links） |
 | Project repository | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (source code, installers, and this documentation are all here) |
 
 **Form Tag Convention**
@@ -194,7 +195,7 @@ This tool has released **three versions**, but because the Web version automatic
 💡 **The Web version judges automatically**: it detects whether your device is a "precise pointer (mouse)" or a "coarse pointer (finger)", then automatically switches to the corresponding mode — **you do not need to make any settings**.
 
 ⚠️ If you want to **preview what the touch version looks like** in a desktop browser (e.g., for teaching demos), append `?touch` to the URL, for example:
-[`https://yushichadao.github.io/Cub3D-Editor/?touch`](https://yushichadao.github.io/Cub3D-Editor/?touch). Conversely, the Android version is permanently the touch layout by default.
+[`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch). Conversely, the Android version is permanently the touch layout by default.
 
 ### 0.2 Capability Comparison Table of the Four Forms
 
@@ -329,7 +330,7 @@ The shared benefits of all three:
 
 Open the public URL below directly in a browser:
 
-> 🌐 **Online address**: [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/)
+> 🌐 **Online address**: [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
 
 Copy the URL into the address bar of any modern browser and press Enter to enter the main interface. Phones, tablets, and computers all work, as long as you have internet and a browser. **It automatically detects whether you are a mouse device or a touch device**, switching to the corresponding layout.
 

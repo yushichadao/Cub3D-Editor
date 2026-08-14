@@ -24,7 +24,7 @@
 ## 快速开始
 
 - **官方网站（宣传页）**：<https://yushichadao.github.io/Cub3D-Editor/> —— 产品介绍、六语言切换、下载入口
-- **网页版编辑器（无需安装）**：<https://yushichadao.github.io/Cub3D-Editor/Web/>
+- **网页版编辑器（无需安装）**：<https://yushichadao.github.io/Cub3D-Editor/Web/index.html>
 - **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
 - **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor.apk`
 

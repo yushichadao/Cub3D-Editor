@@ -13,7 +13,7 @@
 | 入口 | 链接 | 说明 |
 | :--- | :--- | :--- |
 | 官方网站 | https://yushichadao.github.io/Cub3D-Editor/ | 产品介绍、六语言切换、下载入口 |
-| 网页版编辑器 | https://yushichadao.github.io/Cub3D-Editor/Web/ | 无需安装，浏览器直接打开 |
+| 网页版编辑器 | https://yushichadao.github.io/Cub3D-Editor/Web/index.html | 无需安装，浏览器直接打开 |
 | 最新 Release | https://github.com/yushichadao/Cub3D-Editor/releases/latest | PC 安装版 / 便携版、Android APK |
 | 问题反馈 | https://github.com/yushichadao/Cub3D-Editor/issues | Bug 报告与功能建议 |
 | 仓库源码 | https://github.com/yushichadao/Cub3D-Editor | README、构建脚本与源代码 |
@@ -23,7 +23,7 @@
 ## 平台指南
 
 ### Web 版（免安装）
-直接在浏览器打开 [Web 版编辑器](https://yushichadao.github.io/Cub3D-Editor/Web/) 即可使用。
+直接在浏览器打开 [Web 版编辑器](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) 即可使用。
 - 桌面浏览器默认使用鼠标布局。
 - 在平板或手机浏览器中自动切换为触屏布局；也可在 URL 后加 `?touch` 强制使用触屏模式。
 

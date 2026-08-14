@@ -38,7 +38,8 @@
 | Формы | **Веб (мышь) / Веб (сенсор) / PC / Android** — полный охват |
 | Координаты | Ориентируйтесь на **подписи осей на экране**: X синий=вперёд/назад, Y красный=влево/вправо, Z зелёный=высота (Z вверх) |
 | Чтение | Сначала прочитайте [Главу 0. Четыре формы и чтение книги](jump:Глава 0. Четыре формы и чтение книги); первые четыре части — по порядку, остальные — по необходимости |
-| Онлайн | [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/) |
+| Онлайн | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) |
+| Официальный сайт | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （Описание продукта, переключение 6 языков, загрузки） |
 | Репозиторий | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) |
 
 **Пометки форм**
@@ -192,7 +193,7 @@
 
 💡 **Веб-версия определяется автоматически**: она различает «точный указатель (мышь)» и «грубый (палец)» и переключается сама — **никаких настроек не нужно**.
 
-⚠️ Чтобы в браузере ПК **предпросмотреть сенсорную версию**, добавьте к адресу `?touch`, например [`https://yushichadao.github.io/Cub3D-Editor/?touch`](https://yushichadao.github.io/Cub3D-Editor/?touch). Версия Android всегда сенсорная.
+⚠️ Чтобы в браузере ПК **предпросмотреть сенсорную версию**, добавьте к адресу `?touch`, например [`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch). Версия Android всегда сенсорная.
 
 ### 0.2 Сводная таблица возможностей форм
 
@@ -304,7 +305,7 @@
 ### 2.1 Три способа
 
 #### 🖥️📱 Способ 1: Веб-версия (быстрее всего)
-Откройте: > 🌐 [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/)
+Откройте: > 🌐 [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
 Оно автоматически определит мышь или сенсор.
 
 #### 💻 Способ 2: PC-версия (Windows, офлайн)
@@ -1248,5 +1249,5 @@ JSON открывается во всех версиях — легкообме�
 
 Откройте редактор и создайте свою первую сцену. Удачи в трёхмерном творчестве! 🎨
 
-> 🌐 Онлайн: [https://yushichadao.github.io/Cub3D-Editor/](https://yushichadao.github.io/Cub3D-Editor/)
+> 🌐 Онлайн: [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
 > 💻 Репозиторий: [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor)
