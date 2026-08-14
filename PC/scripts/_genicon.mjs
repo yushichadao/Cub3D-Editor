@@ -142,7 +142,7 @@ function drawCube(cv) {
   // 三个可见面
   fillPoly(cv, [v.a, v.b, v.c, v.d], '#1de9ff', 0.16);   // 顶面
   fillPoly(cv, [v.d, v.c, v.g, v.h], '#1de9ff', 0.07);   // 右前面
-  fillPoly(cv, [v.a, v.d, v.h, v.e], '#7c4dff', 0.13);   // 左前面
+  fillPoly(cv, [v.a, v.d, v.h, v.e], '#1de9ff', 0.10);   // 左前面（方案 #01：纯青蓝）
 
   const edges = [
     ['a', 'b'], ['b', 'c'], ['c', 'd'], ['d', 'a'],
@@ -172,9 +172,7 @@ function drawCube(cv) {
     drawLine(cv, v[k][0], v[k][1], v[k][0], v[k][1], R * 2, '#ffffff', dim ? 0.35 : 0.9);
   }
 
-  // 底部一道地平线，暗示「工作台」
-  const y = cy + S * 1.42;
-  drawLine(cv, cv.w * 0.22, y, cv.w * 0.78, y, cv.w * 0.008, '#7c4dff', 0.5);
+  // 底部一道地平线（方案 #01 为纯线框，已移除紫色工作台地平线）
 }
 
 /* ------------------------------- 降采样 ---------------------------------- */

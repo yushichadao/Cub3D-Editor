@@ -1,6 +1,6 @@
 {
   "appId": "com.cub3deditor.app",
-  "appName": "立方3D",
+  "appName": "立方",
   "webDir": "www",
   "server": {
     "androidScheme": "https"

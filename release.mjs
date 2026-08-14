@@ -60,8 +60,8 @@ if (!fs.existsSync(path.join(AND_DIR, 'node_modules'))) run('npm install --no-au
 run('npm run apk:release', AND_DIR);
 
 // 5) 收集产物（统一命名为通用名）
-const setupSrc = globOne(PC_DIR, 'dist', /^Cube3D-Studio-Setup-.*\.exe$/);
-const portableSrc = globOne(PC_DIR, 'dist', /^Cube3D-Studio-Portable-.*\.exe$/);
+const setupSrc = globOne(PC_DIR, 'dist', /^Cub3D-Editor-Setup-.*\.exe$/);
+const portableSrc = globOne(PC_DIR, 'dist', /^Cub3D-Editor-Portable-.*\.exe$/);
 const apkSrc = path.join(AND_DIR, 'dist', 'Cub3D-Editor.apk');
 if (!setupSrc || !portableSrc || !fs.existsSync(apkSrc)) {
   console.error('❌ 找不到构建产物，发布中止。');
