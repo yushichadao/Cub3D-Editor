@@ -12,8 +12,8 @@ node_modules/
 **/node_modules/
 
 # ===== 各端构建产物 / 打包输出 =====
-# 所有 dist 目录（含仓库根 dist/）一律忽略：正式安装包改为 GitHub Releases 附件，
-# 不再随源码入库，避免历史体积膨胀（每个 ~95MB 的 exe 反复入库会撑大 .git）。
+# 所有 dist 目录（含仓库根 dist/）一律忽略：正式安装包通过 GitHub Releases 分发，
+# 不再随源码入库，避免历史体积膨胀（每个 ~100MB 的 exe 反复入库会撑大 .git）。
 **/dist/
 dist/*
 dist-build/
@@ -74,14 +74,12 @@ cap_diag*.log
 cap_update_diag*.log
 missing_terms.txt
 
-# ===== 正式版安装包统一放在仓库根 dist/ 目录（通用名，随仓库分发）=====
-# 各端原始构建目录（Web/dist、PC/dist、Android/dist 等）仍按上方规则忽略，避免仓库体积膨胀；
-# 仅 dist/ 下的成品（Cub3D-Editor-Setup.exe / Cub3D-Editor-Portable.exe / Cub3D-Editor.apk）入库。
 
 # ===== 临时 wiki 工作目录（生成/排查用，不入库）=====
 wiki-tmp/
 
-# ===== 图标替换时的旧文件备份（安全网，不入库）=====
+# ===== 图标替换/产物整理产生的旧文件备份与检查图（安全网，不入库）=====
 *.bak
-
+icon-backups/
+**/icon-backups/
 

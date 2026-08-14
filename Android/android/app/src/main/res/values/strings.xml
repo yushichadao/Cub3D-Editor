@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <!-- 中文用 NCR（&#xXXXX;）书写，保证 aapt2 在任意系统代码页下都不会把汉字编成乱码 -->
-    <string name="app_name">&#x7ACB;&#x65B9;</string>
-    <string name="title_activity_main">&#x7ACB;&#x65B9;</string>
+    <string name="app_name">&#x7ACB;&#x65B9;3D</string>
+    <string name="title_activity_main">&#x7ACB;&#x65B9;3D</string>
     <string name="package_name">com.cub3deditor.app</string>
     <string name="custom_url_scheme">com.cub3deditor.app</string>
 </resources>

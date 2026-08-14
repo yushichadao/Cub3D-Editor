@@ -1,6 +1,6 @@
-# 立方 · 3D设计工坊 Wiki
+# Cub3D Editor Wiki
 
-欢迎来到 **立方 · 3D设计工坊** 的 Wiki！
+欢迎来到 **Cub3D Editor（立方·3D设计工坊）** 的 Wiki！
 
 这是一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码覆盖网页、Windows 桌面与 Android 三端，支持 简体中文 / 繁體中文 / English / 日本語 / 한국어 / Русский 六种语言。
 
@@ -55,7 +55,7 @@
 
 ## 多语言说明书
 
-立方 配套了六语言使用说明书，源文件位于仓库 `shared/docs/` 目录：
+Cub3D Editor 配套了六语言使用说明书，源文件位于仓库 `shared/docs/` 目录：
 
 | 语言 | 说明书文件 |
 | :--- | :--- |
@@ -98,7 +98,7 @@ cd Android && npm run apk:release # 构建 Android release APK
 
 ## 许可证
 
-立方 采用 **木兰宽松许可证第 2 版（MulanPSL-2）** 发布。
+Cub3D Editor 采用 **木兰宽松许可证第 2 版（MulanPSL-2）** 发布。
 
 ---
 
