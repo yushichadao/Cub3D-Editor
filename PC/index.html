@@ -10765,6 +10765,8 @@ window.__debug = {
 /* ===================== 说明书阅读器（零依赖 Markdown 阅读器） ===================== */
 function mdEscape(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function slugify(s){ return String(s).normalize('NFKC').replace(/\s+/g,'').replace(/["']/g,''); }
+// 宽松匹配：去掉所有标点/空白，仅保留字母、数字与中日韩文字，用于 jump: 链接容错
+function slugifyLoose(s){ return String(s).normalize('NFKC').replace(/[^0-9a-zA-Z\u4e00-\u9fff\u3040-\u30ff]/g,'').toLowerCase(); }
 function mdInline(text){
   const codes = [];
   let s = mdEscape(text);
@@ -10990,7 +10992,7 @@ function openManual(){
     docEl.addEventListener('touchend', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
     docEl.addEventListener('touchcancel', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
     docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(!openManual._sel && (e.clientX || e.clientY)){ selectWordAt(e.clientX, e.clientY); } onSelectionChange(); });
-    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugify(h.textContent).indexOf(slug)>=0); if(tgt){ tgt.scrollIntoView({behavior:'smooth',block:'start'}); flash(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; block.scrollIntoView({behavior:'smooth',block:'start'}); flash(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
+    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugifyLoose(h.textContent)===slugifyLoose(goto)); if(tgt){ scrollToBlock(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; scrollToBlock(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
     openManual._mo = new MutationObserver(()=>syncStickyVisibility());
     openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
   }
@@ -11018,7 +11020,8 @@ function openManual(){
     if(isTouchMode()) saveStore('manualMobileFontSize', next); else saveStore('zoom', next); }
   function blocks(){ return Array.from(docEl.querySelectorAll('.md-block')); }
   function blockLineOf(node){ let el=node.nodeType===3?node.parentElement:node; while(el && el!==docEl){ if(el.classList && el.classList.contains('md-block')) return parseInt(el.dataset.line,10); el=el.parentElement; } return 0; }
-  function jumpToLine(n){ const bs=blocks(); let target=null; for(const b of bs){ if(parseInt(b.dataset.line,10)<=n) target=b; else break; } if(target){ target.scrollIntoView({behavior:'smooth',block:'start'}); flash(target); } }
+  function scrollToBlock(block, instant){ if(!block) return; const baseTop=docEl.getBoundingClientRect().top; const top=block.getBoundingClientRect().top-baseTop+docEl.scrollTop-8; docEl.scrollTo({top:Math.max(0,top), behavior: instant?'auto':'smooth'}); flash(block); }
+  function jumpToLine(n){ const bs=blocks(); let target=null; for(const b of bs){ if(parseInt(b.dataset.line,10)<=n) target=b; else break; } if(target){ scrollToBlock(target); } }
   function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function clearSearchHits(){
     docEl.querySelectorAll('mark.search-hit').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); });
