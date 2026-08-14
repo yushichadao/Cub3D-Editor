@@ -88,8 +88,8 @@ async function main() {
     tasks.push({ buf: await sharp(Buffer.from(fullSvg)).png().resize(512).toBuffer(), path: join(outDir, 'pc-icon-512.png') });
   } else {
     mkdirSync(PC_BUILD, { recursive: true });
-    tasks.push({ buf: await sharp(Buffer.from(fullSvg)).png().resize(1024).toBuffer(), path: join(PC_BUILD, 'icon.png'), backup: join(PC_BUILD, 'icon.png.bak') });
-    tasks.push({ buf: await sharp(Buffer.from(fullSvg)).png().resize(512).toBuffer(), path: join(PC_BUILD, 'icon-512.png'), backup: join(PC_BUILD, 'icon-512.png.bak') });
+    tasks.push({ buf: await sharp(Buffer.from(fullSvg)).png().resize(1024).toBuffer(), path: join(PC_BUILD, 'icon.png'), backup: join(PC_BUILD, '..', 'icon-backups', 'icon.png.bak') });
+    tasks.push({ buf: await sharp(Buffer.from(fullSvg)).png().resize(512).toBuffer(), path: join(PC_BUILD, 'icon-512.png'), backup: join(PC_BUILD, '..', 'icon-backups', 'icon-512.png.bak') });
   }
 
   // Android
@@ -110,7 +110,9 @@ async function main() {
       if (TEST) {
         tasks.push({ buf: t.buf, path: join(outDir, `android-${density}-${t.name}`) });
       } else {
-        tasks.push({ buf: t.buf, path: p, backup: p + '.bak' });
+        // 备份必须放在 res/ 之外，否则 Android 资源合并器会因 .bak 后缀报错
+        const backup = join(ANDROID_RES, '..', 'icon-backups', density, t.name + '.bak');
+        tasks.push({ buf: t.buf, path: p, backup });
       }
     }
   }
@@ -119,6 +121,7 @@ async function main() {
   let replaced = 0;
   for (const t of tasks) {
     if (t.backup && existsSync(t.path) && !existsSync(t.backup)) {
+      mkdirSync(dirname(t.backup), { recursive: true });
       copyFileSync(t.path, t.backup);
     }
     writeFileSync(t.path, t.buf);
