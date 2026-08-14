@@ -111,8 +111,8 @@
 
   function updateTitle() {
     var name = currentPath ? currentPath.replace(/^.*[\\/]/, '') : '';
-    var base = name || '立方';
-    D.window.setTitle((isDirty() ? '● ' : '') + base + (name ? ' — 立方' : ''));
+    var base = name || '立方三维设计工坊';
+    D.window.setTitle((isDirty() ? '● ' : '') + base + (name ? ' — 立方三维设计工坊' : ''));
   }
 
   /* ---------------------------- 自绘标题栏注入 ---------------------------- */

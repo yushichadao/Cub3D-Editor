@@ -1,4 +1,4 @@
-# 立方 · 3D设计工坊
+# Cub3D Editor — 立方·3D设计工坊
 
 一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码同时覆盖网页、Windows 桌面、Android 三端。支持简体中文、繁體中文、English、日本語、한국어、Русский 六种语言。
 
@@ -94,7 +94,7 @@ node sync-shared.mjs
 ## 项目结构
 
 ```
-立方/
+Cub3D Editor/
 ├── index.html              # 宣传页 / 官网首页（六语言，内联 i18n，由 Pages 发布到站点根）
 ├── shared/                 # 各端共享的「单一源」
 │   ├── docs/               # 六语言说明书源文件
@@ -158,7 +158,7 @@ npm run dist:portable   # 仅便携版
 ```powershell
 cd Android
 npm install
-npm run keystore        # 首次构建前生成签名密钥（CN=立方）
+npm run keystore        # 首次构建前生成签名密钥（CN=Cub3D Editor）
 npm run apk:release     # 构建 release 签名版 Cub3D-Editor.apk
 npm run apk:debug       # 调试包
 ```

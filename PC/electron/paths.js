@@ -39,7 +39,7 @@ const resourcesRoot = app.isPackaged ? process.resourcesPath : appRoot;
 function resolveDataRoot() {
   if (isDev) return path.join(appRoot, '.userdata');
   if (isPortable) return path.join(exeDir(), 'data');
-  return path.join(app.getPath('appData'), '立方三维设计工坊');
+  return app.getPath('userData');
 }
 
 const dataRoot = resolveDataRoot();
