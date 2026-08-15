@@ -98,8 +98,10 @@
     border-radius:3px; transform: translate(7px,7px);
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .top-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; }
+  .top-actions { display: flex; align-items: center; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; min-width: 0; flex: 1 1 0; }
   .top-actions::-webkit-scrollbar { display: none; }
+  /* 内层按内容宽度排布，不压缩；外层负责横向滚动。margin-inline-start:auto 在内容不足时把按钮推到末端（RTL 下为左端），溢出时自动为 0，按钮从起始端开始滚动 */
+  .top-actions-inner { display: flex; gap: 4px; align-items: center; justify-content: flex-start; flex-wrap: nowrap; width: max-content; margin-inline-start: auto; }
   .top-btn {
     height: 30px; padding: 0 9px; font-size: 12px;
     color: var(--text); background: var(--control-bg);
@@ -670,18 +672,16 @@
     .brand { gap: 6px; margin-inline-end: 4px; flex-shrink: 0; }
     .brand .logo { width: 24px; height: 24px; }
     .brand span { display: none; }
+    /* RTL：同特异性且更靠后，覆盖 html[dir="rtl"] .brand span[data-i18n] 的 display:inline-block，窄屏同样隐藏标题 */
+    html[dir="rtl"] .brand span[data-i18n] { display: none; }
     .top-actions {
-      flex: 1 1 0; min-width: 0; overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap; gap: 4px;
+      flex: 1 1 0; min-width: 0; overflow-x: auto; overflow-y: hidden;
       justify-content: flex-start;
       scrollbar-width: none; -ms-overflow-style: none;
       -webkit-overflow-scrolling: touch;
       padding: 0 2px;
     }
-    /* 注意：不要在此使用 margin-left:auto 右对齐，它会在 overflow-x:auto 的 flex 容器里
-       干扰 scrollWidth 计算，导致「溢出」判定失效、滚轮/拖拽无法触发。右对齐由 justify-content:flex-end 负责。 */
     .top-actions::-webkit-scrollbar { display: none; }
-    /* RTL：按钮区镜像到顶栏左侧（屏幕左缘），与右侧 brand 拉开间距 */
-    html[dir="rtl"] .top-actions { justify-content: flex-end; }
     .top-btn { height: 30px; padding: 0 8px; font-size: 12px; flex-shrink: 0; }
     .top-btn-sep { width: 1px; height: 18px; background: var(--bb-sep); flex-shrink: 0; margin: 0 2px; }
     /* 面板保持固定宽度（见基础规则），窄屏不再收窄，仅调整高度与折叠按钮间距 */
@@ -956,6 +956,10 @@
 .sticky-title { flex:1; font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sticky-ico { background:transparent; border:none; color:#1c1c1c; cursor:pointer; font-size:12px; line-height:1; padding:3px 5px; border-radius:5px; font-family:inherit; }
 .sticky-ico:hover { background:rgba(255,255,255,.65); }
+/* "A+" / "A−" 图标为固定用法，阿拉伯语(RTL)下强制保持 LTR 顺序 */
+#manual-zoom-out, #manual-zoom-in,
+.sticky-ico[data-act="fs-"], .sticky-ico[data-act="fs+"],
+.mb-btn[data-act="zoom-out"] .mb-ic, .mb-btn[data-act="zoom-in"] .mb-ic { direction:ltr; unicode-bidi:isolate; }
 .sticky-quote { font-size:11.5px; font-style:italic; color:rgba(0,0,0,.62); padding:5px 8px; max-height:70px; overflow:auto; border-bottom:1px dashed rgba(0,0,0,.22); word-break:break-word; cursor:pointer; }
 .sticky-quote.hide { display:none; }
 .sticky-area { flex:1; min-height:0; border:none; outline:none; resize:none; background:transparent; color:#161616; padding:8px; font-size:var(--sfs); line-height:1.6; font-family:inherit; user-select:text; -webkit-user-select:text; }
@@ -1115,6 +1119,10 @@
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/noto-kufi-arabic-700.woff2') format('woff2');}
 html[lang="ar"] body,html[lang="ar"] button,html[lang="ar"] input,html[lang="ar"] select,html[lang="ar"] textarea{font-family:'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif;}
 html[dir="rtl"]{direction:rtl;}
+/* 便签浮窗：RTL 下底部按钮区与颜色选择、缩放手柄做左右镜像 */
+html[dir="rtl"] .sticky-colors{margin-left:0; margin-right:auto;}
+html[dir="rtl"] .sticky-resize{right:auto; left:0;}
+html[dir="rtl"] .sticky-resize::after{right:auto; left:3px; border-right:none; border-left:2px solid rgba(0,0,0,.32); border-bottom-right-radius:0; border-bottom-left-radius:2px;}
 /* 阿拉伯语下，数字输入框内容（含正/负号）应始终是左到右，避免符号跑到右侧 */
 html[dir="rtl"] input[type="number"]{direction:ltr !important; text-align:left !important;}
 /* 只读数值显示（如属性面板带 +/− 的实时值）同样保持左到右 */
@@ -1135,6 +1143,7 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
 <header class="topbar">
   <div class="brand"><div class="logo"></div><span data-i18n="aboutName">立方·3D设计工坊</span></div>
   <div class="top-actions">
+    <div class="top-actions-inner">
     <button class="top-btn" id="btn-new" data-i18n-title="titleNew"><span class="ic">✨</span><span class="lbl" data-i18n="new">新建</span></button>
     <button class="top-btn" id="btn-import" data-i18n-title="titleImport"><span class="ic">📥</span><span class="lbl" data-i18n="import">导入</span></button>
     <button class="top-btn" id="btn-export" data-i18n-title="titleExport"><span class="ic">📤</span><span class="lbl" data-i18n="export">导出</span></button>
@@ -1152,6 +1161,7 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
     <button class="top-btn active" id="btn-ground" data-i18n-title="titleGround"><span class="ic">🔲</span><span class="lbl" data-i18n="ground">地面</span></button>
     <div class="top-btn-sep"></div>
     <button class="top-btn" id="btn-settings" data-i18n-title="titleSettings"><span class="ic">⚙</span><span class="lbl" data-i18n="settings">设置</span></button>
+    </div>
   </div>
 </header>
 
@@ -10682,6 +10692,15 @@ animate();
 // 其它情况（按钮区未溢出）滚轮转发到画布，做视野缩放。
 const topbarEl = document.querySelector('.topbar');
 const topActionsEl = document.querySelector('.top-actions');
+// RTL（阿拉伯语）横向滚动兼容：
+//   Blink(Chrome/Edge) 中 RTL 容器的 scrollLeft 为负值域 [-(C-W), 0]，Firefox 为正值域 [0, C-W]。
+//   这里统一换算成「逻辑滚动量 s」（0=阅读起点，maxScroll=终点），读写时做符号转换，
+//   使滚轮/拖拽在 LTR 与 RTL 下方向一致、且不会被 Math.max(0,…) 一类夹取砍掉负值域。
+function topScrollNeg() {
+  return document.documentElement.getAttribute('dir') === 'rtl' && !/Firefox\//.test(navigator.userAgent);
+}
+function getTopScroll() { return topScrollNeg() ? -topActionsEl.scrollLeft : topActionsEl.scrollLeft; }
+function setTopScroll(v) { topActionsEl.scrollLeft = topScrollNeg() ? -v : v; }
 // 按钮区是否溢出（需要横向滚动）。全屏 / 最大化 / 普通窗口下都允许左右拖动。
 function topActionsOverflow() {
   return topActionsEl.scrollWidth > topActionsEl.clientWidth;
@@ -10696,7 +10715,8 @@ if (topbarEl && topActionsEl) {
     let d = e.deltaY !== 0 ? e.deltaY : e.deltaX;
     if (e.deltaMode === 1) d *= 16;
     else if (e.deltaMode === 2) d *= topActionsEl.clientWidth;
-    topActionsEl.scrollLeft += d;
+    // 逻辑滚动量：LTR 下 d>0 向右看；RTL 下 d>0 向左看（RTL 的前进方向），方向由 setTopScroll 统一换算
+    setTopScroll(getTopScroll() + d);
   }, { passive: false });
 
   // 顶栏其它区域（brand / 空白）滚轮 → 转发到画布做视野缩放
@@ -10729,14 +10749,15 @@ if (topbarEl && topActionsEl) {
     dragScrolling = true;
     dragMoved = false;
     dragStartX = e.clientX;
-    dragStartScroll = topActionsEl.scrollLeft;
+    dragStartScroll = getTopScroll();
     topActionsEl.style.cursor = 'grabbing';
   });
   window.addEventListener('mousemove', function (e) {
     if (!dragScrolling) return;
     var dx = e.clientX - dragStartX;
     if (Math.abs(dx) > 3) dragMoved = true;
-    topActionsEl.scrollLeft = dragStartScroll - dx;
+    // RTL 下滚动方向镜像：内容向右拖 → 显示更左的逻辑增量；LTR 反之
+    setTopScroll(dragStartScroll + (document.documentElement.getAttribute('dir') === 'rtl' ? dx : -dx));
   });
   window.addEventListener('mouseup', function () {
     if (!dragScrolling) return;

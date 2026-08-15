@@ -30,7 +30,9 @@ $lanIp = (Get-NetIPAddress -AddressFamily IPv4 |
     Where-Object { $_.InterfaceAlias -notlike '*Loopback*' -and $_.IPAddress -ne '127.0.0.1' } |
     Select-Object -First 1).IPAddress
 
-$root = 'c:\Users\yushi\Documents\trae_projects\3d-editor'
+# 以脚本所在目录为站点根目录（脚本应放在 Web/ PC/ 等各端目录内），
+# 不再硬编码机器专属路径，避免换机器 / 换目录后 docs 与页面 404。
+$root = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
 $mime = @{
     '.html'='text/html; charset=utf-8'
     '.js'='application/javascript; charset=utf-8'
@@ -40,6 +42,7 @@ $mime = @{
     '.png'='image/png'
     '.jpg'='image/jpeg'; '.jpeg'='image/jpeg'
     '.gif'='image/gif'
+    '.md'='text/markdown; charset=utf-8'
     '.woff'='font/woff'; '.woff2'='font/woff2'
     '.map'='application/json; charset=utf-8'
 }
@@ -57,6 +60,11 @@ if ($lanIp) {
 }
 Write-Host '=================================='
 
+if (-not (Test-Path (Join-Path $root 'docs'))) {
+    Write-Host '[警告] 未找到 docs/ 目录，使用说明书将无法打开。' -ForegroundColor Yellow
+    Write-Host '       请在仓库根目录执行: node sync-shared.mjs' -ForegroundColor Yellow
+}
+
 while ($listener.IsListening) {
     $ctx = $listener.GetContext()
     $url = $ctx.Request.Url.LocalPath
@@ -68,6 +76,8 @@ while ($listener.IsListening) {
         continue
     }
     if ($url -eq '/') { $url = '/index.html' }
+    # 解码 URL（中文说明书文件名经 encodeURIComponent 编码后请求，需还原才能定位文件）
+    try { $url = [System.Uri]::UnescapeDataString($url) } catch {}
     $file = Join-Path $root ($url.TrimStart('/'))
     if (Test-Path $file -PathType Leaf) {
         $bytes = [System.IO.File]::ReadAllBytes($file)

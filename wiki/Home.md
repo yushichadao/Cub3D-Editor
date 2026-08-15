@@ -2,7 +2,7 @@
 
 欢迎来到 **Cub3D Editor（立方·3D设计工坊）** 的 Wiki！
 
-这是一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码覆盖网页、Windows 桌面与 Android 三端，支持 简体中文 / 繁體中文 / English / 日本語 / 한국어 / Русский 六种语言。
+这是一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码覆盖网页、Windows 桌面与 Android 三端，支持 简体中文 / 繁體中文 / English / 日本語 / 한국어 / Русский / Français 七种语言。
 
 > 无论你是零基础涂鸦，还是进阶参数化建模，导出的 `.json` 工程文件在三端之间完全互通，可以在手机起草、电脑精修之间自由接力。
 
@@ -12,7 +12,7 @@
 
 | 入口 | 链接 | 说明 |
 | :--- | :--- | :--- |
-| 官方网站 | https://yushichadao.github.io/Cub3D-Editor/ | 产品介绍、六语言切换、下载入口 |
+| 官方网站 | https://yushichadao.github.io/Cub3D-Editor/ | 产品介绍、七语言切换、下载入口 |
 | 网页版编辑器 | https://yushichadao.github.io/Cub3D-Editor/Web/index.html | 无需安装，浏览器直接打开 |
 | 最新 Release | https://github.com/yushichadao/Cub3D-Editor/releases/latest | PC 安装版 / 便携版、Android APK |
 | 问题反馈 | https://github.com/yushichadao/Cub3D-Editor/issues | Bug 报告与功能建议 |
@@ -55,7 +55,7 @@
 
 ## 多语言说明书
 
-Cub3D Editor 配套了六语言使用说明书，源文件位于仓库 `shared/docs/` 目录：
+Cub3D Editor 配套了七语言使用说明书，源文件位于仓库 `shared/docs/` 目录：
 
 | 语言 | 说明书文件 |
 | :--- | :--- |
@@ -65,6 +65,7 @@ Cub3D Editor 配套了六语言使用说明书，源文件位于仓库 `shared/d
 | 日本語 | [`shared/docs/使用説明書_ja.md`](https://github.com/yushichadao/Cub3D-Editor/blob/main/shared/docs/使用説明書_ja.md) |
 | 한국어 | [`shared/docs/사용설명서_ko.md`](https://github.com/yushichadao/Cub3D-Editor/blob/main/shared/docs/사용설명서_ko.md) |
 | Русский | [`shared/docs/使用说明书_ru.md`](https://github.com/yushichadao/Cub3D-Editor/blob/main/shared/docs/使用说明书_ru.md) |
+| Français | [`shared/docs/使用说明书_fr.md`](https://github.com/yushichadao/Cub3D-Editor/blob/main/shared/docs/使用说明书_fr.md) |
 
 > 各端 `docs/` 目录为同步生成的副本，**请勿直接编辑**。如需修改，请在 `shared/docs/` 中编辑后运行 `node sync-shared.mjs` 同步。
 

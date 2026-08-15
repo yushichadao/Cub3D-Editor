@@ -13,7 +13,13 @@
     --radius:12px; --maxw:1080px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+  /* 细窄、贴合主题的滚动条，避免系统默认丑陋滚动条 */
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px;border:2px solid var(--bg)}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.26)}
+  ::-webkit-scrollbar-corner{background:transparent}
   body{
     background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","MS PGothic",sans-serif;
@@ -47,6 +53,10 @@
   .lang button{border:0;background:transparent;color:var(--dim);font-size:12.5px;font-weight:600;
     padding:5px 9px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit}
   .lang button.active{background:var(--accent);color:#0c1413}
+  /* 中窄屏：顶栏 9 个语言按钮压缩，避免导航栏溢出换行 */
+  @media (max-width:900px){
+    .lang button{padding:4px 7px;font-size:12px}
+  }
   .menu-btn{display:flex;align-items:center;justify-content:center;background:var(--bg-soft);
     border:1px solid var(--line);color:var(--text);width:42px;height:38px;border-radius:8px;font-size:17px;cursor:pointer;flex:0 0 auto}
   .menu-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -139,13 +149,14 @@
     border:1px solid var(--line);padding:5px 12px;border-radius:7px;background:var(--bg-soft)}
 
   /* ===== 作者 ===== */
-  .author{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;
-    border:1px solid var(--line);border-radius:var(--radius);padding:34px;background:var(--panel)}
+  .author{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;align-items:start;
+    border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--panel)}
+  .author>div{min-width:0}
   .avatar{width:96px;height:96px;border-radius:14px;display:grid;place-items:center;font-size:38px;font-weight:800;
     background:var(--accent);color:#0c1413}
   .author h3{font-size:22px;font-weight:700}
   .author .role{color:var(--accent);font-weight:600;margin:4px 0 12px;font-size:14px}
-  .author p{color:var(--dim);max-width:60ch;font-size:14.5px;line-height:1.7;text-wrap:pretty}
+  .author p{color:var(--dim);max-width:60ch;font-size:14.5px;line-height:1.7;text-wrap:pretty;overflow-wrap:anywhere}
   .author .meta{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .tag-soft{font-size:12px;color:var(--dim);border:1px solid var(--line);padding:5px 11px;border-radius:7px}
   .gh{display:inline-flex;align-items:center;gap:7px;background:var(--bg-soft);border:1px solid var(--line);
@@ -159,6 +170,9 @@
   .foot a{color:var(--dim);transition:color .2s}
   .foot a:hover{color:var(--accent)}
   .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+  .foot-info{display:flex;flex-direction:column;min-width:0;align-items:flex-end;text-align:right}
+  .foot-info .brand{flex-wrap:nowrap}
+  .foot-copy{white-space:normal;direction:ltr;unicode-bidi:isolate}
 
   /* ===== 场景卡片 ===== */
   .scn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:36px}
@@ -294,8 +308,8 @@
 
   /* ===== 响应式 ===== */
   @media(max-width:1099px){
-    .author{grid-template-columns:1fr;text-align:center;justify-items:center}
-    .author .meta{justify-content:center}
+    .author{grid-template-columns:1fr;gap:16px;text-align:left;justify-items:start}
+    .author .meta{justify-content:flex-start}
     .detect .go{margin-left:0;width:100%}
     .detect .go .btn{width:100%;justify-content:center}
   }
@@ -312,32 +326,80 @@
     .lang-mobile button.active{background:var(--accent);color:#0c1413}
   }
 </style>
+  <!-- 阿拉伯语（实验）：仅作用于 html[lang="ar"]，不影响其它语言 -->
+  <style>
+    @font-face{
+      font-family:"Noto Kufi Arabic";
+      font-style:normal; font-weight:400; font-display:swap;
+      src:url("ar-fonts/noto-kufi-arabic-400.woff2") format("woff2");
+    }
+    @font-face{
+      font-family:"Noto Kufi Arabic";
+      font-style:normal; font-weight:700; font-display:swap;
+      src:url("ar-fonts/noto-kufi-arabic-700.woff2") format("woff2");
+    }
+    html[lang="ar"], html[lang="ar"] body{
+      font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+      line-height:1.7;
+    }
+    html[lang="ar"] [data-i18n], html[lang="ar"] input, html[lang="ar"] select, html[lang="ar"] button, html[lang="ar"] textarea{
+      font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+    }
+    /* 语言选择器的按钮含中文/日文/韩文/俄文/阿拉伯文字，需保留与正常语言一致的多语言无衬线字体（含 Noto Sans Arabic 以正确显示 ع），
+       否则阿拉伯文字体无对应汉字字形会回退到衬线体，与中文等语言下观感不一致 */
+    html[lang="ar"] .lang button, html[lang="ar"] .lang-mobile button{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","Malgun Gothic",sans-serif;
+    }
+    /* RTL：常见问题卡片标题与 + 按钮随内容一起镜像（标题在右、按钮在左）；LTR 保持正常 */
+    html[lang="ar"] .faq summary{flex-direction:row-reverse}
+    html[lang="ar"] .faq details .ans{direction:rtl}
+    /* RTL：时间线/更新点装饰镜像 */
+    html[lang="ar"] .road{border-left:none;border-right:1px solid var(--line);padding-left:0;padding-right:26px}
+    html[lang="ar"] .road-item::before{left:auto;right:-33px}
+    html[lang="ar"] .log-item li{padding-left:0;padding-right:18px}
+    html[lang="ar"] .log-item li::before{left:auto;right:0}
+    /* RTL：Hero 光晕镜像 */
+    html[lang="ar"] .hero::before{right:auto;left:-10%}
+    html[lang="ar"] .hero::after{left:auto;right:-12%}
+    /* 品牌标志含拉丁品牌名 Cub3D Editor，应始终按 LTR 渲染（logo 在左、名称在右），
+       并强制无衬线字体——否则阿拉伯字体无拉丁字形会回退衬线体，造成标志渲染异常 */
+    html[lang="ar"] .brand{direction:ltr;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans JP","Malgun Gothic",sans-serif}
+    html[lang="ar"] .brand .mark{font-family:inherit;direction:ltr}
+    /* 底栏信息块（头像+项目名+版权）始终物理顶到右边缘，不受 RTL 影响 */
+    html[lang="ar"] .foot{flex-direction:row-reverse}
+    html[lang="ar"] .foot-info{align-items:flex-start}
+    /* RTL：句尾是英语/技术词（如 Cub3D Editor、.json）时，用 isolate 把拉丁片段包成独立双向单元，
+       避免后续的阿拉伯语把句号/问号等中性标点拉到拉丁词左侧，造成标点位置异常 */
+    html[lang="ar"] .brand span[data-i18n]{unicode-bidi:isolate}
+    html[lang="ar"] code{unicode-bidi:isolate}
+    html[lang="ar"] [data-i18n]{unicode-bidi:isolate}
+    /* RTL：作者卡片改为纵向堆叠（头像在上、文字在下），头像靠右、文字整体靠右 */
+    html[lang="ar"] .author{
+      grid-template-columns:1fr;
+      justify-items:start;
+      align-items:start;
+      text-align:right;
+      direction:rtl;
+    }
+    html[lang="ar"] .author .meta{flex-direction:row-reverse;justify-content:flex-start}
+    /* RTL：窄屏单列时同样保持头像靠右、文字靠右（覆盖通用 .author{text-align:left}） */
+    @media(max-width:1099px){
+      html[lang="ar"] .author{justify-items:start;text-align:right}
+      html[lang="ar"] .author .meta{justify-content:flex-start}
+    }
+  </style>
 </head>
 <body>
 <header>
   <div class="wrap nav">
     <a class="brand" href="#top"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></a>
     <div class="nav-right">
-      <div class="lang" id="lang">
-        <button data-lang="zh-CN" class="active">简</button>
-        <button data-lang="zh-TW">繁</button>
-        <button data-lang="en">EN</button>
-        <button data-lang="ja">日</button>
-        <button data-lang="ko">한</button>
-        <button data-lang="ru">RU</button>
-      </div>
+      <div class="lang" id="lang"></div>
       <button class="menu-btn" id="menuBtn" aria-label="menu">☰</button>
     </div>
   </div>
   <nav class="nav-links" id="navLinks">
-    <div class="lang-mobile" id="langMobile">
-      <button data-lang="zh-CN" class="active">简</button>
-      <button data-lang="zh-TW">繁</button>
-      <button data-lang="en">EN</button>
-      <button data-lang="ja">日</button>
-      <button data-lang="ko">한</button>
-      <button data-lang="ru">RU</button>
-    </div>
+    <div class="lang-mobile" id="langMobile"></div>
     <a href="#features" data-i18n="nav.features">功能特性</a>
     <a href="#scenarios" data-i18n="nav.scenarios">使用场景</a>
     <a href="#quickstart" data-i18n="nav.quickstart">快速上手</a>
@@ -430,7 +492,7 @@
       <div class="feat reveal"><div class="fi">💾</div><h4 data-i18n="f6.t">离线优先</h4><p data-i18n="f6.d">无需账号，数据本地保存；<code>.json</code> 工程三端互通。</p></div>
       <div class="feat reveal"><div class="fi">🖥️</div><h4 data-i18n="f7.t">PC 版增强</h4><p data-i18n="f7.d">原生文件对话框（系统级打开/保存）、独立桌面窗口运行、离线安装。</p></div>
       <div class="feat reveal"><div class="fi">📲</div><h4 data-i18n="f8.t">Android 版增强</h4><p data-i18n="f8.d">返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。</p></div>
-      <div class="feat reveal"><div class="fi">🌐</div><h4 data-i18n="f9.t">六语言界面</h4><p data-i18n="f9.d">简体中文、繁體中文、English、日本語、한국어、Русский，切换同步更新。</p></div>
+      <div class="feat reveal"><div class="fi">🌐</div><h4 data-i18n="f9.t">七语言界面</h4><p data-i18n="f9.d">简体中文、繁體中文、English、日本語、한국어、Русский、Français，切换同步更新。</p></div>
     </div>
   </section>
 
@@ -504,7 +566,7 @@
       <details class="reveal d1" open><summary><span data-i18n="faq.q1">需要注册账号吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a1">不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。</div></details>
       <details class="reveal d2"><summary><span data-i18n="faq.q2">三个平台的功能一样吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a2">绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。</div></details>
       <details class="reveal d3"><summary><span data-i18n="faq.q3">工程文件能在设备间通用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a3">可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。</div></details>
-      <details class="reveal d4"><summary><span data-i18n="faq.q5">支持哪些语言？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a5">界面支持简体中文、繁體中文、English、日本語、한국어、Русский六种语言，切换时文案同步更新。</div></details>
+      <details class="reveal d4"><summary><span data-i18n="faq.q5">支持哪些语言？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a5">界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Français 七种语言，切换时文案同步更新。</div></details>
     </div>
   </section>
 
@@ -519,7 +581,7 @@
           <li data-i18n="log.v1.1">网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备</li>
           <li data-i18n="log.v1.2">绘制/形状、对象变换、材质、文字框、视图辅助等核心能力</li>
           <li data-i18n="log.v1.3">离线优先、本地存储、.json 工程三端互通</li>
-          <li data-i18n="log.v1.4">六语言界面与崩溃恢复 / 自动保存</li>
+          <li data-i18n="log.v1.4">七语言界面与崩溃恢复 / 自动保存</li>
         </ul>
       </div>
     </div>
@@ -536,7 +598,7 @@
         <div class="role" data-i18n="author.role">独立开发者 · Cub3D Editor 作者</div>
         <p data-i18n="author.bio">致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。</p>
         <div class="meta">
-          <a class="gh" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener">⭐ GitHub 仓库</a>
+          <a class="gh" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="author.repo">⭐ GitHub 仓库</a>
           <span class="tag-soft" data-i18n="author.tools">本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成</span>
           <span class="tag-soft" data-i18n="author.license">许可证：木兰宽松许可证第2版 (MulanPSL-2)</span>
         </div>
@@ -547,14 +609,14 @@
 
 <footer>
   <div class="wrap foot">
-    <div>
-      <div class="brand" style="margin-bottom:8px"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></div>
-      <div data-i18n="footer.copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
-    </div>
     <div class="foot-links">
       <a href="Web/index.html" data-i18n="footer.app">进入编辑器</a>
       <a href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="footer.repo">GitHub</a>
       <a href="#platforms" data-i18n="footer.download">下载</a>
+    </div>
+    <div class="foot-info">
+      <div class="brand" style="margin-bottom:8px"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></div>
+      <div class="foot-copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
     </div>
   </div>
 </footer>
@@ -587,12 +649,12 @@ const T = {
     "f6.t":"离线优先","f6.d":"无需账号，数据本地保存；.json 工程三端互通。",
     "f7.t":"PC 版增强","f7.d":"原生文件对话框（系统级打开/保存）、独立桌面窗口运行、离线安装。",
     "f8.t":"Android 版增强","f8.d":"返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。",
-    "f9.t":"六语言界面","f9.d":"简体中文、繁體中文、English、日本語、한국어、Русский，切换同步更新。",
+    "f9.t":"七语言界面","f9.d":"简体中文、繁體中文、English、日本語、한국어、Русский、Français，切换同步更新。",
     "versions.eyebrow":"版本对比","versions.title":"各版本能力一览","versions.sub":"三端共享同一套核心引擎，绝大多数功能完全一致；差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。其中“全屏”在 Android 上仅为贴合状态栏的视觉全屏（非原生沉浸全屏）。",
     "cmp.cap":"能力","cmp.web":"网页版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
     "leg.yes":"完整支持","leg.part":"部分支持","leg.no":"不适用",
     "author.eyebrow":"关于","author.title":"关于作者与项目","author.name":"Yushichadao","author.role":"独立开发者 · Cub3D Editor 作者",
-    "author.bio":"致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。",
+    "author.bio":"致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。","author.repo":"⭐ GitHub 仓库",
     "author.tools":"本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成","author.license":"许可证：木兰宽松许可证第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载",
     "detect.windows":"检测到您正在使用 Windows，推荐下载 PC 桌面版。",
@@ -615,13 +677,74 @@ const T = {
     "faq.q1":"需要注册账号吗？","faq.a1":"不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。",
     "faq.q2":"三个平台的功能一样吗？","faq.a2":"绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。",
     "faq.q3":"工程文件能在设备间通用吗？","faq.a3":"可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。",
-    "faq.q5":"支持哪些语言？","faq.a5":"界面支持简体中文、繁體中文、English、日本語、한국어、Русский六种语言，切换时文案同步更新。",
+    "faq.q5":"支持哪些语言？","faq.a5":"界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Français 七种语言，切换时文案同步更新。",
     "changelog.eyebrow":"更新记录","changelog.title":"更新记录",
     "log.v1.date":"2026 · 首发",
     "log.v1.1":"网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备",
     "log.v1.2":"绘制/形状、对象变换、材质、文字框、视图辅助等核心能力",
     "log.v1.3":"离线优先、本地存储、.json 工程三端互通",
-    "log.v1.4":"六语言界面与崩溃恢复 / 自动保存"
+    "log.v1.4":"七语言界面与崩溃恢复 / 自动保存"
+  },
+  "es":{
+    brand:"Cub3D Editor",
+    "nav.features":"Funciones","nav.versions":"Comparativa","nav.platforms":"Descargar y abrir","nav.author":"Sobre el autor",
+    "hero.eyebrow":"Prioridad sin conexión · Editor de escenas 3D/2D multiplataforma",
+    "hero.title":"Cubo · Taller de Diseño 3D","hero.title2":"Cub3D Editor",
+    "hero.sub":"Editor de escenas 3D/2D multiplataforma, sin conexión",
+    "hero.tag":"Una misma base de código para web, Windows y Android, en cuatro formas de uso.",
+    "hero.ctaWeb":"Abrir en el navegador","hero.ctaAll":"Ver todas las descargas",
+    "note.free":"Totalmente gratuito","note.account":"Sin cuenta","note.local":"Datos guardados localmente","note.sync":"Archivos de proyecto compatibles en los tres entornos",
+    "detect.default":"Detectando tu dispositivo…","detect.go":"Ir a la versión recomendada",
+    "platforms.eyebrow":"Tres plataformas · Cuatro formas","platforms.title":"Elige la que te convenga",
+    "platforms.sub":"Ya sea móvil, tableta, ordenador o navegador, hay una entrada para ti. Los botones de abajo abren la web o descargan el paquete directamente.",
+    "plat1.name":"Web · Ratón","plat1.desc":"Se abre directamente en el navegador, sin instalar. Para escritorio y portátil.","plat1.btn":"Abrir ahora",
+    "plat2.name":"Web · Táctil","plat2.desc":"Navegador de móvil/tableta, o añade ?touch a la URL para el diseño táctil.","plat2.btn":"Modo táctil",
+    "plat3.name":"PC de escritorio · Windows","plat3.desc":"Versión de instalación / portátil (sin instalar) de Windows. Con recuperación tras bloqueo y autoguardado.","plat3.setup":"Descargar instalable","plat3.portable":"Descargar portátil",
+    "plat4.name":"Android móvil","plat4.desc":"Paquete de instalación para móvil/tableta Android (firma release). Con pantalla completa, compartir y exportar.","plat4.btn":"Descargar .apk",
+    "features.eyebrow":"Capacidades centrales","features.title":"Del boceto al modelado paramétrico","features.sub":"Un conjunto de herramientas cubre todo el flujo creativo 3D y 2D, con mejoras específicas por plataforma.",
+    "f1.t":"Dibujo y formas","f1.d":"Pincel y borrador (total/parcial), herramientas de forma, en 3D y 2D.",
+    "f2.t":"Operación de objetos","f2.d":"Mover, rotar, escalar; deshacer/rehacer, copiar/pegar/clonar.",
+    "f3.t":"Edición de materiales","f3.d":"Colores predefinidos y personalizados, patrones/texturas.",
+    "f4.t":"Cuadro de texto","f4.d":"Varias fuentes, horizontal/vertical, anota libremente tu escena.",
+    "f5.t":"Ayudas de vista","f5.d":"Ejes, cuadrícula, plano de suelo, modo malla de alambre.",
+    "f6.t":"Prioridad sin conexión","f6.d":"Sin cuenta, datos locales; proyectos .json compatibles en tres entornos.",
+    "f7.t":"Mejoras de PC","f7.d":"Diálogos nativos de archivos (abrir/guardar a nivel de sistema), ventana de escritorio independiente, instalación sin conexión.",
+    "f8.t":"Mejoras de Android","f8.d":"Confirmación con botón Atrás, diálogos nativos de guardar/abrir (selector de documentos del sistema), integración de pantalla completa y barra de estado.",
+    "f9.t":"Interfaz en siete idiomas","f9.d":"Chino simplificado, Chino tradicional, English, 日本語, 한국어, Русский, Français, con sincronización al cambiar.",
+    "versions.eyebrow":"Comparativa","versions.title":"Resumen de capacidades","versions.sub":"Los tres entornos comparten el mismo motor central; la gran mayoría de funciones son idénticas. Las diferencias provienen solo del modo de instalación, y de los diálogos nativos de guardar/abrir y el botón Atrás de Android. La «pantalla completa» en Android es solo visual (ajuste a la barra de estado, no inmersiva nativa).",
+    "cmp.cap":"Capacidad","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
+    "leg.yes":"Soporte completo","leg.part":"Soporte parcial","leg.no":"No aplicable",
+    "author.eyebrow":"Acerca de","author.title":"Sobre el autor y el proyecto","author.name":"Yushichadao","author.role":"Desarrollador independiente · Autor de Cub3D Editor",
+    "author.bio":"Me dedico a crear herramientas creativas 3D/2D sin conexión y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.","author.repo":"⭐ Repositorio de GitHub",
+    "author.tools":"Este sitio fue generado con asistencia de IA usando TRAE y CodeBuddy","author.license":"Licencia: Mulan Permissive Software License v2 (MulanPSL-2)",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Entrar al editor","footer.repo":"GitHub","footer.download":"Descargar",
+    "detect.windows":"Detectamos Windows; se recomienda la versión de escritorio para PC.",
+    "detect.android":"Detectamos Android; se recomienda la versión móvil de Android.",
+    "detect.other":"No se identificó un sistema concreto; se recomienda la versión web.",
+    "nav.scenarios":"Casos de uso","nav.quickstart":"Inicio rápido","nav.roadmap":"Hoja de ruta","nav.faq":"Preguntas frecuentes",
+    "scenarios.eyebrow":"Quién lo usa","scenarios.title":"Ideal para estos casos","scenarios.sub":"Ya sea apuntes de inspiración, demostración docente o diseño formal, hay una entrada y un ritmo adecuados.",
+    "scn1.t":"Apuntes de inspiración","scn1.d":"Boceta un croquis 3D con el móvil en el trayecto y retócalo en el ordenador al llegar a casa.",
+    "scn2.t":"Demostración docente","scn2.d":"Explica estructuras espaciales con geometría y cuadros de texto en clase o en una charla.",
+    "scn3.t":"Juegos y prototipos","scn3.d":"Monta niveles, props o prototipos de interfaz rápidamente y exporta .json para iterar.",
+    "scn4.t":"Planificación espacial","scn4.d":"Haz bocetos de disposición con cuadrícula y ejes, todo sin conexión.",
+    "quickstart.eyebrow":"Tres pasos","quickstart.title":"Empieza en minutos","quickstart.sub":"Sin registro ni conexión; abre y dibuja.",
+    "qs1.t":"Abre el editor","qs1.d":"Abre la web o instala las versiones de escritorio/Android; entra al lienzo sin cuenta.",
+    "qs2.t":"Dibuja y edita","qs2.d":"Construye con pincel y formas, mueve/rota/escala objetos, añade texto y materiales.",
+    "qs3.t":"Guarda y continúa","qs3.d":"Exporta el proyecto .json y continúa libremente entre móvil, PC y Android.",
+    "roadmap.eyebrow":"Por venir","roadmap.title":"Hoja de ruta","roadmap.sub":"Marcamos el progreso con honestidad: lo completado no se repite, lo planeado se indica claramente.",
+    "road.rel.t":"Publicado: cobertura en tres entornos","road.rel.tag":"Completado",    "road.rel.d":"Web (ratón/táctil), escritorio Windows y móvil Android listos, compartiendo el mismo motor central y proyectos .json.",
+    "road.feat.t":"Pulido continuo del núcleo","road.feat.tag":"En curso","road.feat.d":"Manteniendo la prioridad sin conexión y el respeto a la privacidad, seguimos mejorando dibujo, materiales, texto y ayudas de vista.",
+    "faq.eyebrow":"Preguntas frecuentes","faq.title":"Quizás quieras preguntar",
+    "faq.q1":"¿Necesito una cuenta?","faq.a1":"No. Cub3D Editor funciona sin conexión; todos los datos se guardan en el dispositivo local y no necesita ninguna cuenta.",
+    "faq.q2":"¿Son iguales las funciones en las tres plataformas?","faq.a2":"La gran mayoría son idénticas, con el mismo motor central. Las diferencias provienen solo del modo de instalación, y de los diálogos nativos de guardar/abrir y el botón Atrás de Android. La «pantalla completa» de Android es solo visual (ajuste a la barra de estado).",
+    "faq.q3":"¿Son compatibles los archivos entre dispositivos?","faq.a3":"Sí. Los proyectos .json exportados funcionan en web, Windows y Android; puedes bocetar en el móvil y retocar en el PC libremente.",
+    "faq.q5":"¿Qué idiomas admite?","faq.a5":"La interfaz admite siete idiomas: chino simplificado, chino tradicional, English, 日本語, 한국어, Русский y Français, con sincronización al cambiar.",
+    "changelog.eyebrow":"Registro de cambios","changelog.title":"Registro de cambios",
+    "log.v1.date":"2026 · Primera versión",
+    "log.v1.1":"Las tres plataformas listas: web (ratón/táctil), escritorio Windows y móvil Android",
+    "log.v1.2":"Capacidades centrales: dibujo/formas, transformación, materiales, cuadro de texto, ayudas de vista",
+    "log.v1.3":"Prioridad sin conexión, almacenamiento local, proyectos .json en tres entornos",
+    "log.v1.4":"Interfaz en siete idiomas y recuperación tras bloqueo / autoguardado"
   },
   "zh-TW":{
     brand:"Cub3D Editor",
@@ -648,12 +771,12 @@ const T = {
     "f6.t":"離線優先","f6.d":"無須帳號，資料本機保存；.json 工程三端互通。",
     "f7.t":"PC 版增強","f7.d":"原生檔案對話方塊（系統級開啟/儲存）、獨立桌面視窗運行、離線安裝。",
     "f8.t":"Android 版增強","f8.d":"返回鍵確認、原生儲存/開啟對話方塊（系統文件選擇器）、全螢幕與狀態列整合。",
-    "f9.t":"六語言介面","f9.d":"簡體中文、繁體中文、English、日本語、한국어、Русский，切換同步更新。",
+    "f9.t":"七語言介面","f9.d":"簡體中文、繁體中文、English、日本語、한국어、Русский、Français，切換同步更新。",
     "versions.eyebrow":"版本對比","versions.title":"各版本能力一覽","versions.sub":"三端共享同一套核心引擎，絕大多數功能完全一致；差異僅來自安裝方式，以及 Android 的原生儲存/開啟對話方塊與返回鍵。其中「全螢幕」在 Android 上僅為貼合狀態列的視覺全螢幕（非原生沉浸全螢幕）。",
     "cmp.cap":"能力","cmp.web":"網頁版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
     "leg.yes":"完整支援","leg.part":"部分支援","leg.no":"不適用",
     "author.eyebrow":"關於","author.title":"關於作者與專案","author.name":"Yushichadao","author.role":"獨立開發者 · Cub3D Editor 作者",
-    "author.bio":"致力於打造離線優先、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。",
+    "author.bio":"致力於打造離線優先、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。","author.repo":"⭐ GitHub 倉庫",
     "author.tools":"本網站由 TRAE 與 CodeBuddy 工具 AI 輔助生成","author.license":"授權條款：木蘭寬鬆授權條款第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載",
     "detect.windows":"偵測到您正在使用 Windows，推薦下載 PC 桌面版。",
@@ -676,13 +799,13 @@ const T = {
     "faq.q1":"需要註冊帳號嗎？","faq.a1":"不需要。Cub3D Editor 離線優先，所有資料保存在本地裝置，無需任何帳號即可使用。",
     "faq.q2":"三個平台的功能一樣嗎？","faq.a2":"絕大多數功能完全一致，共享同一套核心引擎。差異僅來自安裝方式，以及 Android 的原生儲存/開啟對話方塊與返回鍵。Android 的「全螢幕」僅為貼合狀態列的視覺全螢幕。",
     "faq.q3":"工程檔案能在裝置間通用嗎？","faq.a3":"可以。匯出的 .json 工程檔案在網頁、Windows、Android 三端之間通用，可在手機起草、電腦精修之間自由接力。",
-    "faq.q5":"支援哪些語言？","faq.a5":"介面支援簡體中文、繁體中文、English、日本語、한국어、Русский六種語言，切換時文案同步更新。",
+    "faq.q5":"支援哪些語言？","faq.a5":"介面支援簡體中文、繁體中文、English、日本語、한국어、Русский、Français 七種語言，切換時文案同步更新。",
     "changelog.eyebrow":"更新記錄","changelog.title":"更新記錄",
     "log.v1.date":"2026 · 首發",
     "log.v1.1":"網頁（滑鼠/觸控）、Windows 桌面、Android 移動版三端齊備",
     "log.v1.2":"繪製/形狀、物件變換、材質、文字框、視圖輔助等核心能力",
     "log.v1.3":"離線優先、本地儲存、.json 工程三端互通",
-    "log.v1.4":"六語言介面與崩潰復原 / 自動儲存"
+    "log.v1.4":"七語言介面與崩潰復原 / 自動儲存"
   },
   "en":{
     brand:"Cub3D Editor",
@@ -709,12 +832,12 @@ const T = {
     "f6.t":"Offline-first","f6.d":"No account; data saved locally; .json projects work on all platforms.",
     "f7.t":"PC Extras","f7.d":"Native file dialogs (system open/save), standalone desktop window, offline install.",
     "f8.t":"Android Extras","f8.d":"Back-key confirm, native save/open dialogs (system document picker), fullscreen & status bar integration.",
-    "f9.t":"6 Languages","f9.d":"Simplified Chinese, Traditional Chinese, English, Japanese, Korean, Russian — synced on switch.",
+    "f9.t":"7 Languages","f9.d":"Simplified Chinese, Traditional Chinese, English, Japanese, Korean, Russian, French — synced on switch.",
     "versions.eyebrow":"Version Compare","versions.title":"Capability at a glance","versions.sub":"All three platforms share the same core engine, so most features are identical. Differences come only from install method, plus Android's native save/open dialogs and back key. Note: on Android, \"fullscreen\" is only a visual fit to the status bar (not a native immersive fullscreen).",
     "cmp.cap":"Capability","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"Full support","leg.part":"Partial","leg.no":"Not applicable",
     "author.eyebrow":"About","author.title":"About the Author & Project","author.name":"Yushichadao","author.role":"Independent Developer · Creator of Cub3D Editor",
-    "author.bio":"Building offline-first, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.",
+    "author.bio":"Building offline-first, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.","author.repo":"⭐ GitHub Repo",
     "author.tools":"This site was AI-assisted by TRAE & CodeBuddy tools","author.license":"License: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download",
     "detect.windows":"We detected Windows — the PC desktop edition is recommended.",
@@ -737,13 +860,13 @@ const T = {
     "faq.q1":"Do I need to register an account?","faq.a1":"No. Cub3D Editor is offline-first; all data is stored on your local device and works without any account.",
     "faq.q2":"Are the three platforms identical in features?","faq.a2":"The vast majority of features are exactly the same, sharing the same core engine. Differences come only from the install method, and from Android's native save/open dialogs and back key confirm. Android's \"Fullscreen\" is only a visual fullscreen that fits the status bar.",
     "faq.q3":"Can project files be used across devices?","faq.a3":"Yes. Exported .json project files work across Web, Windows, and Android, letting you freely hand off between drafting on your phone and refining on your computer.",
-    "faq.q5":"Which languages are supported?","faq.a5":"The UI supports six languages — Simplified Chinese, Traditional Chinese, English, Japanese, Korean, and Russian — with text syncing on switch.",
+    "faq.q5":"Which languages are supported?","faq.a5":"The UI supports seven languages — Simplified Chinese, Traditional Chinese, English, Japanese, Korean, Russian, and French — with text syncing on switch.",
     "changelog.eyebrow":"Changelog","changelog.title":"What's new",
     "log.v1.date":"2026 · First release",
     "log.v1.1":"Web (mouse/touch), Windows desktop, and Android mobile — all three platforms available",
     "log.v1.2":"Core capabilities: drawing/shapes, object transforms, materials, text boxes, view aids",
     "log.v1.3":"Offline-first, local storage, .json project interoperability across three platforms",
-    "log.v1.4":"Six-language UI and crash recovery / auto-save"
+    "log.v1.4":"Seven-language UI and crash recovery / auto-save"
   },
   "ja":{
     brand:"Cub3D Editor",
@@ -770,12 +893,12 @@ const T = {
     "f6.t":"オフライン優先","f6.d":"アカウント不要、データはローカル保存。.json は端末間で共通。",
     "f7.t":"PC 向け強化","f7.d":"ネイティブファイルダイアログ（システム開く/保存）、単体デスクトップ窓、オフライン導入。",
     "f8.t":"Android 向け強化","f8.d":"戻るキー確認、ネイティブ保存/開くダイアログ（システム文書ピッカー）、全画面とステータスバー統合。",
-    "f9.t":"6言語対応","f9.d":"簡体字中国語・繁体字中国語・English・日本語・한국어・ロシア語。切替で同期。",
+    "f9.t":"7言語対応","f9.d":"簡体字中国語・繁体字中国語・English・日本語・한국어・ロシア語・Français。切替で同期。",
     "versions.eyebrow":"バージョン比較","versions.title":"対応機能一覧","versions.sub":"3プラットフォームは同じコアエンジンを共有し、ほとんどの機能は同一です。違いはインストール方式と、Android のネイティブ保存/開くダイアログと戻るキーのみ。なお Android の「全画面」はステータスバーに合わせる視覚的なもの（ネイティブな没入全画面ではありません）。",
     "cmp.cap":"機能","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"完全対応","leg.part":"一部対応","leg.no":"該当なし",
     "author.eyebrow":"について","author.title":"作者とソフトウェアについて","author.name":"Yushichadao","author.role":"独立開発者・Cub3D Editor 作者",
-    "author.bio":"オフライン優先でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。",
+    "author.bio":"オフライン優先でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。","author.repo":"⭐ GitHub リポジトリ",
     "author.tools":"本サイトは TRAE と CodeBuddy ツールで AI 補助生成","author.license":"ライセンス：木蘭緩和ライセンス第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード",
     "detect.windows":"Windows を検出しました。PC デスクトップ版をおすすめします。",
@@ -798,13 +921,13 @@ const T = {
     "faq.q1":"アカウント登録は必要ですか？","faq.a1":"いいえ。Cub3D Editor はオフライン優先で、すべてのデータはローカル端末に保存され、アカウント不要で使えます。",
     "faq.q2":"3つのプラットフォームで機能は同じですか？","faq.a2":"ほとんどの機能は完全に同一で、同じコアエンジンを共有。違いはインストール方式と、Android のネイティブ保存/開くダイアログと戻るキーのみ。Android の「全画面」はステータスバーに合わせる視覚的なものです。",
     "faq.q3":"シーンファイルは端末間で共有できますか？","faq.a3":"はい。書き出した .json シーンは Web・Windows・Android の3端末間で共通。スマホで下書き、PCで仕上げ、と自由に引き継げます。",
-    "faq.q5":"対応言語は？","faq.a5":"簡体字中国語・繁体字中国語・English・日本語・한국어・ロシア語の6言語。切替でテキストが同期します。",
+    "faq.q5":"対応言語は？","faq.a5":"簡体字中国語・繁体字中国語・English・日本語・한국어・ロシア語・Françaisの7言語。切替でテキストが同期します。",
     "changelog.eyebrow":"更新履歴","changelog.title":"更新履歴",
     "log.v1.date":"2026・初回リリース",
     "log.v1.1":"Web（マウス/タッチ）、Windows デスクトップ、Android モバイルの3プラットフォームがそろう",
     "log.v1.2":"描画/図形、トランスフォーム、マテリアル、テキストボックス、表示補助などのコア機能",
     "log.v1.3":"オフライン優先、ローカル保存、.json シーンの3端末間共有",
-    "log.v1.4":"6言語UIとクラッシュ復旧 / 自動保存"
+    "log.v1.4":"7言語UIとクラッシュ復旧 / 自動保存"
   },
   "ko":{
     brand:"Cub3D Editor",
@@ -831,12 +954,12 @@ const T = {
     "f6.t":"오프라인 우선","f6.d":"계정 불필요, 데이터는 로컬 저장, .json 프로젝트는 모든 플랫폼에서 호환.",
     "f7.t":"PC 전용 기능","f7.d":"네이티브 파일 대화상자(시스템 열기/저장), 독립 데스크톱 창, 오프라인 설치.",
     "f8.t":"Android 전용 기능","f8.d":"뒤로 가기 키 확인, 네이티브 저장/열기 대화상자(시스템 문서 선택기), 전체 화면 및 상태 표시줄 통합.",
-    "f9.t":"6개 언어 지원","f9.d":"간체 중국어·번체 중국어·English·日本語·한국어·러시아어, 전환 시 동기화.",
+    "f9.t":"7개 언어 지원","f9.d":"간체 중국어·번체 중국어·English·日本語·한국어·러시아어·Français, 전환 시 동기화.",
     "versions.eyebrow":"버전 비교","versions.title":"지원 기능 한눈에","versions.sub":"세 플랫폼은 동일한 코어 엔진을 공유하므로 대부분의 기능이 동일합니다. 차이는 설치 방식과 Android의 네이티브 저장/열기 대화상자 및 뒤로 가기 키에서만 발생합니다. 참고: Android에서 '전체 화면'은 상태 표시줄에 맞춘 시각적 전체 화면일 뿐(네이티브 몰입형 전체 화면 아님).",
     "cmp.cap":"기능","cmp.web":"웹","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"완전 지원","leg.part":"일부 지원","leg.no":"해당 없음",
     "author.eyebrow":"소개","author.title":"제작자 및 프로젝트","author.name":"Yushichadao","author.role":"독립 개발자 · Cub3D Editor 제작자",
-    "author.bio":"오프라인 우선, 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.",
+    "author.bio":"오프라인 우선, 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.","author.repo":"⭐ GitHub 저장소",
     "author.tools":"이 사이트는 TRAE 및 CodeBuddy 도구의 AI 지원으로 생성되었습니다.","author.license":"라이선스: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"편집기 열기","footer.repo":"GitHub","footer.download":"다운로드",
     "detect.windows":"Windows를 사용 중이시군요. PC 데스크톱 버전을 권장합니다.","detect.android":"Android를 사용 중이시군요. Android 버전을 권장합니다.","detect.other":"운영체제를 확인하지 못했으니 웹 버전을 권장합니다.",
@@ -863,7 +986,7 @@ const T = {
     "log.v1.1":"웹(마우스/터치), Windows 데스크톱, Android 모바일 3플랫폼 완비",
     "log.v1.2":"그리기/도형, 객체 변환, 재질, 텍스트 상자, 보기 보조 등 핵심 기능",
     "log.v1.3":"오프라인 우선, 로컬 저장, .json 프로젝트 3플랫폼 간 공유",
-    "log.v1.4":"6개 언어 UI와 크래시 복구 / 자동 저장"
+    "log.v1.4":"7개 언어 UI와 크래시 복구 / 자동 저장"
   },
   "ru":{
     brand:"Cub3D Editor",
@@ -890,12 +1013,12 @@ const T = {
     "f6.t":"Офлайн-приоритет","f6.d":"Без аккаунта; данные сохраняются локально; .json проекты работают на всех платформах.",
     "f7.t":"Расширения ПК","f7.d":"Нативные диалоги файлов (системные открыть/сохранить), отдельное окно рабочего стола, офлайн-установка.",
     "f8.t":"Расширения Android","f8.d":"Подтверждение кнопкой «Назад», нативные диалоги сохранения/открытия (системный выбор документов), интеграция полноэкранного режима и строки состояния.",
-    "f9.t":"6 языков","f9.d":"Упрощённый китайский, традиционный китайский, English, 日本語, 한국어 и Русский — синхронизация при переключении.",
+    "f9.t":"7 языков","f9.d":"Упрощённый китайский, традиционный китайский, English, 日本語, 한국어, Русский и Français — синхронизация при переключении.",
     "versions.eyebrow":"Сравнение версий","versions.title":"Возможности в один взгляд","versions.sub":"Все три платформы используют один и тот же основной движок, поэтому большинство функций идентичны. Различия — только в способе установки и в нативных диалогах сохранения/открытия и кнопке «Назад» в Android. Примечание: в Android «полноэкранный режим» — это лишь визуальное совмещение со строкой состояния (не нативный погружающий режим).",
     "cmp.cap":"Возможность","cmp.web":"Веб","cmp.pc":"ПК (Windows)","cmp.android":"Android",
     "leg.yes":"Полная поддержка","leg.part":"Частично","leg.no":"Не применимо",
     "author.eyebrow":"Об авторе","author.title":"Об авторе и проекте","author.name":"Yushichadao","author.role":"Независимый разработчик · Создатель Cub3D Editor",
-    "author.bio":"Создаю офлайн-приоритетные, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.",
+    "author.bio":"Создаю офлайн-приоритетные, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.","author.repo":"⭐ Репозиторий GitHub",
     "author.tools":"Этот сайт создан при помощи ИИ инструментами TRAE и CodeBuddy","author.license":"Лицензия: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Открыть редактор","footer.repo":"GitHub","footer.download":"Скачать",
     "detect.windows":"Обнаружена система Windows — рекомендуем ПК-версию.","detect.android":"Обнаружен Android — рекомендуем версию для Android.","detect.other":"Не удалось определить ОС — рекомендуем веб-версию.",
@@ -916,13 +1039,142 @@ const T = {
     "faq.q1":"Нужна ли регистрация аккаунта?","faq.a1":"Нет. Cub3D Editor работает с офлайн-приоритетом; все данные хранятся на вашем локальном устройстве и работают без аккаунта.",
     "faq.q2":"Функции на трёх платформах одинаковы?","faq.a2":"Подавляющее большинство функций полностью совпадает, используя один и тот же основной движок. Различия — только в способе установки и в нативных диалогах сохранения/открытия и кнопке «Назад» Android. «Полноэкранный режим» Android — лишь визуальное совмещение со строкой состояния.",
     "faq.q3":"Можно ли использовать файлы проектов на разных устройствах?","faq.a3":"Да. Экспортированные .json проекты работают в вебе, Windows и Android, позволяя свободно передавать работу между телефоном и компьютером.",
-    "faq.q5":"Какие языки поддерживаются?","faq.a5":"Интерфейс поддерживает шесть языков — упрощённый китайский, традиционный китайский, English, 日本語, 한국어 и Русский — с синхронизацией текста при переключении.",
+    "faq.q5":"Какие языки поддерживаются?","faq.a5":"Интерфейс поддерживает семь языков — упрощённый китайский, традиционный китайский, English, 日本語, 한국어, Русский и Français — с синхронизацией текста при переключении.",
     "changelog.eyebrow":"История изменений","changelog.title":"Что нового",
     "log.v1.date":"2026 · Первый выпуск",
     "log.v1.1":"Веб (мышь/сенсор), Windows-десктоп и Android-мобайл — все три платформы готовы",
     "log.v1.2":"Ключевые функции: рисование/фигуры, трансформация объектов, материалы, текстовые поля, вспомогательные виды",
     "log.v1.3":"Офлайн-приоритет, локальное хранилище, совместимость .json проектов на трёх платформах",
     "log.v1.4":"Интерфейс на пяти языках и восстановление после сбоя / автосохранение"
+  },
+  "fr":{
+    brand:"Cub3D Editor",
+    "nav.features":"Fonctionnalités","nav.versions":"Comparaison","nav.platforms":"Télécharger","nav.author":"À propos",
+    "hero.eyebrow":"Éditeur de scènes 3D/2D multiplateforme, hors-ligne d'abord","hero.title":"Cube · Atelier de design 3D","hero.title2":"Cub3D Editor",
+    "hero.sub":"Éditeur de scènes 3D/2D multiplateforme, hors-ligne d'abord",
+    "hero.tag":"Un seul code couvre le Web, Windows et Android, sur trois plateformes et quatre modes d'utilisation.",
+    "hero.ctaWeb":"Ouvrir dans le navigateur","hero.ctaAll":"Voir tous les téléchargements",
+    "note.free":"Entièrement gratuit","note.account":"Sans compte","note.local":"Données enregistrées localement","note.sync":"Projets synchronisés entre appareils",
+    "detect.default":"Détection de votre appareil…","detect.go":"Aller à la version recommandée",
+    "platforms.eyebrow":"Trois plateformes · Quatre modes","platforms.title":"Choisissez ce qui vous convient",
+    "platforms.sub":"Que ce soit un téléphone, une tablette, un ordinateur ou un navigateur, vous trouverez une entrée adaptée. Les boutons ci-dessous ouvrent le Web ou lancent le téléchargement directement.",
+    "plat1.name":"Web · Souris","plat1.desc":"S'ouvre directement dans le navigateur, sans installation. Adapté aux ordinateurs de bureau et portables.","plat1.btn":"Ouvrir maintenant",
+    "plat2.name":"Web · Tactile","plat2.desc":"Téléphones/tablettes, ou ajoutez ?touch au lien pour basculer en disposition tactile.","plat2.btn":"Ouvrir le mode tactile",
+    "plat3.name":"Bureau PC · Windows","plat3.desc":"Version d'installation Windows / version portable (sans installation). Récupération après crash, auto-sauvegarde, etc.","plat3.setup":"Télécharger l'installateur","plat3.portable":"Télécharger la version portable",
+    "plat4.name":"Version Android","plat4.desc":"Paquet pour téléphone/tablette Android (signé). Plein écran, partage, export, etc.","plat4.btn":"Télécharger .apk",
+    "features.eyebrow":"Capacités de base","features.title":"Du croquis à la modélisation paramétrique","features.sub":"Une seule boîte à outils couvre l'ensemble du flux créatif 3D et 2D, avec des optimisations propres à chaque plateforme.",
+    "f1.t":"Dessin et formes","f1.d":"Pinceau, gomme (totale/partielle), outils de forme, prend en charge 3D et 2D.",
+    "f2.t":"Opérations d'objet","f2.d":"Déplacer, pivoter, mettre à l'échelle ; annuler/rétablir, copier/coller/dupliquer.",
+    "f3.t":"Édition de matériaux","f3.d":"Couleurs prédéfinies et personnalisées, motifs/cartes de texture.",
+    "f4.t":"Boîte de texte","f4.d":"Texte multi-lignes, horizontal/vertical.",
+    "f5.t":"Aides à la vue","f5.d":"Axes, grille, plan de sol de référence, mode fil de fer.",
+    "f6.t":"Hors-ligne d'abord","f6.d":"Sans compte ; données enregistrées localement ; projets .json fonctionnant sur toutes les plateformes.",
+    "f7.t":"Optimisations PC","f7.d":"Boîtes de dialogue fichiers natives (ouvrir/enregistrer au niveau système), fenêtre bureau indépendante, installation hors-ligne.",
+    "f8.t":"Optimisations Android","f8.d":"Confirmation du bouton retour, boîtes de dialogue enregistrer/ouvrir natives (sélecteur de documents système), intégration plein écran et barre d'état.",
+    "f9.t":"Sept langues","f9.d":"Chinois simplifié, chinois traditionnel, English, 日本語, 한국어, Русский, Français — synchronisées lors du changement.",
+    "versions.eyebrow":"Comparaison des versions","versions.title":"Aperçu des capacités","versions.sub":"Les trois plateformes partagent le même moteur principal, donc la plupart des fonctions sont identiques. Les différences ne viennent que de la méthode d'installation, ainsi que des boîtes de dialogue enregistrer/ouvrir natives d'Android et du bouton retour.",
+    "cmp.cap":"Capacité","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
+    "cmp.r0":["Capacités de base","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r1":["Dessin (pinceau/gomme/formes)","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r2":["Transformation d'objets","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r3":["Matériaux et motifs","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r4":["Boîte de texte","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r5":["Aides à la vue (grille/axes)","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r6":["Hors-ligne / local","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r7":["Projet .json multiplateforme","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r8":["Interface sept langues","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
+    "cmp.r9":["Récupération / auto-sauvegarde","Non applicable","Prise en charge complète","Partiel"],
+    "cmp.r10":["Plein écran / partage natif","Non applicable","Non applicable","Prise en charge complète"],
+    "cmp.r_lang":["Langues d'interface","Chinois simplifié, chinois traditionnel, English, 日本語, 한국어, Русский, Français","Identique","Identique"],
+    "leg.yes":"Prise en charge complète","leg.part":"Prise en charge partielle","leg.no":"Non applicable",
+    "author.eyebrow":"À propos","author.title":"À propos de l'auteur et du projet","author.name":"Yushichadao","author.role":"Développeur indépendant · Auteur de Cub3D Editor",
+    "author.bio":"Nous cherchons à construire des outils créatifs 3D/2D hors-ligne d'abord et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.","author.repo":"⭐ Dépôt GitHub",
+    "author.tools":"Ce site a été généré à l'aide des outils IA TRAE et CodeBuddy","author.license":"Licence : Licence logicielle permissive Mulan v2 (MulanPSL-2)",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Ouvrir l'éditeur","footer.repo":"GitHub","footer.download":"Télécharger",
+    "detect.windows":"Système Windows détecté — la version PC est recommandée.","detect.android":"Android détecté — la version Android est recommandée.","detect.other":"Impossible de détecter le système — la version Web est recommandée.",
+    "nav.scenarios":"Scénarios","nav.quickstart":"Démarrage rapide","nav.roadmap":"Feuille de route","nav.faq":"FAQ",
+    "scenarios.eyebrow":"Qui l'utilise","scenarios.title":"Adapté à ces situations","scenarios.sub":"Qu'il s'agisse d'une note d'idée rapide, d'une démonstration pédagogique ou d'un design sérieux, vous trouverez une entrée et un rythme adaptés.",
+    "scn1.t":"Note d'idée rapide","scn1.d":"Esquissez un 3D sur votre téléphone en déplacement, puis affinez-le sur l'ordinateur à la maison.",
+    "scn2.t":"Démo pédagogique","scn2.d":"Utilisez des formes géométriques et des boîtes de texte pour expliquer visuellement les structures spatiales en cours ou en présentation.",
+    "scn3.t":"Jeux et prototypes","scn3.d":"Assemblez rapidement des niveaux, des objets ou des prototypes d'interface, et exportez en .json pour itérer à tout moment.",
+    "scn4.t":"Aménagement d'espace","scn4.d":"Utilisez la grille et les axes pour de simples schémas d'agencement — tout peut se faire hors-ligne.",
+    "quickstart.eyebrow":"Trois étapes pour démarrer","quickstart.title":"Commencez à créer en quelques minutes","quickstart.sub":"Sans inscription ni internet — ouvrez et dessinez.",
+    "qs1.t":"Ouvrez l'éditeur","qs1.d":"Lancez la version Web ou installez la version PC/Android — accès au canevas sans compte.",
+    "qs2.t":"Dessinez et éditez","qs2.d":"Créez au pinceau et avec des formes, déplacez/pivotez/mettez à l'échelle des objets, ajoutez du texte et des matériaux.",
+    "qs3.t":"Enregistrement et partage","qs3.d":"Exportez le projet .json et poursuivez facilement sur téléphone, PC et Android.",
+    "roadmap.eyebrow":"Et ensuite","roadmap.title":"Feuille de route","roadmap.sub":"Nous indiquons honnêtement l'avancement : les fonctions déjà publiées ne sont pas re-promues, et les fonctions planifiées sont clairement marquées.",
+    "road.rel.t":"Publié : prise en charge des trois plateformes","road.rel.tag":"Terminé","road.rel.d":"Web (souris/tactile), bureau Windows et mobile Android sont disponibles, avec un moteur principal commun et la compatibilité des projets .json.",
+    "road.feat.t":"Amélioration continue des fonctions clés","road.feat.tag":"En cours","road.feat.d":"Tout en préservant la priorité hors-ligne et le respect de la vie privée, nous améliorons l'expérience créative : dessin, matériaux, texte et vues auxiliaires.",
+    "faq.eyebrow":"Questions fréquentes","faq.title":"Ce qui pourrait vous intéresser",
+    "faq.q1":"Un compte est-il nécessaire ?","faq.a1":"Non. Cub3D Editor fonctionne hors-ligne d'abord ; toutes vos données sont stockées sur votre appareil local et fonctionnent sans compte.",
+    "faq.q2":"Les fonctions sont-elles identiques sur les trois plateformes ?","faq.a2":"La grande majorité des fonctions sont totalement identiques, utilisant le même moteur principal. Les différences concernent uniquement la méthode d'installation et les boîtes de dialogue natives d'enregistrement/ouverture et le bouton « Retour » d'Android. Le « plein écran » d'Android n'est qu'une fusion visuelle avec la barre d'état.",
+    "faq.q3":"Puis-je utiliser les fichiers de projet sur différents appareils ?","faq.a3":"Oui. Les projets .json exportés fonctionnent sur le Web, Windows et Android, permettant de transférer librement le travail entre téléphone et ordinateur.",
+    "faq.q5":"Quelles langues sont prises en charge ?","faq.a5":"L'interface prend en charge sept langues — chinois simplifié, chinois traditionnel, English, 日本語, 한국어, Русский et Français — avec synchronisation du texte lors du changement.",
+    "changelog.eyebrow":"Journal des modifications","changelog.title":"Nouveautés",
+    "log.v1.date":"2026 · Première version",
+    "log.v1.1":"Web (souris/tactile), bureau Windows et mobile Android — les trois plateformes sont prêtes",
+    "log.v1.2":"Fonctions clés : dessin/formes, transformation d'objets, matériaux, boîte de texte, vues auxiliaires",
+    "log.v1.3":"Hors-ligne d'abord, stockage local, compatibilité des projets .json sur trois plateformes",
+    "log.v1.4":"Interface en sept langues et récupération après crash / auto-sauvegarde"
+  },
+  "ar":{
+    brand:"Cub3D Editor",
+    "nav.features":"الميزات","nav.versions":"مقارنة الإصدارات","nav.platforms":"التنزيل والفتح","nav.author":"عن المؤلف",
+    "hero.eyebrow":"محرر مشاهد 3D/2D عبر المنصات يعمل دون اتصال أولاً",
+    "hero.title":"مكعب · ورشة التصميم ثلاثي الأبعاد","hero.title2":"Cub3D Editor",
+    "hero.sub":"محرر مشاهد 3D/2D عبر المنصات يعمل دون اتصال أولاً",
+    "hero.tag":"شفرة واحدة تغطي الويب وWindows وAndroid عبر ثلاث منصات وأربعة أشكال استخدام.",
+    "hero.ctaWeb":"افتح في المتصفح","hero.ctaAll":"عرض كل التنزيلات",
+    "note.free":"مجاني تماماً","note.account":"بدون حساب","note.local":"البيانات محفوظة محلياً","note.sync":"مشاريع متزامنة بين الأجهزة",
+    "detect.default":"جارٍ التعرف على جهازك…","detect.go":"انتقل إلى الإصدار الموصى به",
+    "platforms.eyebrow":"ثلاث منصات · أربعة أشكال","platforms.title":"اختر الطريقة التي تناسبك",
+    "platforms.sub":"سواء كان هاتفاً أو جهازاً لوحياً أو حاسوباً أو متصفحاً، ستجد مدخلاً مناسباً. الأزرار أدناه تفتح الويب أو تبدأ التنزيل مباشرة.",
+    "plat1.name":"الويب · الماوس","plat1.desc":"يفتح مباشرة في المتصفح دون تثبيت. مناسب لأجهزة سطح المكتب والمحمولة.","plat1.btn":"افتح الآن",
+    "plat2.name":"الويب · اللمس","plat2.desc":"هواتف/أجهزة لوحية، أو أضف ?touch إلى الرابط لتبديل تخطيط اللمس.","plat2.btn":"افتح وضع اللمس",
+    "plat3.name":"سطح المكتب PC · Windows","plat3.desc":"نسخة تثبيت Windows / نسخة محمولة (بدون تثبيت). استرداد من الانهيار وحفظ تلقائي وغيرها.","plat3.setup":"تنزيل نسخة التثبيت","plat3.portable":"تنزيل النسخة المحمولة",
+    "plat4.name":"إصدار Android","plat4.desc":"حزمة هاتف/جهاز لوحي Android (موقّعة بإصدار). ملء الشاشة والمشاركة والتصدير وغيرها.","plat4.btn":"تنزيل .apk",
+    "features.eyebrow":"القدرات الأساسية","features.title":"من الخربشة إلى النمذجة المعاملية","features.sub":"مجموعة أدوات واحدة تغطي سير عمل الإبداع ثلاثي الأبعاد وثنائي الأبعاد بالكامل، مع تحسينات خاصة بكل منصة.",
+    "f1.t":"الرسم والأشكال","f1.d":"فرشاة، ممحاة (كلي/جزئي)، أدوات الأشكال، تدعم 3D و2D.",
+    "f2.t":"عمليات الكائن","f2.d":"نقل، تدوير، تكبير؛ تراجع/إعادة، نسخ/لصق/استنساخ.",
+    "f3.t":"تحرير المواد","f3.d":"ألوان جاهزة ومخصصة، أنماط/خرائط نسيج.",
+    "f4.t":"صندوق النص","f4.d":"خطوط متعددة، أفقي/رأسي.",
+    "f5.t":"مساعدات العرض","f5.d":"محاور، شبكة، مستوى أرضي مرجعي، وضع الإطار السلكي.",
+    "f6.t":"دون اتصال أولاً","f6.d":"بدون حساب؛ البيانات محفوظة محلياً؛ مشاريع .json تعمل على كل المنصات.",
+    "f7.t":"تحسينات PC","f7.d":"حوارات ملفات أصلية (فتح/حفظ على مستوى النظام)، نافذة سطح مكتب مستقلة، تثبيت دون اتصال.",
+    "f8.t":"تحسينات Android","f8.d":"تأكيد زر الرجوع، حوارات حفظ/فتح أصلية (منتقي مستندات النظام)، دمج ملء الشاشة وشريط الحالة.",
+    "f9.t":"سبع لغات","f9.d":"الصينية المبسطة، الصينية التقليدية، English، 日本語، 한국어، Русский، Français — متزامنة عند التبديل.",
+    "versions.eyebrow":"مقارنة الإصدارات","versions.title":"نظرة عامة على القدرات","versions.sub":"المنصات الثلاث تشترك في نفس المحرك الأساسي، لذا فمعظم الميزات متطابقة. الاختلافات تنشأ فقط من طريقة التثبيت، بالإضافة إلى حوارات حفظ/فتح Android الأصلية وزر الرجوع.",
+    "cmp.cap":"القدرة","cmp.web":"الويب","cmp.pc":"PC (Windows)","cmp.android":"Android",
+    "leg.yes":"دعم كامل","leg.part":"دعم جزئي","leg.no":"غير منطبق",
+    "author.eyebrow":"عن","author.title":"عن المؤلف والمشروع","author.name":"Yushichadao","author.role":"مطوّر مستقل · مؤلف Cub3D Editor",
+    "author.bio":"نسعى لبناء أدوات إبداعية 3D/2D دون اتصال أولاً وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان.","author.repo":"⭐ مستودع GitHub",
+    "author.tools":"تم توليد هذا الموقع بمساعدة أدوات TRAE وCodeBuddy","author.license":"الترخيص: رخصة مولان المتساهلة الإصدار 2 (MulanPSL-2)",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"ادخل المحرر","footer.repo":"GitHub","footer.download":"تنزيل",
+    "detect.windows":"تم اكتشاف Windows — يوصى بإصدار سطح المكتب PC.","detect.android":"تم اكتشاف Android — يوصى بإصدار Android.","detect.other":"تعذّر اكتشاف النظام — يوصى بإصدار الويب.",
+    "nav.scenarios":"حالات الاستخدام","nav.quickstart":"البدء السريع","nav.roadmap":"خارطة الطريق","nav.faq":"الأسئلة الشائعة",
+    "scenarios.eyebrow":"من يستخدمه","scenarios.title":"مناسب لهذه السيناريوهات","scenarios.sub":"سواء كانت ملاحظة فكرة سريعة أو عرضاً تعليمياً أو تصميماً رسمياً، ستجد نقطة دخول وتيرة مناسبة.",
+    "scn1.t":"ملاحظة فكرة سريعة","scn1.d":"ارسم مسودة 3D على هاتفك أثناء التنقل، ثم صقلها على الحاسوب في المنزل.",
+    "scn2.t":"عرض تعليمي","scn2.d":"استخدم الأشكال الهندسية وصناديق النص لشرح البنية المكانية بصرياً في الفصل أو العرض.",
+    "scn3.t":"ألعاب ونماذج أولية","scn3.d":"اجمع المستويات والعناصر أو نماذج الواجهة بسرعة، وصدّر .json للتكرار في أي وقت.",
+    "scn4.t":"تخطيط المساحة","scn4.d":"استخدم الشبكة والمحاور لعمل مخطط بسيط، كل ذلك دون اتصال.",
+    "quickstart.eyebrow":"ثلاث خطوات للبدء","quickstart.title":"ابدأ الإبداع في دقائق","quickstart.sub":"بدون تسجيل، بدون إنترنت، افتح وارسم.",
+    "qs1.t":"افتح المحرر","qs1.d":"افتح الويب أو ثبّت إصدار سطح المكتب/Android، دون حساب للدخول إلى اللوحة.",
+    "qs2.t":"ارسم وحرر","qs2.d":"ابنِ بالفرشاة وأدوات الأشكال، انقل/دوّر/كبّر الكائنات، وأضف النص والمواد.",
+    "qs3.t":"احفظ وتسلّم","qs3.d":"صدّر مشروع .json وتابع بسلاسة بين الهاتف والحاسوب وAndroid.",
+    "roadmap.eyebrow":"ماذا بعد","roadmap.title":"خارطة طريق التطوير","roadmap.sub":"نوضّح التقدم بصدق: الميزات المنشورة لا تُعلَّن مراراً، والمخطط منها محدد بوضوح.",
+    "road.rel.t":"صدر: تغطية ثلاث منصات","road.rel.tag":"مكتمل","road.rel.d":"الويب (ماوس/لمس) وسطح مكتب Windows وموبايل Android متاحة، تشترك في نفس المحرك الأساسي مع توافق مشاريع .json.",
+    "road.feat.t":"صقل مستمر للقدرات الأساسية","road.feat.tag":"قيد التقدم","road.feat.d":"مع الحفاظ على نهج دون اتصال أولاً وصديق للخصوصية، نواصل تحسين تجربة الرسم والمواد والنص ومساعدات العرض.",
+    "faq.eyebrow":"الأسئلة الشائعة","faq.title":"ربما تتساءل",
+    "faq.q1":"هل أحتاج إلى تسجيل حساب؟","faq.a1":"لا. يعمل Cub3D Editor دون اتصال أولاً؛ كل البيانات محفوظة على جهازك المحلي ويعمل بدون أي حساب.",
+    "faq.q2":"هل الميزات متطابقة على المنصات الثلاث؟","faq.a2":"الغالبية العظمى من الميزات متطابقة تماماً، وتشترك في نفس المحرك الأساسي. الاختلافات تنشأ فقط من طريقة التثبيت، ومن حوارات حفظ/فتح Android الأصلية وزر الرجوع.",
+    "faq.q3":"هل يمكن استخدام ملفات المشروع عبر الأجهزة؟","faq.a3":"نعم. ملفات مشروع .json المصدّرة تعمل عبر الويب وWindows وAndroid، مما يتيح لك التسليم بحرية بين المسودة على الهاتف والصقل على الحاسوب.",
+    "faq.q5":"ما اللغات المدعومة؟","faq.a5":"يدعم الواجهة سبع لغات — الصينية المبسطة، الصينية التقليدية، English، 日本語، 한국어، Русский، Français — مع مزامنة النص عند التبديل.",
+    "changelog.eyebrow":"سجل التحديثات","changelog.title":"سجل التحديثات",
+    "log.v1.date":"2026 · الإصدار الأول",
+    "log.v1.1":"الويب (ماوس/لمس) وسطح مكتب Windows وموبايل Android — المنصات الثلاث متاحة",
+    "log.v1.2":"القدرات الأساسية: الرسم/الأشكال، تحويل الكائنات، المواد، صناديق النص، مساعدات العرض",
+    "log.v1.3":"دون اتصال أولاً، تخزين محلي، توافق مشاريع .json عبر ثلاث منصات",
+    "log.v1.4":"واجهة بسبع لغات واسترداد من الانهيار / حفظ تلقائي"
   }
 };
 
@@ -946,12 +1198,15 @@ const CMP = [
   ["cmp.r_back","N","N","Y"]                        // 返回键确认：仅 Android backButton
 ];
 const CMPLABEL = {
-  "zh-CN":{"cmp.r_install":"安装方式","cmp.r_draw":"画笔/橡皮/形状","cmp.r_transform":"对象变换","cmp.r_material":"材质/纹理","cmp.r_text":"文字框","cmp.r_view":"坐标轴/网格/地面/线框","cmp.r_undo":"撤销重做/复制克隆","cmp.r_offline":"离线/本地存储","cmp.r_json":".json 工程互通","cmp.r_fullscreen":"全屏运行","cmp.r_crash":"崩溃恢复 / 自动保存","cmp.r_sticky":"置顶便签窗","cmp.r_drag":"拖放打开工程","cmp.r_lang":"六语言界面(简/繁/英/日/韩/俄)","cmp.r_nativeSave":"原生保存/打开对话框","cmp.r_back":"返回键确认"},
-  "zh-TW":{"cmp.r_install":"安裝方式","cmp.r_draw":"畫筆/橡皮/形狀","cmp.r_transform":"物件變換","cmp.r_material":"材質/紋理","cmp.r_text":"文字框","cmp.r_view":"座標軸/網格/地面/線框","cmp.r_undo":"復原重做/複製克隆","cmp.r_offline":"離線/本機儲存","cmp.r_json":".json 工程互通","cmp.r_fullscreen":"全螢幕執行","cmp.r_crash":"崩潰復原 / 自動儲存","cmp.r_sticky":"置頂便利貼窗","cmp.r_drag":"拖放開啟工程","cmp.r_lang":"六語言介面(簡/繁/英/日/韓/俄)","cmp.r_nativeSave":"原生儲存/開啟對話方塊","cmp.r_back":"返回鍵確認"},
-  "en":{"cmp.r_install":"Install method","cmp.r_draw":"Brush/eraser/shapes","cmp.r_transform":"Object transform","cmp.r_material":"Materials/textures","cmp.r_text":"Text box","cmp.r_view":"Axes/grid/ground/wire","cmp.r_undo":"Undo-redo/copy-clone","cmp.r_offline":"Offline/local storage","cmp.r_json":".json project sync","cmp.r_fullscreen":"Fullscreen","cmp.r_crash":"Crash recovery / autosave","cmp.r_sticky":"Sticky-note window","cmp.r_drag":"Drag-open project","cmp.r_lang":"6 languages","cmp.r_nativeSave":"Native save/open dialog","cmp.r_back":"Back-key confirm"},
-  "ja":{"cmp.r_install":"インストール方式","cmp.r_draw":"ブラシ/消しゴム/図形","cmp.r_transform":"トランスフォーム","cmp.r_material":"マテリアル/テクスチャ","cmp.r_text":"テキストボックス","cmp.r_view":"座標軸/グリッド/地面/ワイヤ","cmp.r_undo":"元に戻す/複製","cmp.r_offline":"オフライン/ローカル保存","cmp.r_json":".json 共有","cmp.r_fullscreen":"全画面","cmp.r_crash":"クラッシュ復旧 / 自動保存","cmp.r_sticky":"付箋ウィンドウ","cmp.r_drag":"ドラッグで開く","cmp.r_lang":"6言語(簡/繁/英/日/韓/露)","cmp.r_nativeSave":"ネイティブ保存/開くダイアログ","cmp.r_back":"戻るキー確認"},
-  "ko":{"cmp.r_install":"설치 방식","cmp.r_draw":"브러시/지우개/도형","cmp.r_transform":"객체 변환","cmp.r_material":"재질/텍스처","cmp.r_text":"텍스트 상자","cmp.r_view":"좌표축/격자/지면/와이어","cmp.r_undo":"실행취소-다시실행/복사-복제","cmp.r_offline":"오프라인/로컬 저장","cmp.r_json":".json 프로젝트 공유","cmp.r_fullscreen":"전체 화면 실행","cmp.r_crash":"크래시 복구 / 자동 저장","cmp.r_sticky":"항상 위에 메모 창","cmp.r_drag":"드래그로 프로젝트 열기","cmp.r_lang":"6개 언어 UI(간/번/英/日/한/러)","cmp.r_nativeSave":"네이티브 저장/열기 대화상자","cmp.r_back":"뒤로 가기 키 확인"},
-  "ru":{"cmp.r_install":"Способ установки","cmp.r_draw":"Кисть/ластик/фигуры","cmp.r_transform":"Трансформация объекта","cmp.r_material":"Материалы/текстуры","cmp.r_text":"Текстовое поле","cmp.r_view":"Оси/сетка/плоскость/каркас","cmp.r_undo":"Отмена-повтор/копия-клон","cmp.r_offline":"Офлайн/локальное хранилище","cmp.r_json":".json общий проект","cmp.r_fullscreen":"Полноэкранный режим","cmp.r_crash":"Восстановление / автосохранение","cmp.r_sticky":"Окно закреплённой заметки","cmp.r_drag":"Открытие проекта перетаскиванием","cmp.r_lang":"6 языков (zh/zh-TW/en/ja/ko/ru)","cmp.r_nativeSave":"Нативные диалоги сохранения/открытия","cmp.r_back":"Подтверждение кнопкой «Назад»"}
+  "zh-CN":{"cmp.r_install":"安装方式","cmp.r_draw":"画笔/橡皮/形状","cmp.r_transform":"对象变换","cmp.r_material":"材质/纹理","cmp.r_text":"文字框","cmp.r_view":"坐标轴/网格/地面/线框","cmp.r_undo":"撤销重做/复制克隆","cmp.r_offline":"离线/本地存储","cmp.r_json":".json 工程互通","cmp.r_fullscreen":"全屏运行","cmp.r_crash":"崩溃恢复 / 自动保存","cmp.r_sticky":"置顶便签窗","cmp.r_drag":"拖放打开工程","cmp.r_lang":"七语言界面(简/繁/英/日/韩/俄/法)","cmp.r_nativeSave":"原生保存/打开对话框","cmp.r_back":"返回键确认"},
+  "zh-TW":{"cmp.r_install":"安裝方式","cmp.r_draw":"畫筆/橡皮/形狀","cmp.r_transform":"物件變換","cmp.r_material":"材質/紋理","cmp.r_text":"文字框","cmp.r_view":"座標軸/網格/地面/線框","cmp.r_undo":"復原重做/複製克隆","cmp.r_offline":"離線/本機儲存","cmp.r_json":".json 工程互通","cmp.r_fullscreen":"全螢幕執行","cmp.r_crash":"崩潰復原 / 自動儲存","cmp.r_sticky":"置頂便利貼窗","cmp.r_drag":"拖放開啟工程","cmp.r_lang":"七語言介面(簡/繁/英/日/韓/俄/法)","cmp.r_nativeSave":"原生儲存/開啟對話方塊","cmp.r_back":"返回鍵確認"},
+  "en":{"cmp.r_install":"Install method","cmp.r_draw":"Brush/eraser/shapes","cmp.r_transform":"Object transform","cmp.r_material":"Materials/textures","cmp.r_text":"Text box","cmp.r_view":"Axes/grid/ground/wire","cmp.r_undo":"Undo-redo/copy-clone","cmp.r_offline":"Offline/local storage","cmp.r_json":".json project sync","cmp.r_fullscreen":"Fullscreen","cmp.r_crash":"Crash recovery / autosave","cmp.r_sticky":"Sticky-note window","cmp.r_drag":"Drag-open project","cmp.r_lang":"7 languages","cmp.r_nativeSave":"Native save/open dialog","cmp.r_back":"Back-key confirm"},
+  "ja":{"cmp.r_install":"インストール方式","cmp.r_draw":"ブラシ/消しゴム/図形","cmp.r_transform":"トランスフォーム","cmp.r_material":"マテリアル/テクスチャ","cmp.r_text":"テキストボックス","cmp.r_view":"座標軸/グリッド/地面/ワイヤ","cmp.r_undo":"元に戻す/複製","cmp.r_offline":"オフライン/ローカル保存","cmp.r_json":".json 共有","cmp.r_fullscreen":"全画面","cmp.r_crash":"クラッシュ復旧 / 自動保存","cmp.r_sticky":"付箋ウィンドウ","cmp.r_drag":"ドラッグで開く","cmp.r_lang":"7言語(簡/繁/英/日/韓/露/仏)","cmp.r_nativeSave":"ネイティブ保存/開くダイアログ","cmp.r_back":"戻るキー確認"},
+  "ko":{"cmp.r_install":"설치 방식","cmp.r_draw":"브러시/지우개/도형","cmp.r_transform":"객체 변환","cmp.r_material":"재질/텍스처","cmp.r_text":"텍스트 상자","cmp.r_view":"좌표축/격자/지면/와이어","cmp.r_undo":"실행취소-다시실행/복사-복제","cmp.r_offline":"오프라인/로컬 저장","cmp.r_json":".json 프로젝트 공유","cmp.r_fullscreen":"전체 화면 실행","cmp.r_crash":"크래시 복구 / 자동 저장","cmp.r_sticky":"항상 위에 메모 창","cmp.r_drag":"드래그로 프로젝트 열기","cmp.r_lang":"7개 언어 UI(간/번/英/日/한/러/프)","cmp.r_nativeSave":"네이티브 저장/열기 대화상자","cmp.r_back":"뒤로 가기 키 확인"},
+  "ru":{"cmp.r_install":"Способ установки","cmp.r_draw":"Кисть/ластик/фигуры","cmp.r_transform":"Трансформация объекта","cmp.r_material":"Материалы/текстуры","cmp.r_text":"Текстовое поле","cmp.r_view":"Оси/сетка/плоскость/каркас","cmp.r_undo":"Отмена-повтор/копия-клон","cmp.r_offline":"Офлайн/локальное хранилище","cmp.r_json":".json общий проект","cmp.r_fullscreen":"Полноэкранный режим","cmp.r_crash":"Восстановление / автосохранение","cmp.r_sticky":"Окно закреплённой заметки","cmp.r_drag":"Открытие проекта перетаскиванием",    "cmp.r_lang":"7 языков (zh/zh-TW/en/ja/ko/ru/fr)","cmp.r_nativeSave":"Нативные диалоги сохранения/открытия","cmp.r_back":"Подтверждение кнопкой «Назад»"},
+  "ar":{"cmp.r_install":"طريقة التثبيت","cmp.r_draw":"فرشاة/ممحاة/أشكال","cmp.r_transform":"تحويل الكائن","cmp.r_material":"مواد/قوام","cmp.r_text":"صندوق نص","cmp.r_view":"محاور/شبكة/أرضي/سلكي","cmp.r_undo":"تراجع/تكرار نسخ/استنساخ","cmp.r_offline":"دون اتصال/تخزين محلي","cmp.r_json":"توافق مشروع .json","cmp.r_fullscreen":"تشغيل ملء الشاشة","cmp.r_crash":"استرداد من انهيار / حفظ تلقائي","cmp.r_sticky":"نافذة ملاحظة علوية","cmp.r_drag":"فتح المشروع بالسحب","cmp.r_lang":"واجهة بسبع لغات","cmp.r_nativeSave":"حوارات حفظ/فتح أصلية","cmp.r_back":"تأكيد زر الرجوع"},
+  "es":{"cmp.r_install":"Modo de instalación","cmp.r_draw":"Pincel/goma/formas","cmp.r_transform":"Transformación de objetos","cmp.r_material":"Materiales/texturas","cmp.r_text":"Cuadro de texto","cmp.r_view":"Ejes/cuadrícula/suelo/malla","cmp.r_undo":"Deshacer-rehacer/copiar-clonar","cmp.r_offline":"Sin conexión/almacenamiento local","cmp.r_json":"Proyectos .json compartidos","cmp.r_fullscreen":"Pantalla completa","cmp.v":"Versión","cmp.r_crash":"Recuperación / autoguardado","cmp.r_sticky":"Ventana de notas fijas","cmp.r_drag":"Abrir arrastrando","cmp.r_lang":"7 idiomas (简/繁/EN/日/韓/俄/ES)","cmp.r_nativeSave":"Diálogos nativos guardar/abrir","cmp.r_back":"Confirmación con Atrás"},
+  "fr":{"cmp.r_install":"Méthode d'installation","cmp.r_draw":"Pinceau/gomme/formes","cmp.r_transform":"Transformation d'objets","cmp.r_material":"Matériaux/textures","cmp.r_text":"Boîte de texte","cmp.r_view":"Axes/grille/sol/filaire","cmp.r_undo":"Annuler-rétablir/copier-cloner","cmp.r_offline":"Hors-ligne/stockage local","cmp.r_json":"Projets .json partagés","cmp.r_fullscreen":"Plein écran","cmp.r_crash":"Récupération / auto-sauvegarde","cmp.r_sticky":"Fenêtre de notes épinglées","cmp.r_drag":"Ouvrir par glisser-déposer","cmp.r_lang":"7 langues (简/繁/EN/日/韓/俄/FR)","cmp.r_nativeSave":"Boîtes de dialogue natives enregistrer/ouvrir","cmp.r_back":"Confirmation touche Retour"}
   };
 const SYM = {Y:'<span class="yes">✓</span>', P:'<span class="part">~</span>', N:'<span class="no">—</span>'};
 
@@ -960,12 +1215,13 @@ let cur = localStorage.getItem('cub3d_lang')
       || (navigator.language||'zh-CN').slice(0,7)
       || 'zh-CN';
 if(!T[cur]) cur = cur.startsWith('zh') ? (cur.includes('TW')||cur.includes('HK')||cur.includes('Hant')?'zh-TW':'zh-CN')
-            : (cur.startsWith('ja')?'ja': cur.startsWith('ko')?'ko': cur.startsWith('ru')?'ru': cur.startsWith('en')?'en':'zh-CN');
+            : (cur.startsWith('ar')?'ar': cur.startsWith('ja')?'ja': cur.startsWith('ko')?'ko': cur.startsWith('ru')?'ru': cur.startsWith('es')?'es': cur.startsWith('en')?'en':'zh-CN');
 if(!T[cur]) cur='zh-CN';
 
 function applyLang(lang){
   cur = lang; localStorage.setItem('cub3d_lang', lang);
   document.documentElement.lang = lang;
+  document.documentElement.dir = (lang==='ar') ? 'rtl' : 'ltr';
   const dict = T[lang];
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const k = el.getAttribute('data-i18n');
@@ -1016,7 +1272,10 @@ function detectDevice(){
     "en":{hero:{windows:"Download for Windows",android:"Download for Android",other:"Open in Browser"}},
     "ja":{hero:{windows:"Windows 版を取得",android:"Android 版を取得",other:"ブラウザで開く"}},
     "ko":{hero:{windows:"Windows용 다운로드",android:"Android용 다운로드",other:"브라우저에서 열기"}},
-    "ru":{hero:{windows:"Скачать для Windows",android:"Скачать для Android",other:"Открыть в браузере"}}
+    "ru":{hero:{windows:"Скачать для Windows",android:"Скачать для Android",other:"Открыть в браузере"}},
+    "ar":{hero:{windows:"تنزيل لـ Windows",android:"تنزيل لـ Android",other:"افتح في المتصفح"}},
+    "es":{hero:{windows:"Descargar para Windows",android:"Descargar para Android",other:"Abrir en el navegador"}},
+    "fr":{hero:{windows:"Télécharger pour Windows",android:"Télécharger pour Android",other:"Ouvrir dans le navigateur"}}
   };
   const m = map[type]; const label = (extra[cur]&&extra[cur].hero[type]) || dict['hero.ctaWeb'];
   heroCta.href = m.url; heroText.textContent = label;
@@ -1062,6 +1321,30 @@ document.querySelectorAll('.card,.feat,.scn,.step,.sol').forEach(card=>{
   },{rootMargin:'-45% 0px -50% 0px', threshold:0});
   secs.forEach(s=>spy.observe(s));
 })();
+
+/* ============ 语言按钮：单一来源，顶栏与移动端下拉共用，杜绝漏项/不同步 ============ */
+const LANGS = [
+  {code:'zh-CN', label:'简'},
+  {code:'zh-TW', label:'繁'},
+  {code:'en',    label:'EN'},
+  {code:'ja',    label:'日'},
+  {code:'ko',    label:'한'},
+  {code:'ru',    label:'RU'},
+  {code:'es',    label:'ES'},
+  {code:'fr',    label:'FR'},
+  {code:'ar',    label:'ع'}
+];
+function buildLangBars(){
+  const top = document.getElementById('lang');
+  const mob = document.getElementById('langMobile');
+  if (top) top.innerHTML = '';
+  if (mob) mob.innerHTML = '';
+  LANGS.forEach(({code,label})=>{
+    if (top){ const b=document.createElement('button'); b.dataset.lang=code; b.textContent=label; top.appendChild(b); }
+    if (mob){ const b=document.createElement('button'); b.dataset.lang=code; b.textContent=label; mob.appendChild(b); }
+  });
+}
+buildLangBars();
 
 /* 初始化 */
 applyLang(cur);

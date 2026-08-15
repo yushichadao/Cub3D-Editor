@@ -18,7 +18,11 @@ const mimeTypes = {
   '.jpg': 'image/jpeg',
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.md': 'text/markdown; charset=utf-8',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.map': 'application/json; charset=utf-8'
 };
 
 function lanIp() {
@@ -40,6 +44,9 @@ const server = http.createServer((req, res) => {
     res.writeHead(302, { 'Location': '/?touch' });
     return res.end();
   }
+
+  // 解码 URL（中文说明书文件名经 encodeURIComponent 编码后请求，需还原才能定位文件）
+  try { pathname = decodeURIComponent(pathname); } catch (e) {}
 
   let urlPath = pathname === '/' ? '/index.html' : pathname;
   let filePath = path.join(__dirname, urlPath.split('?')[0]);
@@ -77,6 +84,10 @@ server.listen(port, '0.0.0.0', () => {
     console.log('--- 手机通过同一 WiFi/局域网访问 ---');
     console.log('电脑版:  http://' + ip + ':' + port + '/');
     console.log('手机版:  http://' + ip + ':' + port + '/touch');
+  }
+  if (!fs.existsSync(path.join(__dirname, 'docs'))) {
+    console.log('[警告] 未找到 docs/ 目录，使用说明书将无法打开。');
+    console.log('        请在仓库根目录执行: node sync-shared.mjs');
   }
   console.log('==================================');
 });

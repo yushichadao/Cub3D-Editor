@@ -106,8 +106,10 @@
     border-radius:3px; transform: translate(7px,7px);
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .top-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; flex: 1; min-width: 0; }
+  .top-actions { display: flex; align-items: center; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; min-width: 0; flex: 1 1 0; }
   .top-actions::-webkit-scrollbar { display: none; }
+  /* 内层按内容宽度排布，不压缩；外层负责横向滚动。margin-inline-start:auto 在内容不足时把按钮推到末端（RTL 下为左端），溢出时自动为 0，按钮从起始端开始滚动 */
+  .top-actions-inner { display: flex; gap: 4px; align-items: center; justify-content: flex-start; flex-wrap: nowrap; width: max-content; margin-inline-start: auto; }
   .top-btn {
     height: 30px; padding: 0 9px; font-size: 12px;
     color: var(--text); background: var(--control-bg);
@@ -684,15 +686,15 @@
     .brand { gap: 6px; margin-inline-end: 4px; flex-shrink: 0; }
     .brand .logo { width: 24px; height: 24px; }
     .brand span { display: none; }
+    /* RTL：同特异性且更靠后，覆盖 html[dir="rtl"] .brand span[data-i18n] 的 display:inline-block，窄屏同样隐藏标题 */
+    html[dir="rtl"] .brand span[data-i18n] { display: none; }
     .top-actions {
-      flex: 1 1 0; min-width: 0; overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap; gap: 4px;
+      flex: 1 1 0; min-width: 0; overflow-x: auto; overflow-y: hidden;
       justify-content: flex-start;
       scrollbar-width: none; -ms-overflow-style: none;
       -webkit-overflow-scrolling: touch;
       padding: 0 2px;
     }
-    /* 按钮区内容不足时右对齐（margin-left:auto吸收剩余空间）；溢出时自动变为0，正常左右滚动 */
-    .top-actions > :first-child { margin-left: auto; }
     .top-actions::-webkit-scrollbar { display: none; }
     .top-btn { height: 30px; padding: 0 8px; font-size: 12px; flex-shrink: 0; }
     .top-btn-sep { width: 1px; height: 18px; background: var(--bb-sep); flex-shrink: 0; margin: 0 2px; }
@@ -970,6 +972,10 @@
 .sticky-title { flex:1; font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sticky-ico { background:transparent; border:none; color:#1c1c1c; cursor:pointer; font-size:12px; line-height:1; padding:3px 5px; border-radius:5px; font-family:inherit; }
 .sticky-ico:hover { background:rgba(255,255,255,.65); }
+/* "A+" / "A−" 图标为固定用法，阿拉伯语(RTL)下强制保持 LTR 顺序 */
+#manual-zoom-out, #manual-zoom-in,
+.sticky-ico[data-act="fs-"], .sticky-ico[data-act="fs+"],
+.mb-btn[data-act="zoom-out"] .mb-ic, .mb-btn[data-act="zoom-in"] .mb-ic { direction:ltr; unicode-bidi:isolate; }
 .sticky-quote { font-size:11.5px; font-style:italic; color:rgba(0,0,0,.62); padding:5px 8px; max-height:70px; overflow:auto; border-bottom:1px dashed rgba(0,0,0,.22); word-break:break-word; cursor:pointer; }
 .sticky-quote.hide { display:none; }
 .sticky-area { flex:1; min-height:0; border:none; outline:none; resize:none; background:transparent; color:#161616; padding:8px; font-size:var(--sfs); line-height:1.6; font-family:inherit; user-select:text; -webkit-user-select:text; -webkit-user-drag:none; }
@@ -1153,6 +1159,7 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
 <header class="topbar">
   <div class="brand"><div class="logo"></div><span data-i18n="aboutName">立方·3D设计工坊</span></div>
   <div class="top-actions">
+    <div class="top-actions-inner">
     <button class="top-btn" id="btn-new" data-i18n-title="titleNew"><span class="ic">✨</span><span class="lbl" data-i18n="new">新建</span></button>
     <button class="top-btn" id="btn-import" data-i18n-title="titleImport"><span class="ic">📥</span><span class="lbl" data-i18n="import">导入</span></button>
     <button class="top-btn" id="btn-export" data-i18n-title="titleExport"><span class="ic">📤</span><span class="lbl" data-i18n="export">导出</span></button>
@@ -1170,6 +1177,7 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
     <button class="top-btn active" id="btn-ground" data-i18n-title="titleGround"><span class="ic">🔲</span><span class="lbl" data-i18n="ground">地面</span></button>
     <div class="top-btn-sep"></div>
     <button class="top-btn" id="btn-settings" data-i18n-title="titleSettings"><span class="ic">⚙</span><span class="lbl" data-i18n="settings">设置</span></button>
+  </div>
   </div>
 </header>
 
@@ -10512,6 +10520,92 @@ if (isTouch) {
     document.getElementById('panel-left').classList.add('collapsed');
     document.getElementById('panel-right').classList.add('collapsed');
   }
+}
+
+// ============ 顶栏交互：滚轮横向滚动 + 拖拽滑动（按钮区） ============
+// 只要按钮区溢出，任意窗口状态（全屏 / 最大化 / 普通）下均可：
+//   - 鼠标在按钮区滚轮 = 横向滚动
+//   - 在按钮区按住左键左右拖动 = 横向滑动
+//   - 触摸设备：overflow-x:auto 原生触摸滑动已生效
+// 其它情况（按钮区未溢出）滚轮转发到画布，做视野缩放。
+const topbarEl = document.querySelector('.topbar');
+const topActionsEl = document.querySelector('.top-actions');
+// RTL（阿拉伯语）横向滚动兼容：
+//   Blink(Chrome/Edge) 中 RTL 容器的 scrollLeft 为负值域 [-(C-W), 0]，Firefox 为正值域 [0, C-W]。
+//   统一换算成「逻辑滚动量 s」（0=阅读起点，maxScroll=终点），读写时做符号转换，
+//   使滚轮/拖拽在 LTR 与 RTL 下方向一致、且不会被 Math.max(0,…) 一类夹取砍掉负值域。
+function topScrollNeg() {
+  return document.documentElement.getAttribute('dir') === 'rtl' && !/Firefox\//.test(navigator.userAgent);
+}
+function getTopScroll() { return topScrollNeg() ? -topActionsEl.scrollLeft : topActionsEl.scrollLeft; }
+function setTopScroll(v) { topActionsEl.scrollLeft = topScrollNeg() ? -v : v; }
+// 按钮区是否溢出（需要横向滚动）。全屏 / 最大化 / 普通窗口下都允许左右拖动。
+function topActionsOverflow() {
+  return topActionsEl.scrollWidth > topActionsEl.clientWidth;
+}
+if (topbarEl && topActionsEl) {
+  // 按钮区自身监听滚轮：溢出时横向滚动
+  topActionsEl.addEventListener('wheel', (e) => {
+    if (!topActionsOverflow()) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // 兼容不同 deltaMode：像素(0)直接用；行(1)≈16px；页(2)≈一屏
+    let d = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+    if (e.deltaMode === 1) d *= 16;
+    else if (e.deltaMode === 2) d *= topActionsEl.clientWidth;
+    // 逻辑滚动量：LTR 下 d>0 向右看；RTL 下 d>0 向左看（RTL 的前进方向），方向由 setTopScroll 统一换算
+    setTopScroll(getTopScroll() + d);
+  }, { passive: false });
+
+  // 顶栏其它区域（brand / 空白）滚轮 → 转发到画布做视野缩放
+  topbarEl.addEventListener('wheel', function (e) {
+    if (topActionsEl.contains(e.target)) return; // 按钮区自行处理
+    e.preventDefault();
+    if (canvas && typeof canvas.dispatchEvent === 'function') {
+      canvas.dispatchEvent(new WheelEvent('wheel', {
+        deltaY: e.deltaY,
+        deltaX: e.deltaX,
+        clientX: e.clientX,
+        clientY: e.clientY,
+        bubbles: true,
+        cancelable: true
+      }));
+    }
+  }, { passive: false });
+
+  // 拖拽滑动：在按钮区按住并左右拖动 = 横向滚动
+  let dragScrolling = false, dragStartX = 0, dragStartScroll = 0, dragMoved = false;
+  function updateGrab() {
+    topActionsEl.style.cursor = topActionsOverflow() ? 'grab' : '';
+  }
+  topActionsEl.addEventListener('mouseenter', updateGrab);
+  if (window.ResizeObserver) new ResizeObserver(updateGrab).observe(topActionsEl);
+  topActionsEl.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    if (!topActionsOverflow()) return;
+    e.preventDefault(); // 阻止 OS 把这次按下当作窗口拖拽
+    dragScrolling = true;
+    dragMoved = false;
+    dragStartX = e.clientX;
+    dragStartScroll = getTopScroll();
+    topActionsEl.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mousemove', function (e) {
+    if (!dragScrolling) return;
+    var dx = e.clientX - dragStartX;
+    if (Math.abs(dx) > 3) dragMoved = true;
+    // RTL 下滚动方向镜像：内容向右拖 → 显示更左的逻辑增量；LTR 反之
+    setTopScroll(dragStartScroll + (document.documentElement.getAttribute('dir') === 'rtl' ? dx : -dx));
+  });
+  window.addEventListener('mouseup', function () {
+    if (!dragScrolling) return;
+    dragScrolling = false;
+    updateGrab();
+  });
+  // 拖拽后抑制误触发的按钮点击
+  topActionsEl.addEventListener('click', function (e) {
+    if (dragMoved) { e.preventDefault(); e.stopPropagation(); dragMoved = false; }
+  }, true);
 }
 
 // 响应式
