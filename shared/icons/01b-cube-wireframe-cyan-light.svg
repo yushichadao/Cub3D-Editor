@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E8F2FB"/>
+    </linearGradient>
+    <linearGradient id="strokeLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#0EA5E9"/>
+    </linearGradient>
+    <filter id="glowLight" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bgLight)"/>
+  <g fill="none" stroke="url(#strokeLight)" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" filter="url(#glowLight)">
+    <path d="M256 96 L400 176 L256 256 L112 176 Z"/>
+    <path d="M112 176 L256 256 L256 396 L112 316 Z"/>
+    <path d="M400 176 L256 256 L256 396 L400 316 Z"/>
+    <path d="M256 256 L256 396"/>
+  </g>
+  <g fill="#22D3EE" filter="url(#glowLight)">
+    <circle cx="256" cy="96" r="7"/>
+    <circle cx="400" cy="176" r="7"/>
+    <circle cx="112" cy="176" r="7"/>
+    <circle cx="256" cy="396" r="7"/>
+  </g>
+</svg>

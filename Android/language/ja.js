@@ -73,8 +73,6 @@ window.__packs['ja'] = {
   posX:'位置 X', posY:'位置 Z', posZ:'位置 Y',
   emptyHint:'オブジェクトが選択されていません。\n左パネルから図形を選び、地面をクリックして配置するか、既存のオブジェクトをクリックして編集します。\nShift+クリックで複数選択できます。トランスフォームは選択したすべてのオブジェクトにまとめて適用されます。',
 
-  helpThOp:'操作', helpThDesc:'説明',
-
   // Extended Toast messages
   toastSelectAllN:'{0}個のオブジェクトを選択しました', toastOldestState:'すでに最も古い状態です', toastUndone:'元に戻しました',
   toastNewestState:'すでに最新の状態です', toastRedone:'やり直しました', toastTextAdded:'テキストを追加しました',
@@ -182,8 +180,8 @@ helpMouseMidhold:'ホイール長押し', helpMouseMidholdDesc:'視点を平行�
 helpMouseWheel:'ホイールスクロール', helpMouseWheelDesc:'視点を拡大縮小',
 helpTouchTap:'1本指タップ', helpTouchTapDesc:'オブジェクト／コントロールを選択',
 helpTouchDblTap:'1本指ダブルタップ', helpTouchDblTapDesc:'テキストを編集',
-helpTouchLongObj:'1本指長押し（オブジェクト）', helpTouchLongObjDesc:'選択に追加／削除（Shiftクリックと同等）',
-helpTouchDragObj:'1本指ドラッグ（オブジェクト）', helpTouchDragObjDesc:'オブジェクト／コントロールを操作',
+helpTouchLongObj:'1本指長押し', helpTouchLongObjDesc:'選択に追加／削除（Shiftクリックと同等）',
+helpTouchDragObj:'1本指ドラッグ', helpTouchDragObjDesc:'オブジェクト／コントロールを操作',
 helpTouchDragBlank:'1本指ドラッグ（空白）', helpTouchDragBlankDesc:'視点を回転',
 helpTouchTapBlank:'1本指タップ（空白）', helpTouchTapBlankDesc:'選択を解除',
 helpTouchSelectAll:'「すべて選択」ボタン', helpTouchSelectAllDesc:'すべてのオブジェクトを選択',

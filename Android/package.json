@@ -8,8 +8,9 @@
     "prestart": "node ../sync-shared.mjs",
     "start": "node server.js",
     "dev": "node server.js",
+    "icon": "node scripts/_genicon-android.mjs",
     "build:www": "node scripts/build-www.mjs",
-    "sync": "npm run build:www && cap sync android",
+    "sync": "npm run icon && npm run build:www && cap sync android",
     "apk:debug": "npm run sync && node scripts/build-apk.mjs debug",
     "apk:release": "npm run sync && node scripts/build-apk.mjs release",
     "keystore": "node scripts/gen-keystore.mjs"
