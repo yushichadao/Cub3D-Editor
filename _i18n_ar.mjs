@@ -14,9 +14,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.join(__dirname, 'i18n-draft', 'language', 'ar.js');
 const DEST = path.join(__dirname, 'shared', 'language', 'ar.js');
 
+// 若草稿源文件缺失，说明阿拉伯语包尚未提供完整草稿。
+// 此时不致命退出，保留已有的 shared/language/ar.js（由 sync-shared 语言包同步步骤继续分发），
+// 避免因单一语言缺失导致整个同步脚本崩溃、GitHub Pages 部署失败。
 if (!fs.existsSync(SRC)) {
-  console.error('[i18n-ar] 源文件缺失：', SRC);
-  process.exit(1);
+  console.warn('[i18n-ar] 跳过：源文件缺失：', SRC);
+  console.warn('[i18n-ar] 将保留已有的共享语言包（', path.relative(__dirname, DEST), '）。如需重新生成阿拉伯语包，请提供 i18n-draft/language/ar.js。');
+  process.exit(0);
 }
 
 // 读取草稿，移除顶部“未接入/不参与同步”说明注释，使其成为正式接入的语言包。
