@@ -2970,7 +2970,7 @@ When expanded, a sticky note is a **page-level topmost floating card** (not a se
 
 ## Chapter 51: Multi-language: The Manual Also "Speaks" Your Language
 
-Both the interface and the manual support six languages:
+Both the interface and the manual support seven languages:
 
 | Language | Interface | Manual |
 | --- | --- | --- |
@@ -2980,12 +2980,13 @@ Both the interface and the manual support six languages:
 | Japanese | ✅ | ✅ |
 | Korean | ✅ | ✅ |
 | Russian | ✅ | ✅ |
+| French | ✅ | ✅ |
 
-How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`.
+How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`, `使用说明书_fr.md`.
 
 💡 **How the language is chosen**: on **first launch** it is **auto-detected from your system language** — based on your OS/browser language setting, it automatically matches Simplified Chinese, Traditional Chinese, English, or Japanese; after that, if you switch languages manually, the app **remembers your choice and fully respects it**, and will not be overridden by the system language again. In short: the first time follows your system; later you use whatever language you pick.
 
-✅ **All six languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
+✅ **All seven languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
 
 > ⚠️ About deletion confirmation: all deletion operations (sticky notes, scene objects) go through a **custom confirmation dialog** rather than a native system dialog, so it pops up reliably even in **fullscreen / immersive mode**, without "clicking does nothing."
 

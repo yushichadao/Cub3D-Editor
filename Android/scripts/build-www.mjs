@@ -10,7 +10,7 @@ const WWW = path.join(ROOT, 'www');
 // Android 版触屏适配已够用，纯复制进 APK 壳，不做任何移动端注入
 // three / language / docs 统一来自仓库根的 shared/ 单一源，避免各端重复维护出现版本差
 const COPY_DIRS = ['three', 'language', 'docs'];
-const COPY_FILES = ['index.html'];
+const COPY_FILES = ['index.html', 'lang-override.js'];
 
 async function copyDir(src, dest) {
   await fs.mkdir(dest, { recursive: true });

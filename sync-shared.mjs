@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = __dirname;
 
-// 1) 说明书（4 个语言版）
+// 1) 说明书（各语言版）
 const DOCS_SRC = path.join(ROOT, 'shared', 'docs');
 const MANUAL_FILES = [
   '使用说明书.md',
@@ -25,6 +25,9 @@ const MANUAL_FILES = [
   '使用說明書_zh-TW.md',
   '사용설명서_ko.md',
   '使用说明书_ru.md',
+  '使用说明书_es.md',
+  '使用说明书_fr.md',
+  '使用说明书_ar.md',
 ];
 const DOCS_DESTS = [
   path.join(ROOT, 'Web', 'docs'),
@@ -87,9 +90,9 @@ async function main() {
   for (const f of scripts) await syncFile(SCRIPTS_SRC, f, SCRIPTS_DESTS);
   console.log('[sync-shared] 共享脚本同步完成。');
 
-  // 4) 国际化：将弹窗文案与扩展后的法律全文写入各平台语言包（en / ja / zh-TW / ko / ru）
-  //    复用独立脚本 _i18n_en.mjs / _i18n_ja.mjs / _i18n_zh-TW.mjs / _i18n_ko.mjs / _i18n_ru.mjs（亦可单独运行）
-  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW', '_i18n_ko', '_i18n_ru']) {
+  // 4) 国际化：将弹窗文案与扩展后的法律全文写入各平台语言包（en / ja / zh-TW / ko / ru / fr）
+  //    复用独立脚本 _i18n_en.mjs / _i18n_ja.mjs / _i18n_zh-TW.mjs / _i18n_ko.mjs / _i18n_ru.mjs / _i18n_fr.mjs（亦可单独运行）
+  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW', '_i18n_ko', '_i18n_ru', '_i18n_fr', '_i18n_ar']) {
     try {
       await import('./' + lang + '.mjs');
       console.log(`[sync-shared] 国际化（${lang}）执行完成。`);

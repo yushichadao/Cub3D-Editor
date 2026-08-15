@@ -1,8 +1,12 @@
 /**
  * 应用图标生成器（零依赖）
  *
- * 用纯 Node 绘制一枚等距立方体线框图标，再自行完成 PNG 编码与 ICO 封装。
- * 之所以不引入 sharp / png 之类的库，是为了让「离线环境重新构建」不受阻碍。
+ * 忠实栅格化 shared/icons/01-cube-wireframe-cyan.svg（暗底 + 青蓝线框立方体）：
+ *   - 圆角矩形背景，深蓝径向渐变
+ *   - 4 条 path 描边（青蓝渐变），带轻微外发光
+ *   - 4 个节点圆点（青蓝）
+ *
+ * 几何坐标与源 SVG（viewBox 0 0 512 512）完全一致，改 SVG 后只需同步本文件。
  *
  *   node scripts/_genicon.mjs
  *
@@ -42,17 +46,22 @@ function hex(c) {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-/** 圆角矩形背景 + 径向渐变 */
+function lerp(a, b, t) { return a + (b - a) * t; }
+function mix(c1, c2, t) {
+  const a = hex(c1), b = hex(c2);
+  return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+}
+
+/** 圆角矩形背景，深蓝径向渐变（对应 01 SVG 的 #0B1220 → #0E1A2E） */
 function drawBackground(cv) {
-  const R = cv.w * 0.19;           // 圆角半径
+  const R = cv.w * (112 / 512);     // 与 SVG rx=112 一致
   const cx = cv.w / 2, cy = cv.h / 2;
-  const inner = hex('#1a2340');
-  const outer = hex('#080a12');
+  const inner = hex('#0B1220');     // 角（亮一点）
+  const outer = hex('#0E1A2E');     // 中心（深一点）——SVG 是左上深/右下更深，这里用径向近似
   const maxD = Math.hypot(cx, cy);
 
   for (let y = 0; y < cv.h; y++) {
     for (let x = 0; x < cv.w; x++) {
-      // 圆角矩形的有符号距离
       const dx = Math.max(Math.abs(x - cx) - (cv.w / 2 - R), 0);
       const dy = Math.max(Math.abs(y - cy) - (cv.h / 2 - R), 0);
       const dist = Math.hypot(dx, dy) - R;
@@ -60,17 +69,16 @@ function drawBackground(cv) {
       if (a <= 0) continue;
 
       const t = Math.min(Math.hypot(x - cx, y - cy) / maxD, 1);
-      const e = t * t;
       blend(cv, x, y,
-        inner[0] + (outer[0] - inner[0]) * e,
-        inner[1] + (outer[1] - inner[1]) * e,
-        inner[2] + (outer[2] - inner[2]) * e,
+        inner[0] + (outer[0] - inner[0]) * t,
+        inner[1] + (outer[1] - inner[1]) * t,
+        inner[2] + (outer[2] - inner[2]) * t,
         a);
     }
   }
 }
 
-/** 线段绘制（带柔边），只遍历包围盒 */
+/** 线段绘制（带柔边 + 外发光），只遍历包围盒 */
 function drawLine(cv, x0, y0, x1, y1, width, color, alpha) {
   const [r, g, b] = hex(color);
   const half = width / 2;
@@ -93,85 +101,84 @@ function drawLine(cv, x0, y0, x1, y1, width, color, alpha) {
   }
 }
 
-/** 凸多边形填充 */
-function fillPoly(cv, pts, color, alpha) {
+/** 实心圆点（节点高光） */
+function drawDot(cv, cx, cy, radius, color) {
   const [r, g, b] = hex(color);
-  const minY = Math.max(0, Math.floor(Math.min(...pts.map(p => p[1]))));
-  const maxY = Math.min(cv.h - 1, Math.ceil(Math.max(...pts.map(p => p[1]))));
-
+  const minX = Math.max(0, Math.floor(cx - radius - 1));
+  const maxX = Math.min(cv.w - 1, Math.ceil(cx + radius + 1));
+  const minY = Math.max(0, Math.floor(cy - radius - 1));
+  const maxY = Math.min(cv.h - 1, Math.ceil(cy + radius + 1));
   for (let y = minY; y <= maxY; y++) {
-    const xs = [];
-    for (let i = 0; i < pts.length; i++) {
-      const [ax, ay] = pts[i];
-      const [bx, by] = pts[(i + 1) % pts.length];
-      if ((ay <= y && by > y) || (by <= y && ay > y)) {
-        xs.push(ax + (y - ay) / (by - ay) * (bx - ax));
-      }
-    }
-    if (xs.length < 2) continue;
-    xs.sort((p, q) => p - q);
-    for (let k = 0; k + 1 < xs.length; k += 2) {
-      const x0 = Math.max(0, Math.ceil(xs[k]));
-      const x1 = Math.min(cv.w - 1, Math.floor(xs[k + 1]));
-      for (let x = x0; x <= x1; x++) blend(cv, x, y, r, g, b, alpha);
+    for (let x = minX; x <= maxX; x++) {
+      const d = Math.hypot(x - cx, y - cy);
+      const a = (1 - Math.min(Math.max(d - radius + 1, 0), 1));
+      if (a > 0) blend(cv, x, y, r, g, b, a);
     }
   }
 }
 
-/** 绘制等距立方体 */
+/* 源 SVG 坐标（viewBox 0 0 512 512），等比缩放到画布 */
+const PTS = {
+  top: [256, 96],
+  right: [400, 176],
+  center: [256, 256],
+  left: [112, 176],
+  bottom: [256, 396],
+  leftBot: [112, 316],
+  rightBot: [400, 316]
+};
+const DOTS = [[256, 96], [400, 176], [112, 176], [256, 396]];
+
+/** 绘制线框立方体（与 01 SVG 完全一致的正面展开投影） */
 function drawCube(cv) {
-  const cx = cv.w / 2;
-  const cy = cv.h / 2 + cv.h * 0.015;
-  const S = cv.w * 0.245;
-  const COS30 = Math.cos(Math.PI / 6);
-  const SIN30 = Math.sin(Math.PI / 6);
+  const s = cv.w / 512;
+  const S = (x, y) => [x * s, y * s];
 
-  // 等距投影
-  const P = (x, y, z) => [
-    cx + (x - z) * COS30 * S,
-    cy + ((x + z) * SIN30 - y) * S
-  ];
+  const strokeW = cv.w * (10 / 512);
+  const glowW = strokeW * 4;
 
-  const v = {
-    // 上层
-    a: P(-1, 1, -1), b: P(1, 1, -1), c: P(1, 1, 1), d: P(-1, 1, 1),
-    // 下层
-    e: P(-1, -1, -1), f: P(1, -1, -1), g: P(1, -1, 1), h: P(-1, -1, 1)
-  };
+  // 外发光层（青蓝，低透明度）
+  const glow = '#22D3EE';
+  drawLine(cv, ...S(...PTS.top), ...S(...PTS.right), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.right), ...S(...PTS.center), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.left), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.left), ...S(...PTS.top), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.left), ...S(...PTS.center), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.leftBot), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.right), ...S(...PTS.center), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.rightBot), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.left), ...S(...PTS.leftBot), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.leftBot), ...S(...PTS.bottom), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.right), ...S(...PTS.rightBot), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.rightBot), ...S(...PTS.bottom), glowW, glow, 0.05);
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.bottom), glowW, glow, 0.05);
 
-  // 三个可见面
-  fillPoly(cv, [v.a, v.b, v.c, v.d], '#1de9ff', 0.16);   // 顶面
-  fillPoly(cv, [v.d, v.c, v.g, v.h], '#1de9ff', 0.07);   // 右前面
-  fillPoly(cv, [v.a, v.d, v.h, v.e], '#1de9ff', 0.13);   // 左前面（方案 #01：纯青蓝）
+  // 主线层（青蓝渐变：近似统一用 #2BC4EE 中间色）
+  const main = '#2BC4EE';
+  // 顶面菱形
+  drawLine(cv, ...S(...PTS.top), ...S(...PTS.right), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.right), ...S(...PTS.center), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.left), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.left), ...S(...PTS.top), strokeW, main, 0.97);
+  // 左前面
+  drawLine(cv, ...S(...PTS.left), ...S(...PTS.center), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.leftBot), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.leftBot), ...S(...PTS.bottom), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.bottom), ...S(...PTS.left), strokeW, main, 0.97);
+  // 右前面
+  drawLine(cv, ...S(...PTS.right), ...S(...PTS.center), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.rightBot), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.rightBot), ...S(...PTS.bottom), strokeW, main, 0.97);
+  drawLine(cv, ...S(...PTS.bottom), ...S(...PTS.right), strokeW, main, 0.97);
+  // 中竖线
+  drawLine(cv, ...S(...PTS.center), ...S(...PTS.bottom), strokeW, main, 0.97);
 
-  const edges = [
-    ['a', 'b'], ['b', 'c'], ['c', 'd'], ['d', 'a'],
-    ['e', 'f'], ['f', 'g'], ['g', 'h'], ['h', 'e'],
-    ['a', 'e'], ['b', 'f'], ['c', 'g'], ['d', 'h']
-  ];
-  // 被遮挡的后侧边（b-f 与其相邻）用虚化处理
-  const hidden = new Set(['b-f', 'a-b', 'b-c']);
-
-  const W = cv.w * 0.0135;
-
-  // 外发光
-  for (const [p, q] of edges) {
-    drawLine(cv, v[p][0], v[p][1], v[q][0], v[q][1], W * 4.5, '#1de9ff', 0.055);
+  // 节点圆点（r=7 in SVG → 缩放到画布，加轻微发光）
+  const rDot = cv.w * (7 / 512);
+  for (const [dx, dy] of DOTS) {
+    drawDot(cv, dx * s, dy * s, rDot * 1.8, glow);     // 发光
+    drawDot(cv, dx * s, dy * s, rDot, '#22D3EE');      // 实心
   }
-  // 主线
-  for (const [p, q] of edges) {
-    const key = p + '-' + q;
-    const dim = hidden.has(key);
-    drawLine(cv, v[p][0], v[p][1], v[q][0], v[q][1], W,
-      dim ? '#4a7fa8' : '#3df3ff', dim ? 0.42 : 0.95);
-  }
-  // 顶点高光
-  const R = cv.w * 0.019;
-  for (const k of Object.keys(v)) {
-    const dim = k === 'b';
-    drawLine(cv, v[k][0], v[k][1], v[k][0], v[k][1], R * 2, '#ffffff', dim ? 0.35 : 0.9);
-  }
-
 }
 
 /* ------------------------------- 降采样 ---------------------------------- */
@@ -228,7 +235,6 @@ function chunk(type, data) {
 
 function encodePNG(cv) {
   const { w, h, data } = cv;
-  // 每行前置一个过滤器字节（0 = None）
   const raw = Buffer.alloc((w * 4 + 1) * h);
   let p = 0;
   for (let y = 0; y < h; y++) {
@@ -269,12 +275,12 @@ function encodeICO(entries) {
   let offset = 6 + dir.length;
   entries.forEach((e, i) => {
     const o = i * 16;
-    dir[o] = e.size >= 256 ? 0 : e.size;      // 256 记为 0
+    dir[o] = e.size >= 256 ? 0 : e.size;
     dir[o + 1] = e.size >= 256 ? 0 : e.size;
-    dir[o + 2] = 0;                            // 调色板
+    dir[o + 2] = 0;
     dir[o + 3] = 0;
-    dir.writeUInt16LE(1, o + 4);               // color planes
-    dir.writeUInt16LE(32, o + 6);              // bpp
+    dir.writeUInt16LE(1, o + 4);
+    dir.writeUInt16LE(32, o + 6);
     dir.writeUInt32BE(0, o + 8);
     dir.writeUInt32LE(e.png.length, o + 8);
     dir.writeUInt32LE(offset, o + 12);
@@ -289,7 +295,7 @@ function encodeICO(entries) {
 function main() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  process.stdout.write('绘制图标…');
+  process.stdout.write('绘制图标（暗底 01 设计稿）…');
   const master = createCanvas(SS);
   drawBackground(master);
   drawCube(master);

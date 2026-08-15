@@ -28,14 +28,15 @@ const bag = new Function(
 )();
 
 const win = { __packs: {} };
-for (const f of ['en.js', 'ja.js', 'zh-TW.js']) {
+for (const f of ['en.js', 'ja.js', 'zh-TW.js', 'es.js']) {
   new Function('window', fs.readFileSync(path.join(root, 'language', f), 'utf8'))(win);
 }
 const LANGS = {
   zh: bag.ZH_CN,
   en: win.__packs['en'],
   ja: win.__packs['ja'],
-  tw: win.__packs['zh-TW']
+  tw: win.__packs['zh-TW'],
+  es: win.__packs['es']
 };
 
 const SHAPES_3D = ['box','sphere','cylinder','cone','torus','knot','icosa','octa','dodeca','capsule',
