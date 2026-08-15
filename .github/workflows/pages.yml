@@ -8,6 +8,7 @@ on:
       - 'Web/**'
       - 'shared/**'
       - 'sync-shared.mjs'
+      - '_i18n_*.mjs'
       - '.nojekyll'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
