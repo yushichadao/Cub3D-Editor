@@ -74,6 +74,22 @@ cap_diag*.log
 cap_update_diag*.log
 missing_terms.txt
 
+# ===== 诊断 / 截图 / 探针 / 回归 临时脚本与图片（排查用，不入库）=====
+_diag_*.cjs
+_diag_*.png
+_probe*.mjs
+_probe*.ps1
+_render_test.cjs
+_shot_*.cjs
+_shot_*.png
+_test_*.cjs
+_tos_*.cjs
+_tos_*.png
+_tos_gate_demo.html
+# 语言/手册草稿与步骤 yaml（排查与生成中间产物，不入库）
+i18n-draft/
+*.yaml
+
 
 # ===== 临时 wiki 工作目录（生成/排查用，不入库）=====
 wiki-tmp/

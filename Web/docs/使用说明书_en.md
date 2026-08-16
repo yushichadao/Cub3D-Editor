@@ -38,7 +38,7 @@ No matter which end you use, the tool pops up a **Service Agreement and Privacy 
 | Coordinate system convention | This book **always follows the axis labels actually shown on the interface** (page labels: X blue = front-back, Y red = left-right, Z green = height, Z axis points up). The internal code implementation axes differ from the page labels; ordinary readers need not concern themselves with this |
 | Reading suggestions | First read [Chapter 0: Four Forms and How to Read This Book](jump:Chapter 0: Four Forms and How to Read This Book), and identify which end you are using; read the first four parts in order; the remaining eight parts can be consulted as needed. Be sure to do the "Think About It" and "Try It" at the end of each chapter |
 | Online address | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (open the page to start practicing) |
-| Official website | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （Product intro, six-language switch, download links） |
+| Official website | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （Product intro, nine-language switch, download links） |
 | Project repository | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (source code, installers, and this documentation are all here) |
 
 **Form Tag Convention**
@@ -53,6 +53,10 @@ Whenever the book encounters differences in operation across ends, one of the fo
 | 🤖 **Android version** | Installed phone app (.apk) | Android phone, tablet |
 
 💡 If a section of operations has **no** form tag, it means **all four ends are identical** — just follow along.
+
+**Jump links (jump:) — how they work**
+
+Every "Chapter X …" in the table of contents is a clickable jump link that takes you to that chapter. Matching is **insensitive to case, spaces, and punctuation** (Chinese/English quotes, brackets, colons, etc.) — even if a link's text differs from a heading by a punctuation mark or two, the system still finds the target using a loose rule of "strip punctuation and whitespace, keep only letters, digits, and CJK characters"; an exact match failing automatically falls back to loose matching, so links basically never "fail to jump." If a target heading truly cannot be found, it simply does nothing — no error.
 
 **Symbol Convention**
 - 💡 Tip: time-saving experience
@@ -577,7 +581,7 @@ Closing the page, refreshing, or accidentally tapping the back key — an unexpo
 
 - Suitable for: posting to social media, making illustrations, handing others a "preview";
 - Suggestion: before screenshotting, tap the top bar to **hide the coordinate axes and grid surface** for a cleaner画面;
-- Output size is the current canvas pixels.
+- Output size scales up automatically by the **device pixel ratio** (at least **3×**), so the captured PNG is sharper and higher-resolution than what you see on screen — not simply equal to the current canvas display pixels.
 
 **Where does the image land? Varies by end:**
 
@@ -1321,9 +1325,11 @@ Text supports all regular operations: select, translate (blue front-back / red l
 
 ## Chapter 22: Font, Size, Weight, and Orientation
 
-After selecting text, the right panel shows text-specific controls. This tool provides **8 fonts** and several layout toggles.
+After selecting text, the right panel shows text-specific controls. This tool provides **multiple built-in font sets** (5 per set, switching with the current UI language) and several layout toggles.
 
-### 22.1 How to Choose Among the Eight Fonts
+### 22.1 How to Choose Fonts (Switches with Language)
+
+The font list is **not fixed**: it changes with the current UI language — each language has 5 dedicated built-in fonts. For example, Simplified Chinese defaults to YaHei / Song / Kai / Hei / FangSong; English uses Arial / Georgia / Times / Courier / Verdana, etc. The table below is an example under the Chinese UI:
 
 | Font | Temperament / Use |
 | --- | --- |
@@ -1336,7 +1342,7 @@ After selecting text, the right panel shows text-specific controls. This tool pr
 | Times | Western serif, formal |
 | Courier | Western monospace, code/typewriter feel |
 
-💡 For Chinese content, prefer the first five; for pure English, the last three express different temperaments.
+💡 For Chinese content, prefer the first five; for pure English, the last three express different temperaments. After switching the UI language, the font dropdown will show that language's dedicated fonts.
 
 ### 22.2 Font Size (default 80)
 
@@ -1358,6 +1364,16 @@ One-click bold makes titles more prominent. Combined with Hei/Kai, it makes a gr
 ⚠️ **Note**: Overly long text may exceed the thin slab's width; press **Shift + Enter** inside the input box to wrap, or appropriately reduce the font size.
 
 ✏️ **Practice**: Make a "Tea House" vertical plaque (Kai, vertical, large size, wood color), and feel the "character" of font combinations.
+
+### 22.5 Cross-Language Read-Only: Switch Language and You Can Only View
+
+A text object **remembers the language it was created in** (the UI text language). When you switch the UI language to **another language**, that text box's dedicated controls **automatically become read-only / disabled**: the body edit box, font, weight, and horizontal/vertical orientation can no longer be changed — you can only view. This avoids garbled text or broken layout caused by rewriting with a mismatched-language font. At this point the font dropdown keeps only that text box's own font, and no longer lists the whole language's font set.
+
+> 📌 Want to keep editing? Switch the UI language back to the one the text box was created in to restore all controls.
+
+### 22.6 Arabic Disables Vertical Layout
+
+When you switch to the **Arabic (ar)** UI, the vertical-layout button is **force-disabled and locked to horizontal** (Arabic itself is written right-to-left, and vertical would scramble the reading direction). This is a hard disable for that language, independent from the "cross-language read-only" rule in 22.5 — the two do not conflict.
 
 ---
 
@@ -2955,6 +2971,11 @@ When expanded, a sticky note is a **page-level topmost floating card** (not a se
 - Supports **export / import** notes (`manExport` / `manImport`), **select all** and **batch delete** (`manSelectAll` / `manBatchDel`);
 - The keys listed under "Settings → Quick Actions" trigger the above operations (PC version can also click the buttons on the window).
 
+> ⚠️ **Three validation rules for importing notes** (consistent across four forms):
+> 1. **Language mismatch → skip the whole package**: if the imported note package's labeled language differs from the current UI language, the system prompts "language mismatch" and **rejects the import**, avoiding mixing in other-language notes;
+> 2. **Old-version prompt**: if a note package contains a version number older (or different) than the current software, after import it prompts "old-version notes detected" so you can watch for compatibility;
+> 3. **Unlabeled old notes**: very old note packages carry no language label; the system prompts "old format, no language" but still imports under the current language for you to verify manually.
+
 > 📌 Sticky notes on all four forms are in-page overlays — they cannot be dragged outside the app window, nor float above other programs.
 
 ### 50.2 Order of Closing Sticky Notes (📱🤖 Touch Device Note)
@@ -2970,7 +2991,7 @@ When expanded, a sticky note is a **page-level topmost floating card** (not a se
 
 ## Chapter 51: Multi-language: The Manual Also "Speaks" Your Language
 
-Both the interface and the manual support seven languages:
+Both the interface and the manual support nine languages:
 
 | Language | Interface | Manual |
 | --- | --- | --- |
@@ -2980,13 +3001,15 @@ Both the interface and the manual support seven languages:
 | Japanese | ✅ | ✅ |
 | Korean | ✅ | ✅ |
 | Russian | ✅ | ✅ |
+| Spanish | ✅ | ✅ |
 | French | ✅ | ✅ |
+| Arabic (العربية) | ✅ | ✅ |
 
-How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`, `使用说明书_fr.md`.
+How to switch: choose the language in Settings, and the interface text and manual body **simultaneously** switch to the corresponding language version. The manual's multi-language content is stored separately in `docs/使用说明书.md` (Simplified), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`, `使用说明书_es.md`, `使用说明书_fr.md`, `使用说明书_ar.md`.
 
-💡 **How the language is chosen**: on **first launch** it is **auto-detected from your system language** — based on your OS/browser language setting, it automatically matches Simplified Chinese, Traditional Chinese, English, or Japanese; after that, if you switch languages manually, the app **remembers your choice and fully respects it**, and will not be overridden by the system language again. In short: the first time follows your system; later you use whatever language you pick.
+💡 **How the language is chosen**: on **first launch** it is **auto-detected from your system language** — based on your OS/browser language setting, it automatically matches common languages like Simplified Chinese, Traditional Chinese, English, Japanese, Spanish, French, العربية; after that, if you switch languages manually, the app **remembers your choice and fully respects it**, and will not be overridden by the system language again. In short: the first time follows your system; later you use whatever language you pick.
 
-✅ **All seven languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms.
+✅ **All nine languages × all four forms fully connected**: no matter which form you use or which language you choose, you read the same manual adapted across three platforms. For RTL (right-to-left) languages like Arabic, the tables and alignment inside the manual auto-mirror.
 
 > ⚠️ About deletion confirmation: all deletion operations (sticky notes, scene objects) go through a **custom confirmation dialog** rather than a native system dialog, so it pops up reliably even in **fullscreen / immersive mode**, without "clicking does nothing."
 

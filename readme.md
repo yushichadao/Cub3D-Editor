@@ -1,6 +1,6 @@
 # Cub3D Editor — 立方·3D设计工坊
 
-一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码同时覆盖网页、Windows 桌面、Android 三端。支持简体中文、繁體中文、English、日本語、한국어、Русский、Français 七种语言。
+一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码同时覆盖网页、Windows 桌面、Android 三端。支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية（阿拉伯语）九种语言。
 
 > 从零基础涂鸦到进阶参数化建模，所有平台的 `.json` 工程文件互通，可在手机起草、电脑精修之间自由接力。
 
@@ -23,7 +23,7 @@
 
 ## 快速开始
 
-- **官方网站（宣传页）**：<https://yushichadao.github.io/Cub3D-Editor/> —— 产品介绍、七语言切换、下载入口
+- **官方网站（宣传页）**：<https://yushichadao.github.io/Cub3D-Editor/> —— 产品介绍、九语言切换、下载入口
 - **网页版编辑器（无需安装）**：<https://yushichadao.github.io/Cub3D-Editor/Web/index.html>
 - **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
 - **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor.apk`
@@ -59,16 +59,16 @@
 - **3D 与 2D 绘制**：画笔、橡皮擦（整体/局部）、形状工具
 - **对象操作**：移动、旋转、缩放；撤销/重做、复制/粘贴/克隆
 - **材质编辑**：预设与自定义颜色、图案/纹理贴图
-- **文字框**：多字体、横排/竖排
+- **文本框**：多字体（随语言切换）、横排/竖排、粗细
 - **视图辅助**：坐标轴、网格、地面参考面、线框模式
 - **PC 版增强**：崩溃恢复、拖放打开、自动保存/会话恢复、置顶便签窗
-- **Android 版增强**：全屏运行、返回键确认、分享面板导出
+- **Android 版增强**：全屏运行、返回键确认、导出 PNG 截图与 `.json` 场景
 
 ---
 
 ## 多语言
 
-界面与说明书均支持七种语言（简体中文、繁體中文、English、日本語、한국어、Русский、Français），切换时文案与文档同步变更。
+界面与说明书均支持九种语言（简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية），切换时文案与文档同步变更。
 
 说明书源文件位于 `shared/docs/`，以简体中文版为基准：
 
@@ -80,6 +80,9 @@
 | `使用説明書_ja.md` | 日本語 |
 | `사용설명서_ko.md` | 한국어 |
 | `使用说明书_ru.md` | Русский |
+| `使用说明书_es.md` | Español |
+| `使用说明书_fr.md` | Français |
+| `使用说明书_ar.md` | العربية |
 
 各端 `docs/` 目录均为同步生成的副本，**请勿直接编辑**。修改统一在 `shared/docs/` 进行，完成后运行：
 
@@ -87,7 +90,7 @@
 node sync-shared.mjs
 ```
 
-界面语言文案集中维护在 `shared/language/`（`en.js` / `ja.js` / `zh-TW.js` / `ko.js` / `ru.js` / `es.js` / `fr.js`，简体中文为内置默认值）。
+界面语言文案集中维护在 `shared/language/`（`en.js` / `ja.js` / `zh-TW.js` / `ko.js` / `ru.js` / `es.js` / `fr.js` / `ar.js`，简体中文为内置默认值）。
 
 ---
 
@@ -95,9 +98,9 @@ node sync-shared.mjs
 
 ```
 Cub3D Editor/
-├── index.html              # 宣传页 / 官网首页（七语言，内联 i18n，由 Pages 发布到站点根）
+├── index.html              # 宣传页 / 官网首页（九语言，内联 i18n，由 Pages 发布到站点根）
 ├── shared/                 # 各端共享的「单一源」
-│   ├── docs/               # 七语言说明书源文件
+│   ├── docs/               # 九语言说明书源文件
 │   ├── language/           # 界面语言文案
 │   ├── infra/              # 三端一致的基础设施（LICENSE、server 等）
 │   ├── scripts/            # 共享脚本
@@ -112,7 +115,10 @@ Cub3D Editor/
 ├── _i18n_ja.mjs            # 日文文案生成
 ├── _i18n_zh-TW.mjs         # 繁体中文文案生成
 ├── _i18n_ko.mjs            # 韩文文案生成
-├── _i18n_ru.mjs            # 俄文文案生成（简体中文为内置默认，无需对应脚本）
+├── _i18n_ru.mjs            # 俄文文案生成
+├── _i18n_es.mjs            # 西班牙语文案生成
+├── _i18n_fr.mjs            # 法语文案生成
+├── _i18n_ar.mjs            # 阿拉伯语文案生成（简体中文为内置默认，无需对应脚本）
 └── check_manual.mjs        # 说明书 ↔ 界面文案一致性校验
 ```
 
@@ -171,7 +177,7 @@ npm run apk:debug       # 调试包
 
 仓库根 `index.html`（宣传页）、`Web/`（编辑器）与 `dist/`（下载）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
 
-- `/` → 宣传页（产品介绍、七语言切换、下载入口）
+- `/` → 宣传页（产品介绍、九语言切换、下载入口）
 - `/Web/` → 网页版编辑器
 - `/dist/` → 安装包下载
 

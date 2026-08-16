@@ -109,6 +109,23 @@ async function saveImage(win, dataURL, suggestName) {
   }
 }
 
+/** 通用 JSON 保存：弹出系统保存对话框，由用户选择保存位置（便签导出等） */
+async function saveJson(win, opts = {}) {
+  const r = await dialog.showSaveDialog(win, {
+    title: opts.title || '保存文件',
+    defaultPath: path.join(P.projects, opts.suggestName || defaultJsonName('json')),
+    filters: [{ name: 'JSON', extensions: ['json'] }, { name: '所有文件', extensions: ['*'] }]
+  });
+  if (r.canceled || !r.filePath) return { ok: false, canceled: true };
+  try {
+    fs.mkdirSync(path.dirname(r.filePath), { recursive: true });
+    fs.writeFileSync(r.filePath, typeof opts.data === 'string' ? opts.data : JSON.stringify(opts.data, null, 2), 'utf8');
+    return { ok: true, path: r.filePath, name: path.basename(r.filePath) };
+  } catch (e) {
+    return { ok: false, message: '保存失败: ' + e.message };
+  }
+}
+
 /** 静默截图落盘（插件用，不弹窗） */
 function writeImage(dataURL, targetPath) {
   const file = targetPath || path.join(P.dataRoot, 'shots', 'shot-' + Date.now() + '.png');
@@ -214,7 +231,7 @@ function revealPath(p) { if (p && fs.existsSync(p)) shell.showItemInFolder(p); }
 function openDataFolder() { shell.openPath(P.dataRoot); return P.dataRoot; }
 
 module.exports = {
-  openScene, saveScene, saveImage, writeImage, autosave, listAutosaves,
+  openScene, saveScene, saveImage, saveJson, writeImage, autosave, listAutosaves,
   readLastSession, clearLastSession, pickImage, readDropped,
   revealPath, openDataFolder, setCurrentFile, getCurrentFile, SCENE_FILTERS
 };

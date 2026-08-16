@@ -32,6 +32,8 @@
     --modal-mask: rgba(8, 10, 18, 0.72);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* 全局禁用元素被系统拖拽，并屏蔽 iOS Safari 长按弹出菜单 */
+  *, *::before, *::after { -webkit-user-drag: none !important; -webkit-touch-callout: none; }
   html, body {
     height: 100%; overflow: hidden;
     background: var(--bg-deep); color: var(--text);
@@ -100,8 +102,10 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .top-actions { display: flex; align-items: center; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; min-width: 0; flex: 1 1 0; }
   .top-actions::-webkit-scrollbar { display: none; }
-  /* 内层按内容宽度排布，不压缩；外层负责横向滚动。margin-inline-start:auto 在内容不足时把按钮推到末端（RTL 下为左端），溢出时自动为 0，按钮从起始端开始滚动 */
-  .top-actions-inner { display: flex; gap: 4px; align-items: center; justify-content: flex-start; flex-wrap: nowrap; width: max-content; margin-inline-start: auto; }
+  /* 内层按内容宽度排布，不压缩；外层负责横向滚动。
+     不依赖 margin-inline-start:auto 做末端对齐（RTL 下会与浏览器的 RTL scroll 夹紧冲突，
+     导致左端按钮不可达）。对齐与滚动由 JS 统一控制（见 enableTopbarScroll）。 */
+  .top-actions-inner { display: flex; gap: 4px; align-items: center; justify-content: flex-start; flex-wrap: nowrap; width: max-content; }
   .top-btn {
     height: 30px; padding: 0 9px; font-size: 12px;
     color: var(--text); background: var(--control-bg);
@@ -164,6 +168,8 @@
   html[dir="rtl"] .brand .logo { direction: ltr; }
   html[dir="rtl"] .brand span[data-i18n] { unicode-bidi: isolate; display: inline-block; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: min(240px, 34vw); }
   html[dir="rtl"] .topbar { column-gap: 14px; }
+  /* RTL：按钮区滚动到最左端时，最左按钮前保留一点空隙，避免贴住视口边缘被截断/遮挡 */
+  html[dir="rtl"] .top-actions { padding-left: 10px; }
   /* ===== RTL：带左右方向性的图标需水平镜像（避免箭头方向反直觉） =====
      仅镜像明确具备左右指向的图标：
        · 撤销/重做 ↶ / ↷（RTL 下撤销箭头应指向阅读方向右侧）
@@ -181,6 +187,9 @@
   html[dir="rtl"] .manual-toc { border-right: none; border-left: 1px solid var(--border); }
   html[dir="rtl"] .manual-toc a.lvl2 { padding-left: 0; padding-right: 18px; }
   html[dir="rtl"] .manual-toc a.lvl3 { padding-left: 0; padding-right: 34px; }
+  /* 目录栏标题头：RTL 下装饰条与内边距镜像（与 manual-note-head 对称） */
+  html[dir="rtl"] .manual-toc-head > span { padding-left: 0; padding-right: 11px; }
+  html[dir="rtl"] .manual-toc-head > span::before { left: auto; right: 0; }
   /* 笔记栏（RTL 下在左侧）：分隔线应朝阅读区 → border-left 改 border-right */
   html[dir="rtl"] .manual-note { border-left: none; border-right: 1px solid var(--border); }
   html[dir="rtl"] .manual-note-item { border-left: none; border-right: 4px solid var(--border); padding: 8px 8px 8px 24px; }
@@ -351,6 +360,7 @@
   }
   .text-ctrl select option { color: #000; background: #fff; }
   .text-ctrl select:focus { border-color: var(--accent); }
+  .text-ctrl select:disabled { opacity: .45; cursor: not-allowed; filter: grayscale(1); color: var(--text-dim); background: var(--input-bg); border-color: var(--border); }
   .toggle-row2 { display: flex; gap: 6px; }
   .toggle-btn {
     flex: 1; height: 30px; font-size: 12px; cursor: pointer;
@@ -359,6 +369,7 @@
   }
   .toggle-btn:hover { color: var(--text); }
   .toggle-btn.active { background: rgba(110,231,255,0.18); color: var(--accent); border-color: var(--accent); }
+  .toggle-btn:disabled { opacity: .4; cursor: not-allowed; filter: grayscale(1); background: var(--input-bg); color: var(--text-dim); border-color: var(--border); }
   .multi-hint { font-size: 11px; color: var(--accent-2); padding: 4px 2px; }
   .kbd { font-size: 10px; color: var(--text-dim); line-height: 1.5; padding: 4px 2px; }
   .kbd b { color: var(--accent); font-weight: 600; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
@@ -416,6 +427,8 @@
     transition: transform .28s ease; display: inline-block; font-size: 12px;
   }
   .bottombar.collapsed > .bb-toggle .bb-arrow { transform: rotate(-90deg); }
+  /* 阿拉伯语：底栏折叠键箭头需镜像（指向左侧展开内容，而非右侧） */
+  html[dir="rtl"] .bottombar.collapsed > .bb-toggle .bb-arrow { transform: rotate(90deg); }
   .bottombar > .bb-body {
     display: flex; gap: 2px; align-items: center;
     overflow-x: auto; overflow-y: hidden;
@@ -487,7 +500,7 @@
     font-variant-numeric: tabular-nums; letter-spacing: .4px;
   }
   #color-loupe .loupe-info .loupe-hex,
-  #color-loupe .loupe-info .loupe-rgb { font-family: inherit; }
+  #color-loupe .loupe-info .loupe-rgb { font-family: inherit; direction: ltr !important; unicode-bidi: isolate; }
   #color-loupe .loupe-info .loupe-rgb { opacity: .82; font-size: 11px; }
   /* 屏幕取色覆盖层：冻结画面，屏蔽页面交互 */
   #screen-pick-overlay {
@@ -552,12 +565,12 @@
   .settings-content { flex:1; padding:16px; overflow-y:auto; }
   .settings-pane { animation: fade .2s ease; }
   .settings-empty { color:var(--text-dim); font-size:13px; line-height:1.8; }
-  .theme-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:10px; margin-top:8px; }
+  .theme-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px; margin-top:8px; }
   .theme-card { border:1px solid var(--border); border-radius:10px; padding:10px 6px; cursor:pointer; transition:all .15s; text-align:center; }
   .theme-card:hover { border-color:var(--accent); }
   .theme-card.active { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); }
   .theme-swatches { display:flex; gap:4px; justify-content:center; margin-bottom:7px; }
-  .theme-sw { width:18px; height:18px; border-radius:50%; }
+  .theme-sw { width:18px; height:18px; border-radius:50%; flex:0 0 auto; }
   .theme-name { font-size:11px; color:var(--text); }
 
   .lang-list { display:flex; flex-direction:column; gap:6px; margin-top:8px; }
@@ -929,11 +942,11 @@
 .manual-note-item .note-actions { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
 .manual-note-empty { color:var(--text-dim); font-size:12px; padding:12px; text-align:center; }
 .manual-note-head { display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border); font-weight:600; flex-shrink:0; background:var(--bg-panel-solid); position:sticky; top:0; z-index:1; }
-.manual-note-head-actions { margin-left:auto; display:flex; gap:4px; }
+.manual-note-head-actions { margin-inline-start:auto; display:flex; gap:4px; }
 .manual-note-tools { display:flex; align-items:center; gap:8px; padding:6px 10px; border-bottom:1px solid var(--border); font-size:12px; }
 .manual-note-selall { display:flex; align-items:center; gap:4px; cursor:pointer; user-select:none; -webkit-user-select:none; }
 .manual-note-selall input[type=checkbox] { width:15px; height:15px; margin:0; accent-color:var(--accent); cursor:pointer; }
-.manual-note-count { margin-left:auto; color:var(--text-dim); }
+.manual-note-count { margin-inline-start:auto; color:var(--text-dim); }
 .manual-note-item { padding:8px 24px 8px 8px; position:relative; }
 .manual-note-item .note-check { position:absolute; top:9px; right:9px; width:15px; height:15px; cursor:pointer; accent-color:var(--accent); }
 .manual-note-item .note-text { color:var(--text); cursor:pointer; white-space:pre-wrap; word-break:break-word; max-height:3.4em; overflow:hidden; }
@@ -1123,15 +1136,49 @@ html[dir="rtl"]{direction:rtl;}
 html[dir="rtl"] .sticky-colors{margin-left:0; margin-right:auto;}
 html[dir="rtl"] .sticky-resize{right:auto; left:0;}
 html[dir="rtl"] .sticky-resize::after{right:auto; left:3px; border-right:none; border-left:2px solid rgba(0,0,0,.32); border-bottom-right-radius:0; border-bottom-left-radius:2px;}
-/* 阿拉伯语下，数字输入框内容（含正/负号）应始终是左到右，避免符号跑到右侧 */
-html[dir="rtl"] input[type="number"]{direction:ltr !important; text-align:left !important;}
+/* 阿拉伯语下，数字输入框内容（含正/负号）保持左到右阅读，但整体靠右对齐以符合 RTL 习惯 */
+html[dir="rtl"] input[type="number"]{direction:ltr !important; text-align:right !important;}
 /* 只读数值显示（如属性面板带 +/− 的实时值）同样保持左到右 */
 html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bidi:isolate; text-align:left !important;}
+/* 阿拉伯语下，HEX 色值文本框与颜色码显示（#RRGGBB，# 在最前）同样保持左到右 */
+html[dir="rtl"] #picker-hex{direction:ltr !important; text-align:right !important;}
+html[dir="rtl"] .color-code{direction:ltr !important; unicode-bidi:isolate; text-align:right !important;}
+/* 阿拉伯语下，自定义颜色 HEX/RGB 两行色号整体靠右（贴合 RTL 阅读方向） */
+/* 数字输入框微调器：隐藏浏览器原生丑陋的上下箭头，改用统一的自定义按钮 */
+input[type="number"]{ -moz-appearance:textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.num-field{
+  position:relative; display:inline-flex; align-items:stretch; box-sizing:border-box;
+  border:1px solid var(--border); border-radius:6px; background:var(--input-bg); overflow:hidden; vertical-align:middle;
+}
+.num-field > input[type="number"]{
+  flex:1 1 auto; min-width:0;
+  border:none !important; border-radius:0 !important; background:transparent !important;
+  color:var(--text); font-family:inherit; font-size:12px; padding:3px 6px; -moz-appearance:textfield; outline:none;
+}
+.num-field > input[type="number"]::-webkit-outer-spin-button,
+.num-field > input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.num-step{ display:flex; flex-direction:column; flex:0 0 auto; width:18px; border-left:1px solid var(--border); background:var(--input-bg); }
+html[dir="rtl"] .num-step{ border-left:none; border-right:1px solid var(--border); }
+.num-step button{
+  flex:1 1 0; display:flex; align-items:center; justify-content:center;
+  border:none; background:transparent; color:var(--text-dim);
+  cursor:pointer; font-size:8px; line-height:1; padding:0; user-select:none;
+}
+.num-step button:hover{ background:var(--accent); color:#fff; }
+.num-step button:active{ background:var(--accent-2); color:#fff; }
+.num-step .num-up{ border-bottom:1px solid var(--border); }
+.num-field:focus-within{ border-color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+/* 阿拉伯语：.num-field 继承 html[dir="rtl"] 的 direction:rtl，
+   配合默认 flex-direction:row 即可让主轴变为右→左，输入框与两个微调按钮自然左右翻转（按钮移到左侧）。
+   切勿在此写 flex-direction:row-reverse —— 在 direction:rtl 下它会抵消翻转。 */
+html[dir="rtl"] .num-field{ direction:rtl; }
 </style>
   <link rel="stylesheet" href="shell/desktop.css">
   <script src="shell/desktop-boot.js"></script>
 </head>
-<body>
+<body oncontextmenu="return false" ondragstart="return false">
 
 <div class="loader" id="loader"><div class="loader-box"><div></div><div></div><div></div></div></div>
 
@@ -1317,11 +1364,11 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
       <div class="swatch-row">
         <div id="obj-custom-swatch" class="color-dot custom-swatch" style="background:#ffffff;"></div>
         <div style="grid-column: 2 / 8; display:flex; align-items:center; gap:10px; min-width:0;">
-          <div style="display:flex; flex-direction:column; gap:1px; line-height:1.25; min-width:0;">
+          <div class="color-meta" style="display:flex; flex-direction:column; gap:1px; line-height:1.25; min-width:0;">
             <span id="obj-custom-hex" class="color-code">#FFFFFF</span>
             <span id="obj-custom-rgb" class="color-code">RGB(255,255,255)</span>
           </div>
-          <button class="tool-btn" id="open-color-picker" style="margin-left:auto; height:26px; padding: 0 10px; font-size: 11px; display:flex; align-items:center; gap:4px; white-space:nowrap; flex-shrink:0; width:auto;">
+          <button class="tool-btn" id="open-color-picker" style="margin-inline-start:auto; height:26px; padding: 0 10px; font-size: 11px; display:flex; align-items:center; gap:4px; white-space:nowrap; flex-shrink:0; width:auto;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
             <span data-i18n="colorPicker">选取器</span>
           </button>
@@ -1412,11 +1459,11 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
       <div class="swatch-row">
         <div id="brush-custom-swatch" class="color-dot custom-swatch" style="background:#000000;"></div>
         <div style="grid-column: 2 / 8; display:flex; align-items:center; gap:10px; min-width:0;">
-          <div style="display:flex; flex-direction:column; gap:1px; line-height:1.25; min-width:0;">
+          <div class="color-meta" style="display:flex; flex-direction:column; gap:1px; line-height:1.25; min-width:0;">
             <span id="brush-custom-hex" class="color-code">#000000</span>
             <span id="brush-custom-rgb" class="color-code">RGB(0,0,0)</span>
           </div>
-          <button class="tool-btn" id="brush-open-picker" style="margin-left:auto; height:26px; padding: 0 10px; font-size: 11px; display:flex; align-items:center; gap:4px; white-space:nowrap; flex-shrink:0; width:auto;">
+          <button class="tool-btn" id="brush-open-picker" style="margin-inline-start:auto; height:26px; padding: 0 10px; font-size: 11px; display:flex; align-items:center; gap:4px; white-space:nowrap; flex-shrink:0; width:auto;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
             <span data-i18n="colorPicker">选取器</span>
           </button>
@@ -1690,7 +1737,7 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
         <div style="font-size:11px; color:var(--text-dim); margin-bottom:4px;" data-i18n="colorPreview">颜色预览</div>
         <div id="picker-preview" style="width:50px; height:50px; border-radius:8px; border:2px solid var(--border); background:#6ee7ff;"></div>
       </div>
-      <div style="display:flex; flex-direction:column; gap:4px; margin-left:auto;">
+      <div style="display:flex; flex-direction:column; gap:4px; margin-inline-start:auto;">
         <button class="top-btn" id="picker-eyedropper" style="font-size:11px; padding:4px 8px;" data-i18n-title="titleEyedropper">
           <span data-i18n="eyedropper">屏幕取色</span>
         </button>
@@ -1780,7 +1827,7 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
                 <span class="about-card-arrow">›</span>
               </button>
             </div>
-            <p class="about-copy" data-i18n="aboutCopyright">Copyright © 2026-Present Yushichadao. All Rights Reserved.</p>
+            <p class="about-copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</p>
           </div>
         </div>
       </div>
@@ -1793,6 +1840,10 @@ html[dir="rtl"] .ctrl-label span:last-child{direction:ltr !important; unicode-bi
   <div class="modal-box terms-box">
     <div class="modal-title" id="terms-modal-title"></div>
     <div id="terms-modal-body" class="terms-body"></div>
+    <div class="terms-foot" id="terms-foot">
+      <span class="read-badge" id="terms-read-badge" data-i18n="tosReadHint">尚未阅读到文末</span>
+      <button type="button" id="terms-read-done" class="terms-read-done disabled" disabled data-i18n="tosReadDone">我已读至文末</button>
+    </div>
     <div class="modal-actions">
       <button class="top-btn" id="terms-modal-close" data-i18n="close">关闭</button>
     </div>
@@ -1836,6 +1887,10 @@ setTimeout(function() {
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js?v=6';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
+// 全局禁用浏览器原生右键菜单与文本/图片拖放（capture 阶段，确保即使内联属性被缓存/CSP 影响也生效）。
+// 仅 preventDefault 不 stopPropagation：说明书内的右键选词监听器仍会执行，不受此拦截影响。
+document.addEventListener('contextmenu', e => e.preventDefault(), true);
+document.addEventListener('dragstart', e => e.preventDefault(), true);
 // 简体中文作为内置默认与回退；其余语言存放在 language/ 目录下独立文件中（见 <head> 的 <script src> 引用）
 const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', ground:'地面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·3D设计工坊', aboutDesc:'基于 Three.js 的 PC 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·3D设计工坊（以下简称“本软件”）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按“现状”提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按“现状”提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件“关于”页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按“现状”提供</h4><p>本软件及其功能按“现状”与“可用”基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p>', privacyBody:'<h4>隐私政策</h4><p>立方·3D设计工坊（以下简称“本软件”或“我们”）是由 <strong>Yushichadao</strong> 作为个人开发者向您提供的一款<strong>离线优先</strong>的跨平台 3D/2D 场景编辑器。我们<strong>不会收集您的个人信息</strong>，您的创作内容与本地设置默认仅保存在您自己的设备本地，不存在我们将您的个人信息传输、存储或用于其他用途的情况。使用本软件即表示您同意本政策。</p><h4>1. 我们是否收集您的账号信息</h4><p><strong>本软件没有账号系统，您无需注册或登录即可使用。我们不会收集、存储或把您的用户名、密码、电子邮箱、电话号码或其他账号类个人信息与您的身份绑定。</strong></p><h4>2. 保存在本地的创作数据</h4><p>(1) <strong>您所创作的 3D 模型、场景、便利贴、注释、文字与图片，默认保存在您的本机设备（浏览器存储空间、应用沙箱或您导出的文件），不会上传到任何服务器。</strong></p><p>(2) 除提供本地功能所必需的本机技术处理外，我们不会主动读取、上传或传输您的创作内容。</p><h4>3. 我们不会上线任何需要共享个人信息的第三方 SDK</h4><p><strong>本软件不会接入任何需要收集或共享您个人信息的第三方 SDK（包括统计、崩溃上报、广告、云同步、社交分享等）。本软件仅使用必要的开源图形库（如 Three.js 及 WebGL 组件）在本机运行，这些组件不会向外部传输您的个人信息。</strong></p><h4>4. 委托处理、共享、转让与公开披露</h4><p><strong>我们不会向任何第三方出售您的个人信息。除以下情形外，我们不会共享、转让或公开披露您的个人信息：</strong>(1) 为遵守适用法律法规、司法或监管要求；(2) 为保护本软件、您或公众的合法权益；(3) 经您事先明确同意。由于本软件不收集您的个人信息，上述情形在一般情况下均不会发生。</p><h4>5. 数据安全与您的责任</h4><p>(1) 您的核心创作数据主要保存在您自己的本机设备，请妥善保管您的设备并设置锁屏，避免他人未经授权访问。</p><p>(2) <strong>请定期导出并备份重要作品；因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的数据丢失，我们无法保证恢复，相关风险由您自行承担。</strong></p><p>(3) 如您通过邮箱与我们联系，您提供的邮箱地址仅用于回复您的问题，不会被用于其他用途。</p><h4>6. 您的权利与退出</h4><p><strong>您始终掌控自己的数据：您可以随时清除缓存、删除作品、卸载应用或停止使用本软件。</strong></p><h4>7. 政策更新</h4><p><strong>本政策可能随软件更新而调整，更新版本将在本软件内公告。您继续使用即视为接受；若您不同意，请停止使用本软件。</strong></p><h4>8. 联系我们</h4><p>开发者：<strong>Yushichadao</strong><br>联系邮箱：<strong>yushichadao@qq.com</strong></p><h4>9. 文本效力</h4><p>本政策以简体中文版本为准；如其他语言版本与本简体中文版本不一致，以简体中文版本为准。本政策生效日期：2026年8月14日。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
   // 面板标题
@@ -1988,7 +2043,7 @@ kbdSliderPgSel:'大幅增/减',
   appTitle:'Cub3D Editor',
   // 说明书阅读器
   tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
-  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', manExportFail:'导出失败', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', manPrevCh:'上一章', manNextCh:'下一章', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出',
+  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manImportLangMismatch:'该便签备份为 {0} 语言，当前说明书为 {1} 语言，已跳过导入以避免混合不同语言', manImportLangUnknown:'该备份未携带语言标识，仅当你确认它导出自当前（{0}）说明书时才可导入', manImportOldVer:'已导入 {0} 条便签，其中部分创建于旧版本（{1}），若说明书已更新请复核', manImportNoVer:'该备份无版本标识，便签已标记为当前版本（{0}）', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', manExportFail:'导出失败', toastExportCancelled:'已取消导出', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', manPrevCh:'上一章', manNextCh:'下一章', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出', tosReadDone:'我已读至文末', tosReadProgress:'已阅读 <b id="tos-progress-num">{0}</b> / 3 份文件', tosReadHint:'尚未阅读到文末', tosReadDoneHint:'✓ 已完整阅读，可关闭',
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
@@ -2881,7 +2936,7 @@ function textTexture(text, opts) {
   // NO_COLOR(-1) 转换为中性灰色 0xcccccc，避免 toString(16) 产生无效颜色导致显示黑色
   const rawColor = opts.color ?? 0x000000;
   const color = (rawColor === NO_COLOR || rawColor === undefined) ? 0xcccccc : rawColor;
-  const font = opts.font || '"Microsoft YaHei","PingFang SC",sans-serif';
+  const font = opts.font || (FONT_LISTS[currentLang] ? FONT_LISTS[currentLang][0].value : '"Microsoft YaHei","PingFang SC",sans-serif');
   const fontSize = opts.fontSize ?? 80;
   const bold = opts.bold !== undefined ? opts.bold : true;
   const direction = opts.direction || 'h';
@@ -2954,7 +3009,7 @@ function createObject(spec) {
   if (spec.kind === 'text') {
     const tOpts = {
       color,
-      font: spec.font || '"Microsoft YaHei","PingFang SC",sans-serif',
+      font: spec.font || (FONT_LISTS[currentLang] ? FONT_LISTS[currentLang][0].value : '"Microsoft YaHei","PingFang SC",sans-serif'),
       fontSize: spec.fontSize ?? 80,
       bold: spec.bold !== undefined ? spec.bold : true,
       direction: spec.direction || 'h'
@@ -2975,6 +3030,7 @@ function createObject(spec) {
     geo.center();
     data = { kind:'text', text: spec.text, color, w, h,
              font: tOpts.font, fontSize: tOpts.fontSize, bold: tOpts.bold, direction: tOpts.direction,
+             locale: spec.locale || currentLang,
              opacity: opacity };
   } else if (spec.kind === 'image') {
     // 图片3D仿2D化：使用PlaneGeometry实现真正的2D平面效果，无厚度
@@ -3540,13 +3596,68 @@ function syncProps(obj) {
   const vOpacity = document.getElementById('v-opacity');
   if (vOpacity) vOpacity.textContent = opacity.toFixed(2);
 }
+// ============ 文本框跨语言只读 ============
+// 文本"出生语言"（创建/导入时的界面语言）与当前界面语言不一致时，锁定文本内容与文本专属属性
+function isTextLocked(o) {
+  return !!(o && o.data && o.data.kind === 'text' && o.data.locale && o.data.locale !== currentLang);
+}
+// 字体下拉补选项：当前语言候选列表可能不含该文本保存的字体，补入以避免回退到第一项
+// 显示名优先取该字体在各语言候选表里的 label（如"雅黑"），找不到才回退为字体值本身
+function fontLabelFor(value) {
+  if (!value) return '';
+  for (const k in FONT_LISTS) {
+    const f = FONT_LISTS[k].find(x => x.value === value);
+    if (f) return f.label;
+  }
+  return value.length > 40 ? value.slice(0, 40) + '…' : value;
+}
+function ensureFontOption(font) {
+  const sel = document.getElementById('t-font');
+  if (!sel || !font) return;
+  for (let i = 0; i < sel.options.length; i++) { if (sel.options[i].value === font) return; }
+  const o = document.createElement('option');
+  o.value = font;
+  o.textContent = fontLabelFor(font);
+  sel.appendChild(o);
+}
+// 跨语言只读时禁用文本专属控件（内容/字体/粗细/方向），并保留阿拉伯语竖排禁用规则
+function applyTextLockUI(o) {
+  if (!o || o.data.kind !== 'text') return;
+  const locked = isTextLocked(o);
+  const ed = document.getElementById('edit-text');
+  const fs = document.getElementById('t-font');
+  if (ed) ed.disabled = locked;
+  const isArabic = currentLang === 'ar';
+  document.querySelectorAll('#sec-text .toggle-btn[data-bold]').forEach(b => { b.disabled = locked; });
+  document.querySelectorAll('#sec-text .toggle-btn[data-dir]').forEach(b => {
+    b.disabled = (b.dataset.dir === 'v') ? (locked || isArabic) : locked;
+  });
+  if (fs) {
+    if (locked) {
+      // 跨语言只读：字体下拉只保留该文本框自身的字体，避免列出全部语言字体造成误导
+      const font = o.data.font;
+      const keep = [...fs.options].find(op => op.value === font);
+      fs.innerHTML = '';
+      const op = document.createElement('option');
+      op.value = font;
+      op.textContent = keep ? keep.textContent : fontLabelFor(font);
+      fs.appendChild(op);
+      fs.value = font;
+      fs.disabled = true;
+    } else {
+      fs.disabled = false;
+    }
+  }
+}
 function syncTextProps(obj) {
   if (obj.data.kind !== 'text') return;
+  ensureFontOption(obj.data.font);
   document.getElementById('t-font').value = obj.data.font;
   document.getElementById('t-size').value = obj.data.fontSize;
   document.getElementById('input-tsize').value = obj.data.fontSize;
   document.querySelectorAll('#sec-text .toggle-btn[data-bold]').forEach(b => b.classList.toggle('active', (b.dataset.bold === 'true') === obj.data.bold));
-  document.querySelectorAll('#sec-text .toggle-btn[data-dir]').forEach(b => b.classList.toggle('active', b.dataset.dir === obj.data.direction));
+  document.querySelectorAll('#sec-text .toggle-btn[data-dir]').forEach(b => b.classList.toggle('active', currentLang === 'ar' ? b.dataset.dir === 'h' : b.dataset.dir === obj.data.direction));
+  applyTextLockUI(obj);
 }
 
 // ============ 历史 ============
@@ -3588,6 +3699,7 @@ function snapshot() {
       fontSize: o.data.fontSize,
       bold: o.data.bold,
       direction: o.data.direction,
+      locale: o.data.locale,
       pos: [o.mesh.position.x, baseY, o.mesh.position.z],
       rotY: Math.round(o.mesh.rotation.y * 180 / Math.PI),
       scale: o.mesh.scale.x,
@@ -3721,7 +3833,7 @@ function disposeObject(o) {
     });
   }
 }
-function restore(snap) {
+function restore(snap, metaLocale) {
   deselectAll();
 
   // 差异恢复：只处理变化的对象，未变化的对象完全不动
@@ -3745,7 +3857,7 @@ function restore(snap) {
         // 画笔对象：删除旧对象，重建
         disposeObject(existing);
         state.objects = state.objects.filter(o => o !== existing);
-        const obj = rebuildFromSnapshot(s, promises);
+        const obj = rebuildFromSnapshot(s, promises, metaLocale);
         if (obj) newBrushObjects.push(obj);
       } else {
         // 非画笔对象：直接应用快照中的变换数据，不重建
@@ -3753,7 +3865,7 @@ function restore(snap) {
       }
     } else {
       // 新对象：创建
-      const obj = rebuildFromSnapshot(s, promises);
+      const obj = rebuildFromSnapshot(s, promises, metaLocale);
       // createObject 已将非画笔对象push到state.objects，画笔对象需要手动push
       if (obj && (s.isBrush || s.kind === 'brush')) {
         newBrushObjects.push(obj);
@@ -3837,7 +3949,7 @@ function applySnapshotToExisting(o, s) {
 }
 
 // 从快照重建对象（用于新对象或画笔对象）
-function rebuildFromSnapshot(s, promises) {
+function rebuildFromSnapshot(s, promises, metaLocale) {
   if (s.isBrush || s.kind === 'brush') {
     const group = new THREE.Group();
     const mat = createBrushMaterialForSnapshot(s);
@@ -4002,7 +4114,7 @@ function rebuildFromSnapshot(s, promises) {
   } else {
     // 用 worldPos/worldQuat/worldScale 精确控制最终位置，避免 createObject 内部
     // 基于 s.pos（baseY）+ halfH 两次计算偏差导致移位
-    const obj = createObject({ ...s, pos: [0, 0, 0], scale: 1, rotX: 0, rotY: 0, rotZ: 0 });
+    const obj = createObject({ ...s, pos: [0, 0, 0], scale: 1, rotX: 0, rotY: 0, rotZ: 0, locale: s.locale || metaLocale || currentLang });
     if (obj) {
       if (s.worldScale) {
         obj.mesh.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
@@ -6176,9 +6288,63 @@ bindNumberInput('input-opacity','p-opacity',(m,v)=>{
   applyOpacityToObject(o, v);
 });
 
+// 数字输入框微调器：用统一的自定义上下按钮替换浏览器原生丑陋箭头（保留已有事件监听）
+function enhanceNumberInputs(root){
+  root = root || document;
+  root.querySelectorAll('input[type="number"]:not(.num-enhanced)').forEach(input=>{
+    input.classList.add('num-enhanced');
+    const wrap = document.createElement('div'); wrap.className = 'num-field';
+    const inlineW = (input.style.width||'').trim();
+    if(inlineW.toLowerCase()==='100%'){ wrap.style.width='100%'; input.style.width=''; input.style.flex='1 1 auto'; }
+    else if(inlineW){ wrap.style.width=inlineW; input.style.flex='1 1 auto'; }
+    const btns = document.createElement('div'); btns.className='num-step';
+    const up = document.createElement('button'); up.type='button'; up.className='num-up'; up.tabIndex=-1; up.setAttribute('aria-label','+'); up.textContent='▲';
+    const down = document.createElement('button'); down.type='button'; down.className='num-down'; down.tabIndex=-1; down.setAttribute('aria-label','-'); down.textContent='▼';
+    btns.appendChild(up); btns.appendChild(down);
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input); wrap.appendChild(btns);
+    const step = (dir)=>{
+      const stepAttr = input.getAttribute('step')||'1';
+      const stepV = parseFloat(stepAttr)||1;
+      let v = parseFloat(input.value); if(isNaN(v)) v = parseFloat(input.getAttribute('value'))||0;
+      let nv = v + dir*stepV;
+      if(input.hasAttribute('min')){ const mn=parseFloat(input.min); if(!isNaN(mn)) nv=Math.max(mn,nv); }
+      if(input.hasAttribute('max')){ const mx=parseFloat(input.max); if(!isNaN(mx)) nv=Math.min(mx,nv); }
+      const dec=(stepAttr.split('.')[1]||'').length; nv=parseFloat(nv.toFixed(dec));
+      input.value = nv;
+      input.dispatchEvent(new Event('input',{bubbles:true}));
+      input.dispatchEvent(new Event('change',{bubbles:true}));
+    };
+    // 长按连续增减：pointerdown 立即触发一次，之后以固定间隔连续触发；松开即停
+    let holdTimer = null;
+    const startHold = (el, dir) => {
+      step(dir);                                  // 立即响应一次（轻点/长按都会触发）
+      clearInterval(holdTimer);
+      holdTimer = setInterval(() => step(dir), 120); // 长按持续连续增减
+      const stop = () => {
+        clearInterval(holdTimer); holdTimer = null;
+        el.removeEventListener('pointerup', stop);
+        el.removeEventListener('pointerleave', stop);
+        el.removeEventListener('pointercancel', stop);
+      };
+      el.addEventListener('pointerup', stop);
+      el.addEventListener('pointerleave', stop);
+      el.addEventListener('pointercancel', stop);
+    };
+    up.addEventListener('pointerdown', e => { e.preventDefault(); startHold(up, 1); });
+    down.addEventListener('pointerdown', e => { e.preventDefault(); startHold(down, -1); });
+    // 键盘回退：Enter / 空格触发单次增减（pointerdown 不响应键盘）
+    up.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(1); } });
+    down.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(-1); } });
+  });
+}
+// 初始页面中的数字输入框统一升级
+enhanceNumberInputs(document);
+
 // 文本属性：字体 / 字号 / 粗细 / 排列方向
 document.getElementById('t-font').addEventListener('change', (e) => {
   const p = getPrimary(); if (!p || p.data.kind !== 'text') return;
+  if (isTextLocked(p)) return;
   state.selectedList.forEach(o => { if (o.data.kind === 'text') { o.data.font = e.target.value; rebuildText(o); } });
   pushHistory();
 });
@@ -6209,6 +6375,7 @@ document.getElementById('t-size').addEventListener('change', () => { if (state.s
 document.querySelectorAll('#sec-text .toggle-btn[data-bold]').forEach(b => {
   b.addEventListener('click', () => {
     const p = getPrimary(); if (!p || p.data.kind !== 'text') return;
+    if (isTextLocked(p)) return;
     const bold = b.dataset.bold === 'true';
     state.selectedList.forEach(o => { if (o.data.kind === 'text') { o.data.bold = bold; rebuildText(o); } });
     document.querySelectorAll('#sec-text .toggle-btn[data-bold]').forEach(x => x.classList.toggle('active', x.dataset.bold === b.dataset.bold));
@@ -6218,7 +6385,9 @@ document.querySelectorAll('#sec-text .toggle-btn[data-bold]').forEach(b => {
 document.querySelectorAll('#sec-text .toggle-btn[data-dir]').forEach(b => {
   b.addEventListener('click', () => {
     const p = getPrimary(); if (!p || p.data.kind !== 'text') return;
+    if (isTextLocked(p)) return;
     const dir = b.dataset.dir;
+    if (currentLang === 'ar' && dir === 'v') return; // 阿拉伯语仅支持横排
     state.selectedList.forEach(o => { if (o.data.kind === 'text') { o.data.direction = dir; rebuildText(o); } });
     document.querySelectorAll('#sec-text .toggle-btn[data-dir]').forEach(x => x.classList.toggle('active', x.dataset.dir === dir));
     updateSelBoxes(); pushHistory();
@@ -6288,6 +6457,7 @@ document.getElementById('clear-tex').addEventListener('click', () => {
 // 编辑文本（仅主选中文本）
 document.getElementById('edit-text').addEventListener('click', async () => {
   const p = getPrimary(); if (!p || p.data.kind !== 'text') return;
+  if (isTextLocked(p)) return;
   const pos = { x: p.mesh.position.x, y: p.mesh.position.y, z: p.mesh.position.z };
   const t = await showInlineTextInput(pos, p.data.text);
   if (t === null) return;
@@ -6453,11 +6623,98 @@ if (window.desktop && window.desktop.isDesktop) {
 
 /* ===== 多语言 / 主题 / 设置页 ===== */
 
+// 各语言专属内置字体（每个语言 5 个），label 为字体名称（专有名词，跨语言通用）
+const FONT_LISTS = {
+  'zh-CN': [
+    { value: '"Microsoft YaHei","PingFang SC",sans-serif', label: '微软雅黑' },
+    { value: 'SimSun,serif', label: '宋体' },
+    { value: 'KaiTi,serif', label: '楷体' },
+    { value: 'SimHei,sans-serif', label: '黑体' },
+    { value: 'FangSong,serif', label: '仿宋' },
+  ],
+  'zh-TW': [
+    { value: '"Microsoft JhengHei","PingFang TC",sans-serif', label: '微軟正黑體' },
+    { value: 'MingLiU,serif', label: '細明體' },
+    { value: 'KaiTi,serif', label: '標楷體' },
+    { value: 'SimHei,sans-serif', label: '黑體' },
+    { value: 'PMingLiU,serif', label: '新細明體' },
+  ],
+  'ja': [
+    { value: '"Yu Gothic",sans-serif', label: 'Yu Gothic' },
+    { value: 'Meiryo,sans-serif', label: 'Meiryo' },
+    { value: '"Hiragino Sans",sans-serif', label: 'Hiragino Sans' },
+    { value: '"MS Gothic",sans-serif', label: 'MS Gothic' },
+    { value: '"Noto Sans JP",sans-serif', label: 'Noto Sans JP' },
+  ],
+  'ko': [
+    { value: '"Malgun Gothic",sans-serif', label: 'Malgun Gothic' },
+    { value: '"Nanum Gothic",sans-serif', label: 'Nanum Gothic' },
+    { value: '"Apple SD Gothic Neo",sans-serif', label: 'Apple SD Gothic Neo' },
+    { value: 'Batang,serif', label: 'Batang' },
+    { value: '"Noto Sans KR",sans-serif', label: 'Noto Sans KR' },
+  ],
+  'ru': [
+    { value: 'Arial,sans-serif', label: 'Arial' },
+    { value: 'Georgia,serif', label: 'Georgia' },
+    { value: '"Times New Roman",serif', label: 'Times New Roman' },
+    { value: 'Verdana,sans-serif', label: 'Verdana' },
+    { value: '"Courier New",monospace', label: 'Courier New' },
+  ],
+  'ar': [
+    { value: '"Segoe UI",sans-serif', label: 'Segoe UI' },
+    { value: 'Tahoma,sans-serif', label: 'Tahoma' },
+    { value: '"Traditional Arabic",serif', label: 'Traditional Arabic' },
+    { value: 'Arial,sans-serif', label: 'Arial' },
+    { value: '"Noto Sans Arabic",sans-serif', label: 'Noto Sans Arabic' },
+  ],
+  'en': [
+    { value: 'Arial,sans-serif', label: 'Arial' },
+    { value: 'Georgia,serif', label: 'Georgia' },
+    { value: '"Times New Roman",serif', label: 'Times New Roman' },
+    { value: '"Courier New",monospace', label: 'Courier New' },
+    { value: 'Verdana,sans-serif', label: 'Verdana' },
+  ],
+  'es': [
+    { value: 'Arial,sans-serif', label: 'Arial' },
+    { value: '"Trebuchet MS",sans-serif', label: 'Trebuchet MS' },
+    { value: 'Georgia,serif', label: 'Georgia' },
+    { value: 'Verdana,sans-serif', label: 'Verdana' },
+    { value: '"Comic Sans MS",cursive', label: 'Comic Sans MS' },
+  ],
+  'fr': [
+    { value: 'Arial,sans-serif', label: 'Arial' },
+    { value: 'Georgia,serif', label: 'Georgia' },
+    { value: '"Times New Roman",serif', label: 'Times New Roman' },
+    { value: 'Verdana,sans-serif', label: 'Verdana' },
+    { value: '"Garamond",serif', label: 'Garamond' },
+  ],
+};
+function populateFontSelect() {
+  const sel = document.getElementById('t-font');
+  if (!sel) return;
+  const prev = sel.value;
+  const list = FONT_LISTS[currentLang] || FONT_LISTS['zh-CN'];
+  sel.innerHTML = '';
+  list.forEach(f => {
+    const o = document.createElement('option');
+    o.value = f.value;
+    o.textContent = f.label;
+    sel.appendChild(o);
+  });
+  const keep = list.find(f => f.value === prev);
+  sel.value = (keep ? keep.value : list[0].value);
+}
 function applyLang() {
   const dict = I18N[currentLang] || I18N['zh-CN'];
   const fallback = I18N['zh-CN'];
   // 阿拉伯语为从右到左（RTL）语言：设置文档方向，界面布局自动翻转
   document.documentElement.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+  // 阿拉伯语仅支持横排：禁用竖排按钮（灰度不可点击），并强制选中横排
+  const isArabic = currentLang === 'ar';
+  document.querySelectorAll('#sec-text .toggle-btn[data-dir]').forEach(b => {
+    if (b.dataset.dir === 'v') { b.disabled = isArabic; }
+    else if (b.dataset.dir === 'h') { b.classList.toggle('active', isArabic || b.classList.contains('active')); }
+  });
   // 页面标题
   document.title = dict.appTitle || fallback.appTitle || document.title;
   // 文本内容替换
@@ -6491,6 +6748,10 @@ function applyLang() {
     if (fsTxt !== undefined) fsBtn.querySelector('.lbl').textContent = fsTxt;
   }
   document.documentElement.lang = currentLang;
+  populateFontSelect();
+  // 语言切换瞬间立即刷新选中文本的跨语言锁定状态与字体下拉
+  const _p = getPrimary();
+  if (_p && _p.data.kind === 'text') syncTextProps(_p);
 }
 function applyThemeObj(obj) {
   const root = document.documentElement;
@@ -6536,15 +6797,7 @@ const termsMap = {
   privacy:    { title: 'privacyLink',    body: 'privacyBody' },
 };
 document.querySelectorAll('.about-card').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const m = termsMap[btn.dataset.term];
-    if (!m) return;
-    termsModalTitle.textContent = _t(m.title);
-    termsModalBody.innerHTML = _t(m.body);
-    termsModalBody.scrollTop = 0;
-    var _tb = termsModal.querySelector('.modal-box'); if (_tb) _tb.scrollTop = 0;
-    termsModal.classList.add('show');
-  });
+  btn.addEventListener('click', () => { if (typeof window.openTermPlain === 'function') window.openTermPlain(btn.dataset.term); });
 });
 document.getElementById('terms-modal-close').addEventListener('click', () => termsModal.classList.remove('show'));
 termsModal.addEventListener('click', e => { if (e.target === termsModal) termsModal.classList.remove('show'); });
@@ -6585,6 +6838,9 @@ applyLang(); updateLangActive();
 function defaultJsonName(prefix){ const d=new Date(), p=x=>String(x).padStart(2,'0'); return prefix+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'; }
 // 软件版本号（可由构建脚本注入 window.__CUB3D_VERSION__ 覆盖）
 const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.0.0';
+// 说明书语言名（用于导入提示中填充 {0}/{1}）
+const MANUAL_LANG_NAME = { 'zh-CN':'简体中文', 'zh-TW':'繁體中文', 'en':'English', 'ja':'日本語', 'ko':'한국어', 'ar':'العربية', 'ru':'Русский', 'es':'Español', 'fr':'Français' };
+function manualLangName(code){ return MANUAL_LANG_NAME[code] || code || ''; }
 // 统计对象类型分布
 function countObjects(objects) {
   const counts = { total: objects.length, byKind: {}, byType: {} };
@@ -6668,9 +6924,17 @@ function exportScene() {
     },
     checksum: computeChecksum(objects)
   }, null, 2);
+  const name = defaultJsonName('scene');
+  const fd = window.desktop && window.desktop.file;
+  if (fd && fd.saveJson) {
+    fd.saveJson({ data: data, suggestName: name, title: _t('titleExport') }).then(function (res) {
+      if (res && res.ok) toast(_t('toastSceneExported'));
+    }).catch(function () {});
+    return;
+  }
   const blob = new Blob([data], { type:'application/json' });
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = defaultJsonName('scene'); a.click();
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
   toast(_t('toastSceneExported'));
 }
 document.getElementById('btn-export').addEventListener('click', exportScene);
@@ -6688,7 +6952,7 @@ document.getElementById('file-import').addEventListener('change', (e) => {
       state.objects.forEach(disposeObject);
       state.objects = [];
       select(null);
-      restore(json.objects);
+      restore(json.objects, json.meta && json.meta.locale);
       // 恢复颜色记忆数据（如果导出文件中包含）
       if (json.colorMemory && typeof json.colorMemory === 'object') {
         try {
@@ -8573,6 +8837,9 @@ function showShapeParams(obj) {
     });
   });
 
+  // 动态参数里的数字输入框同样升级为自定义微调按钮
+  enhanceNumberInputs(container);
+
   // 初次渲染：把动态上下限套用到控件上
   syncLimits();
   refreshRows(null);
@@ -9637,6 +9904,7 @@ canvas.addEventListener('dblclick', async (e) => {
   if (state.selectedList.length === 0) return;
   const p = getPrimary();
   if (!p || p.data.kind !== 'text') return;
+  if (isTextLocked(p)) return;
   // 检测是否双击在该文本对象上
   setPointer(e);
   const hit = intersectObjects();
@@ -10694,18 +10962,43 @@ const topbarEl = document.querySelector('.topbar');
 const topActionsEl = document.querySelector('.top-actions');
 // RTL（阿拉伯语）横向滚动兼容：
 //   Blink(Chrome/Edge) 中 RTL 容器的 scrollLeft 为负值域 [-(C-W), 0]，Firefox 为正值域 [0, C-W]。
-//   这里统一换算成「逻辑滚动量 s」（0=阅读起点，maxScroll=终点），读写时做符号转换，
-//   使滚轮/拖拽在 LTR 与 RTL 下方向一致、且不会被 Math.max(0,…) 一类夹取砍掉负值域。
-function topScrollNeg() {
-  return document.documentElement.getAttribute('dir') === 'rtl' && !/Firefox\//.test(navigator.userAgent);
+//   统一换算成「逻辑滚动量 s」（0=阅读起点/右端，maxScroll=末端/左端），读写时做符号转换，
+//   使滚轮/拖拽在 LTR 与 RTL 下方向一致。所有写入前都 clamp 到 [0, maxScroll]，
+//   保证能稳定到达两端（尤其 RTL 最左端按钮不再被截断/不可达）。
+function topIsRtl() {
+  return document.documentElement.getAttribute('dir') === 'rtl';
 }
-function getTopScroll() { return topScrollNeg() ? -topActionsEl.scrollLeft : topActionsEl.scrollLeft; }
-function setTopScroll(v) { topActionsEl.scrollLeft = topScrollNeg() ? -v : v; }
+function topScrollNeg() {
+  return topIsRtl() && !/Firefox\//.test(navigator.userAgent);
+}
+function topMaxScroll() {
+  return Math.max(0, topActionsEl.scrollWidth - topActionsEl.clientWidth);
+}
+// 读取：把任意浏览器的 scrollLeft（含 RTL 负值）归一化为 [0, maxScroll] 逻辑量
+function getTopScroll() {
+  const raw = topActionsEl.scrollLeft;
+  const s = topScrollNeg() ? -raw : raw;
+  return Math.min(Math.max(s, 0), topMaxScroll());
+}
+// 写入：把逻辑量 clamp 后还原成浏览器 scrollLeft
+function setTopScroll(v) {
+  const c = Math.min(Math.max(v, 0), topMaxScroll());
+  topActionsEl.scrollLeft = topScrollNeg() ? -c : c;
+}
 // 按钮区是否溢出（需要横向滚动）。全屏 / 最大化 / 普通窗口下都允许左右拖动。
 function topActionsOverflow() {
-  return topActionsEl.scrollWidth > topActionsEl.clientWidth;
+  return topActionsEl.scrollWidth > topActionsEl.clientWidth + 1;
 }
 if (topbarEl && topActionsEl) {
+  // 内容不足时把按钮推到末端（LTR 右端 / RTL 左端），溢出时由滚动负责；
+  // 此 justify 不参与 scrollWidth 计算之外的内容，仅在未溢出时视觉对齐。
+  function alignTopActions() {
+    if (topActionsOverflow()) topActionsEl.style.justifyContent = 'flex-start';
+    else topActionsEl.style.justifyContent = topIsRtl() ? 'flex-end' : 'flex-end';
+  }
+  alignTopActions();
+  if (window.ResizeObserver) new ResizeObserver(alignTopActions).observe(topActionsEl);
+
   // 按钮区自身监听滚轮：溢出时横向滚动
   topActionsEl.addEventListener('wheel', (e) => {
     if (!topActionsOverflow()) return;
@@ -10715,7 +11008,7 @@ if (topbarEl && topActionsEl) {
     let d = e.deltaY !== 0 ? e.deltaY : e.deltaX;
     if (e.deltaMode === 1) d *= 16;
     else if (e.deltaMode === 2) d *= topActionsEl.clientWidth;
-    // 逻辑滚动量：LTR 下 d>0 向右看；RTL 下 d>0 向左看（RTL 的前进方向），方向由 setTopScroll 统一换算
+    // 逻辑滚动量：LTR 下 d>0 向右看；RTL 下 d>0 向左看（RTL 的末端方向）
     setTopScroll(getTopScroll() + d);
   }, { passive: false });
 
@@ -10735,7 +11028,7 @@ if (topbarEl && topActionsEl) {
     }
   }, { passive: false });
 
-  // 拖拽滑动：在按钮区按住并左右拖动 = 横向滚动（仅在可调整大小且溢出时）
+  // 拖拽滑动：在按钮区按住并左右拖动 = 横向滚动（内容跟随手指）
   let dragScrolling = false, dragStartX = 0, dragStartScroll = 0, dragMoved = false;
   function updateGrab() {
     topActionsEl.style.cursor = topActionsOverflow() ? 'grab' : '';
@@ -10756,8 +11049,8 @@ if (topbarEl && topActionsEl) {
     if (!dragScrolling) return;
     var dx = e.clientX - dragStartX;
     if (Math.abs(dx) > 3) dragMoved = true;
-    // RTL 下滚动方向镜像：内容向右拖 → 显示更左的逻辑增量；LTR 反之
-    setTopScroll(dragStartScroll + (document.documentElement.getAttribute('dir') === 'rtl' ? dx : -dx));
+    // 内容跟随手指：向右拖(dx>0) → 显示更右（逻辑量减小）；LTR/RTL 一致（scrollLeft 符号已由 setTopScroll 处理）
+    setTopScroll(dragStartScroll - dx);
   });
   window.addEventListener('mouseup', function () {
     if (!dragScrolling) return;
@@ -10933,9 +11226,9 @@ function renderBlock(b){
   return '';
 }
 function unwrapHighlights(root){ root.querySelectorAll('mark.md-hl').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
-function joinMarks(cls){
+function joinMarks(root, cls){
   const groups={};
-  docEl.querySelectorAll('mark.'+cls).forEach(m=>{ const k=m.dataset.hlId||'_all'; (groups[k]=groups[k]||[]).push(m); });
+  root.querySelectorAll('mark.'+cls).forEach(m=>{ const k=m.dataset.hlId||'_all'; (groups[k]=groups[k]||[]).push(m); });
   Object.keys(groups).forEach(k=>{
     const list=groups[k];
     list.sort((a,b)=>{ const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect(); return ra.top-rb.top || ra.left-rb.left; });
@@ -10975,7 +11268,7 @@ function wrapTempMark(root, start, end, cls){
       const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); last=mark;
     }catch(err){ return null; }
   }
-  if(last) joinMarks(cls);
+  if(last) joinMarks(root, cls);
   return last;
 }
 function unwrapMarks(root, cls){ root.querySelectorAll('mark.'+cls).forEach(m=>{ const p=m.parentNode; if(!p) return; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); root.normalize(); }
@@ -11191,7 +11484,7 @@ function openManual(){
         }catch(err){}
       }
     });
-    joinMarks('search-hit');
+    joinMarks(docEl,'search-hit');
     return Array.from(docEl.querySelectorAll('mark.search-hit'));
   }
   function setSearchCount(idx, total){ const c=document.getElementById('manual-search-count'); if(c) c.textContent = T('manCount').replace('{0}', idx+1).replace('{1}', total); }
@@ -11245,7 +11538,7 @@ function openManual(){
     if(!arr.length){ noteListEl.innerHTML='<div class="manual-note-empty">'+T('manNoNote')+'</div>'; updateNoteCount(); return; }
     noteListEl.innerHTML=arr.map(n=>'<div class="manual-note-item" data-id="'+n.id+'" data-color="'+(n.color||'yellow')+'">'
       +'<input type="checkbox" class="note-check" data-id="'+n.id+'">'
-      +'<div class="note-line" data-jump="'+n.id+'">'+T('manNoteAt').replace('{0}', n.line)+'</div>'
+      +'<div class="note-line" data-jump="'+n.id+'">'+T('manNoteAt').replace('{0}', n.line)+(n.appVersion && n.appVersion!==__APP_VERSION__ ? ' <span class="note-ver" title="'+T('manImportOldVer').replace('{0}','').replace('{1}', n.appVersion)+'">⚠ v'+n.appVersion+'</span>' : '')+'</div>'
       +'<div class="note-quote">'+mdEscape(n.quote||'')+'</div>'
       +'<div class="note-text" data-open="'+n.id+'">'+mdEscape(notePreview(n.note))+'</div>'
       +'<div class="note-actions">'
@@ -11319,8 +11612,32 @@ function openManual(){
   function flushSticky(el){ if(!el || !el.classList.contains('sticky-dirty')) return; const area=el.querySelector('.sticky-area'); updateNote(el.dataset.id, {note: area.value}); el.classList.remove('sticky-dirty'); renderNotes(); }
   function syncStickyVisibility(){ const open=modal.classList.contains('show'); stickyLayer().querySelectorAll('.sticky-note').forEach(el=>{ el.style.display=(open||el.classList.contains('pinned'))?'flex':'none'; }); }
   function applyStickyMode(el){ const area=el.querySelector('.sticky-area'); const ro=el.dataset.mode!=='edit'; area.readOnly=ro; el.classList.toggle('sticky-readonly', ro); const saveBtn=el.querySelector('[data-act="save"]'); const editBtn=el.querySelector('[data-act="edit"]'); if(saveBtn) saveBtn.style.display=ro?'none':''; if(editBtn) editBtn.style.display=ro?'':'none'; }
-  function exportNotes(){ const arr=notes(); const data=JSON.stringify(arr, null, 2); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); const name=defaultJsonName('notes'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')); }
-  function importNotes(file){ const reader=new FileReader(); reader.onload=()=>{ try{ const data=JSON.parse(reader.result); if(!Array.isArray(data)) throw new Error('not array'); const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0; data.forEach(n=>{ if(!n||typeof n!=='object') return; const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now()}, n); item.id=String(item.id||newNoteId()); if(ids.has(item.id)) item.id=newNoteId(); ids.add(String(item.id)); cur.push(item); added++; }); saveStore('notes', cur); renderNotes(); toast(T('manImported').replace('{0}', added)); }catch(e){ toast(T('manImportFail')); } }; reader.readAsText(file); }
+  function exportNotes(){ console.log('[exportNotes] called'); const arr=notes(); console.log('[exportNotes] notes() returned:', arr.length, 'items'); if(!arr.length){ console.log('[exportNotes] BLOCKED: empty notes array'); toast(T('manNoNote')); return; } const payload={ type:'cub3d-notes', lang: currentLang, version: 1, appVersion: __APP_VERSION__, notes: arr }; const data=JSON.stringify(payload, null, 2); const name=defaultJsonName('notes'); const fd=window.desktop&&window.desktop.file; console.log('[exportNotes] window.desktop:', !!window.desktop, '| file:', !!fd, '| saveJson:', !!(fd&&fd.saveJson)); if(fd&&fd.saveJson){ console.log('[exportNotes] calling fd.saveJson with suggestName:', name); fd.saveJson({ data:data, suggestName:name, title:T('manExport') }).then(function(res){ console.log('[exportNotes] saveJson resolved:', res); if(res&&res.ok) toast(T('manExported')+' · '+(res.path||name)); else if(res&&res.canceled){} else toast(T('manExportFail')); }).catch(function(e){ console.error('[exportNotes] saveJson rejected:', e); toast(T('manExportFail')); }); return; } console.log('[exportNotes] FALLBACK to <a> download (no native save API)'); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')+' · '+name); }
+  function importNotes(file){ const reader=new FileReader(); reader.onload=()=>{ try{
+    const raw=JSON.parse(reader.result);
+    let payloadLang, noteArr;
+    if(Array.isArray(raw)){ payloadLang=null; noteArr=raw; }
+    else if(raw && raw.type==='cub3d-notes' && Array.isArray(raw.notes)){ payloadLang=raw.lang||null; noteArr=raw.notes; }
+    else { throw new Error('bad format'); }
+    if(payloadLang && payloadLang!==currentLang){
+      toast(T('manImportLangMismatch').replace('{0}', manualLangName(payloadLang)).replace('{1}', manualLangName(currentLang)));
+      return;
+    }
+    if(!payloadLang){
+      toast(T('manImportLangUnknown').replace('{0}', manualLangName(currentLang)));
+    }
+    const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0, oldVer=0;
+    noteArr.forEach(n=>{ if(!n||typeof n!=='object') return;
+      const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now(), appVersion: __APP_VERSION__}, n);
+      item.id=String(item.id||newNoteId()); if(ids.has(item.id)) item.id=newNoteId(); ids.add(String(item.id));
+      if(item.appVersion && item.appVersion!==__APP_VERSION__){ oldVer++; }
+      cur.push(item); added++;
+    });
+    saveStore('notes', cur); renderNotes();
+    if(oldVer>0) toast(T('manImportOldVer').replace('{0}', added).replace('{1}', cur.find(n=>n.appVersion&&n.appVersion!==__APP_VERSION__).appVersion));
+    else if(!payloadLang) toast(T('manImportNoVer').replace('{0}', __APP_VERSION__));
+    else toast(T('manImported').replace('{0}', added));
+  }catch(e){ toast(T('manImportFail')); } }; reader.readAsText(file); }
   async function batchDeleteNotes(){ const ids=Array.from(noteListEl.querySelectorAll('.note-check:checked')).map(c=>String(c.dataset.id)); if(!ids.length){ toast(T('manNoSel')); return; } if(!await showConfirm(T('manBatchDelConfirm').replace('{0}', ids.length))) return; ids.forEach(id=>{ const st=stickyEl(id); if(st) st.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(id); }); renderNotes(); toast(T('manBatchDeleted').replace('{0}', ids.length)); }
   function openSticky(id, forceEdit){
     const n=noteById(id); if(!n) return;
@@ -11413,12 +11730,12 @@ function openManual(){
       }
     }));
   }
-  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now()}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
+  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now(), appVersion: __APP_VERSION__}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
   function hilites(){ return loadStore('hilites', []); }
   function applyHighlights(){ unwrapHighlights(docEl); let arr=hilites(); let maxId=0; arr.forEach(h=>{ const n=parseInt(h.id,10); if(!isNaN(n)&&n>maxId) maxId=n; }); openManual._hlSeq=maxId; let changed=false; arr=arr.filter(h=>{ if(h.start==null){ const off=findTextOffsets(docEl, h.text); if(off){ h.start=off[0]; h.end=off[1]; changed=true; return true; } changed=true; return false; } return true; });
     // 合并互相重叠/相邻的高亮区间，避免同一文本被多次高亮导致颜色嵌套叠加
     const merged=[]; arr.forEach(h=>{ if(h.start==null) { merged.push(h); return; } const last=merged[merged.length-1]; if(last && last.start!=null && h.start<=last.end){ last.end=Math.max(last.end, h.end); changed=true; } else { merged.push({id:(h.id!=null?h.id:++maxId), start:h.start, end:h.end}); } }); arr=merged; if(changed){ openManual._hlSeq=maxId; saveStore('hilites', arr); }
-    arr.forEach(h=>wrapText(docEl, h.start, h.end, h.id)); joinMarks('md-hl'); }
+    arr.forEach(h=>wrapText(docEl, h.start, h.end, h.id)); joinMarks(docEl,'md-hl'); }
   function addHlFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; let arr=hilites(); let seq=openManual._hlSeq||0; const ns=s.start, ne=s.end; const overlaps=arr.filter(h=>h.start!=null && h.start<ne && h.end>ns); if(overlaps.length){ const ms=Math.min(ns, ...overlaps.map(h=>h.start)); const me=Math.max(ne, ...overlaps.map(h=>h.end)); const keepId=overlaps.reduce((a,b)=>(a.id<b.id?a:b)).id; arr=arr.map(h=> h.id===keepId ? {id:h.id, start:ms, end:me} : h); } else { arr.push({id:(seq=(seq||0)+1), start:ns, end:ne}); } openManual._hlSeq=seq; saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHi')); }
 function cancelHlInSelection(){ const s=openManual._sel; if(!s) return; const arr=hilites(); let seq=openManual._hlSeq||0; const next=[]; let removed=false; arr.forEach(h=>{ if(h.start!=null && h.start<s.end && h.end>s.start){ removed=true; const before={id:(++seq), start:h.start, end:s.start}; const after={id:(++seq), start:s.end, end:h.end}; if(before.end>before.start) next.push(before); if(after.end>after.start) next.push(after); } else { next.push(h); } }); if(removed){ openManual._hlSeq=seq; saveStore('hilites', next); applyHighlights(); toast(T('manUnHl')); } floatEl.style.display='none'; }
 function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); const overlaps=arr.filter(h=>h.start!=null && h.start<s.end && h.end>s.start); if(!overlaps.length){ floatEl.style.display='none'; return; } const ns=Math.min(s.start, ...overlaps.map(h=>h.start)); const ne=Math.max(s.end, ...overlaps.map(h=>h.end)); const keepId=overlaps.reduce((a,b)=>(a.id<b.id?a:b)).id; arr=arr.map(h=> h.id===keepId ? {id:h.id, start:ns, end:ne} : h); saveStore('hilites', arr); applyHighlights(); try{ const ss=window.getSelection(); if(ss) ss.removeAllRanges(); }catch(e){} floatEl.style.display='none'; toast(T('manHiExpanded')); }
@@ -11427,7 +11744,15 @@ function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); 
   function openNote(open){ notePanel.classList.toggle('open', open); maskEl.classList.toggle('open', open); if(bottombarEl) bottombarEl.querySelector('[data-act="note"]').classList.toggle('on', !!open); }
   function closeDrawers(){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); if(bottombarEl){ bottombarEl.querySelector('[data-act="toc"]').classList.remove('on'); bottombarEl.querySelector('[data-act="note"]').classList.remove('on'); } }
   function updateProgress(){ const max=docEl.scrollHeight-docEl.clientHeight; const p=max>0? docEl.scrollTop/max : 0; if(progressEl) progressEl.style.width=(p*100)+'%'; }
-  function chapterHeads(){ const all=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]')); const fi=all.findIndex(h=>/^第\d+章/.test((h.textContent||'').trim())); return fi<0?all:all.filter((h,i)=>i<fi||/^第.+篇/.test((h.textContent||'').trim())||/^第\d+章/.test((h.textContent||'').trim())); }
+  function chapterHeads(){
+    const all=Array.from(docEl.querySelectorAll('.md-block[data-type="heading"]'));
+    if(!all.length) return all;
+    const levels=all.map(h=>parseInt(h.getAttribute('data-level')||'1',10));
+    const minLevel=Math.min.apply(null, levels);
+    let start=all.findIndex(h=>parseInt(h.getAttribute('data-level')||'1',10)===minLevel);
+    if(start<0) start=0;
+    return all.filter((h,i)=>i>=start);
+  }
   function updateTocActive(){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=null; heads.forEach(h=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=parseInt(h.dataset.line,10); }); tocEl.querySelectorAll('a').forEach(a=>a.classList.toggle('active', parseInt(a.dataset.line,10)===cur)); }
   function goChapter(dir){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=-1; heads.forEach((h,i)=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=i; }); let idx = dir>0 ? Math.min(heads.length-1, cur+1) : Math.max(0, cur-1); if(cur<0) idx = 0; const target=heads[idx]; const top=target.getBoundingClientRect().top-base+docEl.scrollTop; docEl.scrollTo({top:Math.max(0, top-8), behavior:'smooth'}); flash(target); closeDrawers(); }
   async function loadManual(lang){
@@ -11657,6 +11982,21 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
 /* blocked 态：隐藏正常内容，显示退出失败面板（与 tosgatesim 一致） */
 .tos-gate.blocked .tos-gate-head, .tos-gate.blocked .tos-gate-links, .tos-gate.blocked .tos-gate-actions { display:none; }
 .tos-gate.blocked .tos-gate-blocked { display:flex; }
+/* 阅读进度（对齐工程：accent→accent-2 渐变细条） */
+.tos-gate-progress { padding:14px 20px 0; }
+.progress-track { height:5px; border-radius:3px; background:var(--control-bg); overflow:hidden; border:1px solid var(--border); }
+.progress-fill { height:100%; width:0%; background:linear-gradient(135deg, var(--accent), var(--accent-2)); transition:width .3s ease; }
+.progress-text { margin-top:7px; font-size:12px; color:var(--text-dim); }
+.progress-text b { color:var(--accent); font-weight:600; }
+/* 同意按钮：未读完时灰度禁用（工程 disabled 语言） */
+.tos-gate-btn.primary.disabled { background:var(--control-bg); border-color:var(--border); color:var(--text-dim); cursor:not-allowed; }
+/* 条款弹窗底部：已读徽章 + 我已读至文末按钮 */
+.terms-foot { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 18px; background:var(--bg-panel-solid); }
+.read-badge { font-size:12.5px; color:var(--text-dim); }
+.read-badge.done { color:var(--accent); }
+.terms-read-done { padding:9px 22px; border-radius:10px; font-size:13.5px; cursor:pointer; background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; border:1px solid transparent; font-weight:600; }
+.terms-read-done:hover { filter:brightness(1.08); }
+.terms-read-done.disabled { background:var(--control-bg); border-color:var(--border); color:var(--text-dim); font-weight:400; cursor:not-allowed; filter:none; }
 </style>
 <div id="tos-gate" class="tos-gate">
   <div class="tos-gate-inner">
@@ -11681,8 +12021,12 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
         <span class="tos-gate-link-arrow">›</span>
       </button>
     </div>
+    <div class="tos-gate-progress">
+      <div class="progress-track"><div class="progress-fill" id="tos-progress-fill"></div></div>
+      <div class="progress-text" id="tos-progress-text">已阅读 <b id="tos-progress-num">0</b> / 3 份文件</div>
+    </div>
     <div class="tos-gate-actions">
-      <button class="tos-gate-btn primary" id="tos-gate-accept" data-i18n="tosGateAccept">同意并继续</button>
+      <button class="tos-gate-btn primary disabled" id="tos-gate-accept" disabled data-i18n="tosGateAccept">同意并继续</button>
       <button class="tos-gate-btn exit" id="tos-gate-exit" data-i18n="tosGateExit">不同意并退出</button>
     </div>
     <div class="tos-gate-blocked">
@@ -11706,7 +12050,7 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
       (function(){
       // 主脚本为 type="module"，会在 HTML 解析完成后才执行，故 window._t 在此 IIFE 运行时可能尚未定义。
       // 改为每次调用时再取值，确保用户点击时（模块已加载）能拿到真正的翻译函数。
-      function T(k){ return (typeof window._t === 'function') ? window._t(k) : k; }
+      function T(k, ...a){ return (typeof window._t === 'function') ? window._t(k, ...a) : k; }
       var termsModal = document.getElementById('terms-modal');
       var termsModalTitle = document.getElementById('terms-modal-title');
       var termsModalBody = document.getElementById('terms-modal-body');
@@ -11715,15 +12059,78 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
       disclaimer: { title: 'disclaimerLink', body: 'disclaimerBody' },
       privacy:    { title: 'privacyLink',    body: 'privacyBody' }
       };
-      function tosOpenTerm(key){
-      if(!termsModal || !termsMap) return;
-      var m = termsMap[key]; if(!m) return;
-      termsModalTitle.textContent = T(m.title);
-      termsModalBody.innerHTML = T(m.body);
-      termsModalBody.scrollTop = 0;
-      var _tb = termsModal.querySelector('.modal-box'); if (_tb) _tb.scrollTop = 0;
-      termsModal.classList.add('show');
+      // 已读状态（与 tos-gate 同意按钮联动）；多入口共用
+      var tosRead = { tos:false, disclaimer:false, privacy:false };
+      var currentTerm = null;
+      var raf = window.requestAnimationFrame || function(cb){ return setTimeout(cb,16); };
+
+      function tosRefreshDone(){
+        if(!currentTerm || !termsModalBody) return;
+        var reached = termsModalBody.scrollTop + termsModalBody.clientHeight >= termsModalBody.scrollHeight - 4;
+        var btn = document.getElementById('terms-read-done'); if(!btn) return;
+        if(reached){ btn.disabled = false; btn.className = 'terms-read-done'; }
+        else { btn.disabled = true; btn.className = 'terms-read-done disabled'; }
       }
+      function tosMarkRead(){
+        if(!currentTerm || tosRead[currentTerm]) return;
+        tosRead[currentTerm] = true;
+        var badge = document.getElementById('terms-read-badge');
+        if(badge){ badge.textContent = T('tosReadDoneHint'); badge.className = 'read-badge done'; }
+        renderTosGate();
+      }
+      function tosOpenTerm(key){
+        if(!termsModal || !termsMap) return;
+        var m = termsMap[key]; if(!m) return;
+        currentTerm = key;
+        termsModalTitle.textContent = T(m.title);
+        termsModalBody.innerHTML = T(m.body);
+        termsModalBody.setAttribute('data-term', key);
+        termsModal.classList.add('show');
+        var foot = document.getElementById('terms-foot'); if(foot) foot.style.display = '';
+        // 重置已读确认状态（每次打开都视为未读到文末）
+        var badge = document.getElementById('terms-read-badge');
+        if(badge){ badge.textContent = T('tosReadHint'); badge.className = 'read-badge'; }
+        var doneBtn = document.getElementById('terms-read-done');
+        if(doneBtn){ doneBtn.disabled = true; doneBtn.className = 'terms-read-done disabled'; }
+        // 每次打开都必须从头阅读：元素由 display:none 恢复显示时，部分浏览器会恢复上次滚动位置，
+        // 故须在显示后再次回顶（双帧确保在浏览器完成滚动恢复后强制回顶）。
+        raf(function(){ raf(function(){
+          termsModalBody.scrollTop = 0;
+          var _tb = termsModal.querySelector('.modal-box'); if (_tb) _tb.scrollTop = 0;
+          tosRefreshDone();
+        }); });
+      }
+      function tosCloseTerm(){ if(termsModal) termsModal.classList.remove('show'); currentTerm = null; }
+      function tosAllRead(){ return tosRead.tos && tosRead.disclaimer && tosRead.privacy; }
+      function renderTosGate(){
+        var g = document.getElementById('tos-gate'); if(!g) return;
+        var done = (tosRead.tos?1:0) + (tosRead.disclaimer?1:0) + (tosRead.privacy?1:0);
+        var progText = document.getElementById('tos-progress-text'); if(progText) progText.innerHTML = T('tosReadProgress', done);
+        var fill = document.getElementById('tos-progress-fill'); if(fill) fill.style.width = Math.round(done/3*100) + '%';
+        var btn = document.getElementById('tos-gate-accept');
+        if(btn){
+          if(tosAllRead()){ btn.disabled = false; btn.classList.remove('disabled'); }
+          else { btn.disabled = true; btn.classList.add('disabled'); }
+        }
+      }
+      // 条款弹窗：滚动到底自动标记已读，并实时刷新“我已读至文末”按钮态
+      if(termsModalBody) termsModalBody.addEventListener('scroll', function(){
+        if(!currentTerm) return;
+        tosRefreshDone();
+        if(termsModalBody.scrollTop + termsModalBody.clientHeight >= termsModalBody.scrollHeight - 4) tosMarkRead();
+      });
+      // 我已读至文末：滚到底后点击标记已读并关闭；未到底为禁用态不触发
+      var doneBtn = document.getElementById('terms-read-done');
+      if(doneBtn) doneBtn.addEventListener('click', function(){
+        if(this.disabled || !currentTerm) return;
+        tosMarkRead(); tosCloseTerm();
+      });
+      // 关闭按钮与遮罩（与“关于”页既有绑定并存，幂等）
+      var closeBtn = document.getElementById('terms-modal-close');
+      if(closeBtn) closeBtn.addEventListener('click', tosCloseTerm);
+      if(termsModal) termsModal.addEventListener('click', function(e){ if(e.target === termsModal) tosCloseTerm(); });
+
+      // ===== tos-gate 浮窗 =====
       function tosGateOpen(){ var g=document.getElementById('tos-gate'); return g && g.classList.contains('show'); }
       function showTosGate(){ var g=document.getElementById('tos-gate'); if(g) g.classList.add('show'); document.body.style.overflow='hidden'; }
       function hideTosGate(){ var g=document.getElementById('tos-gate'); if(g) g.classList.remove('show'); document.body.style.overflow=''; }
@@ -11750,15 +12157,30 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
       var accepted=false; try{ accepted=localStorage.getItem('tosAccepted')==='1'; }catch(e){}
       if(accepted) return;
       var g=document.getElementById('tos-gate'); if(!g) return;
-      var a=document.getElementById('tos-gate-accept');     if(a) a.addEventListener('click', acceptTos);
-      var e=document.getElementById('tos-gate-exit');       if(e) e.addEventListener('click', exitTos);
-      var r=document.getElementById('tos-gate-reread');     if(r) r.addEventListener('click', rereadTos);
-      g.querySelectorAll('.tos-gate-link').forEach(function(btn){
-        btn.addEventListener('click', function(){ tosOpenTerm(btn.getAttribute('data-term')); });
-      });
+      var a=document.getElementById('tos-gate-accept'); if(a) a.addEventListener('click', acceptTos);
+      var e=document.getElementById('tos-gate-exit'); if(e) e.addEventListener('click', exitTos);
+      var r=document.getElementById('tos-gate-reread'); if(r) r.addEventListener('click', rereadTos);
+      var links = g.querySelectorAll('.tos-gate-link');
+      for(var li=0; li<links.length; li++){
+        (function(btn){ btn.addEventListener('click', function(){ tosOpenTerm(btn.getAttribute('data-term')); }); })(links[li]);
+      }
+      renderTosGate();   // 初始禁用“同意并继续” + 进度 0/3
       showTosGate();
       }
       if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initTosGate); else initTosGate();
+      window.tosOpenTerm = tosOpenTerm;   // 供“关于”页复用，统一已读逻辑
+      // 关于页只读查看：不进入 tos-gate 已读/灰度流程，隐藏“我已读至文末”底栏
+      function openTermPlain(key){
+        if(!termsModal || !termsMap) return;
+        var m = termsMap[key]; if(!m) return;
+        termsModalTitle.textContent = T(m.title);
+        termsModalBody.innerHTML = T(m.body);
+        termsModalBody.setAttribute('data-term', key);
+        var foot = document.getElementById('terms-foot'); if(foot) foot.style.display = 'none';
+        termsModal.classList.add('show');
+        raf(function(){ raf(function(){ termsModalBody.scrollTop = 0; var _tb = termsModal.querySelector('.modal-box'); if(_tb) _tb.scrollTop = 0; }); });
+      }
+      window.openTermPlain = openTermPlain;
       })();
       </script>
       </body>

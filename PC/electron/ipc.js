@@ -71,6 +71,7 @@ function register() {
   ipcMain.handle('file:open-scene', async (e, presetPath) => fsSvc.openScene(winOf(e), presetPath));
   ipcMain.handle('file:save-scene', async (e, payload) => fsSvc.saveScene(winOf(e), payload));
   ipcMain.handle('file:save-image', async (e, dataURL, name) => fsSvc.saveImage(winOf(e), dataURL, name));
+  ipcMain.handle('file:save-json', async (e, opts) => fsSvc.saveJson(winOf(e), opts));
   ipcMain.handle('file:pick-image', async (e) => fsSvc.pickImage(winOf(e)));
   ipcMain.handle('file:write-image', (_e, dataURL, targetPath) => {
     try { return ok({ path: fsSvc.writeImage(dataURL, targetPath) }); }

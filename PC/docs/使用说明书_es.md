@@ -38,7 +38,7 @@ Sin importar qué extremo uses, al **iniciar por primera vez** esta herramienta 
 | Criterio del sistema de coordenadas | Este libro **siempre se basa en las etiquetas de ejes que se muestran realmente en la interfaz** (etiquetas de la página: X azul = adelante-atrás, Y rojo = izquierda-derecha, Z verde = altura, eje Z hacia arriba). La implementación interna de ejes en el código difiere de las etiquetas de la página; los lectores comunes no necesitan preocuparse |
 | Sugerencia de lectura | Lee primero [Capítulo 0 Cuatro formas y cómo leer este libro](jump:Capítulo 0: Cuatro formas y cómo leer este libro), y confirma qué extremo usas; lee las primeras cuatro partes en orden; las ocho partes siguientes se pueden consultar según necesidad. Los «Piénsalo» y «Practica» al final de cada capítulo deben hacerse sin falta |
 | Dirección en línea | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (abre la página web y podrás practicar de inmediato) |
-| Sitio web oficial | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (presentación del producto, cambio de siete idiomas, entrada de descarga) |
+| Sitio web oficial | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (presentación del producto, cambio de nueve idiomas, entrada de descarga) |
 | Repositorio del proyecto | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (código fuente, paquetes de instalación y esta documentación están aquí) |
 
 **Convención de marcas de forma**
@@ -53,6 +53,10 @@ En todo el libro, donde las operaciones de cada extremo difieran, aparecerán la
 | 🤖 **Versión Android** | Aplicación de teléfono instalada (.apk) | Teléfono y tableta Android |
 
 💡 Si algún párrafo de operación **no tiene** marca de forma, significa que **los cuatro extremos son totalmente idénticos**; simplemente síguelo.
+
+**Enlaces de salto (jump:) — cómo funcionan**
+
+Cada «Capítulo X …» del índice es un enlace de salto clicable que te lleva a ese capítulo. La coincidencia **no distingue mayúsculas/minúsculas, espacios ni puntuación** (comillas, paréntesis, dos puntos chinos/ingleses, etc.) — aunque el texto del enlace difiera del título en un par de signos de puntuación, el sistema igual encuentra el destino con una regla flexible de «quitar puntuación y espacios, conservar solo letras, dígitos y caracteres chino-japonés-coreanos»; si la coincidencia exacta falla, se aplica automáticamente la flexible, así que los enlaces prácticamente nunca «no saltan». Si no se encuentra el título destino, simplemente no hace nada — sin error.
 
 **Convención de símbolos**
 - 💡 Sugerencia: experiencias que ahorran tiempo
@@ -578,7 +582,7 @@ Cerrar la página, recargar o tocar por error el botón de retroceso hace que la
 
 - Ideal para: compartir en redes, hacer ilustraciones, entregar a otros para "ver el efecto";
 - Sugerencia: antes de capturar, pulsa en la barra superior para **ocultar ejes de coordenadas y malla**, para una imagen más limpia;
-- El tamaño de salida es el píxel actual del lienzo.
+- El tamaño de salida se **amplía automáticamente según la relación de píxeles del dispositivo** (al menos **3×**), por lo que el PNG capturado es más nítido y de mayor resolución que lo que ves en pantalla — no es simplemente igual a los píxeles de visualización del lienzo actual.
 
 **¿Dónde se guarda la imagen? Varía según plataforma:**
 
@@ -1322,9 +1326,11 @@ El texto admite todas las operaciones habituales: seleccionar, trasladar (azul a
 
 ## Capítulo 22: Fuente, tamaño, grosor y orientación horizontal/vertical
 
-Al seleccionar un texto, en el panel derecho aparecen los controles exclusivos de texto. Esta herramienta ofrece **8 fuentes** y varios interruptores de composición.
+Al seleccionar un texto, en el panel derecho aparecen los controles exclusivos de texto. Esta herramienta ofrece **varios conjuntos de fuentes integradas** (5 por idioma, que cambian con el idioma actual de la interfaz) y varios interruptores de composición.
 
-### 22.1 Cómo elegir entre las ocho fuentes
+### 22.1 Cómo elegir fuentes (cambia con el idioma)
+
+La lista de fuentes **no es fija**: cambia con el idioma actual de la interfaz — cada idioma tiene 5 fuentes integradas propias. Por ejemplo, el chino simplificado usa por defecto 雅黑 / 宋体 / 楷体 / 黑体 / 仿宋; el inglés usa Arial / Georgia / Times / Courier / Verdana, etc. La tabla siguiente es un ejemplo bajo la interfaz en chino:
 
 | Fuente | Carácter / Uso |
 | --- | --- |
@@ -1337,7 +1343,7 @@ Al seleccionar un texto, en el panel derecho aparecen los controles exclusivos d
 | Times | Occidental serif, formal |
 | Courier | Occidental monoespaciado, sensación de código/máquina de escribir |
 
-💡 El contenido en chino prioriza las cinco primeras; el texto puramente en inglés puede usar las tres últimas para expresar distintos caracteres.
+💡 El contenido en chino prioriza las cinco primeras; el texto puramente en inglés puede usar las tres últimas para expresar distintos caracteres. Tras cambiar el idioma de la interfaz, el desplegable de fuentes mostrará las fuentes propias de ese idioma.
 
 ### 22.2 Tamaño de fuente (predeterminado 80)
 
@@ -1359,6 +1365,16 @@ Un clic para poner en negrita, los títulos resaltan más. Combinado con 黑体/
 ⚠️ **Atención**: Un texto demasiado largo puede exceder el ancho de la placa delgada; dentro del cuadro de entrada pulsa **Shift + Enter** para cambiar de línea, o reduce adecuadamente el tamaño de fuente.
 
 ✏️ **Practica**: Haz un rótulo vertical "Casa de té" (楷体, vertical, gran tamaño, color madera) y Experimenta el "carácter" de la combinación de fuentes.
+
+### 22.5 Solo lectura entre idiomas: al cambiar de idioma solo se puede ver
+
+Un objeto de texto **recuerda el idioma en que se creó** (el idioma de los textos de la interfaz). Cuando cambias el idioma de la interfaz a **otro idioma**, los controles exclusivos de ese cuadro de texto **se vuelven automáticamente solo lectura / deshabilitados**: el cuadro de edición del cuerpo, la fuente, el grosor y la orientación horizontal/vertical ya no se pueden cambiar — solo ver. Esto evita que, al reescribir con una fuente de idioma no coincidente, el texto se corrompa o se rompa la composición. En ese momento el desplegable de fuentes solo conserva la fuente propia de ese cuadro de texto, y ya no lista todo el conjunto de fuentes del idioma.
+
+> 📌 ¿Quieres seguir editando? Vuelve el idioma de la interfaz al que se usó al crear el cuadro de texto para recuperar todos los controles.
+
+### 22.6 Árabe prohíbe la disposición vertical
+
+Al cambiar a la interfaz en **árabe (ar)**, el botón de disposición vertical se **deshabilita por fuerza y se fija en horizontal** (el árabe se escribe de derecha a izquierda, y la disposición vertical desordenaría el sentido de lectura). Esta es una prohibición rígida para ese idioma, independiente de la "solo lectura entre idiomas" del 22.5 — no entran en conflicto.
 
 ---
 
@@ -2957,6 +2973,11 @@ Una vez desplegada, la nota es una **tarjeta flotante fijada dentro de la págin
 - Admite **exportar / importar** notas (`manExport` / `manImport`), **seleccionar todo** y **eliminación por lotes** (`manSelectAll` / `manBatchDel`);
 - Las acciones anteriores se activan con las teclas listadas en «Ajustes → Acciones rápidas» (en la versión PC también puedes pulsar los botones de la ventana).
 
+> ⚠️ **Tres reglas de validación al importar notas** (coincidentes en las cuatro plataformas):
+> 1. **Incoherencia de idioma → se omite todo el paquete**: si el idioma etiquetado del paquete de notas importado difiere del idioma actual de la interfaz, el sistema avisa «idioma no coincide» y **rechaza la importación**, evitando mezclar notas de otros idiomas;
+> 2. **Aviso de versión antigua**: si un paquete de notas contiene un número de versión más antiguo (o distinto) que el software actual, tras importar avisa «hay notas de versión antigua», para que vigiles la compatibilidad;
+> 3. **Notas antiguas sin etiqueta de idioma**: los paquetes de notas muy antiguos no tienen etiqueta de idioma; el sistema avisa «formato antiguo, sin idioma» pero las importa bajo el idioma actual para que verifiques manualmente.
+
 > 📌 Las notas de las cuatro plataformas son capas flotantes dentro de la página; no se pueden arrastrar fuera de la ventana de la aplicación ni superponerse a otros programas.
 
 ### 50.2 Orden de cierre de notas (⚠️ atención en plataformas táctiles 📱🤖)
@@ -2972,7 +2993,7 @@ Una vez desplegada, la nota es una **tarjeta flotante fijada dentro de la págin
 
 ## Capítulo 51: Multilingüe: el manual también "habla" tu idioma
 
-Tanto la interfaz como el manual admiten siete idiomas:
+Tanto la interfaz como el manual admiten nueve idiomas:
 
 | Idioma | Interfaz | Manual |
 | --- | --- | --- |
@@ -2982,13 +3003,15 @@ Tanto la interfaz como el manual admiten siete idiomas:
 | 日本語 | ✅ | ✅ |
 | 한국어 | ✅ | ✅ |
 | Русский | ✅ | ✅ |
+| Español | ✅ | ✅ |
 | Français | ✅ | ✅ |
+| العربية (árabe) | ✅ | ✅ |
 
-Modo de cambio: en Ajustes selecciona el idioma, y los textos de la interfaz y el contenido del manual **se cambian al mismo tiempo** a la versión correspondiente. El contenido multilingüe del manual se almacena respectivamente en `docs/使用说明书.md` (simplificado), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`, `使用说明书_fr.md`.
+Modo de cambio: en Ajustes selecciona el idioma, y los textos de la interfaz y el contenido del manual **se cambian al mismo tiempo** a la versión correspondiente. El contenido multilingüe del manual se almacena respectivamente en `docs/使用说明书.md` (simplificado), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`, `使用说明书_es.md`, `使用说明书_fr.md`, `使用说明书_ar.md`.
 
-💡 **Cómo se elige el idioma**: en el primer arranque se **detecta automáticamente el idioma del sistema** —según la configuración de idioma del sistema/navegador, se empareja automáticamente con 简体中文, 繁體中文, English o 日本語; si posteriormente cambias el idioma manualmente, el software **recuerda tu elección y la respeta por completo**, sin que el idioma del sistema lo sobreescriba. Es decir: la primera vez va con el sistema, y después se usa el que tú elijas.
+💡 **Cómo se elige el idioma**: en el primer arranque se **detecta automáticamente el idioma del sistema** —según la configuración de idioma del sistema/navegador, se empareja automáticamente con idiomas comunes como 简体中文, 繁體中文, English, 日本語, Español, Français, العربية; si posteriormente cambias el idioma manualmente, el software **recuerda tu elección y la respeta por completo**, sin que el idioma del sistema lo sobreescriba. Es decir: la primera vez va con el sistema, y después se usa el que tú elijas.
 
-✅ **Siete idiomas × cuatro formas, todo conectado**: sea cual sea la plataforma o el idioma que elijas, lees el mismo manual adaptado a las tres plataformas.
+✅ **Nueve idiomas × cuatro formas, todo conectado**: sea cual sea la plataforma o el idioma que elijas, lees el mismo manual adaptado a las tres plataformas. Para idiomas de escritura de derecha a izquierda (RTL, como el árabe), las tablas y la alineación dentro del manual se reflejan automáticamente.
 
 > ⚠️ Sobre la confirmación de eliminación: todas las operaciones de eliminación (notas adhesivas, objetos de escena) usan un **cuadro de confirmación personalizado** en lugar del cuadro nativo del sistema, por lo que también se muestra de forma estable en **modo pantalla completa / inmersivo**, sin que pase lo de "pulsé y no responde".
 

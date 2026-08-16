@@ -15,23 +15,20 @@ const SRC = path.join(__dirname, 'i18n-draft', 'language', 'ar.js');
 const DEST = path.join(__dirname, 'shared', 'language', 'ar.js');
 
 // 若草稿源文件缺失，说明阿拉伯语包尚未提供完整草稿。
-// 此时不致命退出，保留已有的 shared/language/ar.js（由 sync-shared 语言包同步步骤继续分发），
-// 避免因单一语言缺失导致整个同步脚本崩溃、GitHub Pages 部署失败。
+// 此时不致命退出（绝不可调用 process.exit，否则在 sync-shared.mjs 里经 import() 调用时
+// 会终止整个同步进程、跳过后续“语言包同步”步骤，导致各端 ar.js 无法分发），
+// 而是保留已有的 shared/language/ar.js，由 sync-shared 的“语言包同步”步骤继续分发。
 if (!fs.existsSync(SRC)) {
-  console.warn('[i18n-ar] 跳过：源文件缺失：', SRC);
+  console.warn('[i18n-ar] 跳过重新生成：源文件缺失：', SRC);
   console.warn('[i18n-ar] 将保留已有的共享语言包（', path.relative(__dirname, DEST), '）。如需重新生成阿拉伯语包，请提供 i18n-draft/language/ar.js。');
-  process.exit(0);
-}
-
-// 读取草稿，移除顶部“未接入/不参与同步”说明注释，使其成为正式接入的语言包。
+} else {
+// 读取草稿，移除顶部“未接入/不参与同步”说明注释（恰好 5 行注释头，兼容 CRLF/LF），使其成为正式接入的语言包。
 let src = fs.readFileSync(SRC, 'utf8');
-src = src.replace(/^\/\/[^\n]*\n/, '');      // 第1行标题
-src = src.replace(/^\/\s*-{3,}[^\n]*\n/, ''); // 分隔线
-src = src.replace(/^\/\/[^\n]*\n/, '');      // 说明第1行
-src = src.replace(/^\/\/[^\n]*\n/, '');      // 说明第2行
-src = src.replace(/^\/\/[^\n]*\n/, '');      // 说明第3行
+src = src.replace(/^(\/\/[^\n]*\r?\n){4}/, ''); // 剥离草稿头：标题 + 分隔线 + 2 行说明（兼容 \r\n）
+src = src.replace(/^\r?\n/, '');                // 可选地剥离草稿头后紧跟的空行
 
 fs.mkdirSync(path.dirname(DEST), { recursive: true });
 fs.writeFileSync(DEST, src, 'utf8');
 console.log('[i18n-ar] 已写入共享语言包：', path.relative(__dirname, DEST));
 console.log('[i18n-ar] 完成。下一步运行 `node sync-shared.mjs` 把 ar.js 分发到各端。');
+}

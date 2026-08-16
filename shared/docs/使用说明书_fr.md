@@ -36,9 +36,9 @@ Quelle que soit la plateforme utilisée, le **premier lancement** de cet outil a
 | Périmètre du contenu | Couvre toutes les fonctionnalités de l'éditeur (interface, graphiques, couleurs, transformations, texte, pinceau, gomme, points de vue, raccourcis, fichiers, avancé et pratique) |
 | Formes applicables | Couverture complète des **quatre formes : Version Web (souris) / Version Web (tactile) / Version PC (Windows) / Version Android** |
 | Référentiel du système de coordonnées | Ce livre **se conforme toujours aux annotations d'axe réellement affichées sur l'interface** (annotations de la page : X bleu = avant-arrière, Y rouge = gauche-droite, Z vert = hauteur, axe Z vers le haut). L'implémentation interne du code diffère des annotations de la page ; les lecteurs ordinaires n'ont pas à s'en soucier |
-| Recommandation de lecture | Lisez d'abord [Chapitre 0 : Quatre formes et comment lire ce livre](jump:第0章 四种形态与本书读法), et identifiez quelle plateforme vous utilisez ; lisez les quatre premières parties dans l'ordre ; les huit parties suivantes peuvent être consultées selon vos besoins. Les sections « Réfléchissez » et « Entraînez-vous » à la fin de chaque chapitre doivent impérativement être pratiquées |
+| Recommandation de lecture | Lisez d'abord [Chapitre 0 : Quatre formes et comment lire ce livre](jump:Chapitre 0 : Quatre formes et comment lire ce livre), et identifiez quelle plateforme vous utilisez ; lisez les quatre premières parties dans l'ordre ; les huit parties suivantes peuvent être consultées selon vos besoins. Les sections « Réfléchissez » et « Entraînez-vous » à la fin de chaque chapitre doivent impérativement être pratiquées |
 | Adresse en ligne | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (ouvrez la page web pour pratiquer directement) |
-| Site Web officiel | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (présentation du produit, commutation en sept langues, entrée de téléchargement) |
+| Site Web officiel | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (présentation du produit, commutation en neuf langues, entrée de téléchargement) |
 | Dépôt du projet | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (code source, paquets d'installation et cette documentation s'y trouvent) |
 
 **Conventions des annotations de forme**
@@ -54,6 +54,10 @@ Chaque fois que les opérations diffèrent selon les plateformes dans tout le li
 
 💡 Si un paragraphe d'opération **ne comporte pas** d'annotation de forme, cela signifie que **les quatre plateformes sont entièrement identiques** ; suivez simplement.
 
+**Liens de saut (jump:) — comment cela fonctionne**
+
+Chaque « Chapitre X … » de la table des matières est un lien de saut cliquable qui vous mène à ce chapitre. La correspondance **ne distingue pas les majuscules/minuscules, les espaces ni la ponctuation** (guillemets, parenthèses, deux-points chinois/anglais, etc.) — même si le texte du lien diffère du titre d'un signe de ponctuation ou deux, le système trouve quand même la cible avec une règle souple « retirer la ponctuation et les espaces, ne garder que lettres, chiffres et caractères chinois-japonais-coréens » ; si la correspondance exacte échoue, la souple s'applique automatiquement, donc les liens ne « sautent » pratiquement jamais. Si la cible n'est vraiment pas trouvée, rien ne se passe — sans erreur.
+
 **Conventions des symboles**
 - 💡 Astuce : expérience pour gagner du temps
 - ❓ Réfléchissez : questions pour guider votre réflexion
@@ -66,100 +70,100 @@ Chaque fois que les opérations diffèrent selon les plateformes dans tout le li
 
 **Partie Zéro : Formes (identifiez d'abord votre version)**
 
-- [Chapitre 0 : Quatre formes et comment lire ce livre](jump:第0章 四种形态与本书读法)
+- [Chapitre 0 : Quatre formes et comment lire ce livre](jump:Chapitre 0 : Quatre formes et comment lire ce livre)
 
 **Partie Un : Démarrage (prise en main pour débutants)**
 
-- [Chapitre 1 : Redécouvrir la « 3D » : à partir d'une photo](jump:第1章 重新认识"三维"：从一张照片说起)
-- [Chapitre 2 : Pour bien faire, ouvrez cet outil](jump:第2章 工欲善其事：打开这个工具)
-- [Chapitre 3 : Vue d'ensemble de l'interface : les cinq espaces devant vous](jump:第3章 界面全景：你眼前的五块天地)
-- [Chapitre 4 : Système de coordonnées : les trois lignes X / Y / Z indiquées sur la page web](jump:第4章 坐标系：网页上标着 X / Y / Z 的那三根线)
-- [Chapitre 5 : Faites-le vous-même : votre première œuvre 3D](jump:第5章 动手做：你的第一个三维作品)
-- [Chapitre 6 : Enregistrement et partage : capture d'écran, exportation et sauvegarde](jump:第6章 保存与分享：截图、导出与备份)
+- [Chapitre 1 : Redécouvrir la « 3D » : à partir d'une photo](jump:Chapitre 1 : Redécouvrir la « 3D » : à partir d'une photo)
+- [Chapitre 2 : Pour bien faire, ouvrez cet outil](jump:Chapitre 2 : Pour bien faire, ouvrez cet outil)
+- [Chapitre 3 : Vue d'ensemble de l'interface : les cinq espaces devant vous](jump:Chapitre 3 : Vue d'ensemble de l'interface : les cinq espaces devant vous)
+- [Chapitre 4 : Système de coordonnées : les trois lignes X / Y / Z indiquées sur la page web](jump:Chapitre 4 : Le système de coordonnées : les trois traits marqués X / Y / Z sur la page web)
+- [Chapitre 5 : Faites-le vous-même : votre première œuvre 3D](jump:Chapitre 5 : Passons à la pratique : votre première œuvre 3D)
+- [Chapitre 6 : Enregistrement et partage : capture d'écran, exportation et sauvegarde](jump:Chapitre 6 : Sauvegarde et partage : capture, exportation et sauvegarde)
 
 **Partie Deux : Bases d'opération (sélection · transformation · annulation)**
 
-- [Chapitre 7 : L'art de sélectionner des objets : sélection simple, multiple et par cadre](jump:第7章 选择对象的艺术：单选、多选与框选)
-- [Chapitre 8 : Le trio des transformations : déplacer, pivoter, redimensionner](jump:第8章 变换三件套：移动、旋转、缩放)
-- [Chapitre 9 : Modes de transformation et mise à l'échelle proportionnelle](jump:第9章 变换模式与等比缩放)
-- [Chapitre 10 : Annulation et historique : l'assurance de tester sans crainte](jump:第10章 撤销与历史：大胆试错的底气)
+- [Chapitre 7 : L'art de sélectionner des objets : sélection simple, multiple et par cadre](jump:Chapitre 7 : L'art de sélectionner les objets : sélection simple, multiple et par cadre)
+- [Chapitre 8 : Le trio des transformations : déplacer, pivoter, redimensionner](jump:Chapitre 8 : Le trio des transformations : déplacer, pivoter, redimensionner)
+- [Chapitre 9 : Modes de transformation et mise à l'échelle proportionnelle](jump:Chapitre 9 : Modes de transformation et redimensionnement proportionnel)
+- [Chapitre 10 : Annulation et historique : l'assurance de tester sans crainte](jump:Chapitre 10 : Annulation et historique : l'assurance de l'essai-erreur)
 
 **Partie Trois : L'univers des graphiques (comment utiliser 20 + 20 types)**
 
-- [Chapitre 11 : Vue d'ensemble des graphiques 3D (comment classer les 20 types)](jump:第11章 3D 图形总览（20 种如何分类）)
-- [Chapitre 12 : Vue d'ensemble des graphiques 2D (les 20 types et la pensée « autocollant »)](jump:第12章 2D 图形总览（20 种与"贴纸"思维）)
-- [Chapitre 13 : Détails des paramètres de chaque graphique 3D (1) : corps de base](jump:第13章 每种 3D 图形参数详解（上）：基础体)
-- [Chapitre 14 : Détails des paramètres de chaque graphique 3D (2) : formes spéciales](jump:第14章 每种 3D 图形参数详解（下）：特种形状)
-- [Chapitre 15 : « Debout » et « allongé » : la différence essentielle entre 3D et 2D](jump:第15章 "站"与"躺"：3D 与 2D 的本质差异)
+- [Chapitre 11 : Vue d'ensemble des graphiques 3D (comment classer les 20 types)](jump:Chapitre 11 : Aperçu des formes 3D（comment classer les 20 types）)
+- [Chapitre 12 : Vue d'ensemble des graphiques 2D (les 20 types et la pensée « autocollant »)](jump:Chapitre 12 : Aperçu des graphiques 2D（20 types et la pensée « autocollant »）)
+- [Chapitre 13 : Détails des paramètres de chaque graphique 3D (1) : corps de base](jump:Chapitre 13 : Détails des paramètres de chaque graphique 3D（1re partie）: formes de base)
+- [Chapitre 14 : Détails des paramètres de chaque graphique 3D (2) : formes spéciales](jump:Chapitre 14 : Détails des paramètres de chaque graphique 3D（2e partie）: formes spéciales)
+- [Chapitre 15 : « Debout » et « allongé » : la différence essentielle entre 3D et 2D](jump:Chapitre 15 : « Debout » et « couché » : la différence essentielle entre 3D et 2D)
 
 **Partie Quatre : Couleur et matériau**
 
-- [Chapitre 16 : Initiation aux couleurs : le jeu de l'œil humain et de la lumière](jump:第16章 颜色入门：人眼与光的游戏)
-- [Chapitre 17 : 27 couleurs prédéfinies : coloriez en un clic](jump:第17章 27 种预设色：一键上色)
-- [Chapitre 18 : Couleurs personnalisées : HEX, HSV et pipette d'écran](jump:第18章 自定义颜色：HEX、HSV 与屏幕取色器)
-- [Chapitre 19 : 12 motifs de texture : donnez une histoire aux surfaces](jump:第19章 12 种花纹贴图：让表面有故事)
-- [Chapitre 20 : Téléchargement d'images de texture et opacité](jump:第20章 上传图片贴图与不透明度)
+- [Chapitre 16 : Initiation aux couleurs : le jeu de l'œil humain et de la lumière](jump:Chapitre 16 : Initiation à la couleur : le jeu de l'œil humain et de la lumière)
+- [Chapitre 17 : 27 couleurs prédéfinies : coloriez en un clic](jump:Chapitre 17 : 27 couleurs prédéfinies : une touche pour colorer)
+- [Chapitre 18 : Couleurs personnalisées : HEX, HSV et pipette d'écran](jump:Chapitre 18 : Couleur personnalisée : HEX, HSV et pipette d'écran)
+- [Chapitre 19 : 12 motifs de texture : donnez une histoire aux surfaces](jump:Chapitre 19 : 12 motifs de texture : donner une histoire aux surfaces)
+- [Chapitre 20 : Téléchargement d'images de texture et opacité](jump:Chapitre 20 : Coller une image importée et opacité)
 
 **Partie Cinq : Texte et image**
 
-- [Chapitre 21 : Ajouter du texte : faites parler la scène](jump:第21章 添加文本：让场景会说话)
-- [Chapitre 22 : Police, taille, graisse et orientation horizontale/verticale](jump:第22章 字体、字号、粗细与横竖排)
-- [Chapitre 23 : Objet image : mettez une photo dans le monde 3D](jump:第23章 图片对象：把照片放进三维世界)
+- [Chapitre 21 : Ajouter du texte : faites parler la scène](jump:Chapitre 21 : Ajouter du texte : faire parler la scène)
+- [Chapitre 22 : Police, taille, graisse et orientation horizontale/verticale](jump:Chapitre 22 : Police, taille, graisse et orientation horizontal/vertical)
+- [Chapitre 23 : Objet image : mettez une photo dans le monde 3D](jump:Chapitre 23 : L'objet image : intégrer une photo dans le monde 3D)
 
 **Partie Six : Pinceau et gomme**
 
-- [Chapitre 24 : Pinceau 2D : dessiner des lignes au sol](jump:第24章 2D 画笔：在地面画线)
-- [Chapitre 25 : Pinceau 3D et plan de référence](jump:第25章 3D 画笔与参考平面)
-- [Chapitre 26 : Gomme : globale et partielle](jump:第26章 橡皮擦：整体与局部)
+- [Chapitre 24 : Pinceau 2D : dessiner des lignes au sol](jump:Chapitre 24 : Pinceau 2D : tracer sur le sol)
+- [Chapitre 25 : Pinceau 3D et plan de référence](jump:Chapitre 25 : Pinceau 3D et plan de référence)
+- [Chapitre 26 : Gomme : globale et partielle](jump:Chapitre 26 : Gomme : global et local)
 
 **Partie Sept : Points de vue et observation**
 
-- [Chapitre 27 : Sept points de vue prédéfinis : changez d'angle pour voir le monde](jump:第27章 七种预设视角：换个角度看世界)
-- [Chapitre 28 : Masquer les辅助 et plein écran](jump:第28章 隐藏辅助与全屏)
+- [Chapitre 27 : Sept points de vue prédéfinis : changez d'angle pour voir le monde](jump:Chapitre 27 : Sept angles de vue prédéfinis : voir le monde sous un autre angle)
+- [Chapitre 28 : Masquer les辅助 et plein écran](jump:Chapitre 28 : Masquer les repères et plein écran)
 
 **Partie Huit : Efficacité · Raccourcis (faites « voler » vos mains)**
 
-- [Chapitre 29 : Pourquoi mémoriser les raccourcis : les intérêts composés de l'efficacité](jump:第29章 为什么要记快捷键：效率的复利)
-- [Chapitre 30 : Opérations souris et gestuelles : expliquées pour les quatre formes](jump:第30章 鼠标与手势操作：四种形态都讲)
-- [Chapitre 31 : Opérations à une touche et combinaisons avec Shift](jump:第31章 单键操作与 Shift 组合键)
-- [Chapitre 32 : Barres de glissement / champs de saisie et combinaisons avec Ctrl](jump:第32章 滑动条/输入框 与 Ctrl 组合键)
+- [Chapitre 29 : Pourquoi mémoriser les raccourcis : les intérêts composés de l'efficacité](jump:Chapitre 29 : Pourquoi mémoriser les raccourcis : les intérêts composés de l'efficacité)
+- [Chapitre 30 : Opérations souris et gestuelles : expliquées pour les quatre formes](jump:Chapitre 30 : Opérations souris et gestuelles : les quatre formes expliquées)
+- [Chapitre 31 : Opérations à une touche et combinaisons avec Shift](jump:Chapitre 31 : Opérations à une touche et combinaisons Shift)
+- [Chapitre 32 : Barres de glissement / champs de saisie et combinaisons avec Ctrl](jump:Chapitre 32 : Curseur / champ de saisie et combinaisons Ctrl)
 
 **Partie Neuf : Contrôles de transformation (les flèches qui « parlent »)**
 
-- [Chapitre 33 : Première rencontre avec les contrôles de transformation : trois « outils de préhension »](jump:第33章 初见变换控件：三件"抓握工具")
-- [Chapitre 34 : Mode translation : « attrapez » l'objet avec les flèches pour le déplacer](jump:第34章 平移模式：用箭头"抓"着物体走)
-- [Chapitre 35 : Mode rotation : l'anneau détermine « autour de quel axe tourner »](jump:第35章 旋转模式：圆环决定"绕哪根轴转")
-- [Chapitre 36 : Mode mise à l'échelle : poignées carrées et interrupteur « proportionnel »](jump:第36章 缩放模式：方块手柄与"等比"开关)
+- [Chapitre 33 : Première rencontre avec les contrôles de transformation : trois « outils de préhension »](jump:Chapitre 33 : Première rencontre avec le contrôle de transformation : trois « outils de préhension »)
+- [Chapitre 34 : Mode translation : « attrapez » l'objet avec les flèches pour le déplacer](jump:Chapitre 34 : Mode translation : « attraper » l'objet avec les flèches et le déplacer)
+- [Chapitre 35 : Mode rotation : l'anneau détermine « autour de quel axe tourner »](jump:Chapitre 35 : Mode rotation : l'anneau décide « autour de quel axe on tourne »)
+- [Chapitre 36 : Mode mise à l'échelle : poignées carrées et interrupteur « proportionnel »](jump:Chapitre 36 : Mode mise à l'échelle : poignées carrées et interrupteur « proportionnel »)
 
 **Partie Dix : Groupe (gérer « un groupe » d'objets à la fois)**
 
-- [Chapitre 37 : Sélectionner un groupe d'un coup : découvrez l'« ensemble de sélection »](jump:第37章 一次选中一群：认识"选择集")
-- [Chapitre 38 : Faire bouger tout un groupe : le « point de contrôle principal » de la transformation multiple](jump:第38章 一群一起动：多选变换的"主控点")
-- [Chapitre 39 : Production de masse : copie, clonage et « réseau »](jump:第39章 量产：复制、克隆与"阵列")
+- [Chapitre 37 : Sélectionner un groupe d'un coup : découvrez l'« ensemble de sélection »](jump:Chapitre 37 : Sélectionner une foule d'un coup : connaître « l'ensemble de sélection »)
+- [Chapitre 38 : Faire bouger tout un groupe : le « point de contrôle principal » de la transformation multiple](jump:Chapitre 38 : Tout bouger ensemble : le « point maître » de la transformation multiple)
+- [Chapitre 39 : Production de masse : copie, clonage et « réseau »](jump:Chapitre 39 : Production de masse : copie, clonage et « réseau »)
 
 **Partie Onze : L'œuvre quitte l'écran (partage · collaboration · alignement)**
 
-- [Chapitre 40 : Enregistrement et partage : faites quitter l'écran à votre œuvre](jump:第40章 保存与分享：让作品离开屏幕)
+- [Chapitre 40 : Enregistrement et partage : faites quitter l'écran à votre œuvre](jump:Chapitre 40 : Sauvegarde et partage : faire sortir l'œuvre de l'écran)
 
 **Partie Douze : Pratique (construire une scène complète à partir de zéro)**
 
-- [Chapitre 41 : Projet 1 : construire une petite maison](jump:第41章 项目一：搭一座小房子)
-- [Chapitre 42 : Projet 2 : fabriquer une slogan en relief](jump:第42章 项目二：制作立体字标语)
-- [Chapitre 43 : Projet 3 : concevoir un emblème / une icône](jump:第43章 项目三：设计一枚徽标 / 图标)
-- [Chapitre 44 : Projet 4 : scène composite « Ma petite cour »](jump:第44章 项目四：综合场景《我的小院》)
+- [Chapitre 41 : Projet 1 : construire une petite maison](jump:Chapitre 41 : Projet 1 : construire une petite maison)
+- [Chapitre 42 : Projet 2 : fabriquer une slogan en relief](jump:Chapitre 42 : Projet 2 : fabriquer une devise en texte 3D)
+- [Chapitre 43 : Projet 3 : concevoir un emblème / une icône](jump:Chapitre 43 Projet trois : concevoir un emblème / une icône)
+- [Chapitre 44 : Projet 4 : scène composite « Ma petite cour »](jump:Chapitre 44 Projet quatre : scène composite « Ma petite cour »)
 
 **Partie Treize : Dépannage et annexes**
 
-- [Chapitre 45 : Guide de dépannage des problèmes courants](jump:第45章 常见问题排查手册)
-- [Chapitre 46 : Glossaire (français-anglais)](jump:第46章 术语表（中英对照）)
-- [Chapitre 47 : Tableau rapide des raccourcis](jump:第47章 快捷键速查表)
-- [Chapitre 48 : Index des graphiques · motifs · couleurs](jump:第48章 图形 · 花纹 · 颜色索引)
+- [Chapitre 45 : Guide de dépannage des problèmes courants](jump:Chapitre 45 Manuel de dépannage des problèmes courants)
+- [Chapitre 46 : Glossaire (français-anglais)](jump:Chapitre 46 Glossaire（chinois-anglais）)
+- [Chapitre 47 : Tableau rapide des raccourcis](jump:Chapitre 47 : Tableau rapide des raccourcis)
+- [Chapitre 48 : Index des graphiques · motifs · couleurs](jump:Chapitre 48 : Index des formes · motifs · couleurs)
 
 **Partie Quatorze : Notes · Multilangue**
 
-- [Chapitre 49 : Lire et noter : les notes dans le manuel](jump:第49章 边读边记：说明书里的便签)
-- [Chapitre 50 : Faire « flotter » les notes à l'écran](jump:第50章 让便签"浮"在屏幕上)
-- [Chapitre 51 : Multilangue : le manuel « parle » aussi votre langue](jump:第51章 多语言：说明书也会"说"你的语言)
+- [Chapitre 49 : Lire et noter : les notes dans le manuel](jump:Chapitre 49 : Lire et noter : les notes dans le manuel)
+- [Chapitre 50 : Faire « flotter » les notes à l'écran](jump:Chapitre 50 : Faire « flotter » les notes à l'écran)
+- [Chapitre 51 : Multilangue : le manuel « parle » aussi votre langue](jump:Chapitre 51 : Multilingue : le manuel « parle » aussi votre langue)
 
 ---
 
@@ -333,7 +337,7 @@ Les avantages communs des trois :
 
 💡 Ceci est important : **une même œuvre peut être poursuivie d'une plateforme à l'autre**. Ayez une inspiration sur téléphone et esquissez un brouillon, puis peaufinez-le sur PC en rentrant.
 
-✏️ **Entraînez-vous** : confirmez votre forme (voir [Chapitre 0](jump:第0章 四种形态与本书读法)), ouvrez l'outil, et contentez-vous de voir le canevas central et les panneaux autour. Ne vous précipitez pas pour opérer, « familiarisez-vous simplement avec l'environnement ».
+✏️ **Entraînez-vous** : confirmez votre forme (voir [Chapitre 0](jump:Chapitre 0 : Quatre formes et comment lire ce livre)), ouvrez l'outil, et contentez-vous de voir le canevas central et les panneaux autour. Ne vous précipitez pas pour opérer, « familiarisez-vous simplement avec l'environnement ».
 
 ---
 
@@ -428,7 +432,7 @@ Tous les graphiques s'affichent ici. Les modes d'opération varient selon la for
 - 🖥️💻 **Côté souris (Web · Souris / PC)** : glisser le **bouton droit** pour pivoter la vue, **molette** pour zoomer, **bouton gauche** pour sélectionner ou placer.
 - 📱🤖 **Côté tactile (Web · Tactile / Android)** : glisser d'**un doigt** pour pivoter la vue, pincer **deux doigts** pour zoomer, glisser **deux doigts** pour translater, **toucher d'un doigt** pour sélectionner ou placer.
 
-💡 La comparaison complète se trouve dans le tableau des modes de saisie de la [section 0.3 du Chapitre 0](jump:第0章 四种形态与本书读法).
+💡 La comparaison complète se trouve dans le tableau des modes de saisie de la [section 0.3 du Chapitre 0](jump:Chapitre 0 : Quatre formes et comment lire ce livre).
 
 ### 3.4 Panneau droit (réglage des paramètres après sélection)
 
@@ -593,7 +597,7 @@ Fermer la page, actualiser, ou toucher par erreur le bouton retour : la scène n
 
 - Idéal pour : publier sur les réseaux, faire une illustration, montrer le « rendu » à quelqu'un ;
 - Conseil : avant la capture, cliquez dans la barre supérieure pour masquer les **axes de coordonnées et la grille**, l'image sera plus propre ;
-- La taille de sortie correspond aux pixels actuels de la zone de travail.
+- La taille de sortie est **agrandie automatiquement selon le ratio de pixels de l'appareil** (au moins **3×**), donc le PNG capturé est plus net et de plus haute résolution que ce que vous voyez à l'écran — il n'est pas simplement égal aux pixels d'affichage de la zone de travail actuelle.
 
 **Où l'image est-elle enregistrée ? Cela diffère selon les plateformes :**
 
@@ -854,7 +858,7 @@ Vous pouvez revenir en arrière de plusieurs étapes consécutives, et avancer �
 
 Le logiciel mémorise en interne une **liste d'opérations** (comme l'historique de retour du navigateur). Chaque opération importante y est empilée ; annuler revient à dépiler la dernière.
 
-⚠️ **Attention** : l'historique a une **limite de pas**. Les opérations très anciennes peuvent en être « expulsées » et ne plus être annulables — d'où l'importance d'exporter un JSON de sauvegarde aux étapes clés (voir [Chapitre 6](jump:第6章 保存与分享：截图、导出与备份)).
+⚠️ **Attention** : l'historique a une **limite de pas**. Les opérations très anciennes peuvent en être « expulsées » et ne plus être annulables — d'où l'importance d'exporter un JSON de sauvegarde aux étapes clés (voir [Chapitre 6](jump:Chapitre 6 : Sauvegarde et partage : capture, exportation et sauvegarde)).
 
 ### 10.3 Ce qui entre dans l'historique, ce qui n'y entre pas
 
@@ -1340,9 +1344,11 @@ Le texte prend en charge toutes les opérations habituelles : sélection, transl
 
 ## Chapitre 22 : Police, taille, graisse et orientation horizontal/vertical
 
-Après sélection du texte, le panneau droit affiche les contrôles propres au texte. Cet outil offre **8 polices** et plusieurs commutateurs de mise en page.
+Après sélection du texte, le panneau droit affiche les contrôles propres au texte. Cet outil offre **plusieurs jeux de polices intégrées** (5 par langue, qui changent avec la langue d'interface courante) et plusieurs commutateurs de mise en page.
 
-### 22.1 Comment choisir les huit polices
+### 22.1 Comment choisir les polices (change avec la langue)
+
+La liste des polices **n'est pas fixe** : elle change avec la langue d'interface courante — chaque langue a 5 polices intégrées propres. Par exemple, le chinois simplifié utilise par défaut 雅黑 / 宋体 / 楷体 / 黑体 / 仿宋 ; l'anglais utilise Arial / Georgia / Times / Courier / Verdana, etc. Le tableau ci-dessous est un exemple sous l'interface chinoise :
 
 | Police | Tempérament / usage |
 | --- | --- |
@@ -1355,7 +1361,7 @@ Après sélection du texte, le panneau droit affiche les contrôles propres au t
 | Times | Occidental avec empattement, formel |
 | Courier | Occidental à chasse fixe, code/machine à écrire |
 
-💡 Le contenu chinois privilégie les cinq premières ; l'anglais pur peut utiliser les trois dernières pour différents tempéraments.
+💡 Le contenu chinois privilégie les cinq premières ; l'anglais pur peut utiliser les trois dernières pour différents tempéraments. Après avoir changé la langue d'interface, la liste déroulante des polices affiche les polices propres à cette langue.
 
 ### 22.2 Taille de caractère (par défaut 80)
 
@@ -1377,6 +1383,16 @@ Un clic pour mettre en gras, le titre ressort davantage. Avec les polices gras /
 ⚠️ **Attention** : un texte trop long peut dépasser la largeur de la plaque ; vous pouvez appuyer sur **Shift + Enter** dans le champ de saisie pour aller à la ligne, ou réduire la taille du texte.
 
 ✏️ **À essayer** : réalisez une enseigne verticale « 茶馆 » (salon de thé) (police régulière, alignement vertical, grande taille, couleur bois), et ressentez le « caractère » de la combinaison des polices.
+
+### 22.5 Lecture seule entre langues : changer de langue, on ne peut que voir
+
+Un objet texte **se souvient de la langue dans laquelle il a été créé** (la langue des textes de l'interface). Lorsque vous changez la langue d'interface pour **une autre langue**, les contrôles propres à cette zone de texte **deviennent automatiquement en lecture seule / désactivés** : le champ d'édition du corps, la police, l'épaisseur et l'orientation horizontale/verticale ne peuvent plus être modifiés — on ne peut que voir. Cela évite, en réécrivant avec une police de langue non correspondante, que le texte se corrompe ou que la mise en page casse. À ce moment, la liste déroulante des polices ne conserve que la police propre à cette zone de texte, et ne liste plus tout le jeu de polices de la langue.
+
+> 📌 Vous voulez continuer à éditer ? Revenez à la langue d'interface utilisée lors de la création de la zone de texte pour rétablir tous les contrôles.
+
+### 22.6 L'arabe interdit l'alignement vertical
+
+En passant à l'interface en **arabe (ar)**, le bouton d'alignement vertical est **désactivé de force et verrouillé sur l'horizontal** (l'arabe s'écrit de droite à gauche, et l'alignement vertical embrouillerait le sens de lecture). Il s'agit d'une interdiction stricte pour cette langue, indépendante de la « lecture seule entre langues » du 22.5 — elles ne sont pas en conflit.
 
 ---
 
@@ -1604,7 +1620,7 @@ Dans la barre supérieure se trouvent trois interrupteurs : « Axes », « Grill
 > 📌 **Comment lire cette partie (important)**
 > - 🖥️💻 **Web·souris / Version PC (Windows)** : toute cette partie s'applique, c'est la clé de votre rapidité, lisez-la attentivement.
 > - 📱🤖 **Web·tactile / Version Android** : pas de clavier physique, les **raccourcis clavier** des chapitres 29, 31, 32 ne s'appliquent pas,
->   la zone d'aide « Raccourcis clavier » n'apparaît pas non plus dans l'application. **Sautez directement à la [table des gestes du chapitre 30](jump:第30章 鼠标与手势操作：四种形态都讲)**, c'est votre outil d'efficacité.
+>   la zone d'aide « Raccourcis clavier » n'apparaît pas non plus dans l'application. **Sautez directement à la [table des gestes du chapitre 30](jump:Chapitre 30 : Opérations souris et gestuelles : les quatre formes expliquées)**, c'est votre outil d'efficacité.
 >   (Si vous connectez un clavier physique à votre tablette, les raccourcis sont aussi disponibles, vous pouvez lire en même temps.)
 
 ---
@@ -1620,7 +1636,7 @@ Vous découvrirez quasi certainement : **le clavier est plus rapide, plus préci
 Trois raisons :
 1. **La main ne quitte pas la zone centrale du clavier** — l'œil fixé sur l'image, les doigts sur les touches, le cerveau n'a pas à basculer sans cesse entre « regarder l'image → chercher le panneau → déplacer la souris → tirer le curseur ».
 2. **Pas fixe** — une pression sur une flèche déplace l'objet précisément de « 0,1 grille », 10 pressions font exactement 1 grille. Tirer le curseur 10 fois, vous ne saurez plus du tout de combien vous avez bougé.
-3. **Superposable, annulable** — chaque opération clavier entre dans la pile d'historique (voir [chapitre 32](jump:第32章 滑动条/输入框 与 Ctrl 组合键)), une erreur se corrige d'un `Ctrl+Z` ; tandis que tirer le curseur est un changement continu, dont l'annulation « saute » souvent brutalement.
+3. **Superposable, annulable** — chaque opération clavier entre dans la pile d'historique (voir [chapitre 32](jump:Chapitre 32 : Curseur / champ de saisie et combinaisons Ctrl)), une erreur se corrige d'un `Ctrl+Z` ; tandis que tirer le curseur est un changement continu, dont l'annulation « saute » souvent brutalement.
 
 💡 **Une phrase-clé** : la souris gère « sélectionner » et « dessiner », le clavier gère « modifier » et « régler ». Travaillez en分工, l'efficacité double.
 
@@ -2979,6 +2995,11 @@ Une fois déployée, la note est une **carte flottante épinglée dans la page**
 - Prend en charge **exporter / importer** les notes (`manExport` / `manImport`), **tout sélectionner** et **suppression par lot** (`manSelectAll` / `manBatchDel`) ;
 - Les touches listées dans « Paramètres → Opérations rapides » déclenchent ces actions (la Version PC peut aussi cliquer les boutons de la fenêtre).
 
+> ⚠️ **Trois règles de validation à l'import des notes** (identiques sur les quatre plateformes) :
+> 1. **Incohérence de langue → tout le paquet est ignoré** : si la langue étiquetée du paquet de notes importé diffère de la langue d'interface courante, le système affiche « langue non correspondante » et **refuse l'import**, évitant de mélanger des notes d'autres langues ;
+> 2. **Avertissement de version ancienne** : si un paquet de notes contient un numéro de version plus ancien (ou différent) que le logiciel actuel, après import il affiche « notes de version ancienne détectées », pour vous alerter sur la compatibilité ;
+> 3. **Anciennes notes sans étiquette de langue** : les très anciens paquets de notes n'ont pas d'étiquette de langue ; le système affiche « ancien format, sans langue » mais les importe quand même dans la langue courante pour vérification manuelle.
+
 > 📌 Les notes des quatre côtés sont des couches dans la page, ne peuvent pas être tirées hors de la fenêtre de l'application ni passer au-dessus d'un autre programme.
 
 ### 50.2 Ordre de fermeture des notes (📱🤖 côté tactile, attention)
@@ -2994,7 +3015,7 @@ Une fois déployée, la note est une **carte flottante épinglée dans la page**
 
 ## Chapitre 51 : Multilingue : le manuel « parle » aussi votre langue
 
-L'interface et le manuel prennent en charge sept langues :
+L'interface et le manuel prennent en charge neuf langues :
 
 | Langue | Interface | Manuel |
 | --- | --- | --- |
@@ -3004,13 +3025,15 @@ L'interface et le manuel prennent en charge sept langues :
 | 日本語 | ✅ | ✅ |
 | 한국어 | ✅ | ✅ |
 | Русский | ✅ | ✅ |
+| Español | ✅ | ✅ |
 | Français | ✅ | ✅ |
+| العربية (arabe) | ✅ | ✅ |
 
-Mode de bascule : dans les paramètres, choisissez la langue, le texte de l'interface et le corps du manuel basculent **simultanément** vers la version linguistique correspondante. Le contenu multilingue du manuel est stocké respectivement dans `docs/使用说明书.md` (chinois simplifié), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`, `使用说明书_fr.md`.
+Mode de bascule : dans les paramètres, choisissez la langue, le texte de l'interface et le corps du manuel basculent **simultanément** vers la version linguistique correspondante. Le contenu multilingue du manuel est stocké respectivement dans `docs/使用说明书.md` (chinois simplifié), `使用说明书_en.md`, `使用説明書_ja.md`, `使用說明書_zh-TW.md`, `사용설명서_ko.md`, `使用说明书_ru.md`, `使用说明书_es.md`, `使用说明书_fr.md`, `使用说明书_ar.md`.
 
-💡 **Comment la langue est choisie** : au premier démarrage, la **langue système est détectée automatiquement** — selon les paramètres de langue du système/navigateur, correspondance automatique avec chinois simplifié, 繁體中文, English ou 日本語 ; ensuite, si vous avez changé de langue manuellement, le logiciel **mémorise votre choix et le respecte totalement**, sans être recouvert par la langue système. Autrement dit, la première fois suit le système, par la suite c'est votre choix qui prévaut.
+💡 **Comment la langue est choisie** : au premier démarrage, la **langue système est détectée automatiquement** — selon les paramètres de langue du système/navigateur, correspondance automatique avec les langues courantes comme chinois simplifié, 繁體中文, English, 日本語, Español, Français, العربية ; ensuite, si vous avez changé de langue manuellement, le logiciel **mémorise votre choix et le respecte totalement**, sans être recouvert par la langue système. Autrement dit, la première fois suit le système, par la suite c'est votre choix qui prévaut.
 
-✅ **Sept langues × quatre formes entièrement intégrées** : quel que soit votre côté ou votre langue, vous lisez le même manuel adapté aux trois côtés.
+✅ **Neuf langues × quatre formes entièrement intégrées** : quel que soit votre côté ou votre langue, vous lisez le même manuel adapté aux trois côtés. Pour les langues à écriture de droite à gauche (RTL, comme l'arabe), les tableaux et l'alignement dans le manuel sont automatiquement miroir.
 
 > ⚠️ Concernant la confirmation de suppression : toutes les opérations de suppression (notes, objets de scène) passent par une **boîte de confirmation personnalisée** plutôt que native du système, donc elles s'affichent stablement même en **mode plein écran / immergé**, sans « clic sans réaction ».
 

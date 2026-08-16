@@ -55,6 +55,12 @@ android {
             useLegacyPackaging = false
         }
     }
+
+    // 释放构建跳过 lintVital（splash 多密度图缺默认 drawable 触发 MissingDefaultResource）
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 repositories {

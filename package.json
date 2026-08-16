@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/yushichadao/Cub3D-Editor/issues"
   },
-  "homepage": "https://github.com/yushichadao/Cub3D-Editor#readme"
+  "homepage": "https://github.com/yushichadao/Cub3D-Editor#readme",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
 }

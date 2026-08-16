@@ -49,6 +49,7 @@ const api = {
     openScene: p => invoke('file:open-scene', p),
     saveScene: payload => invoke('file:save-scene', payload),
     saveImage: (dataURL, name) => invoke('file:save-image', dataURL, name),
+    saveJson: opts => invoke('file:save-json', opts),
     pickImage: () => invoke('file:pick-image'),
     /** 静默写入图片（插件截图用，不弹对话框） */
     writeImage: (dataURL, targetPath) => invoke('file:write-image', dataURL, targetPath),

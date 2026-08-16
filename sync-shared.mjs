@@ -90,9 +90,9 @@ async function main() {
   for (const f of scripts) await syncFile(SCRIPTS_SRC, f, SCRIPTS_DESTS);
   console.log('[sync-shared] 共享脚本同步完成。');
 
-  // 4) 国际化：将弹窗文案与扩展后的法律全文写入各平台语言包（en / ja / zh-TW / ko / ru / fr）
-  //    复用独立脚本 _i18n_en.mjs / _i18n_ja.mjs / _i18n_zh-TW.mjs / _i18n_ko.mjs / _i18n_ru.mjs / _i18n_fr.mjs（亦可单独运行）
-  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW', '_i18n_ko', '_i18n_ru', '_i18n_fr', '_i18n_ar']) {
+  // 4) 国际化：将弹窗文案与扩展后的法律全文写入各平台语言包（en / ja / zh-TW / ko / ru / es / fr / ar）
+  //    复用独立脚本 _i18n_en.mjs / _i18n_ja.mjs / _i18n_zh-TW.mjs / _i18n_ko.mjs / _i18n_ru.mjs / _i18n_es.mjs / _i18n_fr.mjs / _i18n_ar.mjs（亦可单独运行）
+  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW', '_i18n_ko', '_i18n_ru', '_i18n_es', '_i18n_fr', '_i18n_ar']) {
     try {
       await import('./' + lang + '.mjs');
       console.log(`[sync-shared] 国际化（${lang}）执行完成。`);
