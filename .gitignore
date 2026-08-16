@@ -94,6 +94,10 @@ i18n-draft/
 # ===== 临时 wiki 工作目录（生成/排查用，不入库）=====
 wiki-tmp/
 
+# ===== 发布安装包产物（由 release.mjs 生成，经 GitHub Releases 分发，不入库）=====
+Release/
+**/Release/
+
 # ===== 图标替换/产物整理产生的旧文件备份与检查图（安全网，不入库）=====
 *.bak
 icon-backups/

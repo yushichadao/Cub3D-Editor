@@ -1282,9 +1282,9 @@ html[dir="rtl"] #picker-hex{direction:ltr !important; text-align:right !importan
 html[dir="rtl"] .color-code{direction:ltr !important; unicode-bidi:isolate; text-align:right !important;}
 /* 阿拉伯语下，自定义颜色 HEX/RGB 两行色号整体靠右（贴合 RTL 阅读方向） */
 /* 数字输入框微调器：隐藏浏览器原生丑陋的上下箭头，改用统一的自定义按钮 */
-input[type="number"]{ -moz-appearance:textfield; }
+input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; appearance:none; margin:0; }
 .num-field{
   position:relative; display:inline-flex; align-items:stretch; box-sizing:border-box;
   border:1px solid var(--border); border-radius:6px; background:var(--input-bg); overflow:hidden; vertical-align:middle;
@@ -1292,10 +1292,10 @@ input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin
 .num-field > input[type="number"]{
   flex:1 1 auto; min-width:0;
   border:none !important; border-radius:0 !important; background:transparent !important;
-  color:var(--text); font-family:inherit; font-size:12px; padding:3px 6px; -moz-appearance:textfield; outline:none;
+  color:var(--text); font-family:inherit; font-size:12px; padding:3px 6px; -moz-appearance:textfield; appearance:textfield; outline:none;
 }
 .num-field > input[type="number"]::-webkit-outer-spin-button,
-.num-field > input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.num-field > input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; appearance:none; margin:0; }
 .num-step{ display:flex; flex-direction:column; flex:0 0 auto; width:18px; border-left:1px solid var(--border); background:var(--input-bg); }
 html[dir="rtl"] .num-step{ border-left:none; border-right:1px solid var(--border); }
 .num-step button{
