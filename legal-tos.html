@@ -81,7 +81,7 @@
 </header>
 <main class="wrap">
   <div class="toprow">
-    <a class="back" id="backLink" href="index.html">返回宣传页</a>
+    <a class="back" id="backLink" href="index.html" data-i18n="backHome">返回主页</a>
   </div>
   <section class="legal">
     <h1 id="docTitle">服务协议</h1>
@@ -91,7 +91,7 @@
 <footer>
   <div class="wrap foot">
     <div>Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
-    <a href="index.html">Cub3D Editor 主页</a>
+    <a href="index.html" data-i18n="homeLink">Cub3D Editor 主页</a>
     <!-- ICP 备案号预留空框：现阶段无备案，仅画框占位不写内容，后续在此填写备案号 -->
     <span class="icp-slot" aria-hidden="true"></span>
   </div>
@@ -128,6 +128,10 @@ function render(){
   const raw = dict[K.b] || '';
   document.getElementById('docBody').innerHTML = raw.replace(/^\s*<h4>[\s\S]*?<\/h4>/, '');
   document.getElementById('backLink').href = 'index.html?lang=' + encodeURIComponent(cur);
+  const bl = document.getElementById('backLink');
+  if (bl && dict.backHome) bl.textContent = dict.backHome;
+  const hl = document.querySelector('[data-i18n="homeLink"]');
+  if (hl && dict.homeLink) hl.textContent = dict.homeLink;
   document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('active', b.dataset.lang===cur));
 }
 const langEl = document.getElementById('lang');
