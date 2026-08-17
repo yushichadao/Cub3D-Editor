@@ -129,6 +129,7 @@
     display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--dim-2)}
   .card .meta b{color:var(--dim);font-weight:600}
   .card .meta .size{color:var(--accent);font-variant-numeric:tabular-nums}
+  .card .meta .size-line{display:flex;gap:6px;flex-wrap:wrap}
   .lbtn{display:flex;align-items:center;justify-content:center;width:100%;gap:8px;padding:11px 14px;border-radius:8px;
     font-weight:600;font-size:14px;cursor:pointer;transition:.2s;border:1px solid var(--line);background:var(--bg-soft);color:var(--text)}
   .lbtn:hover{border-color:var(--accent);color:var(--accent)}
@@ -136,7 +137,7 @@
   .lbtn.main:hover{background:#6fe0d3;color:#0c1413}
 
   /* ===== 编辑器预览区 ===== */
-  .preview{display:grid;gap:16px;margin-top:36px}
+  .preview{display:flex;gap:20px;margin-top:36px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
   .preview-main{position:relative;display:block;width:min(100%,720px);margin-inline:auto;border:1px solid var(--line);border-radius:var(--radius);
     overflow:hidden;background:var(--panel);transition:border-color .25s,transform .25s,box-shadow .25s}
   .preview-main:hover{border-color:var(--accent);transform:translateY(-4px);
@@ -146,6 +147,17 @@
     background:rgba(12,20,19,.72);backdrop-filter:blur(8px);border:1px solid var(--line);
     color:var(--text);font-size:13px;font-weight:600;display:inline-flex;gap:8px;align-items:center}
   .preview-main .pv-badge b{color:var(--accent);font-weight:700}
+  /* 触屏版竖屏预览：窄列、按竖屏比例显示 */
+  .preview-touch{width:min(100%,300px)}
+  .preview-touch img{aspect-ratio:9/20;object-fit:cover}
+  /* 设备类型切换：触屏设备（主要指针为粗指针）只显示触屏版；桌面设备（精指针）只显示桌面版 */
+  @media (pointer:coarse){
+    .preview-desktop{display:none}
+    .preview-touch{display:block}
+  }
+  @media (pointer:fine){
+    .preview-touch{display:none}
+  }
 
   /* ===== 功能亮点数字条 ===== */
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;margin-top:36px;
@@ -429,6 +441,8 @@
     html[lang="ar"] .faq details .ans{direction:rtl}
     /* RTL：对比表首列（能力）默认 text-align:left 是物理方向，不随 RTL 镜像，需显式靠右 */
     html[lang="ar"] table.cmp th:first-child,html[lang="ar"] table.cmp td:first-child{text-align:right}
+    /* RTL：功能亮点数字条（关键数字）默认 text-align:left 是物理方向，不随 RTL 镜像，需显式靠右 */
+    html[lang="ar"] .stat{text-align:right}
     /* RTL：时间线/更新点装饰镜像 */
     html[lang="ar"] .road{border-left:none;border-right:1px solid var(--line);padding-left:0;padding-right:26px}
     html[lang="ar"] .road-item::before{left:auto;right:-33px}
@@ -525,9 +539,13 @@
     <h2 class="sec-title reveal" data-i18n="preview.title">眼见为实</h2>
     <p class="sec-sub reveal" data-i18n="preview.sub">三端共用同一套核心引擎，界面与画布体验高度一致。以下为编辑器画面示意，点开即可亲自体验。</p>
     <div class="preview">
-      <a class="preview-main reveal" href="Web/index.html" aria-label="Open editor">
-        <img src="assets/preview-web.png" alt="Cub3D Editor preview" loading="lazy" onerror="this.style.display='none'">
+      <a class="preview-main preview-desktop reveal" href="Web/index.html" aria-label="Open editor">
+        <img id="previewImg" src="assets/preview-zh-CN.png" alt="Cub3D Editor preview (desktop)" loading="lazy" onerror="this.style.display='none'">
         <span class="pv-badge"><b data-i18n="preview.badge">点击进入实时编辑器</b><i class="dot"></i></span>
+      </a>
+      <a class="preview-main preview-touch reveal" href="Web/index.html?touch" aria-label="Open touch editor">
+        <img id="previewTouchImg" src="assets/preview-touch-zh-CN.png" alt="Cub3D Editor preview (touch)" loading="lazy" onerror="this.style.display='none'">
+        <span class="pv-badge"><b data-i18n="preview.badgeTouch">触屏版</b><i class="dot"></i></span>
       </a>
     </div>
   </section>
@@ -573,7 +591,10 @@
         <div class="meta">
           <span><b data-i18n="plat.version">版本</b> <span data-size-ver>…</span></span>
           <span><b data-i18n="plat.req">系统要求</b> <span data-i18n="plat3.req">Windows 10+</span></span>
-          <span><b data-i18n="plat.size">体积</b> 安装版 <span class="size" data-size-for="setup">…</span> · 便携版 <span class="size" data-size-for="portable">…</span></span>
+          <span><b data-i18n="plat.size">体积</b>
+            <span class="size-line"><span data-i18n="plat.setupTag">安装版</span> <span class="size" data-size-for="setup">…</span></span>
+            <span class="size-line"><span data-i18n="plat.portableTag">便携版</span> <span class="size" data-size-for="portable">…</span></span>
+          </span>
         </div>
         <div class="acts">
           <a class="lbtn main" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup.exe" data-i18n="plat3.setup">下载安装版</a>
@@ -770,13 +791,13 @@ const T = {
     "hero.ctaWeb":"在浏览器中打开","hero.ctaAll":"查看全部下载",
     "note.free":"完全免费","note.account":"无需账号","note.local":"数据本地保存","note.sync":"工程文件三端互通",
     "detect.default":"正在识别您的设备…","detect.go":"前往推荐版本",
-    "preview.eyebrow":"编辑器预览","preview.title":"眼见为实","preview.sub":"三端共用同一套核心引擎，界面与画布体验高度一致。以下为编辑器画面示意，点开即可亲自体验。","preview.badge":"点击进入实时编辑器",
+    "preview.eyebrow":"编辑器预览","preview.title":"眼见为实","preview.sub":"三端共用同一套核心引擎，界面与画布体验高度一致。以下为编辑器画面示意，点开即可亲自体验。","preview.badge":"点击进入实时编辑器","preview.badgeTouch":"触屏版",
     "stats.eyebrow":"关键数字","stats.title":"用数据说话","stats.l1":"种界面语言，切换即同步","stats.l2":"平台 · 网页 / Windows / Android","stats.l3":"种使用形态，随设备自适应","stats.l4":"离线可用，数据本地保存",
     "platforms.eyebrow":"三种平台 · 四种形态","platforms.title":"选择适合你的方式",
     "platforms.sub":"无论手机、平板、电脑还是浏览器，都能找到对应的入口。下方按钮会直接打开网页或下载安装包。",
     "plat1.name":"网页版 · 鼠标","plat1.desc":"浏览器直接打开，无需安装。适配台式机、笔记本。","plat1.btn":"立即打开",
     "plat2.name":"网页版 · 触屏","plat2.desc":"手机/平板浏览器，或 URL 加 ?touch 切换触控布局。","plat2.btn":"触屏模式打开",
-    "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安装版 / 便携版（免安装）。崩溃恢复、自动保存等增强。","plat3.setup":"下载安装版","plat3.portable":"下载便携版",
+    "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安装版 / 便携版（免安装）。崩溃恢复、自动保存等增强。","plat3.setup":"下载安装版","plat3.portable":"下载便携版","plat.setupTag":"安装版","plat.portableTag":"便携版",
     "plat4.name":"Android 移动版","plat4.desc":"安卓手机/平板安装包（release 签名）。全屏、分享导出等增强。","plat4.btn":"下载 .apk",
     "plat.version":"版本","plat.req":"系统要求","plat.size":"体积","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"核心能力","features.title":"从涂鸦到参数化建模","features.sub":"一套工具覆盖 3D 与 2D 创作全流程，并在不同平台提供专属增强。",
@@ -843,13 +864,13 @@ const T = {
     "hero.ctaWeb":"Abrir en el navegador","hero.ctaAll":"Ver todas las descargas",
     "note.free":"Totalmente gratuito","note.account":"Sin cuenta","note.local":"Datos guardados localmente","note.sync":"Archivos de proyecto compatibles en los tres entornos",
     "detect.default":"Detectando tu dispositivo…","detect.go":"Ir a la versión recomendada",
-    "preview.eyebrow":"Vista previa del editor","preview.title":"Ver para creer","preview.sub":"Las tres plataformas comparten el mismo motor principal, por lo que la interfaz y el lienzo son muy consistentes. A continuación, una muestra del editor: púlsalo para probarlo tú mismo.","preview.badge":"Haz clic para abrir el editor en vivo",
+    "preview.eyebrow":"Vista previa del editor","preview.title":"Ver para creer","preview.sub":"Las tres plataformas comparten el mismo motor principal, por lo que la interfaz y el lienzo son muy consistentes. A continuación, una muestra del editor: púlsalo para probarlo tú mismo.","preview.badge":"Haz clic para abrir el editor en vivo","preview.badgeTouch":"Táctil",
     "stats.eyebrow":"Cifras clave","stats.title":"En cifras","stats.l1":"idiomas de interfaz, sincronización al cambiar","stats.l2":"Plataformas · Web / Windows / Android","stats.l3":"modos de uso, adaptados al dispositivo","stats.l4":"disponible sin conexión, datos en local",
     "platforms.eyebrow":"Tres plataformas · Cuatro formas","platforms.title":"Elige la que te convenga",
     "platforms.sub":"Ya sea móvil, tableta, ordenador o navegador, hay una entrada para ti. Los botones de abajo abren la web o descargan el paquete directamente.",
     "plat1.name":"Web · Ratón","plat1.desc":"Se abre directamente en el navegador, sin instalar. Para escritorio y portátil.","plat1.btn":"Abrir ahora",
     "plat2.name":"Web · Táctil","plat2.desc":"Navegador de móvil/tableta, o añade ?touch a la URL para el diseño táctil.","plat2.btn":"Modo táctil",
-    "plat3.name":"PC de escritorio · Windows","plat3.desc":"Versión de instalación / portátil (sin instalar) de Windows. Con recuperación tras bloqueo y autoguardado.","plat3.setup":"Descargar instalable","plat3.portable":"Descargar portátil",
+    "plat3.name":"PC de escritorio · Windows","plat3.desc":"Versión de instalación / portátil (sin instalar) de Windows. Con recuperación tras bloqueo y autoguardado.","plat3.setup":"Descargar instalable","plat3.portable":"Descargar portátil","plat.setupTag":"Instalable","plat.portableTag":"Portátil",
     "plat4.name":"Android móvil","plat4.desc":"Paquete de instalación para móvil/tableta Android (firma release). Con pantalla completa, compartir y exportar.","plat4.btn":"Descargar .apk",
     "plat.version":"Versión","plat.req":"Sistema","plat.size":"Tamaño","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Capacidades centrales","features.title":"Del boceto al modelado paramétrico","features.sub":"Un conjunto de herramientas cubre todo el flujo creativo 3D y 2D, con mejoras específicas por plataforma.",
@@ -916,13 +937,13 @@ const T = {
     "hero.ctaWeb":"在瀏覽器中開啟","hero.ctaAll":"查看全部下載",
     "note.free":"完全免費","note.account":"無需帳號","note.local":"資料本機保存","note.sync":"工程檔案三端互通",
     "detect.default":"正在識別您的裝置…","detect.go":"前往推薦版本",
-    "preview.eyebrow":"編輯器預覽","preview.title":"眼見為實","preview.sub":"三端共用同一套核心引擎，介面與畫布體驗高度一致。以下為編輯器畫面示意，點開即可親自體驗。","preview.badge":"點擊進入即時編輯器",
+    "preview.eyebrow":"編輯器預覽","preview.title":"眼見為實","preview.sub":"三端共用同一套核心引擎，介面與畫布體驗高度一致。以下為編輯器畫面示意，點開即可親自體驗。","preview.badge":"點擊進入即時編輯器","preview.badgeTouch":"觸屏版",
     "stats.eyebrow":"關鍵數字","stats.title":"用數據說話","stats.l1":"種介面語言，切換即同步","stats.l2":"平台 · 網頁 / Windows / Android","stats.l3":"種使用形態，隨裝置自適應","stats.l4":"離線可用，資料本機保存",
     "platforms.eyebrow":"三種平台 · 四種形態","platforms.title":"選擇適合你的方式",
     "platforms.sub":"無論手機、平板、電腦還是瀏覽器，都能找到對應的入口。下方按鈕會直接開啟網頁或下載安裝檔。",
     "plat1.name":"網頁版 · 滑鼠","plat1.desc":"瀏覽器直接開啟，無須安裝。適配桌上型電腦、筆電。","plat1.btn":"立即開啟",
     "plat2.name":"網頁版 · 觸控","plat2.desc":"手機/平板瀏覽器，或 URL 加 ?touch 切換觸控佈局。","plat2.btn":"觸控模式開啟",
-    "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安裝版 / 免安裝版。崩潰復原、自動儲存等增強。","plat3.setup":"下載安裝版","plat3.portable":"下載免安裝版",
+    "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安裝版 / 免安裝版。崩潰復原、自動儲存等增強。","plat3.setup":"下載安裝版","plat3.portable":"下載免安裝版","plat.setupTag":"安裝版","plat.portableTag":"免安裝版",
     "plat4.name":"Android 行動版","plat4.desc":"安卓手機/平板安裝檔（release 簽章）。全螢幕、分享匯出等增強。","plat4.btn":"下載 .apk",
     "plat.version":"版本","plat.req":"系統需求","plat.size":"體積","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"核心能力","features.title":"從塗鴉到參數化建模","features.sub":"一套工具涵蓋 3D 與 2D 創作全流程，並在不同平台提供專屬增強。",
@@ -989,13 +1010,13 @@ const T = {
     "hero.ctaWeb":"Open in Browser","hero.ctaAll":"See All Downloads",
     "note.free":"Completely free","note.account":"No account needed","note.local":"Data stays local","note.sync":"Projects sync across devices",
     "detect.default":"Detecting your device…","detect.go":"Go to recommended",
-    "preview.eyebrow":"Editor Preview","preview.title":"See It in Action","preview.sub":"All three platforms share the same core engine, so the UI and canvas experience stay consistent. Below is a glimpse of the editor—click to try it yourself.","preview.badge":"Click to open the live editor",
+    "preview.eyebrow":"Editor Preview","preview.title":"See It in Action","preview.sub":"All three platforms share the same core engine, so the UI and canvas experience stay consistent. Below is a glimpse of the editor—click to try it yourself.","preview.badge":"Click to open the live editor","preview.badgeTouch":"Touch",
     "stats.eyebrow":"Key Numbers","stats.title":"By the Numbers","stats.l1":"interface languages, switch to sync","stats.l2":"Platforms · Web / Windows / Android","stats.l3":"usage modes, adaptive to device","stats.l4":"offline-ready, data stays local",
     "platforms.eyebrow":"3 Platforms · 4 Modes","platforms.title":"Pick what fits you",
     "platforms.sub":"Whether phone, tablet, PC or browser — there is an entry for each. Buttons open the web app or download the installer directly.",
     "plat1.name":"Web · Mouse","plat1.desc":"Open directly in a browser, no install. For desktop and laptop.","plat1.btn":"Open Now",
     "plat2.name":"Web · Touch","plat2.desc":"Phones/tablets, or add ?touch to the URL for the touch layout.","plat2.btn":"Open Touch Mode",
-    "plat3.name":"PC · Windows","plat3.desc":"Windows setup / portable (no install). Crash recovery, autosave and more.","plat3.setup":"Download Setup","plat3.portable":"Download Portable",
+    "plat3.name":"PC · Windows","plat3.desc":"Windows setup / portable (no install). Crash recovery, autosave and more.","plat3.setup":"Download Setup","plat3.portable":"Download Portable","plat.setupTag":"Setup","plat.portableTag":"Portable",
     "plat4.name":"Android","plat4.desc":"Android phone/tablet package (release-signed). Fullscreen, share-export and more.","plat4.btn":"Download .apk",
     "plat.version":"Version","plat.req":"System","plat.size":"Size","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Core Capabilities","features.title":"From doodles to parametric modeling","features.sub":"One toolset for the whole 3D & 2D pipeline, with platform-specific extras.",
@@ -1062,13 +1083,13 @@ const T = {
     "hero.ctaWeb":"ブラウザで開く","hero.ctaAll":"すべてのダウンロード",
     "note.free":"完全無料","note.account":"アカウント不要","note.local":"データはローカル保存","note.sync":"シーンは端末間共有",
     "detect.default":"デバイスを判別中…","detect.go":"おすすめへ",
-    "preview.eyebrow":"エディタプレビュー","preview.title":"百聞は一見に如かず","preview.sub":"3つのプラットフォームは同じコアエンジンを共有し、UIとキャンバス体験はほぼ同一です。以下はエディタ画面のイメージです。クリックしてお試しください。","preview.badge":"クリックしてライブエディタを開く",
+    "preview.eyebrow":"エディタプレビュー","preview.title":"百聞は一見に如かず","preview.sub":"3つのプラットフォームは同じコアエンジンを共有し、UIとキャンバス体験はほぼ同一です。以下はエディタ画面のイメージです。クリックしてお試しください。","preview.badge":"クリックしてライブエディタを開く","preview.badgeTouch":"タッチ版",
     "stats.eyebrow":"主な数字","stats.title":"数字で見る","stats.l1":"言語のUI、切替で同期","stats.l2":"プラットフォーム · Web / Windows / Android","stats.l3":"使用形態、端末に応じて自動調整","stats.l4":"オフライン対応、データはローカル保存",
     "platforms.eyebrow":"3プラットフォーム・4形態","platforms.title":"あなたに合う方法を",
     "platforms.sub":"スマホ・タブレット・PC・ブラウザのいずれでも入り口があります。ボタンでWebアプリを開くか、インストーラを直接ダウンロードします。",
     "plat1.name":"Web・マウス","plat1.desc":"ブラウザですぐ開く、インストール不要。デスクトップ・ノート向け。","plat1.btn":"今すぐ開く",
     "plat2.name":"Web・タッチ","plat2.desc":"スマホ/タブレット、またはURLに ?touch を付けてタッチレイアウト。","plat2.btn":"タッチモードで開く",
-    "plat3.name":"PC・Windows","plat3.desc":"Windows インストーラ / ポータブル（インストール不要）。クラッシュ復旧・自動保存など。","plat3.setup":"インストーラを取得","plat3.portable":"ポータブルを取得",
+    "plat3.name":"PC・Windows","plat3.desc":"Windows インストーラ / ポータブル（インストール不要）。クラッシュ復旧・自動保存など。","plat3.setup":"インストーラを取得","plat3.portable":"ポータブルを取得","plat.setupTag":"インストーラ","plat.portableTag":"ポータブル",
     "plat4.name":"Android","plat4.desc":"Android スマホ/タブレット向けパッケージ（リリース署名）。全画面・共有書き出しなど。","plat4.btn":" .apk を取得",
     "plat.version":"バージョン","plat.req":"システム要件","plat.size":"サイズ","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"主要機能","features.title":"落書きからパラメトリック建模まで","features.sub":"3Dと2Dの制作全体をカバーし、プラットフォームごとに専用強化を提供。",
@@ -1135,13 +1156,13 @@ const T = {
     "hero.ctaWeb":"브라우저에서 열기","hero.ctaAll":"모든 다운로드 보기",
     "note.free":"완전 무료","note.account":"계정 불필요","note.local":"데이터는 기기에 저장","note.sync":"프로젝트 기기 간 공유",
     "detect.default":"기기를 인식하는 중…","detect.go":"추천 버전으로",
-    "preview.eyebrow":"에디터 미리보기","preview.title":"백문이불여일견","preview.sub":"세 플랫폼은 동일한 코어 엔진을 공유하여 UI와 캔버스 경험이 거의 같습니다. 아래는 에디터 화면의 예시입니다. 클릭하여 직접 체험해 보세요.","preview.badge":"클릭하여 라이브 에디터 열기",
+    "preview.eyebrow":"에디터 미리보기","preview.title":"백문이불여일견","preview.sub":"세 플랫폼은 동일한 코어 엔진을 공유하여 UI와 캔버스 경험이 거의 같습니다. 아래는 에디터 화면의 예시입니다. 클릭하여 직접 체험해 보세요.","preview.badge":"클릭하여 라이브 에디터 열기","preview.badgeTouch":"터치 버전",
     "stats.eyebrow":"핵심 수치","stats.title":"숫자로 보는","stats.l1":"개 언어 UI, 전환 시 동기화","stats.l2":"플랫폼 · 웹 / Windows / Android","stats.l3":"가지 사용 형태, 기기에 맞춰 자동 조정","stats.l4":"오프라인 지원, 데이터 로컬 저장",
     "platforms.eyebrow":"3개 플랫폼 · 4가지 형태","platforms.title":"당신에게 맞는 방식",
     "platforms.sub":"스마트폰·태블릿·PC·브라우저 어디서든 진입점이 있습니다. 버튼을 누르면 웹 앱이 열리거나 설치 파일이 바로 다운로드됩니다.",
     "plat1.name":"웹 · 마우스","plat1.desc":"브라우저에서 바로 열고 설치 불필요. 데스크톱·노트북용.","plat1.btn":"지금 열기",
     "plat2.name":"웹 · 터치","plat2.desc":"스마트폰/태블릿, 또는 URL에 ?touch 를 붙여 터치 레이아웃으로.","plat2.btn":"터치 모드 열기",
-    "plat3.name":"PC · Windows","plat3.desc":"Windows 설치판 / 포터블(설치 불필요). 크래시 복구·자동 저장 등.","plat3.setup":"설치판 다운로드","plat3.portable":"포터블 다운로드",
+    "plat3.name":"PC · Windows","plat3.desc":"Windows 설치판 / 포터블(설치 불필요). 크래시 복구·자동 저장 등.","plat3.setup":"설치판 다운로드","plat3.portable":"포터블 다운로드","plat.setupTag":"설치판","plat.portableTag":"포터블",
     "plat4.name":"Android","plat4.desc":"Android 폰/태블릿 패키지(릴리스 서명). 전체 화면·공유 내보내기 등.","plat4.btn":" .apk 다운로드",
     "plat.version":"버전","plat.req":"시스템 요구","plat.size":"용량","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"핵심 기능","features.title":"낙서에서 파라메트릭 모델링까지","features.sub":"3D와 2D 제작 전 과정을 아우르는 하나의 툴셋, 플랫폼별 전용 기능 제공.",
@@ -1202,13 +1223,13 @@ const T = {
     "hero.ctaWeb":"Открыть в браузере","hero.ctaAll":"Все загрузки",
     "note.free":"Полностью бесплатно","note.account":"Без регистрации","note.local":"Данные локально","note.sync":"Проекты общие на всех устройствах",
     "detect.default":"Определяем ваше устройство…","detect.go":"К рекомендованной версии",
-    "preview.eyebrow":"Предпросмотр редактора","preview.title":"Увидеть своими глазами","preview.sub":"Все три платформы используют один и тот же основной движок, поэтому интерфейс и холст практически идентичны. Ниже — пример экрана редактора. Нажмите, чтобы попробовать самим.","preview.badge":"Нажмите, чтобы открыть живой редактор",
+    "preview.eyebrow":"Предпросмотр редактора","preview.title":"Увидеть своими глазами","preview.sub":"Все три платформы используют один и тот же основной движок, поэтому интерфейс и холст практически идентичны. Ниже — пример экрана редактора. Нажмите, чтобы попробовать самим.","preview.badge":"Нажмите, чтобы открыть живой редактор","preview.badgeTouch":"Сенсорная версия",
     "stats.eyebrow":"Ключевые цифры","stats.title":"Цифры говорят","stats.l1":"языков интерфейса, синхронизация при переключении","stats.l2":"Платформы · Web / Windows / Android","stats.l3":"режима использования, адаптация к устройству","stats.l4":"офлайн-доступ, данные хранятся локально",
     "platforms.eyebrow":"3 платформы · 4 режима","platforms.title":"Выберите подходящий вариант",
     "platforms.sub":"Будь то телефон, планшет, ПК или браузер — для каждого есть свой вход. Кнопки открывают веб-приложение или скачивают установщик напрямую.",
     "plat1.name":"Веб · Мышь","plat1.desc":"Открывается прямо в браузере, без установки. Для настольных ПК и ноутбуков.","plat1.btn":"Открыть сейчас",
     "plat2.name":"Веб · Сенсор","plat2.desc":"Телефоны/планшеты или добавьте ?touch к URL для сенсорной раскладки.","plat2.btn":"Открыть сенсорный режим",
-    "plat3.name":"ПК · Windows","plat3.desc":"Установщик Windows / портативная версия (без установки). Восстановление после сбоя, автосохранение и др.","plat3.setup":"Скачать установщик","plat3.portable":"Скачать портативную",
+    "plat3.name":"ПК · Windows","plat3.desc":"Установщик Windows / портативная версия (без установки). Восстановление после сбоя, автосохранение и др.","plat3.setup":"Скачать установщик","plat3.portable":"Скачать портативную","plat.setupTag":"Установщик","plat.portableTag":"Портативная",
     "plat4.name":"Android","plat4.desc":"Пакет для телефона/планшета Android (подпись release). Полноэкранный режим, экспорт через «Поделиться» и др.","plat4.btn":"Скачать .apk",
     "plat.version":"Версия","plat.req":"Система","plat.size":"Размер","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Ключевые возможности","features.title":"От наброска до параметрического моделирования","features.sub":"Один набор инструментов для всего процесса 3D- и 2D-творчества с расширениями под каждую платформу.",
@@ -1268,13 +1289,13 @@ const T = {
     "hero.ctaWeb":"Ouvrir dans le navigateur","hero.ctaAll":"Voir tous les téléchargements",
     "note.free":"Entièrement gratuit","note.account":"Sans compte","note.local":"Données enregistrées localement","note.sync":"Projets synchronisés entre appareils",
     "detect.default":"Détection de votre appareil…","detect.go":"Aller à la version recommandée",
-    "preview.eyebrow":"Aperçu de l'éditeur","preview.title":"Voir pour croire","preview.sub":"Les trois plateformes partagent le même moteur principal, l'interface et le canevas restent donc cohérents. Voici un aperçu de l'éditeur — cliquez pour l'essayer vous-même.","preview.badge":"Cliquez pour ouvrir l'éditeur en direct",
+    "preview.eyebrow":"Aperçu de l'éditeur","preview.title":"Voir pour croire","preview.sub":"Les trois plateformes partagent le même moteur principal, l'interface et le canevas restent donc cohérents. Voici un aperçu de l'éditeur — cliquez pour l'essayer vous-même.","preview.badge":"Cliquez pour ouvrir l'éditeur en direct","preview.badgeTouch":"Tactile",
     "stats.eyebrow":"Chiffres clés","stats.title":"En chiffres","stats.l1":"langues d'interface, synchronisées au changement","stats.l2":"Plateformes · Web / Windows / Android","stats.l3":"modes d'utilisation, adaptatifs à l'appareil","stats.l4":"hors-ligne, données enregistrées localement",
     "platforms.eyebrow":"Trois plateformes · Quatre modes","platforms.title":"Choisissez ce qui vous convient",
     "platforms.sub":"Que ce soit un téléphone, une tablette, un ordinateur ou un navigateur, vous trouverez une entrée adaptée. Les boutons ci-dessous ouvrent le Web ou lancent le téléchargement directement.",
     "plat1.name":"Web · Souris","plat1.desc":"S'ouvre directement dans le navigateur, sans installation. Adapté aux ordinateurs de bureau et portables.","plat1.btn":"Ouvrir maintenant",
     "plat2.name":"Web · Tactile","plat2.desc":"Téléphones/tablettes, ou ajoutez ?touch au lien pour basculer en disposition tactile.","plat2.btn":"Ouvrir le mode tactile",
-    "plat3.name":"Bureau PC · Windows","plat3.desc":"Version d'installation Windows / version portable (sans installation). Récupération après crash, auto-sauvegarde, etc.","plat3.setup":"Télécharger l'installateur","plat3.portable":"Télécharger la version portable",
+    "plat3.name":"Bureau PC · Windows","plat3.desc":"Version d'installation Windows / version portable (sans installation). Récupération après crash, auto-sauvegarde, etc.","plat3.setup":"Télécharger l'installateur","plat3.portable":"Télécharger la version portable","plat.setupTag":"Installateur","plat.portableTag":"Portable",
     "plat4.name":"Version Android","plat4.desc":"Paquet pour téléphone/tablette Android (signé). Plein écran, partage, export, etc.","plat4.btn":"Télécharger .apk",
     "plat.version":"Version","plat.req":"Système","plat.size":"Taille","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Capacités de base","features.title":"Du croquis à la modélisation paramétrique","features.sub":"Une seule boîte à outils couvre l'ensemble du flux créatif 3D et 2D, avec des optimisations propres à chaque plateforme.",
@@ -1347,13 +1368,13 @@ const T = {
     "hero.ctaWeb":"افتح في المتصفح","hero.ctaAll":"عرض كل التنزيلات",
     "note.free":"مجاني تماماً","note.account":"بدون حساب","note.local":"البيانات محفوظة محلياً","note.sync":"مشاريع متزامنة بين الأجهزة",
     "detect.default":"جارٍ التعرف على جهازك…","detect.go":"انتقل إلى الإصدار الموصى به",
-    "preview.eyebrow":"معاينة المحرر","preview.title":"الرؤية خير من الخبر","preview.sub":"تتشارك المنصات الثلاث نفس المحرك الأساسي، لذا تظل الواجهة وسطح الرسم متسقين. فيما يلي لمحة عن المحرر — انقر لتجربته بنفسك.","preview.badge":"انقر لفتح المحرر المباشر",
+    "preview.eyebrow":"معاينة المحرر","preview.title":"الرؤية خير من الخبر","preview.sub":"تتشارك المنصات الثلاث نفس المحرك الأساسي، لذا تظل الواجهة وسطح الرسم متسقين. فيما يلي لمحة عن المحرر — انقر لتجربته بنفسك.","preview.badge":"انقر لفتح المحرر المباشر","preview.badgeTouch":"اللمس",
     "stats.eyebrow":"أرقام رئيسية","stats.title":"بالأرقام","stats.l1":"لغات الواجهة، تزامن عند التبديل","stats.l2":"منصات · الويب / Windows / Android","stats.l3":"أشكال استخدام، تتكيف مع الجهاز","stats.l4":"متاح دون اتصال، البيانات محفوظة محلياً",
     "platforms.eyebrow":"ثلاث منصات · أربعة أشكال","platforms.title":"اختر الطريقة التي تناسبك",
     "platforms.sub":"سواء كان هاتفاً أو جهازاً لوحياً أو حاسوباً أو متصفحاً، ستجد مدخلاً مناسباً. الأزرار أدناه تفتح الويب أو تبدأ التنزيل مباشرة.",
     "plat1.name":"الويب · الماوس","plat1.desc":"يفتح مباشرة في المتصفح دون تثبيت. مناسب لأجهزة سطح المكتب والمحمولة.","plat1.btn":"افتح الآن",
     "plat2.name":"الويب · اللمس","plat2.desc":"هواتف/أجهزة لوحية، أو أضف ?touch إلى الرابط لتبديل تخطيط اللمس.","plat2.btn":"افتح وضع اللمس",
-    "plat3.name":"سطح المكتب PC · Windows","plat3.desc":"نسخة تثبيت Windows / نسخة محمولة (بدون تثبيت). استرداد من الانهيار وحفظ تلقائي وغيرها.","plat3.setup":"تنزيل نسخة التثبيت","plat3.portable":"تنزيل النسخة المحمولة",
+    "plat3.name":"سطح المكتب PC · Windows","plat3.desc":"نسخة تثبيت Windows / نسخة محمولة (بدون تثبيت). استرداد من الانهيار وحفظ تلقائي وغيرها.","plat3.setup":"تنزيل نسخة التثبيت","plat3.portable":"تنزيل النسخة المحمولة","plat.setupTag":"نسخة التثبيت","plat.portableTag":"المحمولة",
     "plat4.name":"إصدار Android","plat4.desc":"حزمة هاتف/جهاز لوحي Android (موقّعة بإصدار). ملء الشاشة والمشاركة والتصدير وغيرها.","plat4.btn":"تنزيل .apk",
     "plat.version":"الإصدار","plat.req":"متطلبات النظام","plat.size":"الحجم","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"القدرات الأساسية","features.title":"من الخربشة إلى النمذجة المعاملية","features.sub":"مجموعة أدوات واحدة تغطي سير عمل الإبداع ثلاثي الأبعاد وثنائي الأبعاد بالكامل، مع تحسينات خاصة بكل منصة.",
@@ -1458,6 +1479,17 @@ function applyLang(lang){
     if(dict[k]!=null) el.innerHTML = dict[k];
   });
   document.title = (dict["hero.title"]||"Cub3D Editor") + " — " + (dict["hero.sub"]||"");
+  // 预览图随语言切换（桌面横版 + 触屏竖版）
+  const previewImg = document.getElementById('previewImg');
+  if(previewImg){
+    previewImg.src = 'assets/preview-' + lang + '.png';
+    previewImg.style.display = '';
+  }
+  const previewTouchImg = document.getElementById('previewTouchImg');
+  if(previewTouchImg){
+    previewTouchImg.src = 'assets/preview-touch-' + lang + '.png';
+    previewTouchImg.style.display = '';
+  }
   // 对比表重渲
   const labels = CMPLABEL[lang];
   const body = document.getElementById('cmpBody');
