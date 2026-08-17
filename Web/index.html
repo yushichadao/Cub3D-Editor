@@ -11601,8 +11601,11 @@ if (topbarEl && topActionsEl) {
   // 内容不足时把按钮推到末端（LTR 右端 / RTL 左端），溢出时由滚动负责；
   // 此 margin 不参与 scrollWidth 计算之外的内容，仅在未溢出时视觉对齐。
   function alignTopActions() {
-    if (topActionsOverflow()) topActionsEl.style.justifyContent = 'flex-start';
-    else topActionsEl.style.justifyContent = topIsRtl() ? 'flex-end' : 'flex-end';
+    // 内容溢出、或已发生横向滚动时一律用 flex-start：
+    // justify-content:flex-end 在溢出时会被 Chrome 压缩 scrollWidth 导致滚动卡死，
+    // 且会丢失已有滚动位置，因此只要存在可滚动内容就绝不切换到 flex-end。
+    if (topActionsOverflow() || getTopScroll() > 0) topActionsEl.style.justifyContent = 'flex-start';
+    else topActionsEl.style.justifyContent = 'flex-end';
   }
   alignTopActions();
   if (window.ResizeObserver) new ResizeObserver(alignTopActions).observe(topActionsEl);
@@ -11670,17 +11673,22 @@ if (topbarEl && topActionsEl) {
     if (dragMoved) { e.preventDefault(); e.stopPropagation(); dragMoved = false; }
   }, true);
 
-  // 全屏 / 退出全屏后，视口在动画过渡期间会经历多次布局抖动，
-  // ResizeObserver 可能错过最后一次稳定态，导致对齐状态停留在 flex-end 而卡死。
-  // 延迟到布局稳定后重新对齐并刷新 grab 光标（供 fullscreenchange 监听调用）。
+  // 全屏 / 退出全屏后，视口在动画过渡期间会经历多次布局抖动，且 Android Chrome
+  // 的全屏过渡动画约持续 300ms。因此延迟多次重试，每次：
+  //   1) 强制重建滚动上下文（overflow 抖动 + reflow），修复全屏切换后触摸横向滚动卡死；
+  //   2) 重新对齐 justify-content 并刷新 grab 光标。
   window.resyncTopbarScroll = function () {
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        if (!topActionsEl) return;
-        alignTopActions();
-        updateGrab();
-      });
-    });
+    if (!topActionsEl) return;
+    let tries = 0;
+    (function retry() {
+      tries++;
+      topActionsEl.style.overflowX = 'hidden';
+      void topActionsEl.offsetWidth; // 强制 reflow，重建滚动容器
+      topActionsEl.style.overflowX = 'auto';
+      alignTopActions();
+      updateGrab();
+      if (tries < 4) setTimeout(retry, 100); // 覆盖约 400ms 的全屏过渡动画
+    })();
   };
 }
 
@@ -11689,6 +11697,8 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  // 移动端全屏/退出全屏会伴随 resize，补一次顶栏滚动重同步
+  if (window.resyncTopbarScroll) window.resyncTopbarScroll();
 });
 
 // 画布离开时隐藏工具指示器
