@@ -108,9 +108,7 @@ function genPanel(w, h, accent = [90, 209, 196]) {
 // og:image 1200x630
 fs.writeFileSync(path.join(OUT, 'og-card.png'), genPanel(1200, 630));
 
-// 预览区占位（Web 16:9 / PC 16:9 / Android 竖版近似 9:16）
+// 预览区占位（Web 16:9）
 fs.writeFileSync(path.join(OUT, 'preview-web.png'), genPanel(1280, 720, [90, 209, 196]));
-fs.writeFileSync(path.join(OUT, 'preview-pc.png'), genPanel(1280, 720, [120, 130, 235]));
-fs.writeFileSync(path.join(OUT, 'preview-android.png'), genPanel(540, 960, [90, 209, 196]));
 
 console.log('Generated placeholder PNGs -> ' + OUT);

@@ -137,23 +137,15 @@
 
   /* ===== 编辑器预览区 ===== */
   .preview{display:grid;gap:16px;margin-top:36px}
-  .preview-main{position:relative;display:block;border:1px solid var(--line);border-radius:var(--radius);
+  .preview-main{position:relative;display:block;width:min(100%,720px);margin-inline:auto;border:1px solid var(--line);border-radius:var(--radius);
     overflow:hidden;background:var(--panel);transition:border-color .25s,transform .25s,box-shadow .25s}
   .preview-main:hover{border-color:var(--accent);transform:translateY(-4px);
     box-shadow:0 18px 48px -20px rgba(90,209,196,.32)}
-  .preview-main img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .preview-main img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:cover}
   .preview-main .pv-badge{position:absolute;left:16px;bottom:16px;padding:8px 14px;border-radius:8px;
     background:rgba(12,20,19,.72);backdrop-filter:blur(8px);border:1px solid var(--line);
     color:var(--text);font-size:13px;font-weight:600;display:inline-flex;gap:8px;align-items:center}
   .preview-main .pv-badge b{color:var(--accent);font-weight:700}
-  .preview-thumbs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
-  .preview-thumb{position:relative;display:block;border:1px solid var(--line);border-radius:12px;overflow:hidden;
-    background:var(--panel);transition:border-color .2s,transform .2s}
-  .preview-thumb:hover{border-color:var(--accent);transform:translateY(-3px)}
-  .preview-thumb img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover}
-  .preview-thumb span{position:absolute;left:10px;bottom:10px;padding:4px 10px;border-radius:6px;
-    background:rgba(12,20,19,.72);backdrop-filter:blur(8px);border:1px solid var(--line);
-    font-size:12px;color:var(--text);font-weight:600}
 
   /* ===== 功能亮点数字条 ===== */
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;margin-top:36px;
@@ -538,11 +530,6 @@
         <img src="assets/preview-web.png" alt="Cub3D Editor preview" loading="lazy" onerror="this.style.display='none'">
         <span class="pv-badge"><b data-i18n="preview.badge">点击进入实时编辑器</b><i class="dot"></i></span>
       </a>
-      <div class="preview-thumbs">
-        <a class="preview-thumb reveal d1" href="Web/index.html"><img src="assets/preview-web.png" alt="Web" loading="lazy" onerror="this.style.display='none'"><span data-i18n="preview.thumb.web">网页版</span></a>
-        <a class="preview-thumb reveal d2" href="#platforms"><img src="assets/preview-pc.png" alt="PC" loading="lazy" onerror="this.style.display='none'"><span data-i18n="preview.thumb.pc">PC 桌面版</span></a>
-        <a class="preview-thumb reveal d3" href="#platforms"><img src="assets/preview-android.png" alt="Android" loading="lazy" onerror="this.style.display='none'"><span data-i18n="preview.thumb.android">Android 版</span></a>
-      </div>
     </div>
   </section>
 
@@ -784,7 +771,7 @@ const T = {
     "hero.ctaWeb":"在浏览器中打开","hero.ctaAll":"查看全部下载",
     "note.free":"完全免费","note.account":"无需账号","note.local":"数据本地保存","note.sync":"工程文件三端互通",
     "detect.default":"正在识别您的设备…","detect.go":"前往推荐版本",
-    "preview.eyebrow":"编辑器预览","preview.title":"眼见为实","preview.sub":"三端共用同一套核心引擎，界面与画布体验高度一致。以下为编辑器画面示意，点开即可亲自体验。","preview.badge":"点击进入实时编辑器","preview.thumb.web":"网页版","preview.thumb.pc":"PC 桌面版","preview.thumb.android":"Android 版",
+    "preview.eyebrow":"编辑器预览","preview.title":"眼见为实","preview.sub":"三端共用同一套核心引擎，界面与画布体验高度一致。以下为编辑器画面示意，点开即可亲自体验。","preview.badge":"点击进入实时编辑器",
     "stats.eyebrow":"关键数字","stats.title":"用数据说话","stats.l1":"种界面语言，切换即同步","stats.l2":"平台 · 网页 / Windows / Android","stats.l3":"种使用形态，随设备自适应","stats.l4":"离线可用，数据本地保存",
     "platforms.eyebrow":"三种平台 · 四种形态","platforms.title":"选择适合你的方式",
     "platforms.sub":"无论手机、平板、电脑还是浏览器，都能找到对应的入口。下方按钮会直接打开网页或下载安装包。",
@@ -852,7 +839,7 @@ const T = {
     "hero.ctaWeb":"Abrir en el navegador","hero.ctaAll":"Ver todas las descargas",
     "note.free":"Totalmente gratuito","note.account":"Sin cuenta","note.local":"Datos guardados localmente","note.sync":"Archivos de proyecto compatibles en los tres entornos",
     "detect.default":"Detectando tu dispositivo…","detect.go":"Ir a la versión recomendada",
-    "preview.eyebrow":"Vista previa del editor","preview.title":"Ver para creer","preview.sub":"Las tres plataformas comparten el mismo motor principal, por lo que la interfaz y el lienzo son muy consistentes. A continuación, una muestra del editor: púlsalo para probarlo tú mismo.","preview.badge":"Haz clic para abrir el editor en vivo","preview.thumb.web":"Versión web","preview.thumb.pc":"Escritorio PC","preview.thumb.android":"Android",
+    "preview.eyebrow":"Vista previa del editor","preview.title":"Ver para creer","preview.sub":"Las tres plataformas comparten el mismo motor principal, por lo que la interfaz y el lienzo son muy consistentes. A continuación, una muestra del editor: púlsalo para probarlo tú mismo.","preview.badge":"Haz clic para abrir el editor en vivo",
     "stats.eyebrow":"Cifras clave","stats.title":"En cifras","stats.l1":"idiomas de interfaz, sincronización al cambiar","stats.l2":"Plataformas · Web / Windows / Android","stats.l3":"modos de uso, adaptados al dispositivo","stats.l4":"disponible sin conexión, datos en local",
     "platforms.eyebrow":"Tres plataformas · Cuatro formas","platforms.title":"Elige la que te convenga",
     "platforms.sub":"Ya sea móvil, tableta, ordenador o navegador, hay una entrada para ti. Los botones de abajo abren la web o descargan el paquete directamente.",
@@ -920,7 +907,7 @@ const T = {
     "hero.ctaWeb":"在瀏覽器中開啟","hero.ctaAll":"查看全部下載",
     "note.free":"完全免費","note.account":"無需帳號","note.local":"資料本機保存","note.sync":"工程檔案三端互通",
     "detect.default":"正在識別您的裝置…","detect.go":"前往推薦版本",
-    "preview.eyebrow":"編輯器預覽","preview.title":"眼見為實","preview.sub":"三端共用同一套核心引擎，介面與畫布體驗高度一致。以下為編輯器畫面示意，點開即可親自體驗。","preview.badge":"點擊進入即時編輯器","preview.thumb.web":"網頁版","preview.thumb.pc":"PC 桌面版","preview.thumb.android":"Android 版",
+    "preview.eyebrow":"編輯器預覽","preview.title":"眼見為實","preview.sub":"三端共用同一套核心引擎，介面與畫布體驗高度一致。以下為編輯器畫面示意，點開即可親自體驗。","preview.badge":"點擊進入即時編輯器",
     "stats.eyebrow":"關鍵數字","stats.title":"用數據說話","stats.l1":"種介面語言，切換即同步","stats.l2":"平台 · 網頁 / Windows / Android","stats.l3":"種使用形態，隨裝置自適應","stats.l4":"離線可用，資料本機保存",
     "platforms.eyebrow":"三種平台 · 四種形態","platforms.title":"選擇適合你的方式",
     "platforms.sub":"無論手機、平板、電腦還是瀏覽器，都能找到對應的入口。下方按鈕會直接開啟網頁或下載安裝檔。",
@@ -988,7 +975,7 @@ const T = {
     "hero.ctaWeb":"Open in Browser","hero.ctaAll":"See All Downloads",
     "note.free":"Completely free","note.account":"No account needed","note.local":"Data stays local","note.sync":"Projects sync across devices",
     "detect.default":"Detecting your device…","detect.go":"Go to recommended",
-    "preview.eyebrow":"Editor Preview","preview.title":"See It in Action","preview.sub":"All three platforms share the same core engine, so the UI and canvas experience stay consistent. Below is a glimpse of the editor—click to try it yourself.","preview.badge":"Click to open the live editor","preview.thumb.web":"Web","preview.thumb.pc":"PC Desktop","preview.thumb.android":"Android",
+    "preview.eyebrow":"Editor Preview","preview.title":"See It in Action","preview.sub":"All three platforms share the same core engine, so the UI and canvas experience stay consistent. Below is a glimpse of the editor—click to try it yourself.","preview.badge":"Click to open the live editor",
     "stats.eyebrow":"Key Numbers","stats.title":"By the Numbers","stats.l1":"interface languages, switch to sync","stats.l2":"Platforms · Web / Windows / Android","stats.l3":"usage modes, adaptive to device","stats.l4":"offline-ready, data stays local",
     "platforms.eyebrow":"3 Platforms · 4 Modes","platforms.title":"Pick what fits you",
     "platforms.sub":"Whether phone, tablet, PC or browser — there is an entry for each. Buttons open the web app or download the installer directly.",
@@ -1056,7 +1043,7 @@ const T = {
     "hero.ctaWeb":"ブラウザで開く","hero.ctaAll":"すべてのダウンロード",
     "note.free":"完全無料","note.account":"アカウント不要","note.local":"データはローカル保存","note.sync":"シーンは端末間共有",
     "detect.default":"デバイスを判別中…","detect.go":"おすすめへ",
-    "preview.eyebrow":"エディタプレビュー","preview.title":"百聞は一見に如かず","preview.sub":"3つのプラットフォームは同じコアエンジンを共有し、UIとキャンバス体験はほぼ同一です。以下はエディタ画面のイメージです。クリックしてお試しください。","preview.badge":"クリックしてライブエディタを開く","preview.thumb.web":"Web版","preview.thumb.pc":"PC デスクトップ版","preview.thumb.android":"Android版",
+    "preview.eyebrow":"エディタプレビュー","preview.title":"百聞は一見に如かず","preview.sub":"3つのプラットフォームは同じコアエンジンを共有し、UIとキャンバス体験はほぼ同一です。以下はエディタ画面のイメージです。クリックしてお試しください。","preview.badge":"クリックしてライブエディタを開く",
     "stats.eyebrow":"主な数字","stats.title":"数字で見る","stats.l1":"言語のUI、切替で同期","stats.l2":"プラットフォーム · Web / Windows / Android","stats.l3":"使用形態、端末に応じて自動調整","stats.l4":"オフライン対応、データはローカル保存",
     "platforms.eyebrow":"3プラットフォーム・4形態","platforms.title":"あなたに合う方法を",
     "platforms.sub":"スマホ・タブレット・PC・ブラウザのいずれでも入り口があります。ボタンでWebアプリを開くか、インストーラを直接ダウンロードします。",
@@ -1124,7 +1111,7 @@ const T = {
     "hero.ctaWeb":"브라우저에서 열기","hero.ctaAll":"모든 다운로드 보기",
     "note.free":"완전 무료","note.account":"계정 불필요","note.local":"데이터는 기기에 저장","note.sync":"프로젝트 기기 간 공유",
     "detect.default":"기기를 인식하는 중…","detect.go":"추천 버전으로",
-    "preview.eyebrow":"에디터 미리보기","preview.title":"백문이불여일견","preview.sub":"세 플랫폼은 동일한 코어 엔진을 공유하여 UI와 캔버스 경험이 거의 같습니다. 아래는 에디터 화면의 예시입니다. 클릭하여 직접 체험해 보세요.","preview.badge":"클릭하여 라이브 에디터 열기","preview.thumb.web":"웹 버전","preview.thumb.pc":"PC 데스크톱 버전","preview.thumb.android":"Android 버전",
+    "preview.eyebrow":"에디터 미리보기","preview.title":"백문이불여일견","preview.sub":"세 플랫폼은 동일한 코어 엔진을 공유하여 UI와 캔버스 경험이 거의 같습니다. 아래는 에디터 화면의 예시입니다. 클릭하여 직접 체험해 보세요.","preview.badge":"클릭하여 라이브 에디터 열기",
     "stats.eyebrow":"핵심 수치","stats.title":"숫자로 보는","stats.l1":"개 언어 UI, 전환 시 동기화","stats.l2":"플랫폼 · 웹 / Windows / Android","stats.l3":"가지 사용 형태, 기기에 맞춰 자동 조정","stats.l4":"오프라인 지원, 데이터 로컬 저장",
     "platforms.eyebrow":"3개 플랫폼 · 4가지 형태","platforms.title":"당신에게 맞는 방식",
     "platforms.sub":"스마트폰·태블릿·PC·브라우저 어디서든 진입점이 있습니다. 버튼을 누르면 웹 앱이 열리거나 설치 파일이 바로 다운로드됩니다.",
@@ -1190,7 +1177,7 @@ const T = {
     "hero.ctaWeb":"Открыть в браузере","hero.ctaAll":"Все загрузки",
     "note.free":"Полностью бесплатно","note.account":"Без регистрации","note.local":"Данные локально","note.sync":"Проекты общие на всех устройствах",
     "detect.default":"Определяем ваше устройство…","detect.go":"К рекомендованной версии",
-    "preview.eyebrow":"Предпросмотр редактора","preview.title":"Увидеть своими глазами","preview.sub":"Все три платформы используют один и тот же основной движок, поэтому интерфейс и холст практически идентичны. Ниже — пример экрана редактора. Нажмите, чтобы попробовать самим.","preview.badge":"Нажмите, чтобы открыть живой редактор","preview.thumb.web":"Веб-версия","preview.thumb.pc":"PC (десктоп)","preview.thumb.android":"Android",
+    "preview.eyebrow":"Предпросмотр редактора","preview.title":"Увидеть своими глазами","preview.sub":"Все три платформы используют один и тот же основной движок, поэтому интерфейс и холст практически идентичны. Ниже — пример экрана редактора. Нажмите, чтобы попробовать самим.","preview.badge":"Нажмите, чтобы открыть живой редактор",
     "stats.eyebrow":"Ключевые цифры","stats.title":"Цифры говорят","stats.l1":"языков интерфейса, синхронизация при переключении","stats.l2":"Платформы · Web / Windows / Android","stats.l3":"режима использования, адаптация к устройству","stats.l4":"офлайн-доступ, данные хранятся локально",
     "platforms.eyebrow":"3 платформы · 4 режима","platforms.title":"Выберите подходящий вариант",
     "platforms.sub":"Будь то телефон, планшет, ПК или браузер — для каждого есть свой вход. Кнопки открывают веб-приложение или скачивают установщик напрямую.",
@@ -1255,7 +1242,7 @@ const T = {
     "hero.ctaWeb":"Ouvrir dans le navigateur","hero.ctaAll":"Voir tous les téléchargements",
     "note.free":"Entièrement gratuit","note.account":"Sans compte","note.local":"Données enregistrées localement","note.sync":"Projets synchronisés entre appareils",
     "detect.default":"Détection de votre appareil…","detect.go":"Aller à la version recommandée",
-    "preview.eyebrow":"Aperçu de l'éditeur","preview.title":"Voir pour croire","preview.sub":"Les trois plateformes partagent le même moteur principal, l'interface et le canevas restent donc cohérents. Voici un aperçu de l'éditeur — cliquez pour l'essayer vous-même.","preview.badge":"Cliquez pour ouvrir l'éditeur en direct","preview.thumb.web":"Version Web","preview.thumb.pc":"Bureau PC","preview.thumb.android":"Android",
+    "preview.eyebrow":"Aperçu de l'éditeur","preview.title":"Voir pour croire","preview.sub":"Les trois plateformes partagent le même moteur principal, l'interface et le canevas restent donc cohérents. Voici un aperçu de l'éditeur — cliquez pour l'essayer vous-même.","preview.badge":"Cliquez pour ouvrir l'éditeur en direct",
     "stats.eyebrow":"Chiffres clés","stats.title":"En chiffres","stats.l1":"langues d'interface, synchronisées au changement","stats.l2":"Plateformes · Web / Windows / Android","stats.l3":"modes d'utilisation, adaptatifs à l'appareil","stats.l4":"hors-ligne, données enregistrées localement",
     "platforms.eyebrow":"Trois plateformes · Quatre modes","platforms.title":"Choisissez ce qui vous convient",
     "platforms.sub":"Que ce soit un téléphone, une tablette, un ordinateur ou un navigateur, vous trouverez une entrée adaptée. Les boutons ci-dessous ouvrent le Web ou lancent le téléchargement directement.",
@@ -1333,7 +1320,7 @@ const T = {
     "hero.ctaWeb":"افتح في المتصفح","hero.ctaAll":"عرض كل التنزيلات",
     "note.free":"مجاني تماماً","note.account":"بدون حساب","note.local":"البيانات محفوظة محلياً","note.sync":"مشاريع متزامنة بين الأجهزة",
     "detect.default":"جارٍ التعرف على جهازك…","detect.go":"انتقل إلى الإصدار الموصى به",
-    "preview.eyebrow":"معاينة المحرر","preview.title":"الرؤية خير من الخبر","preview.sub":"تتشارك المنصات الثلاث نفس المحرك الأساسي، لذا تظل الواجهة وسطح الرسم متسقين. فيما يلي لمحة عن المحرر — انقر لتجربته بنفسك.","preview.badge":"انقر لفتح المحرر المباشر","preview.thumb.web":"نسخة الويب","preview.thumb.pc":"نسخة سطح المكتب PC","preview.thumb.android":"نسخة Android",
+    "preview.eyebrow":"معاينة المحرر","preview.title":"الرؤية خير من الخبر","preview.sub":"تتشارك المنصات الثلاث نفس المحرك الأساسي، لذا تظل الواجهة وسطح الرسم متسقين. فيما يلي لمحة عن المحرر — انقر لتجربته بنفسك.","preview.badge":"انقر لفتح المحرر المباشر",
     "stats.eyebrow":"أرقام رئيسية","stats.title":"بالأرقام","stats.l1":"لغات الواجهة، تزامن عند التبديل","stats.l2":"منصات · الويب / Windows / Android","stats.l3":"أشكال استخدام، تتكيف مع الجهاز","stats.l4":"متاح دون اتصال، البيانات محفوظة محلياً",
     "platforms.eyebrow":"ثلاث منصات · أربعة أشكال","platforms.title":"اختر الطريقة التي تناسبك",
     "platforms.sub":"سواء كان هاتفاً أو جهازاً لوحياً أو حاسوباً أو متصفحاً، ستجد مدخلاً مناسباً. الأزرار أدناه تفتح الويب أو تبدأ التنزيل مباشرة.",
@@ -1501,13 +1488,28 @@ function detectDevice(){
   cta.href = m.url;
 }
 
-/* ============ 移动端菜单 ============ */
-document.getElementById('menuBtn').addEventListener('click', ()=>{
-  document.getElementById('navLinks').classList.toggle('open');
+/* ============ 移动端菜单（选择栏）============ */
+const menuBtn = document.getElementById('menuBtn');
+const navPanel = document.getElementById('navLinks');
+const navIsOpen = ()=>navPanel.classList.contains('open');
+menuBtn.addEventListener('click', ()=>{
+  navPanel.classList.toggle('open');
 });
 document.querySelectorAll('#navLinks a').forEach(a=>a.addEventListener('click',()=>{
-  document.getElementById('navLinks').classList.remove('open');
+  navPanel.classList.remove('open');
 }));
+/* 选择栏展开时：
+   - 鼠标指针停留在面板区域内 → 禁止滚动网页（wheel / 触屏 touchmove 阻止默认行为）
+   - 指针移出面板区域 → 事件不再落在面板上，页面恢复正常滚动
+   - 若面板自身内容超高可滚动（scrollHeight>clientHeight），则不拦截，保证面板内可滚动 */
+const navSelfScroll = ()=>navPanel.scrollHeight > navPanel.clientHeight + 1;
+const blockPageScroll = e=>{ if(navIsOpen() && !navSelfScroll()) e.preventDefault(); };
+navPanel.addEventListener('wheel', blockPageScroll, {passive:false});
+navPanel.addEventListener('touchmove', blockPageScroll, {passive:false});
+/* 展开时点击面板以外的区域（含其余页面内容）→ 面板收缩 */
+document.addEventListener('click', e=>{
+  if(navIsOpen() && !navPanel.contains(e.target) && !menuBtn.contains(e.target)) navPanel.classList.remove('open');
+});
 
 /* ============ 滚动揭示 ============ */
 const io = new IntersectionObserver(es=>{
