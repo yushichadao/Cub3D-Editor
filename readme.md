@@ -1,6 +1,6 @@
 # Cub3D Editor — 立方·3D设计工坊
 
-一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码同时覆盖网页、Windows 桌面、Android 三端。支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية（阿拉伯语）九种语言。
+一个**轻量化**的跨平台 3D/2D 场景编辑器，同一套代码同时覆盖网页、Windows 桌面、Android 三端。支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية（阿拉伯语）九种语言。
 
 > 从零基础涂鸦到进阶参数化建模，所有平台的 `.json` 工程文件互通，可在手机起草、电脑精修之间自由接力。
 
@@ -104,7 +104,9 @@ Cub3D Editor/
 │   ├── language/           # 界面语言文案
 │   ├── infra/              # 三端一致的基础设施（LICENSE、server 等）
 │   ├── scripts/            # 共享脚本
-│   └── three/              # Three.js 模块与示例
+│   ├── three/              # Three.js 模块与示例
+│   ├── fonts/              # 跨端字体（如阿拉伯语 Noto Kufi）
+│   └── icons/              # 立方系列图标（宣传页 / 站点用 SVG）
 ├── Web/                    # 网页版编辑器（由 Pages 发布到 /Web/）
 ├── PC/                     # Windows 桌面版（Electron + electron-builder）
 │   └── electron/           # Electron 主进程
@@ -123,7 +125,9 @@ Cub3D Editor/
 │   ├── _i18n_ru.mjs        # 俄文文案生成
 │   ├── _i18n_es.mjs        # 西班牙语文案生成
 │   ├── _i18n_fr.mjs        # 法语文案生成
-│   └── _i18n_ar.mjs        # 阿拉伯语文案生成（简体中文为内置默认，无需对应脚本）
+│   ├── _i18n_ar.mjs        # 阿拉伯语文案生成（简体中文为内置默认，无需对应脚本）
+│   ├── _extract_legal.mjs  # 生成九语言法律条款（assets/legal-i18n.js）
+│   └── _gen_placeholders.mjs # 生成宣传页占位图（og:image 等）
 ```
 
 ---
@@ -218,6 +222,16 @@ node tools/check_manual.mjs    # 核对说明书中的界面名词是否与代�
 | Android | Capacitor 6 |
 | Web 部署 | GitHub Pages / Vercel |
 | 多语言 | 自定义 i18n 脚本 |
+
+---
+
+## 支持与捐赠
+
+Cub3D Editor 由独立开发者维护，**完全免费、无广告、离线可用**。如果你觉得它对创作有帮助，欢迎通过爱发电赞助支持：
+
+- **爱发电主页**：<https://afdian.com/a/cub3d-editor>
+
+每一份支持都会用于服务器的维护、构建工具链与持续的开发投入。感谢你的鼓励！
 
 ---
 

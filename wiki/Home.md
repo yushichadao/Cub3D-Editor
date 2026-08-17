@@ -2,7 +2,7 @@
 
 欢迎来到 **Cub3D Editor（立方·3D设计工坊）** 的 Wiki！
 
-这是一个**离线优先**的跨平台 3D/2D 场景编辑器，同一套代码覆盖网页、Windows 桌面与 Android 三端，支持 简体中文 / 繁體中文 / English / 日本語 / 한국어 / Русский / Español / Français / العربية 九种语言。
+这是一个**轻量化**的跨平台 3D/2D 场景编辑器，同一套代码覆盖网页、Windows 桌面与 Android 三端，支持 简体中文 / 繁體中文 / English / 日本語 / 한국어 / Русский / Español / Français / العربية 九种语言。
 
 > 无论你是零基础涂鸦，还是进阶参数化建模，导出的 `.json` 工程文件在三端之间完全互通，可以在手机起草、电脑精修之间自由接力。
 
@@ -96,6 +96,16 @@ cd Android && npm run apk:release # 构建 Android release APK
 - 发现 Bug 或有新功能建议？请提交 [Issue](https://github.com/yushichadao/Cub3D-Editor/issues)。
 - 想贡献代码或文档？欢迎 Fork 仓库并提交 Pull Request。
 - 多语言文案与说明书的维护说明见 README「多语言」章节。
+
+---
+
+## 支持与捐赠
+
+Cub3D Editor 完全免费、无广告、离线可用，由独立开发者持续维护。如果它对你有帮助，欢迎通过爱发电赞助支持：
+
+- **爱发电主页**：[afdian.com/a/cub3d-editor](https://afdian.com/a/cub3d-editor)
+
+每一份支持都会投入项目的继续开发。感谢你的鼓励！
 
 ---
 
