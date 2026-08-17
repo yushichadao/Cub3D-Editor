@@ -220,9 +220,9 @@ function main() {
   const src = decodePNG(SRC_PNG);
   // 源 PC/build/icon-512.png 中立方体占据约 73% 高度，顶部/底部紧贴图标边缘。
   // 在 Android 自适应图标（圆角矩形 / 圆形 / 各种遮罩）下会被圆角裁切而「溢出」。
-  // 这里把整张源图（含暗蓝背景）整体缩到 ~60% 后居中放回原画布，再做图层拆分，
+  // 这里把整张源图（含暗蓝背景）整体缩到 ~53% 后居中放回原画布，再做图层拆分，
   // 让立方体自然落在 Android 66% 安全区内（留足余量），圆角外区域由 splitLayers 正常处理为透明/填白。
-  const cubeScale = 0.82; // 73% -> ~60%
+  const cubeScale = 0.72; // 73% -> ~53%
   const cubeSize = Math.round(src.w * cubeScale);
   const shrunk = downsamplePremul(src.data, src.w, src.h, cubeSize);
   const canvas = Buffer.alloc(src.w * src.h * 4);
