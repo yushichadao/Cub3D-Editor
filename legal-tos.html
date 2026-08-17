@@ -48,6 +48,28 @@
   footer a:hover{color:var(--accent)}
   .icp-slot{display:inline-flex;min-width:170px;min-height:24px;padding:2px 12px;border:1px dashed var(--line);border-radius:7px}
   @media(max-width:600px){.lang button{padding:3px 5px;font-size:11px}}
+  /* ===== 阿拉伯语字体（与宣传页一致）===== */
+  @font-face{
+    font-family:"Noto Kufi Arabic";
+    font-style:normal; font-weight:400; font-display:swap;
+    src:url("shared/fonts/noto-kufi-arabic-400.woff2") format("woff2");
+  }
+  @font-face{
+    font-family:"Noto Kufi Arabic";
+    font-style:normal; font-weight:700; font-display:swap;
+    src:url("shared/fonts/noto-kufi-arabic-700.woff2") format("woff2");
+  }
+  html[lang="ar"] body{
+    font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+  }
+  html[lang="ar"] .panel, html[lang="ar"] .panel p, html[lang="ar"] .panel li,
+  html[lang="ar"] .panel h4, html[lang="ar"] .panel strong, html[lang="ar"] .panel a,
+  html[lang="ar"] .legal h1, html[lang="ar"] .back{
+    font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+  }
+  html[lang="ar"] .brand, html[lang="ar"] .lang button{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","Malgun Gothic",sans-serif;
+  }
 </style>
 </head>
 <body data-term="tos">

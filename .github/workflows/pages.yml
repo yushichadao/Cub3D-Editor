@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'index.html'
+      - 'legal-*.html'
       - 'assets/**'
       - 'Web/**'
       - 'shared/**'
@@ -47,6 +48,7 @@ jobs:
           cp index.html _site/
           cp -r Web _site/Web
           cp -r assets _site/assets
+          cp -r shared/fonts _site/shared/fonts
           cp legal-*.html _site/ 2>/dev/null || true
           cp .nojekyll _site/
 
