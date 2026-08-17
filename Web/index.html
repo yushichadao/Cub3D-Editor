@@ -7027,6 +7027,8 @@ function toggleFullscreen() {
 }
 document.getElementById('btn-fs').addEventListener('click', toggleFullscreen);
 document.addEventListener('fullscreenchange', _syncFsButton);
+// 全屏 / 退出全屏后重新对齐顶栏按钮区，避免布局抖动导致横向滑动卡死
+document.addEventListener('fullscreenchange', () => { if (window.resyncTopbarScroll) window.resyncTopbarScroll(); });
 
 /* ===== 多语言 / 主题 / 设置页 ===== */
 
@@ -11585,7 +11587,15 @@ function setTopScroll(v) {
 }
 // 按钮区是否溢出（需要横向滚动）。全屏 / 最大化 / 普通窗口下都允许左右拖动。
 function topActionsOverflow() {
-  return topActionsEl.scrollWidth > topActionsEl.clientWidth + 1;
+  // 关键修复：justify-content 为 flex-end（内容不足时被推到末端的视觉对齐）时，
+  // 溢出内容的 scrollWidth 会被浏览器压缩成 clientWidth，导致溢出检测误判为 false；
+  // 全屏 / 退出全屏等布局抖动后一旦进入该状态就会卡死，按钮区永远无法横向滑动。
+  // 因此测量前临时切回 flex-start 保证 scrollWidth 真实，测量后再恢复原值。
+  const prev = topActionsEl.style.justifyContent;
+  if (prev !== 'flex-start') topActionsEl.style.justifyContent = 'flex-start';
+  const overflow = topActionsEl.scrollWidth > topActionsEl.clientWidth + 1;
+  topActionsEl.style.justifyContent = prev;
+  return overflow;
 }
 if (topbarEl && topActionsEl) {
   // 内容不足时把按钮推到末端（LTR 右端 / RTL 左端），溢出时由滚动负责；
@@ -11659,6 +11669,19 @@ if (topbarEl && topActionsEl) {
   topActionsEl.addEventListener('click', function (e) {
     if (dragMoved) { e.preventDefault(); e.stopPropagation(); dragMoved = false; }
   }, true);
+
+  // 全屏 / 退出全屏后，视口在动画过渡期间会经历多次布局抖动，
+  // ResizeObserver 可能错过最后一次稳定态，导致对齐状态停留在 flex-end 而卡死。
+  // 延迟到布局稳定后重新对齐并刷新 grab 光标（供 fullscreenchange 监听调用）。
+  window.resyncTopbarScroll = function () {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        if (!topActionsEl) return;
+        alignTopActions();
+        updateGrab();
+      });
+    });
+  };
 }
 
 // 响应式
