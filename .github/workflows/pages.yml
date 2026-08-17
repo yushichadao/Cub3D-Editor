@@ -48,6 +48,7 @@ jobs:
           cp index.html _site/
           cp -r Web _site/Web
           cp -r assets _site/assets
+          mkdir -p _site/shared
           cp -r shared/fonts _site/shared/fonts
           cp legal-*.html _site/ 2>/dev/null || true
           cp .nojekyll _site/
