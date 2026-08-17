@@ -7,7 +7,7 @@ window.__packs['ru'] = {
   tabTheme:'Тема', tabLang:'Язык', tabAbout:'О программе',
   themeTitle:'Тема оформления', langTitle:'Переключение языка',
   aboutName:'Куб · Мастерская 3D-дизайна', aboutDesc:'Инструмент для трёхмерного графического дизайна и редактирования на базе Three.js.',
-  aboutStack:'Стек технологий: Three.js / WebGL', aboutRepo:'Репозиторий GitHub', manualLink:'Руководство пользователя',
+  aboutStack:'Стек технологий: Three.js / WebGL', aboutRepo:'Репозиторий GitHub', aboutHome:'Главная страница проекта', manualLink:'Руководство пользователя',
   aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'Автор',
   aboutAI:'Данное приложение создано с помощью ИИ-инструментов TRAE и CodeBuddy',
   tosLink:'Пользовательское соглашение', disclaimerLink:'Отказ от ответственности', privacyLink:'Политика конфиденциальности', tosReadDoneHint:'✓ Прочитано полностью — можно закрыть', tosReadHint:'Вы ещё не дочитали до конца', tosReadProgress:'Прочитано: <b id="tos-progress-num">{0}</b> / 3 документа', tosReadDone:'Я дочитал до конца',
