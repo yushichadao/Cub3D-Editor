@@ -226,13 +226,16 @@
   .donate:hover{background:var(--accent);color:#0c1413}
 
   /* ===== 右下角浮钮（返回顶部 + 分享） ===== */
-  .float-btns{position:fixed;right:20px;bottom:24px;z-index:150;display:flex;flex-direction:column;gap:10px;align-items:center}
+  .float-btns{position:fixed;inset-inline-end:max(20px,calc((100vw - var(--maxw))/2 + 20px));bottom:24px;z-index:150;display:flex;flex-direction:column;gap:10px;align-items:center}
+  .float-btns.collapsed #shareBtn,.float-btns.collapsed #toTop,.float-btns.collapsed #toBottom{display:none}
   .fab{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:19px;cursor:pointer;
     background:rgba(22,24,31,.82);backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--text);
     transition:transform .2s,border-color .2s,color .2s,opacity .25s}
   .fab:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
   #toTop{opacity:0;visibility:hidden;transform:translateY(8px)}
   #toTop.show{opacity:1;visibility:visible;transform:none}
+  #toBottom{opacity:1;visibility:visible;transform:none}
+  #toBottom.hide{opacity:0;visibility:hidden;transform:translateY(8px)}
   /* 复制成功 toast */
   .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(14px);z-index:200;
     background:var(--panel);border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:9px;
@@ -773,8 +776,10 @@
 </footer>
 
 <div class="float-btns" aria-hidden="false">
+  <button class="fab" id="fabToggle" type="button" title="Hide buttons" aria-label="Hide buttons"><span>✕</span></button>
   <button class="fab" id="shareBtn" type="button" title="Share" aria-label="Share"><span>📤</span></button>
   <button class="fab" id="toTop" type="button" title="Back to top" aria-label="Back to top"><span>↑</span></button>
+  <button class="fab" id="toBottom" type="button" title="Go to bottom" aria-label="Go to bottom"><span>↓</span></button>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -814,7 +819,7 @@ const T = {
     "cmp.cap":"能力","cmp.web":"网页版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
     "leg.yes":"完整支持","leg.no":"不适用",
     "author.eyebrow":"关于","author.title":"关于作者与项目","author.name":"Yushichadao","author.role":"独立开发者 · Cub3D Editor 作者",
-    "author.bio":"致力于打造轻量化、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。","author.repo":"⭐ GitHub 仓库","author.donate":"♥ 赞助支持","toast.copied":"链接已复制","toast.fail":"复制失败",
+    "author.bio":"致力于打造轻量化、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。","author.repo":"⭐ GitHub 仓库","author.donate":"♥ 赞助支持","toast.copied":"链接已复制","toast.fail":"复制失败","fab.share":"分享页面","fab.top":"返回顶部","fab.bottom":"一键到底","fab.hide":"隐藏按钮","fab.show":"显示按钮",
     "author.tools":"本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成","author.license":"许可证：木兰宽松许可证第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载","footer.tos":"服务协议","footer.disclaimer":"免责声明","footer.privacy":"隐私政策",
     "detect.windows":"检测到您正在使用 Windows，推荐下载 PC 桌面版。",
@@ -887,7 +892,7 @@ const T = {
     "cmp.cap":"Capacidad","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"Soporte completo","leg.no":"No aplicable",
     "author.eyebrow":"Acerca de","author.title":"Sobre el autor y el proyecto","author.name":"Yushichadao","author.role":"Desarrollador independiente · Autor de Cub3D Editor",
-    "author.bio":"Me dedico a crear herramientas creativas 3D/2D ligeras y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.","author.repo":"⭐ Repositorio de GitHub","author.donate":"♥ Apoyar","toast.copied":"Enlace copiado","toast.fail":"Error al copiar",
+    "author.bio":"Me dedico a crear herramientas creativas 3D/2D ligeras y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.","author.repo":"⭐ Repositorio de GitHub","author.donate":"♥ Apoyar","toast.copied":"Enlace copiado","toast.fail":"Error al copiar","fab.share":"Compartir página","fab.top":"Volver arriba","fab.bottom":"Ir al final","fab.hide":"Ocultar botones","fab.show":"Mostrar botones",
     "author.tools":"Este sitio fue generado con asistencia de IA usando TRAE y CodeBuddy","author.license":"Licencia: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Entrar al editor","footer.repo":"GitHub","footer.download":"Descargar","footer.tos":"Términos del servicio","footer.disclaimer":"Exención de responsabilidad","footer.privacy":"Política de privacidad",
     "detect.windows":"Detectamos Windows; se recomienda la versión de escritorio para PC.",
@@ -960,7 +965,7 @@ const T = {
     "cmp.cap":"能力","cmp.web":"網頁版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
     "leg.yes":"完整支援","leg.no":"不適用",
     "author.eyebrow":"關於","author.title":"關於作者與專案","author.name":"Yushichadao","author.role":"獨立開發者 · Cub3D Editor 作者",
-    "author.bio":"致力於打造輕量化、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。","author.repo":"⭐ GitHub 倉庫","author.donate":"♥ 贊助支持","toast.copied":"連結已複製","toast.fail":"複製失敗",
+    "author.bio":"致力於打造輕量化、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。","author.repo":"⭐ GitHub 倉庫","author.donate":"♥ 贊助支持","toast.copied":"連結已複製","toast.fail":"複製失敗","fab.share":"分享頁面","fab.top":"返回頂部","fab.bottom":"一鍵到底","fab.hide":"隱藏按鈕","fab.show":"顯示按鈕",
     "author.tools":"本網站由 TRAE 與 CodeBuddy 工具 AI 輔助生成","author.license":"授權條款：木蘭寬鬆授權條款第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載","footer.tos":"服務協議","footer.disclaimer":"免責聲明","footer.privacy":"隱私政策",
     "detect.windows":"偵測到您正在使用 Windows，推薦下載 PC 桌面版。",
@@ -1033,7 +1038,7 @@ const T = {
     "cmp.cap":"Capability","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"Full support","leg.no":"Not applicable",
     "author.eyebrow":"About","author.title":"About the Author & Project","author.name":"Yushichadao","author.role":"Independent Developer · Creator of Cub3D Editor",
-    "author.bio":"Building lightweight, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.","author.repo":"⭐ GitHub Repo","author.donate":"♥ Support","toast.copied":"Link copied","toast.fail":"Copy failed",
+    "author.bio":"Building lightweight, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.","author.repo":"⭐ GitHub Repo","author.donate":"♥ Support","toast.copied":"Link copied","toast.fail":"Copy failed","fab.share":"Share this page","fab.top":"Back to top","fab.bottom":"Go to bottom","fab.hide":"Hide buttons","fab.show":"Show buttons",
     "author.tools":"This site was AI-assisted by TRAE & CodeBuddy tools","author.license":"License: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download","footer.tos":"Terms of Service","footer.disclaimer":"Disclaimer","footer.privacy":"Privacy Policy",
     "detect.windows":"We detected Windows — the PC desktop edition is recommended.",
@@ -1106,7 +1111,7 @@ const T = {
     "cmp.cap":"機能","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"完全対応","leg.no":"該当なし",
     "author.eyebrow":"について","author.title":"作者とソフトウェアについて","author.name":"Yushichadao","author.role":"独立開発者・Cub3D Editor 作者",
-    "author.bio":"軽量でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。","author.repo":"⭐ GitHub リポジトリ","author.donate":"♥ 支援する","toast.copied":"リンクをコピーしました","toast.fail":"コピーに失敗",
+    "author.bio":"軽量でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。","author.repo":"⭐ GitHub リポジトリ","author.donate":"♥ 支援する","toast.copied":"リンクをコピーしました","toast.fail":"コピーに失敗","fab.share":"ページを共有","fab.top":"トップに戻る","fab.bottom":"最下部へ","fab.hide":"ボタンを隠す","fab.show":"ボタンを表示",
     "author.tools":"本サイトは TRAE と CodeBuddy ツールで AI 補助生成","author.license":"ライセンス：木蘭緩和ライセンス第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード","footer.tos":"利用規約","footer.disclaimer":"免責事項","footer.privacy":"プライバシーポリシー",
     "detect.windows":"Windows を検出しました。PC デスクトップ版をおすすめします。",
@@ -1179,7 +1184,7 @@ const T = {
     "cmp.cap":"기능","cmp.web":"웹","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"완전 지원","leg.no":"해당 없음",
     "author.eyebrow":"소개","author.title":"제작자 및 프로젝트","author.name":"Yushichadao","author.role":"독립 개발자 · Cub3D Editor 제작자",
-    "author.bio":"가볍고 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.","author.repo":"⭐ GitHub 저장소","author.donate":"♥ 후원하기","toast.copied":"링크가 복사되었습니다","toast.fail":"복사 실패",
+    "author.bio":"가볍고 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.","author.repo":"⭐ GitHub 저장소","author.donate":"♥ 후원하기","toast.copied":"링크가 복사되었습니다","toast.fail":"복사 실패","fab.share":"페이지 공유","fab.top":"맨 위로","fab.bottom":"맨 아래로","fab.hide":"버튼 숨기기","fab.show":"버튼 표시",
     "author.tools":"이 사이트는 TRAE 및 CodeBuddy 도구의 AI 지원으로 생성되었습니다.","author.license":"라이선스: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"편집기 열기","footer.repo":"GitHub","footer.download":"다운로드","footer.tos":"서비스 약관","footer.disclaimer":"면책 조항","footer.privacy":"개인정보 처리방침",
     "detect.windows":"Windows를 사용 중이시군요. PC 데스크톱 버전을 권장합니다.","detect.android":"Android를 사용 중이시군요. Android 버전을 권장합니다.","detect.harmonyos":"HarmonyOS를 사용 중이시군요. 웹 터치 버전을 권장합니다.","detect.ios":"iOS/iPadOS를 사용 중이시군요. 웹 터치 버전을 권장합니다.","detect.macos":"macOS를 사용 중이시군요. 웹 버전을 권장합니다.","detect.linux":"Linux를 사용 중이시군요. 웹 버전을 권장합니다.","detect.other":"운영체제를 확인하지 못했으니 웹 버전을 권장합니다.",
@@ -1246,7 +1251,7 @@ const T = {
     "cmp.cap":"Возможность","cmp.web":"Веб","cmp.pc":"ПК (Windows)","cmp.android":"Android",
     "leg.yes":"Полная поддержка","leg.no":"Не применимо",
     "author.eyebrow":"Об авторе","author.title":"Об авторе и проекте","author.name":"Yushichadao","author.role":"Независимый разработчик · Создатель Cub3D Editor",
-    "author.bio":"Создаю лёгкие, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.","author.repo":"⭐ Репозиторий GitHub","author.donate":"♥ Поддержать","toast.copied":"Ссылка скопирована","toast.fail":"Не удалось скопировать",
+    "author.bio":"Создаю лёгкие, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.","author.repo":"⭐ Репозиторий GitHub","author.donate":"♥ Поддержать","toast.copied":"Ссылка скопирована","toast.fail":"Не удалось скопировать","fab.share":"Поделиться страницей","fab.top":"Наверх","fab.bottom":"Вниз","fab.hide":"Скрыть кнопки","fab.show":"Показать кнопки",
     "author.tools":"Этот сайт создан при помощи ИИ инструментами TRAE и CodeBuddy","author.license":"Лицензия: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Открыть редактор","footer.repo":"GitHub","footer.download":"Скачать","footer.tos":"Условия обслуживания","footer.disclaimer":"Дисклеймер","footer.privacy":"Политика конфиденциальности",
     "detect.windows":"Обнаружена система Windows — рекомендуем ПК-версию.","detect.android":"Обнаружен Android — рекомендуем версию для Android.","detect.harmonyos":"Обнаружена система HarmonyOS — рекомендуем веб-версию (сенсорную).","detect.ios":"Обнаружено устройство iOS/iPadOS — рекомендуем веб-версию (сенсорную).","detect.macos":"Обнаружена система macOS — рекомендуем веб-версию.","detect.linux":"Обнаружен Linux — рекомендуем веб-версию.","detect.other":"Не удалось определить ОС — рекомендуем веб-версию.",
@@ -1324,7 +1329,7 @@ const T = {
     "cmp.r_lang":["Langues d'interface","Chinois simplifié, chinois traditionnel, anglais, japonais, coréen, russe, espagnol, français, arabe","Identique","Identique"],
     "leg.yes":"Prise en charge complète","leg.no":"Non applicable",
     "author.eyebrow":"À propos","author.title":"À propos de l'auteur et du projet","author.name":"Yushichadao","author.role":"Développeur indépendant · Auteur de Cub3D Editor",
-    "author.bio":"Nous cherchons à construire des outils créatifs 3D/2D légers et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.","author.repo":"⭐ Dépôt GitHub","author.donate":"♥ Soutenir","toast.copied":"Lien copié","toast.fail":"Échec de la copie",
+    "author.bio":"Nous cherchons à construire des outils créatifs 3D/2D légers et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.","author.repo":"⭐ Dépôt GitHub","author.donate":"♥ Soutenir","toast.copied":"Lien copié","toast.fail":"Échec de la copie","fab.share":"Partager la page","fab.top":"Haut de page","fab.bottom":"Bas de page","fab.hide":"Masquer les boutons","fab.show":"Afficher les boutons",
     "author.tools":"Ce site a été généré à l'aide des outils IA TRAE et CodeBuddy","author.license":"Licence : Licence logicielle permissive Mulan v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Ouvrir l'éditeur","footer.repo":"GitHub","footer.download":"Télécharger","footer.tos":"Conditions d'utilisation","footer.disclaimer":"Avis de non-responsabilité","footer.privacy":"Politique de confidentialité",
     "detect.windows":"Système Windows détecté — la version PC est recommandée.","detect.android":"Android détecté — la version Android est recommandée.","detect.harmonyos":"Système HarmonyOS détecté — la version Web tactile est recommandée.","detect.ios":"Appareil iOS/iPadOS détecté — la version Web tactile est recommandée.","detect.macos":"macOS détecté — la version Web est recommandée.","detect.linux":"Linux détecté — la version Web est recommandée.","detect.other":"Impossible de détecter le système — la version Web est recommandée.",
@@ -1391,7 +1396,7 @@ const T = {
     "cmp.cap":"القدرة","cmp.web":"الويب","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"دعم كامل","leg.no":"غير منطبق",
     "author.eyebrow":"عن","author.title":"عن المؤلف والمشروع","author.name":"Yushichadao","author.role":"مطوّر مستقل · مؤلف Cub3D Editor",
-    "author.bio":"نسعى لبناء أدوات إبداعية 3D/2D خفيفة وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان.","author.repo":"⭐ مستودع GitHub","author.donate":"♥ دعم","toast.copied":"تم نسخ الرابط","toast.fail":"فشل النسخ",
+    "author.bio":"نسعى لبناء أدوات إبداعية 3D/2D خفيفة وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان.","author.repo":"⭐ مستودع GitHub","author.donate":"♥ دعم","toast.copied":"تم نسخ الرابط","toast.fail":"فشل النسخ","fab.share":"مشاركة الصفحة","fab.top":"العودة إلى الأعلى","fab.bottom":"الانتقال إلى الأسفل","fab.hide":"إخفاء الأزرار","fab.show":"إظهار الأزرار",
     "author.tools":"تم توليد هذا الموقع بمساعدة أدوات TRAE وCodeBuddy","author.license":"الترخيص: رخصة مولان المتساهلة الإصدار 2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"ادخل المحرر","footer.repo":"GitHub","footer.download":"تنزيل","footer.tos":"شروط الخدمة","footer.disclaimer":"إخلاء المسؤولية","footer.privacy":"سياسة الخصوصية",
     "detect.windows":"تم اكتشاف Windows — يوصى بإصدار سطح المكتب PC.","detect.android":"تم اكتشاف Android — يوصى بإصدار Android.","detect.harmonyos":"تم اكتشاف HarmonyOS — يوصى بإصدار الويب اللمسي.","detect.ios":"تم اكتشاف جهاز iOS/iPadOS — يوصى بإصدار الويب اللمسي.","detect.macos":"تم اكتشاف macOS — يوصى بإصدار الويب.","detect.linux":"تم اكتشاف Linux — يوصى بإصدار الويب.","detect.other":"تعذّر اكتشاف النظام — يوصى بإصدار الويب.",
@@ -1479,6 +1484,18 @@ function applyLang(lang){
     if(dict[k]!=null) el.innerHTML = dict[k];
   });
   document.title = (dict["hero.title"]||"Cub3D Editor") + " — " + (dict["hero.sub"]||"");
+  // 悬浮按钮标签随语言切换
+  const fabMap = [['shareBtn','fab.share'],['toTop','fab.top'],['toBottom','fab.bottom']];
+  fabMap.forEach(([id,k])=>{
+    const el = document.getElementById(id);
+    if(el && dict[k]){ el.title = dict[k]; el.setAttribute('aria-label', dict[k]); }
+  });
+  const fabTog = document.getElementById('fabToggle');
+  if(fabTog){
+    const collapsed = document.querySelector('.float-btns') && document.querySelector('.float-btns').classList.contains('collapsed');
+    const lbl = dict[collapsed ? 'fab.show' : 'fab.hide'];
+    if(lbl){ fabTog.title = lbl; fabTog.setAttribute('aria-label', lbl); }
+  }
   // 预览图随语言切换（桌面横版 + 触屏竖版）
   const previewImg = document.getElementById('previewImg');
   if(previewImg){
@@ -1702,9 +1719,30 @@ if (shareBtn) shareBtn.addEventListener('click', async ()=>{
   showToast(ok ? (dict['toast.copied']||'Link copied') : (dict['toast.fail']||'Copy failed'));
 });
 if (toTopBtn) toTopBtn.addEventListener('click', ()=>window.scrollTo({ top:0, behavior:'smooth' }));
-window.addEventListener('scroll', ()=>{
+const toBottomBtn = document.getElementById('toBottom');
+if (toBottomBtn) toBottomBtn.addEventListener('click', ()=>window.scrollTo({ top:document.documentElement.scrollHeight, behavior:'smooth' }));
+const fabToggle = document.getElementById('fabToggle');
+const fabGroup = document.querySelector('.float-btns');
+if (fabToggle && fabGroup) {
+  fabToggle.addEventListener('click', ()=>{
+    const collapsed = fabGroup.classList.toggle('collapsed');
+    const dict = T[cur] || {};
+    const lbl = dict[collapsed ? 'fab.show' : 'fab.hide'] || (collapsed ? 'Show buttons' : 'Hide buttons');
+    fabToggle.title = lbl;
+    fabToggle.setAttribute('aria-label', lbl);
+    const icon = fabToggle.querySelector('span');
+    if (icon) icon.textContent = collapsed ? '☰' : '✕';
+  });
+}
+function syncFabScroll(){
   if (toTopBtn) toTopBtn.classList.toggle('show', window.scrollY > 420);
-}, { passive:true });
+  if (toBottomBtn){
+    const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 24;
+    toBottomBtn.classList.toggle('hide', atBottom);
+  }
+}
+window.addEventListener('scroll', syncFabScroll, { passive:true });
+syncFabScroll();
 
 /* 初始化 */
 applyLang(cur);
