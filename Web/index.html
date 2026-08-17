@@ -91,8 +91,8 @@
   #three-canvas.tooling { cursor: none; }
   #three-canvas.grabbing { cursor: grabbing; }
 
-  /* 沉浸（伪全屏）模式：不调用浏览器原生全屏 API，仅隐藏界面元素让画布铺满视口。
-     这样可避免 Android Chrome 在进入原生全屏时强制切横屏，方向完全交给系统。 */
+  /* 沉浸（伪全屏）模式：仅作为浏览器不支持原生全屏 API（如部分旧 WebView）时的
+     回退方案，隐藏顶栏/侧栏让画布铺满视口。正常情况下全屏按钮走原生全屏 API。 */
   body.fs-immersive .topbar,
   body.fs-immersive .panel-left,
   body.fs-immersive .panel-right { display: none !important; }
@@ -6987,14 +6987,10 @@ function captureScreenshot() {
 document.getElementById('btn-shot').addEventListener('click', captureScreenshot);
 
 /* 全屏切换。
-   移动端（触屏 / 小屏）采用「沉浸模式」：仅给 <body> 加 .fs-immersive 隐藏顶栏与
-   侧栏，让画布铺满视口——不调用浏览器原生全屏 API，因此不会触发 Android Chrome
-   在进入原生全屏时强制切横屏的已知行为，方向完全交给用户系统设置。
-   桌面端仍使用原生全screen API（方向在桌面上无影响）。 */
-function _isMobile() {
-  return (('ontouchstart' in window) || navigator.maxTouchPoints > 0) &&
-         Math.min(window.innerWidth, window.innerHeight) < 820;
-}
+   统一调用浏览器原生全屏 API：整个页面（含顶栏/侧栏）进入浏览器全屏，
+   不会隐藏任何界面元素。
+   仅当环境不支持原生全屏 API（如部分旧 WebView）时，才回退「沉浸模式」：
+   给 <body> 加 .fs-immersive 隐藏顶栏与侧栏，让画布铺满视口。 */
 function _syncFsButton() {
   const btn = document.getElementById('btn-fs');
   const d = (LANGS[currentLang] || LANGS['zh-CN']).dict;
@@ -7007,18 +7003,20 @@ function toggleFullscreen() {
   const nativeFs = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
   const immersive = document.body.classList.contains('fs-immersive');
   if (!nativeFs && !immersive) {
-    if (_isMobile()) {
-      // 移动端：沉浸模式（伪全屏），不触发浏览器原生全屏的强制横屏
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (req) {
+      // 原生全屏：整个页面（含顶栏/侧栏）进入浏览器全屏，不隐藏任何元素
+      const p = req.call(el);
+      if (p && typeof p.catch === 'function') p.catch(() => {
+        // 原生全屏被拒绝/失败时回退沉浸模式，避免按钮无响应
+        document.body.classList.add('fs-immersive');
+        _syncFsButton();
+      });
+    } else {
+      // 不支持原生全屏 API 的环境：回退沉浸模式（隐藏顶栏/侧栏）
       document.body.classList.add('fs-immersive');
       _syncFsButton();
-    } else {
-      // 桌面端：原生全屏
-      const el = document.documentElement;
-      const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-      if (req) {
-        const p = req.call(el);
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      }
     }
   } else {
     if (immersive) document.body.classList.remove('fs-immersive');
