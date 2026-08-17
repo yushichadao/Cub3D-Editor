@@ -12,7 +12,7 @@
 
 | 入口 | 链接 | 说明 |
 | :--- | :--- | :--- |
-| 官方网站 | https://yushichadao.github.io/Cub3D-Editor/ | 产品介绍、九语言切换、下载入口 |
+| 主页 | https://yushichadao.github.io/Cub3D-Editor/ | 产品介绍、九语言切换、下载入口 |
 | 网页版编辑器 | https://yushichadao.github.io/Cub3D-Editor/Web/index.html | 无需安装，浏览器直接打开 |
 | 最新 Release | https://github.com/yushichadao/Cub3D-Editor/releases/latest | PC 安装版 / 便携版、Android APK |
 | 问题反馈 | https://github.com/yushichadao/Cub3D-Editor/issues | Bug 报告与功能建议 |

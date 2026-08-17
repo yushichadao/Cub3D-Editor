@@ -180,7 +180,6 @@
     table.cmp thead th{position:sticky;top:0;z-index:1}
   }
   .yes{color:var(--accent);font-weight:700}
-  .part{color:var(--dim);font-weight:700}
   .no{color:var(--dim-2)}
   .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px;color:var(--dim);font-size:13px}
   .legend i{font-style:normal;font-weight:700;margin-inline-end:6px}
@@ -655,7 +654,6 @@
     </div>
     <div class="legend reveal">
       <span><i class="yes">✓</i><span data-i18n="leg.yes">完整支持</span></span>
-      <span><i class="part">~</i><span data-i18n="leg.part">部分支持</span></span>
       <span><i class="no">—</i><span data-i18n="leg.no">不适用</span></span>
     </div>
   </section>
@@ -682,14 +680,15 @@
     <span class="eyebrow reveal" data-i18n="faq.eyebrow">常见问题</span>
     <h2 class="sec-title reveal" data-i18n="faq.title">你可能想问</h2>
     <div class="faq">
-      <details class="reveal d1" open><summary><span data-i18n="faq.q1">需要注册账号吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a1">不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。</div></details>
-      <details class="reveal d2"><summary><span data-i18n="faq.q2">三个平台的功能一样吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a2">绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。</div></details>
-      <details class="reveal d3"><summary><span data-i18n="faq.q3">工程文件能在设备间通用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a3">可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。</div></details>
-      <details class="reveal d4"><summary><span data-i18n="faq.q5">支持哪些语言？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a5">界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية 九种语言，切换时文案同步更新。</div></details>
-      <details class="reveal"><summary><span data-i18n="faq.q6">会收费吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a6">不会。Cub3D Editor 完全免费，所有基础功能无需付费即可使用，目前没有付费计划。</div></details>
-      <details class="reveal"><summary><span data-i18n="faq.q7">会联网或上传我的数据吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a7">不会主动上传。编辑器离线优先，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。</div></details>
-      <details class="reveal"><summary><span data-i18n="faq.q8">能商用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a8">可以。本项目采用木兰宽松许可证第2版（MulanPSL-2），允许自由使用、修改与分发，商用友好。</div></details>
+      <details class="reveal d1" open><summary><span data-i18n="faq.q6">会收费吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a6">不会。Cub3D Editor 完全免费，所有基础功能无需付费即可使用，目前没有付费计划。</div></details>
+      <details class="reveal d2"><summary><span data-i18n="faq.q1">需要注册账号吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a1">不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。</div></details>
+      <details class="reveal d3"><summary><span data-i18n="faq.q7">会联网或上传我的数据吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a7">不会主动上传。编辑器离线优先，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。</div></details>
+      <details class="reveal d4"><summary><span data-i18n="faq.q8">能商用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a8">可以。本项目采用木兰宽松许可证第2版（MulanPSL-2），允许自由使用、修改与分发，商用友好。</div></details>
+      <details class="reveal d5"><summary><span data-i18n="faq.q3">工程文件能在设备间通用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a3">可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。</div></details>
+      <details class="reveal"><summary><span data-i18n="faq.q2">三个平台的功能一样吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a2">绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。</div></details>
+      <details class="reveal"><summary><span data-i18n="faq.q10">iOS / macOS / Linux / 鸿蒙系统怎么用？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a10">这些系统没有原生安装包，直接使用网页版即可：iPhone / iPad / 鸿蒙手机等触屏设备会自动进入触屏布局，macOS / Linux 桌面在浏览器打开即可。工程文件仍与三端互通。</div></details>
       <details class="reveal"><summary><span data-i18n="faq.q9">各平台有什么系统要求？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a9">Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；网页版只需现代浏览器，无需安装。</div></details>
+      <details class="reveal"><summary><span data-i18n="faq.q5">支持哪些语言？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a5">界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية 九种语言，切换时文案同步更新。</div></details>
     </div>
   </section>
 
@@ -790,15 +789,19 @@ const T = {
     "f7.t":"PC 版增强","f7.d":"原生文件对话框（系统级打开/保存）、独立桌面窗口运行、离线安装。",
     "f8.t":"Android 版增强","f8.d":"返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。",
     "f9.t":"九语言界面","f9.d":"简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية，切换同步更新。",
-    "versions.eyebrow":"版本对比","versions.title":"各版本能力一览","versions.sub":"三端共享同一套核心引擎，绝大多数功能完全一致；差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。其中“全屏”在 Android 上仅为贴合状态栏的视觉全屏（非原生沉浸全屏）。",
+    "versions.eyebrow":"版本对比","versions.title":"各版本能力一览","versions.sub":"三端共享同一套核心引擎，绝大多数功能完全一致；差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。",
     "cmp.cap":"能力","cmp.web":"网页版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
-    "leg.yes":"完整支持","leg.part":"部分支持","leg.no":"不适用",
+    "leg.yes":"完整支持","leg.no":"不适用",
     "author.eyebrow":"关于","author.title":"关于作者与项目","author.name":"Yushichadao","author.role":"独立开发者 · Cub3D Editor 作者",
     "author.bio":"致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。","author.repo":"⭐ GitHub 仓库","author.donate":"♥ 赞助支持","toast.copied":"链接已复制","toast.fail":"复制失败",
     "author.tools":"本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成","author.license":"许可证：木兰宽松许可证第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载","footer.tos":"服务协议","footer.disclaimer":"免责声明","footer.privacy":"隐私政策",
     "detect.windows":"检测到您正在使用 Windows，推荐下载 PC 桌面版。",
     "detect.android":"检测到您正在使用 Android，推荐下载 Android 移动版。",
+    "detect.harmonyos":"检测到鸿蒙设备，推荐网页触屏版。",
+    "detect.ios":"检测到 iOS / iPadOS 设备，推荐网页触屏版。",
+    "detect.macos":"检测到 macOS，推荐网页版。",
+    "detect.linux":"检测到 Linux，推荐网页版。",
     "detect.other":"未识别到具体系统，推荐使用网页版。",
     "nav.scenarios":"使用场景","nav.quickstart":"快速上手","nav.roadmap":"路线图","nav.faq":"常见问题",
     "scenarios.eyebrow":"谁在用","scenarios.title":"适合这些场景","scenarios.sub":"无论是灵感速记、教学演示还是正式设计，都能找到合适的入口与节奏。",
@@ -822,6 +825,7 @@ const T = {
     "faq.q7":"会联网或上传我的数据吗？","faq.a7":"不会主动上传。编辑器离线优先，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。",
     "faq.q8":"能商用吗？","faq.a8":"可以。本项目采用木兰宽松许可证第2版（MulanPSL-2），允许自由使用、修改与分发，商用友好。",
     "faq.q9":"各平台有什么系统要求？","faq.a9":"Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；网页版只需现代浏览器，无需安装。",
+    "faq.q10":"iOS / macOS / Linux / 鸿蒙系统怎么用？","faq.a10":"这些系统没有原生安装包，直接使用网页版即可：iPhone / iPad / 鸿蒙手机等触屏设备会自动进入触屏布局，macOS / Linux 桌面在浏览器打开即可。工程文件仍与三端互通。",
     "changelog.eyebrow":"更新记录","changelog.title":"更新记录",
     "log.v1.date":"2026 · 首发",
     "log.v1.1":"网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备",
@@ -858,15 +862,19 @@ const T = {
     "f7.t":"Mejoras de PC","f7.d":"Diálogos nativos de archivos (abrir/guardar a nivel de sistema), ventana de escritorio independiente, instalación sin conexión.",
     "f8.t":"Mejoras de Android","f8.d":"Confirmación con botón Atrás, diálogos nativos de guardar/abrir (selector de documentos del sistema), integración de pantalla completa y barra de estado.",
     "f9.t":"Interfaz en nueve idiomas","f9.d":"Chino simplificado, Chino tradicional, English, 日本語, 한국어, Русский, Español, Français, العربية, con sincronización al cambiar.",
-    "versions.eyebrow":"Comparativa","versions.title":"Resumen de capacidades","versions.sub":"Los tres entornos comparten el mismo motor central; la gran mayoría de funciones son idénticas. Las diferencias provienen solo del modo de instalación, y de los diálogos nativos de guardar/abrir y el botón Atrás de Android. La «pantalla completa» en Android es solo visual (ajuste a la barra de estado, no inmersiva nativa).",
+    "versions.eyebrow":"Comparativa","versions.title":"Resumen de capacidades","versions.sub":"Los tres entornos comparten el mismo motor central; la gran mayoría de funciones son idénticas. Las diferencias provienen solo del modo de instalación, y de los diálogos nativos de guardar/abrir y el botón Atrás de Android.",
     "cmp.cap":"Capacidad","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
-    "leg.yes":"Soporte completo","leg.part":"Soporte parcial","leg.no":"No aplicable",
+    "leg.yes":"Soporte completo","leg.no":"No aplicable",
     "author.eyebrow":"Acerca de","author.title":"Sobre el autor y el proyecto","author.name":"Yushichadao","author.role":"Desarrollador independiente · Autor de Cub3D Editor",
     "author.bio":"Me dedico a crear herramientas creativas 3D/2D sin conexión y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.","author.repo":"⭐ Repositorio de GitHub","author.donate":"♥ Apoyar","toast.copied":"Enlace copiado","toast.fail":"Error al copiar",
     "author.tools":"Este sitio fue generado con asistencia de IA usando TRAE y CodeBuddy","author.license":"Licencia: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Entrar al editor","footer.repo":"GitHub","footer.download":"Descargar","footer.tos":"Términos del servicio","footer.disclaimer":"Exención de responsabilidad","footer.privacy":"Política de privacidad",
     "detect.windows":"Detectamos Windows; se recomienda la versión de escritorio para PC.",
     "detect.android":"Detectamos Android; se recomienda la versión móvil de Android.",
+    "detect.harmonyos":"Detectamos HarmonyOS; se recomienda la versión web táctil.",
+    "detect.ios":"Detectamos un dispositivo iOS/iPadOS; se recomienda la versión web táctil.",
+    "detect.macos":"Detectamos macOS; se recomienda la versión web.",
+    "detect.linux":"Detectamos Linux; se recomienda la versión web.",
     "detect.other":"No se identificó un sistema concreto; se recomienda la versión web.",
     "nav.scenarios":"Casos de uso","nav.quickstart":"Inicio rápido","nav.roadmap":"Hoja de ruta","nav.faq":"Preguntas frecuentes",
     "scenarios.eyebrow":"Quién lo usa","scenarios.title":"Ideal para estos casos","scenarios.sub":"Ya sea apuntes de inspiración, demostración docente o diseño formal, hay una entrada y un ritmo adecuados.",
@@ -890,6 +898,7 @@ const T = {
     "faq.q7":"¿Se conecta o sube mis datos?","faq.a7":"No. El editor es offline-first: los datos se guardan en tu dispositivo, no se requiere cuenta y nunca se suben tus archivos.",
     "faq.q8":"¿Puedo usarlo comercialmente?","faq.a8":"Sí. El proyecto se distribuye bajo la Licencia de Software Permisiva Mulan v2 (MulanPSL-2), que permite uso, modificación y distribución libres, incluido el uso comercial.",
     "faq.q9":"¿Qué requisitos de sistema hay?","faq.a9":"La versión de escritorio Windows requiere Windows 10 o superior; Android requiere Android 7.0 o superior; la versión web solo necesita un navegador moderno, sin instalar.",
+    "faq.q10":"¿Cómo se usa en iOS / macOS / Linux / HarmonyOS?","faq.a10":"Estos sistemas no tienen paquete nativo: usa directamente la versión web. Los dispositivos táctiles (iPhone / iPad / móviles HarmonyOS) entran automáticamente en el diseño táctil, y los de escritorio (macOS / Linux) se abren en el navegador. Los proyectos siguen siendo compatibles entre los tres entornos.",
     "changelog.eyebrow":"Registro de cambios","changelog.title":"Registro de cambios",
     "log.v1.date":"2026 · Primera versión",
     "log.v1.1":"Las tres plataformas listas: web (ratón/táctil), escritorio Windows y móvil Android",
@@ -926,15 +935,19 @@ const T = {
     "f7.t":"PC 版增強","f7.d":"原生檔案對話方塊（系統級開啟/儲存）、獨立桌面視窗運行、離線安裝。",
     "f8.t":"Android 版增強","f8.d":"返回鍵確認、原生儲存/開啟對話方塊（系統文件選擇器）、全螢幕與狀態列整合。",
     "f9.t":"九語言介面","f9.d":"簡體中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية，切換同步更新。",
-    "versions.eyebrow":"版本對比","versions.title":"各版本能力一覽","versions.sub":"三端共享同一套核心引擎，絕大多數功能完全一致；差異僅來自安裝方式，以及 Android 的原生儲存/開啟對話方塊與返回鍵。其中「全螢幕」在 Android 上僅為貼合狀態列的視覺全螢幕（非原生沉浸全螢幕）。",
+    "versions.eyebrow":"版本對比","versions.title":"各版本能力一覽","versions.sub":"三端共享同一套核心引擎，絕大多數功能完全一致；差異僅來自安裝方式，以及 Android 的原生儲存/開啟對話方塊與返回鍵。",
     "cmp.cap":"能力","cmp.web":"網頁版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
-    "leg.yes":"完整支援","leg.part":"部分支援","leg.no":"不適用",
+    "leg.yes":"完整支援","leg.no":"不適用",
     "author.eyebrow":"關於","author.title":"關於作者與專案","author.name":"Yushichadao","author.role":"獨立開發者 · Cub3D Editor 作者",
     "author.bio":"致力於打造離線優先、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。","author.repo":"⭐ GitHub 倉庫","author.donate":"♥ 贊助支持","toast.copied":"連結已複製","toast.fail":"複製失敗",
     "author.tools":"本網站由 TRAE 與 CodeBuddy 工具 AI 輔助生成","author.license":"授權條款：木蘭寬鬆授權條款第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載","footer.tos":"服務協議","footer.disclaimer":"免責聲明","footer.privacy":"隱私政策",
     "detect.windows":"偵測到您正在使用 Windows，推薦下載 PC 桌面版。",
     "detect.android":"偵測到您正在使用 Android，推薦下載 Android 行動版。",
+    "detect.harmonyos":"偵測到鴻蒙裝置，推薦網頁觸屏版。",
+    "detect.ios":"偵測到 iOS / iPadOS 裝置，推薦網頁觸屏版。",
+    "detect.macos":"偵測到 macOS，推薦網頁版。",
+    "detect.linux":"偵測到 Linux，推薦網頁版。",
     "detect.other":"未識別到具體系統，推薦使用網頁版。",
     "nav.scenarios":"使用場景","nav.quickstart":"快速上手","nav.roadmap":"路線圖","nav.faq":"常見問題",
     "scenarios.eyebrow":"誰在用","scenarios.title":"適合這些場景","scenarios.sub":"無論是靈感速記、教學演示還是正式設計，都能找到合適的入口與節奏。",
@@ -958,6 +971,7 @@ const T = {
     "faq.q7":"會連網或上傳我的資料嗎？","faq.a7":"不會主動上傳。編輯器離線優先，預設所有資料保存在本機設備，無需登入，也不會上傳你的工程檔案。",
     "faq.q8":"能商用嗎？","faq.a8":"可以。本專案採用木蘭寬鬆許可證第2版（MulanPSL-2），允許自由使用、修改與散布，商用友好。",
     "faq.q9":"各平台有什麼系統需求？","faq.a9":"Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；網頁版只需現代瀏覽器，無需安裝。",
+    "faq.q10":"iOS / macOS / Linux / 鴻蒙系統怎麼用？","faq.a10":"這些系統沒有原生安裝包，直接使用網頁版即可：iPhone / iPad / 鴻蒙手機等觸屏裝置會自動進入觸屏佈局，macOS / Linux 桌面在瀏覽器開啟即可。工程檔案仍與三端互通。",
     "changelog.eyebrow":"更新記錄","changelog.title":"更新記錄",
     "log.v1.date":"2026 · 首發",
     "log.v1.1":"網頁（滑鼠/觸控）、Windows 桌面、Android 移動版三端齊備",
@@ -994,15 +1008,19 @@ const T = {
     "f7.t":"PC Extras","f7.d":"Native file dialogs (system open/save), standalone desktop window, offline install.",
     "f8.t":"Android Extras","f8.d":"Back-key confirm, native save/open dialogs (system document picker), fullscreen & status bar integration.",
     "f9.t":"9 Languages","f9.d":"Simplified Chinese, Traditional Chinese, English, Japanese, Korean, Russian, Spanish, French, Arabic — synced on switch.",
-    "versions.eyebrow":"Version Compare","versions.title":"Capability at a glance","versions.sub":"All three platforms share the same core engine, so most features are identical. Differences come only from install method, plus Android's native save/open dialogs and back key. Note: on Android, \"fullscreen\" is only a visual fit to the status bar (not a native immersive fullscreen).",
+    "versions.eyebrow":"Version Compare","versions.title":"Capability at a glance","versions.sub":"All three platforms share the same core engine, so most features are identical. Differences come only from install method, plus Android's native save/open dialogs and back key.",
     "cmp.cap":"Capability","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
-    "leg.yes":"Full support","leg.part":"Partial","leg.no":"Not applicable",
+    "leg.yes":"Full support","leg.no":"Not applicable",
     "author.eyebrow":"About","author.title":"About the Author & Project","author.name":"Yushichadao","author.role":"Independent Developer · Creator of Cub3D Editor",
     "author.bio":"Building offline-first, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.","author.repo":"⭐ GitHub Repo","author.donate":"♥ Support","toast.copied":"Link copied","toast.fail":"Copy failed",
     "author.tools":"This site was AI-assisted by TRAE & CodeBuddy tools","author.license":"License: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download","footer.tos":"Terms of Service","footer.disclaimer":"Disclaimer","footer.privacy":"Privacy Policy",
     "detect.windows":"We detected Windows — the PC desktop edition is recommended.",
     "detect.android":"We detected Android — the Android edition is recommended.",
+    "detect.harmonyos":"We detected HarmonyOS — the web touch version is recommended.",
+    "detect.ios":"We detected an iOS/iPadOS device — the web touch version is recommended.",
+    "detect.macos":"We detected macOS — the Web version is recommended.",
+    "detect.linux":"We detected Linux — the Web version is recommended.",
     "detect.other":"Could not detect your OS — the Web version is recommended.",
     "nav.scenarios":"Use cases","nav.quickstart":"Quick start","nav.roadmap":"Roadmap","nav.faq":"FAQ",
     "scenarios.eyebrow":"Who's using it","scenarios.title":"Perfect for these scenarios","scenarios.sub":"Whether it's a quick idea sketch, a teaching demo, or formal design, there's a fitting entry point and pace for you.",
@@ -1026,6 +1044,7 @@ const T = {
     "faq.q7":"Does it go online or upload my data?","faq.a7":"It does not upload anything by default. The editor is offline-first: all data stays on your device, no login required, and your project files are never uploaded.",
     "faq.q8":"Can I use it commercially?","faq.a8":"Yes. This project is licensed under the Mulan Permissive Software License v2 (MulanPSL-2), allowing free use, modification and distribution, including commercial use.",
     "faq.q9":"What are the system requirements?","faq.a9":"Windows desktop requires Windows 10 or later; Android requires Android 7.0 or later; the web version just needs a modern browser—no install.",
+    "faq.q10":"How do iOS / macOS / Linux / HarmonyOS users get started?","faq.a10":"These systems have no native package—just use the Web version: touch devices (iPhone / iPad / HarmonyOS phones) automatically switch to the touch layout, and macOS / Linux desktops can open it right in the browser. Projects still sync across all three platforms.",
     "changelog.eyebrow":"Changelog","changelog.title":"What's new",
     "log.v1.date":"2026 · First release",
     "log.v1.1":"Web (mouse/touch), Windows desktop, and Android mobile — all three platforms available",
@@ -1062,15 +1081,19 @@ const T = {
     "f7.t":"PC 向け強化","f7.d":"ネイティブファイルダイアログ（システム開く/保存）、単体デスクトップ窓、オフライン導入。",
     "f8.t":"Android 向け強化","f8.d":"戻るキー確認、ネイティブ保存/開くダイアログ（システム文書ピッカー）、全画面とステータスバー統合。",
     "f9.t":"9言語対応","f9.d":"簡体字中国語・繁体字中国語・English・日本語・한국어・ロシア語・Español・Français・العربية。切替で同期。",
-    "versions.eyebrow":"バージョン比較","versions.title":"対応機能一覧","versions.sub":"3プラットフォームは同じコアエンジンを共有し、ほとんどの機能は同一です。違いはインストール方式と、Android のネイティブ保存/開くダイアログと戻るキーのみ。なお Android の「全画面」はステータスバーに合わせる視覚的なもの（ネイティブな没入全画面ではありません）。",
+    "versions.eyebrow":"バージョン比較","versions.title":"対応機能一覧","versions.sub":"3プラットフォームは同じコアエンジンを共有し、ほとんどの機能は同一です。違いはインストール方式と、Android のネイティブ保存/開くダイアログと戻るキーのみ。",
     "cmp.cap":"機能","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
-    "leg.yes":"完全対応","leg.part":"一部対応","leg.no":"該当なし",
+    "leg.yes":"完全対応","leg.no":"該当なし",
     "author.eyebrow":"について","author.title":"作者とソフトウェアについて","author.name":"Yushichadao","author.role":"独立開発者・Cub3D Editor 作者",
     "author.bio":"オフライン優先でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。","author.repo":"⭐ GitHub リポジトリ","author.donate":"♥ 支援する","toast.copied":"リンクをコピーしました","toast.fail":"コピーに失敗",
     "author.tools":"本サイトは TRAE と CodeBuddy ツールで AI 補助生成","author.license":"ライセンス：木蘭緩和ライセンス第2版 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード","footer.tos":"利用規約","footer.disclaimer":"免責事項","footer.privacy":"プライバシーポリシー",
     "detect.windows":"Windows を検出しました。PC デスクトップ版をおすすめします。",
     "detect.android":"Android を検出しました。Android 版をおすすめします。",
+    "detect.harmonyos":"HarmonyOS を検出しました。Web タッチ版をおすすめします。",
+    "detect.ios":"iOS/iPadOS を検出しました。Web タッチ版をおすすめします。",
+    "detect.macos":"macOS を検出しました。Web 版をおすすめします。",
+    "detect.linux":"Linux を検出しました。Web 版をおすすめします。",
     "detect.other":"OS を特定できませんでした。Web 版をおすすめします。",
     "nav.scenarios":"ユースケース","nav.quickstart":"クイックスタート","nav.roadmap":"ロードマップ","nav.faq":"よくある質問",
     "scenarios.eyebrow":"こんな方に","scenarios.title":"こんな場面で活躍","scenarios.sub":"ひらめきのメモ、授業のデモ、本格的なデザインまで、ぴったりの入り口とペースが見つかります。",
@@ -1094,6 +1117,7 @@ const T = {
     "faq.q7":"通信やデータのアップロードはありますか？","faq.a7":"ありません。エディタはオフライン優先で、データは既定で端末内に保存され、ログイン不要、プロジェクトをアップロードすることもありません。",
     "faq.q8":"商用利用できますか？","faq.a8":"できます。本プロジェクトは木蘭緩和ライセンス第2版（MulanPSL-2）で、自由な利用・変更・配布を認めており、商用にも好適です。",
     "faq.q9":"各プラットフォームのシステム要件は？","faq.a9":"Windows デスクトップ版は Windows 10 以上、Android 版は Android 7.0 以上が必要です。Web 版はモダンブラウザのみでインストール不要です。",
+    "faq.q10":"iOS / macOS / Linux / HarmonyOS ではどう使う？","faq.a10":"これらのOSにはネイティブパッケージがありません。Web 版を直接お使いください。iPhone / iPad / HarmonyOS スマホなどのタッチ端末は自動的にタッチレイアウトになり、macOS / Linux デスクトップはブラウザで開くだけです。プロジェクトは3プラットフォーム間で共有できます。",
     "changelog.eyebrow":"更新履歴","changelog.title":"更新履歴",
     "log.v1.date":"2026・初回リリース",
     "log.v1.1":"Web（マウス/タッチ）、Windows デスクトップ、Android モバイルの3プラットフォームがそろう",
@@ -1130,14 +1154,14 @@ const T = {
     "f7.t":"PC 전용 기능","f7.d":"네이티브 파일 대화상자(시스템 열기/저장), 독립 데스크톱 창, 오프라인 설치.",
     "f8.t":"Android 전용 기능","f8.d":"뒤로 가기 키 확인, 네이티브 저장/열기 대화상자(시스템 문서 선택기), 전체 화면 및 상태 표시줄 통합.",
     "f9.t":"9개 언어 지원","f9.d":"간체 중국어·번체 중국어·English·日本語·한국어·러시아어·Español·Français·العربية, 전환 시 동기화.",
-    "versions.eyebrow":"버전 비교","versions.title":"지원 기능 한눈에","versions.sub":"세 플랫폼은 동일한 코어 엔진을 공유하므로 대부분의 기능이 동일합니다. 차이는 설치 방식과 Android의 네이티브 저장/열기 대화상자 및 뒤로 가기 키에서만 발생합니다. 참고: Android에서 '전체 화면'은 상태 표시줄에 맞춘 시각적 전체 화면일 뿐(네이티브 몰입형 전체 화면 아님).",
+    "versions.eyebrow":"버전 비교","versions.title":"지원 기능 한눈에","versions.sub":"세 플랫폼은 동일한 코어 엔진을 공유하므로 대부분의 기능이 동일합니다. 차이는 설치 방식과 Android의 네이티브 저장/열기 대화상자 및 뒤로 가기 키에서만 발생합니다.",
     "cmp.cap":"기능","cmp.web":"웹","cmp.pc":"PC (Windows)","cmp.android":"Android",
-    "leg.yes":"완전 지원","leg.part":"일부 지원","leg.no":"해당 없음",
+    "leg.yes":"완전 지원","leg.no":"해당 없음",
     "author.eyebrow":"소개","author.title":"제작자 및 프로젝트","author.name":"Yushichadao","author.role":"독립 개발자 · Cub3D Editor 제작자",
     "author.bio":"오프라인 우선, 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.","author.repo":"⭐ GitHub 저장소","author.donate":"♥ 후원하기","toast.copied":"링크가 복사되었습니다","toast.fail":"복사 실패",
     "author.tools":"이 사이트는 TRAE 및 CodeBuddy 도구의 AI 지원으로 생성되었습니다.","author.license":"라이선스: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"편집기 열기","footer.repo":"GitHub","footer.download":"다운로드","footer.tos":"서비스 약관","footer.disclaimer":"면책 조항","footer.privacy":"개인정보 처리방침",
-    "detect.windows":"Windows를 사용 중이시군요. PC 데스크톱 버전을 권장합니다.","detect.android":"Android를 사용 중이시군요. Android 버전을 권장합니다.","detect.other":"운영체제를 확인하지 못했으니 웹 버전을 권장합니다.",
+    "detect.windows":"Windows를 사용 중이시군요. PC 데스크톱 버전을 권장합니다.","detect.android":"Android를 사용 중이시군요. Android 버전을 권장합니다.","detect.harmonyos":"HarmonyOS를 사용 중이시군요. 웹 터치 버전을 권장합니다.","detect.ios":"iOS/iPadOS를 사용 중이시군요. 웹 터치 버전을 권장합니다.","detect.macos":"macOS를 사용 중이시군요. 웹 버전을 권장합니다.","detect.linux":"Linux를 사용 중이시군요. 웹 버전을 권장합니다.","detect.other":"운영체제를 확인하지 못했으니 웹 버전을 권장합니다.",
     "nav.scenarios":"활용 사례","nav.quickstart":"빠른 시작","nav.roadmap":"로드맵","nav.faq":"자주 묻는 질문",
     "scenarios.eyebrow":"누가 쓰나요","scenarios.title":"이런 상황에 딱","scenarios.sub":"영감 메모든 수업 데모든 본격적인 디자인이든, 알맞은 진입점과 속도를 찾을 수 있습니다.",
     "scn1.t":"영감 메모","scn1.d":"출근길에 폰으로 3D 스케치를 슥 그리거나, 집에 와서 PC로 다듬기.",
@@ -1160,6 +1184,7 @@ const T = {
     "faq.q7":"인터넷 연결이나 데이터 업로드가 있나요?","faq.a7":"없습니다. 에디터는 오프라인 우선이며 데이터는 기본적으로 기기에 저장되고 로그인이 필요 없으며 프로젝트 파일을 업로드하지 않습니다.",
     "faq.q8":"상업적으로 사용할 수 있나요?","faq.a8":"네. 이 프로젝트는 Mulan Permissive Software License v2(MulanPSL-2)로 라이선스되어 자유로운 사용·수정·배포와 상업 이용을 허용합니다.",
     "faq.q9":"각 플랫폼의 시스템 요구 사항은?","faq.a9":"Windows 데스크톱은 Windows 10 이상, Android는 Android 7.0 이상이 필요하며 웹 버전은 최신 브라우저만 있으면 설치가 필요 없습니다.",
+    "faq.q10":"iOS / macOS / Linux / HarmonyOS에서는 어떻게 사용하나요?","faq.a10":"이들 OS에는 네이티브 설치 파일이 없으므로 웹 버전을 바로 사용하세요. iPhone / iPad / HarmonyOS 폰 등 터치 기기는 자동으로 터치 레이아웃으로 전환되며, macOS / Linux 데스크톱은 브라우저에서 열면 됩니다. 프로젝트는 세 플랫폼 간에 계속 호환됩니다.",
     "changelog.eyebrow":"업데이트 기록","changelog.title":"업데이트 기록",
     "log.v1.date":"2026 · 첫 릴리스",
     "log.v1.1":"웹(마우스/터치), Windows 데스크톱, Android 모바일 3플랫폼 완비",
@@ -1196,14 +1221,14 @@ const T = {
     "f7.t":"Расширения ПК","f7.d":"Нативные диалоги файлов (системные открыть/сохранить), отдельное окно рабочего стола, офлайн-установка.",
     "f8.t":"Расширения Android","f8.d":"Подтверждение кнопкой «Назад», нативные диалоги сохранения/открытия (системный выбор документов), интеграция полноэкранного режима и строки состояния.",
     "f9.t":"9 языков","f9.d":"Упрощённый китайский, традиционный китайский, English, 日本語, 한국어, Русский, Español и Français, العربية — синхронизация при переключении.",
-    "versions.eyebrow":"Сравнение версий","versions.title":"Возможности в один взгляд","versions.sub":"Все три платформы используют один и тот же основной движок, поэтому большинство функций идентичны. Различия — только в способе установки и в нативных диалогах сохранения/открытия и кнопке «Назад» в Android. Примечание: в Android «полноэкранный режим» — это лишь визуальное совмещение со строкой состояния (не нативный погружающий режим).",
+    "versions.eyebrow":"Сравнение версий","versions.title":"Возможности в один взгляд","versions.sub":"Все три платформы используют один и тот же основной движок, поэтому большинство функций идентичны. Различия — только в способе установки и в нативных диалогах сохранения/открытия и кнопке «Назад» в Android.",
     "cmp.cap":"Возможность","cmp.web":"Веб","cmp.pc":"ПК (Windows)","cmp.android":"Android",
-    "leg.yes":"Полная поддержка","leg.part":"Частично","leg.no":"Не применимо",
+    "leg.yes":"Полная поддержка","leg.no":"Не применимо",
     "author.eyebrow":"Об авторе","author.title":"Об авторе и проекте","author.name":"Yushichadao","author.role":"Независимый разработчик · Создатель Cub3D Editor",
     "author.bio":"Создаю офлайн-приоритетные, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.","author.repo":"⭐ Репозиторий GitHub","author.donate":"♥ Поддержать","toast.copied":"Ссылка скопирована","toast.fail":"Не удалось скопировать",
     "author.tools":"Этот сайт создан при помощи ИИ инструментами TRAE и CodeBuddy","author.license":"Лицензия: Mulan Permissive Software License v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Открыть редактор","footer.repo":"GitHub","footer.download":"Скачать","footer.tos":"Условия обслуживания","footer.disclaimer":"Дисклеймер","footer.privacy":"Политика конфиденциальности",
-    "detect.windows":"Обнаружена система Windows — рекомендуем ПК-версию.","detect.android":"Обнаружен Android — рекомендуем версию для Android.","detect.other":"Не удалось определить ОС — рекомендуем веб-версию.",
+    "detect.windows":"Обнаружена система Windows — рекомендуем ПК-версию.","detect.android":"Обнаружен Android — рекомендуем версию для Android.","detect.harmonyos":"Обнаружена система HarmonyOS — рекомендуем веб-версию (сенсорную).","detect.ios":"Обнаружено устройство iOS/iPadOS — рекомендуем веб-версию (сенсорную).","detect.macos":"Обнаружена система macOS — рекомендуем веб-версию.","detect.linux":"Обнаружен Linux — рекомендуем веб-версию.","detect.other":"Не удалось определить ОС — рекомендуем веб-версию.",
     "nav.scenarios":"Сценарии","nav.quickstart":"Быстрый старт","nav.roadmap":"План развития","nav.faq":"Частые вопросы",
     "scenarios.eyebrow":"Кто использует","scenarios.title":"Подойдёт для этих ситуаций","scenarios.sub":"Будь то быстрая заметка-идея, учебная демонстрация или серьёзный дизайн — найдётся подходящий вход и темп.",
     "scn1.t":"Быстрая идея","scn1.d":"Набросайте 3D-эскиз на телефоне по дороге и доработайте на компьютере дома.",
@@ -1226,6 +1251,7 @@ const T = {
     "faq.q7":"Подключается к сети или загружает мои данные?","faq.a7":"Нет. Редактор офлайн-приоритетный: по умолчанию все данные хранятся на устройстве, вход не требуется, файлы проектов не загружаются.",
     "faq.q8":"Можно ли использовать в коммерческих целях?","faq.a8":"Да. Проект распространяется по лицензии Mulan Permissive Software License v2 (MulanPSL-2), допускающей свободное использование, изменение и распространение, включая коммерческое.",
     "faq.q9":"Какие системные требования?","faq.a9":"Для Windows-версии нужна Windows 10 и выше; для Android — Android 7.0 и выше; веб-версия требует только современный браузер без установки.",
+    "faq.q10":"Как пользоваться на iOS / macOS / Linux / HarmonyOS?","faq.a10":"У этих систем нет нативного пакета — просто используйте веб-версию: сенсорные устройства (iPhone / iPad / смартфоны HarmonyOS) автоматически переходят в сенсорную раскладку, а macOS / Linux открываются в браузере. Проекты по-прежнему совместимы между тремя платформами.",
     "changelog.eyebrow":"История изменений","changelog.title":"Что нового",
     "log.v1.date":"2026 · Первый выпуск",
     "log.v1.1":"Веб (мышь/сенсор), Windows-десктоп и Android-мобайл — все три платформы готовы",
@@ -1275,12 +1301,12 @@ const T = {
     "cmp.r9":["Récupération / auto-sauvegarde","Non applicable","Prise en charge complète","Partiel"],
     "cmp.r10":["Plein écran / partage natif","Non applicable","Non applicable","Prise en charge complète"],
     "cmp.r_lang":["Langues d'interface","Chinois simplifié, chinois traditionnel, anglais, japonais, coréen, russe, espagnol, français, arabe","Identique","Identique"],
-    "leg.yes":"Prise en charge complète","leg.part":"Prise en charge partielle","leg.no":"Non applicable",
+    "leg.yes":"Prise en charge complète","leg.no":"Non applicable",
     "author.eyebrow":"À propos","author.title":"À propos de l'auteur et du projet","author.name":"Yushichadao","author.role":"Développeur indépendant · Auteur de Cub3D Editor",
     "author.bio":"Nous cherchons à construire des outils créatifs 3D/2D hors-ligne d'abord et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.","author.repo":"⭐ Dépôt GitHub","author.donate":"♥ Soutenir","toast.copied":"Lien copié","toast.fail":"Échec de la copie",
     "author.tools":"Ce site a été généré à l'aide des outils IA TRAE et CodeBuddy","author.license":"Licence : Licence logicielle permissive Mulan v2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Ouvrir l'éditeur","footer.repo":"GitHub","footer.download":"Télécharger","footer.tos":"Conditions d'utilisation","footer.disclaimer":"Avis de non-responsabilité","footer.privacy":"Politique de confidentialité",
-    "detect.windows":"Système Windows détecté — la version PC est recommandée.","detect.android":"Android détecté — la version Android est recommandée.","detect.other":"Impossible de détecter le système — la version Web est recommandée.",
+    "detect.windows":"Système Windows détecté — la version PC est recommandée.","detect.android":"Android détecté — la version Android est recommandée.","detect.harmonyos":"Système HarmonyOS détecté — la version Web tactile est recommandée.","detect.ios":"Appareil iOS/iPadOS détecté — la version Web tactile est recommandée.","detect.macos":"macOS détecté — la version Web est recommandée.","detect.linux":"Linux détecté — la version Web est recommandée.","detect.other":"Impossible de détecter le système — la version Web est recommandée.",
     "nav.scenarios":"Scénarios","nav.quickstart":"Démarrage rapide","nav.roadmap":"Feuille de route","nav.faq":"FAQ",
     "scenarios.eyebrow":"Qui l'utilise","scenarios.title":"Adapté à ces situations","scenarios.sub":"Qu'il s'agisse d'une note d'idée rapide, d'une démonstration pédagogique ou d'un design sérieux, vous trouverez une entrée et un rythme adaptés.",
     "scn1.t":"Note d'idée rapide","scn1.d":"Esquissez un 3D sur votre téléphone en déplacement, puis affinez-le sur l'ordinateur à la maison.",
@@ -1303,6 +1329,7 @@ const T = {
     "faq.q7":"Se connecte-t-il ou téléverse-t-il mes données ?","faq.a7":"Non. L'éditeur est hors-ligne d'abord : les données restent sur votre appareil, aucun compte requis, et vos fichiers ne sont jamais téléversés.",
     "faq.q8":"Puis-je l'utiliser à des fins commerciales ?","faq.a8":"Oui. Ce projet est sous Licence de logiciel permissive Mulan v2 (MulanPSL-2), autorisant l'usage, la modification et la distribution libres, y compris commercial.",
     "faq.q9":"Quelles sont les exigences système ?","faq.a9":"La version Windows nécessite Windows 10 ou plus ; Android nécessite Android 7.0 ou plus ; la version Web nécessite seulement un navigateur moderne, sans installation.",
+    "faq.q10":"Comment utiliser sur iOS / macOS / Linux / HarmonyOS ?","faq.a10":"Ces systèmes n'ont pas de paquet natif — utilisez directement la version Web : les appareils tactiles (iPhone / iPad / téléphones HarmonyOS) basculent automatiquement en disposition tactile, et les bureaux macOS / Linux s'ouvrent dans le navigateur. Les projets restent compatibles entre les trois plateformes.",
     "changelog.eyebrow":"Journal des modifications","changelog.title":"Nouveautés",
     "log.v1.date":"2026 · Première version",
     "log.v1.1":"Web (souris/tactile), bureau Windows et mobile Android — les trois plateformes sont prêtes",
@@ -1341,12 +1368,12 @@ const T = {
     "f9.t":"تسع لغات","f9.d":"الصينية المبسطة، الصينية التقليدية، English، 日本語، 한국어، Русский، Español، Français، العربية — متزامنة عند التبديل.",
     "versions.eyebrow":"مقارنة الإصدارات","versions.title":"نظرة عامة على القدرات","versions.sub":"المنصات الثلاث تشترك في نفس المحرك الأساسي، لذا فمعظم الميزات متطابقة. الاختلافات تنشأ فقط من طريقة التثبيت، بالإضافة إلى حوارات حفظ/فتح Android الأصلية وزر الرجوع.",
     "cmp.cap":"القدرة","cmp.web":"الويب","cmp.pc":"PC (Windows)","cmp.android":"Android",
-    "leg.yes":"دعم كامل","leg.part":"دعم جزئي","leg.no":"غير منطبق",
+    "leg.yes":"دعم كامل","leg.no":"غير منطبق",
     "author.eyebrow":"عن","author.title":"عن المؤلف والمشروع","author.name":"Yushichadao","author.role":"مطوّر مستقل · مؤلف Cub3D Editor",
     "author.bio":"نسعى لبناء أدوات إبداعية 3D/2D دون اتصال أولاً وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان.","author.repo":"⭐ مستودع GitHub","author.donate":"♥ دعم","toast.copied":"تم نسخ الرابط","toast.fail":"فشل النسخ",
     "author.tools":"تم توليد هذا الموقع بمساعدة أدوات TRAE وCodeBuddy","author.license":"الترخيص: رخصة مولان المتساهلة الإصدار 2 (MulanPSL-2)",
     "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"ادخل المحرر","footer.repo":"GitHub","footer.download":"تنزيل","footer.tos":"شروط الخدمة","footer.disclaimer":"إخلاء المسؤولية","footer.privacy":"سياسة الخصوصية",
-    "detect.windows":"تم اكتشاف Windows — يوصى بإصدار سطح المكتب PC.","detect.android":"تم اكتشاف Android — يوصى بإصدار Android.","detect.other":"تعذّر اكتشاف النظام — يوصى بإصدار الويب.",
+    "detect.windows":"تم اكتشاف Windows — يوصى بإصدار سطح المكتب PC.","detect.android":"تم اكتشاف Android — يوصى بإصدار Android.","detect.harmonyos":"تم اكتشاف HarmonyOS — يوصى بإصدار الويب اللمسي.","detect.ios":"تم اكتشاف جهاز iOS/iPadOS — يوصى بإصدار الويب اللمسي.","detect.macos":"تم اكتشاف macOS — يوصى بإصدار الويب.","detect.linux":"تم اكتشاف Linux — يوصى بإصدار الويب.","detect.other":"تعذّر اكتشاف النظام — يوصى بإصدار الويب.",
     "nav.scenarios":"حالات الاستخدام","nav.quickstart":"البدء السريع","nav.roadmap":"خارطة الطريق","nav.faq":"الأسئلة الشائعة",
     "scenarios.eyebrow":"من يستخدمه","scenarios.title":"مناسب لهذه السيناريوهات","scenarios.sub":"سواء كانت ملاحظة فكرة سريعة أو عرضاً تعليمياً أو تصميماً رسمياً، ستجد نقطة دخول وتيرة مناسبة.",
     "scn1.t":"ملاحظة فكرة سريعة","scn1.d":"ارسم مسودة 3D على هاتفك أثناء التنقل، ثم صقلها على الحاسوب في المنزل.",
@@ -1369,6 +1396,7 @@ const T = {
     "faq.q7":"هل يتصل بالإنترنت أو يرفع بياناتي؟","faq.a7":"لا. المحرر يعمل دون اتصال أولاً: البيانات تبقى على جهازك، لا حاجة لتسجيل الدخول، ولا يتم رفع ملفات مشاريعك.",
     "faq.q8":"هل يمكنني استخدامه تجارياً؟","faq.a8":"نعم. هذا المشروع مرخّص بموجب رخصة Mulan البرمجية المتساهلة الإصدار 2 (MulanPSL-2)، التي تسمح بالاستخدام والتعديل والتوزيع بحرية بما في ذلك الاستخدام التجاري.",
     "faq.q9":"ما متطلبات النظام؟","faq.a9":"نسخة سطح المكتب Windows تتطلب Windows 10 أو أحدث؛ نسخة Android تتطلب Android 7.0 أو أحدث؛ نسخة الويب تحتاج فقط إلى متصفح حديث دون تثبيت.",
+    "faq.q10":"كيف أستخدمه على iOS / macOS / Linux / HarmonyOS؟","faq.a10":"هذه الأنظمة لا تحتوي على حزمة أصلية — استخدم إصدار الويب مباشرة: الأجهزة اللمسية (iPhone / iPad / هواتف HarmonyOS) تتحول تلقائيًا إلى تخطيط لمس، وأجهزة سطح المكتب macOS / Linux تُفتح في المتصفح. تظل المشاريع متوافقة بين المنصات الثلاث.",
     "changelog.eyebrow":"سجل التحديثات","changelog.title":"سجل التحديثات",
     "log.v1.date":"2026 · الإصدار الأول",
     "log.v1.1":"الويب (ماوس/لمس) وسطح مكتب Windows وموبايل Android — المنصات الثلاث متاحة",
@@ -1389,7 +1417,7 @@ const CMP = [
   ["cmp.r_undo","Y","Y","Y"],
   ["cmp.r_offline","Y","Y","Y"],
   ["cmp.r_json","Y","Y","Y"],
-  ["cmp.r_fullscreen","Y","Y","P"],                 // Web 靠浏览器原生全屏 / PC 为 Electron 原生 / Android 仅 CSS 贴合状态栏(非全屏 API)，标 P=部分
+  ["cmp.r_fullscreen","Y","Y","Y"],                 // Web 靠浏览器原生全屏 / PC 为 Electron 原生 / Android 全屏支持
   ["cmp.r_crash","Y","Y","Y"],                      // 崩溃恢复 + 5 分钟自动保存，Web 注释与 PC 版一致
   ["cmp.r_sticky","Y","Y","Y"],                     // 置顶便签窗，Web 基座含 manPin 置顶逻辑
   ["cmp.r_drag","N","Y","Y"],                       // 拖放打开 .json 工程：Web·PC 基座含 drop 处理；Android 已用 initROMAntiDrag 禁用，标 N
@@ -1408,7 +1436,7 @@ const CMPLABEL = {
   "es":{"cmp.r_install":"Modo de instalación","cmp.r_draw":"Pincel/goma/formas","cmp.r_transform":"Transformación de objetos","cmp.r_material":"Materiales/texturas","cmp.r_text":"Cuadro de texto","cmp.r_view":"Ejes/cuadrícula/suelo/malla","cmp.r_undo":"Deshacer-rehacer/copiar-clonar","cmp.r_offline":"Sin conexión/almacenamiento local","cmp.r_json":"Proyectos .json compartidos","cmp.r_fullscreen":"Pantalla completa","cmp.v":"Versión","cmp.r_crash":"Recuperación / autoguardado","cmp.r_sticky":"Ventana de notas fijas","cmp.r_drag":"Abrir arrastrando","cmp.r_lang":"9 idiomas (chino simplificado / chino tradicional / inglés / japonés / coreano / ruso / español / francés / árabe)","cmp.r_nativeSave":"Diálogos nativos guardar/abrir","cmp.r_back":"Confirmación con Atrás"},
   "fr":{"cmp.r_install":"Méthode d'installation","cmp.r_draw":"Pinceau/gomme/formes","cmp.r_transform":"Transformation d'objets","cmp.r_material":"Matériaux/textures","cmp.r_text":"Boîte de texte","cmp.r_view":"Axes/grille/sol/filaire","cmp.r_undo":"Annuler-rétablir/copier-cloner","cmp.r_offline":"Hors-ligne/stockage local","cmp.r_json":"Projets .json partagés","cmp.r_fullscreen":"Plein écran","cmp.r_crash":"Récupération / auto-sauvegarde","cmp.r_sticky":"Fenêtre de notes épinglées","cmp.r_drag":"Ouvrir par glisser-déposer","cmp.r_lang":"9 langues (chinois simplifié / chinois traditionnel / anglais / japonais / coréen / russe / espagnol / français / arabe)","cmp.r_nativeSave":"Boîtes de dialogue natives enregistrer/ouvrir","cmp.r_back":"Confirmation touche Retour"}
   };
-const SYM = {Y:'<span class="yes">✓</span>', P:'<span class="part">~</span>', N:'<span class="no">—</span>'};
+const SYM = {Y:'<span class="yes">✓</span>', N:'<span class="no">—</span>'};
 
 /* ============ 语言应用 ============ */
 // 优先级：已保存偏好(localStorage) > URL ?lang 参数（仅作初始语言）> 系统语言 > 简体中文
@@ -1456,8 +1484,15 @@ if(langMobile) langMobile.addEventListener('click', e=>{
 function detectDevice(){
   const ua = navigator.userAgent;
   let type='other';
-  if(/Android/i.test(ua)) type='android';
+  // 鸿蒙 UA 常同时含 Android，须优先判定
+  if(/HarmonyOS/i.test(ua) || (/Android/i.test(ua) && /ArkWeb/i.test(ua))) type='harmonyos';
+  // iPad：显式 iPad 字样，或 iPadOS 触控标记（Mac + Mobile 且非 iPhone）
+  else if(/iPad/i.test(ua) || (/Macintosh/i.test(ua) && /Mobile/i.test(ua) && !/iPhone/i.test(ua))) type='ios';
+  else if(/iPhone|iPod/i.test(ua)) type='ios';
+  else if(/Android/i.test(ua)) type='android';
   else if(/Windows NT/i.test(ua)) type='windows';
+  else if(/Macintosh|Mac OS X/i.test(ua)) type='macos';
+  else if(/Linux/i.test(ua)) type='linux';
 
   const dict = T[cur];
   document.getElementById('detectText').innerHTML =
@@ -1469,21 +1504,25 @@ function detectDevice(){
   const map = {
     windows:{url:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup.exe', t:'hero.ctaWin'},
     android:{url:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor.apk', t:'hero.ctaAnd'},
+    harmonyos:{url:'Web/index.html?touch', t:'hero.ctaTouch'},
+    ios:{url:'Web/index.html?touch', t:'hero.ctaTouch'},
+    macos:{url:'Web/index.html', t:'hero.ctaWeb'},
+    linux:{url:'Web/index.html', t:'hero.ctaWeb'},
     other:{url:'Web/index.html', t:'hero.ctaWeb'}
   };
   // 额外 hero 文案
   const extra = {
-    "zh-CN":{hero:{windows:"下载 Windows 版",android:"下载 Android 版",other:"在浏览器打开"}},
-    "zh-TW":{hero:{windows:"下載 Windows 版",android:"下載 Android 版",other:"在瀏覽器開啟"}},
-    "en":{hero:{windows:"Download for Windows",android:"Download for Android",other:"Open in Browser"}},
-    "ja":{hero:{windows:"Windows 版を取得",android:"Android 版を取得",other:"ブラウザで開く"}},
-    "ko":{hero:{windows:"Windows용 다운로드",android:"Android용 다운로드",other:"브라우저에서 열기"}},
-    "ru":{hero:{windows:"Скачать для Windows",android:"Скачать для Android",other:"Открыть в браузере"}},
-    "ar":{hero:{windows:"تنزيل لـ Windows",android:"تنزيل لـ Android",other:"افتح في المتصفح"}},
-    "es":{hero:{windows:"Descargar para Windows",android:"Descargar para Android",other:"Abrir en el navegador"}},
-    "fr":{hero:{windows:"Télécharger pour Windows",android:"Télécharger pour Android",other:"Ouvrir dans le navigateur"}}
+    "zh-CN":{hero:{windows:"下载 Windows 版",android:"下载 Android 版",harmonyos:"鸿蒙触屏版",ios:"网页触屏版",macos:"网页版",linux:"网页版",other:"在浏览器打开"}},
+    "zh-TW":{hero:{windows:"下載 Windows 版",android:"下載 Android 版",harmonyos:"鴻蒙觸屏版",ios:"網頁觸屏版",macos:"網頁版",linux:"網頁版",other:"在瀏覽器開啟"}},
+    "en":{hero:{windows:"Download for Windows",android:"Download for Android",harmonyos:"Web touch",ios:"Web touch",macos:"Web version",linux:"Web version",other:"Open in Browser"}},
+    "ja":{hero:{windows:"Windows 版を取得",android:"Android 版を取得",harmonyos:"Web タッチ版",ios:"Web タッチ版",macos:"Web 版",linux:"Web 版",other:"ブラウザで開く"}},
+    "ko":{hero:{windows:"Windows용 다운로드",android:"Android용 다운로드",harmonyos:"웹 터치 버전",ios:"웹 터치 버전",macos:"웹 버전",linux:"웹 버전",other:"브라우저에서 열기"}},
+    "ru":{hero:{windows:"Скачать для Windows",android:"Скачать для Android",harmonyos:"Веб (сенсор)",ios:"Веб (сенсор)",macos:"Веб-версия",linux:"Веб-версия",other:"Открыть в браузере"}},
+    "ar":{hero:{windows:"تنزيل لـ Windows",android:"تنزيل لـ Android",harmonyos:"ويب لمس",ios:"ويب لمس",macos:"إصدار الويب",linux:"إصدار الويب",other:"افتح في المتصفح"}},
+    "es":{hero:{windows:"Descargar para Windows",android:"Descargar para Android",harmonyos:"Web táctil",ios:"Web táctil",macos:"Versión web",linux:"Versión web",other:"Abrir en el navegador"}},
+    "fr":{hero:{windows:"Télécharger pour Windows",android:"Télécharger pour Android",harmonyos:"Web tactile",ios:"Web tactile",macos:"Version Web",linux:"Version Web",other:"Ouvrir dans le navigateur"}}
   };
-  const m = map[type]; const label = (extra[cur]&&extra[cur].hero[type]) || dict['hero.ctaWeb'];
+  const m = map[type]; const label = (extra[cur]&&extra[cur].hero[type]) || dict[m.t] || dict['hero.ctaWeb'];
   heroCta.href = m.url; heroText.textContent = label;
   cta.href = m.url;
 }

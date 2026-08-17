@@ -23,7 +23,7 @@
 
 ## 快速开始
 
-- **官方网站（宣传页）**：<https://yushichadao.github.io/Cub3D-Editor/> —— 产品介绍、九语言切换、下载入口
+- **主页（宣传页）**：<https://yushichadao.github.io/Cub3D-Editor/> —— 产品介绍、九语言切换、下载入口
 - **网页版编辑器（无需安装）**：<https://yushichadao.github.io/Cub3D-Editor/Web/index.html>
 - **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
 - **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor.apk`
@@ -98,7 +98,7 @@ node tools/sync-shared.mjs
 
 ```
 Cub3D Editor/
-├── index.html              # 宣传页 / 官网首页（九语言，内联 i18n，由 Pages 发布到站点根）
+├── index.html              # 宣传页 / 主页（九语言，内联 i18n，由 Pages 发布到站点根）
 ├── shared/                 # 各端共享的「单一源」
 │   ├── docs/               # 九语言说明书源文件
 │   ├── language/           # 界面语言文案
