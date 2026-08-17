@@ -68,6 +68,10 @@
   /* 中窄屏：顶栏 9 个语言按钮压缩，避免导航栏溢出换行 */
   @media (max-width:900px){
     .lang button{padding:4px 7px;font-size:12px}
+    /* 窄屏下 footer 三项换行，.foot-info（品牌/版权/ICP）独占一行；
+       space-between 对单 item 会放在行首（LTR 左/RTL 右），与宽屏相反。
+       用逻辑 margin 推到行尾：LTR 下=left:auto 靠右，RTL 下=right:auto 靠左 */
+    .foot-info{margin-inline-start:auto}
   }
   .menu-btn{display:flex;align-items:center;justify-content:center;background:var(--bg-soft);
     border:1px solid var(--line);color:var(--text);width:42px;height:38px;border-radius:8px;font-size:17px;cursor:pointer;flex:0 0 auto}
@@ -178,11 +182,16 @@
   table.cmp th:first-child,table.cmp td:first-child{text-align:left;color:var(--text);font-weight:600}
   table.cmp tbody tr:last-child td{border-bottom:0}
   table.cmp tbody tr:hover{background:var(--bg-soft)}
+  /* 窄屏：对比表限高 + 表头吸附 + 触控平滑滚动 */
+  @media(max-width:640px){
+    .cmp-scroll{max-height:440px;overflow:auto;-webkit-overflow-scrolling:touch}
+    table.cmp thead th{position:sticky;top:0;z-index:1}
+  }
   .yes{color:var(--accent);font-weight:700}
   .part{color:var(--dim);font-weight:700}
   .no{color:var(--dim-2)}
   .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px;color:var(--dim);font-size:13px}
-  .legend i{font-style:normal;font-weight:700;margin-right:6px}
+  .legend i{font-style:normal;font-weight:700;margin-inline-end:6px}
 
   /* ===== 解决方案 ===== */
   .sol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:36px}
@@ -208,6 +217,24 @@
   .gh{display:inline-flex;align-items:center;gap:7px;background:var(--bg-soft);border:1px solid var(--line);
     padding:8px 14px;border-radius:8px;font-weight:600;font-size:13.5px;transition:.2s}
   .gh:hover{border-color:var(--accent);color:var(--accent)}
+  /* 赞助按钮：青色描边 ghost，带心形图标 */
+  .donate{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--accent);
+    padding:8px 14px;border-radius:8px;font-weight:600;font-size:13.5px;color:var(--accent);transition:.2s}
+  .donate:hover{background:var(--accent);color:#0c1413}
+
+  /* ===== 右下角浮钮（返回顶部 + 分享） ===== */
+  .float-btns{position:fixed;right:20px;bottom:24px;z-index:150;display:flex;flex-direction:column;gap:10px;align-items:center}
+  .fab{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:19px;cursor:pointer;
+    background:rgba(22,24,31,.82);backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--text);
+    transition:transform .2s,border-color .2s,color .2s,opacity .25s}
+  .fab:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+  #toTop{opacity:0;visibility:hidden;transform:translateY(8px)}
+  #toTop.show{opacity:1;visibility:visible;transform:none}
+  /* 复制成功 toast */
+  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(14px);z-index:200;
+    background:var(--panel);border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:9px;
+    font-size:13.5px;font-weight:600;opacity:0;visibility:hidden;transition:.25s;box-shadow:0 12px 32px -12px rgba(90,209,196,.4)}
+  .toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
 
   /* ===== 页脚 ===== */
   footer{border-top:1px solid var(--line);padding:40px 0 56px;margin-top:0;background:var(--bg)}
@@ -216,6 +243,10 @@
   .foot a{color:var(--dim);transition:color .2s}
   .foot a:hover{color:var(--accent)}
   .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+  /* 法律文档入口 */
+  .foot-legal{display:flex;gap:18px;flex-wrap:wrap}
+  .foot-legal .legal-link{color:var(--dim);font-size:12.5px;transition:color .2s}
+  .foot-legal .legal-link:hover{color:var(--accent);text-decoration:underline}
   .foot-info{display:flex;flex-direction:column;min-width:0;align-items:flex-end;text-align:right}
   .foot-info .brand{flex-wrap:nowrap}
   .foot-copy{white-space:normal;direction:ltr;unicode-bidi:isolate}
@@ -263,6 +294,7 @@
     display:flex;justify-content:space-between;align-items:center;gap:14px;transition:color .2s}
   .faq summary::-webkit-details-marker{display:none}
   .faq summary:hover{color:var(--accent)}
+  .faq summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:12px}
   .faq summary .ar{color:var(--accent);font-size:18px;transition:transform .25s;flex:0 0 auto}
   .faq details[open] summary .ar{transform:rotate(45deg)}
   .faq details .ans{padding:0 20px 18px;color:var(--dim);font-size:14px;line-height:1.7;text-wrap:pretty}
@@ -401,9 +433,11 @@
     html[lang="ar"] .lang button, html[lang="ar"] .lang-mobile button{
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","Malgun Gothic",sans-serif;
     }
-    /* RTL：常见问题卡片标题与 + 按钮随内容一起镜像（标题在右、按钮在左）；LTR 保持正常 */
-    html[lang="ar"] .faq summary{flex-direction:row-reverse}
+    /* RTL：常见问题标题在右、+ 按钮在左 —— html 已设 dir=rtl，summary 的 flex row 自动镜像，
+       切勿再加 flex-direction:row-reverse（会在已 RTL 的主轴上再反转，导致标题靠左、按钮靠右） */
     html[lang="ar"] .faq details .ans{direction:rtl}
+    /* RTL：对比表首列（能力）默认 text-align:left 是物理方向，不随 RTL 镜像，需显式靠右 */
+    html[lang="ar"] table.cmp th:first-child,html[lang="ar"] table.cmp td:first-child{text-align:right}
     /* RTL：时间线/更新点装饰镜像 */
     html[lang="ar"] .road{border-left:none;border-right:1px solid var(--line);padding-left:0;padding-right:26px}
     html[lang="ar"] .road-item::before{left:auto;right:-33px}
@@ -437,7 +471,9 @@
       text-align:right;
       direction:rtl;
     }
-    html[lang="ar"] .author .meta{flex-direction:row-reverse;justify-content:flex-start}
+    /* RTL：作者卡片 meta 按钮行（GitHub / 赞助 / 两个 tag）随 rtl 自然镜像，行首在右；
+       切勿加 flex-direction:row-reverse —— 会在已 RTL 的主轴上二次反转，导致 4 个元素左右顺序颠倒 */
+    html[lang="ar"] .author .meta{justify-content:flex-start}
     /* RTL：窄屏单列时同样保持头像靠右、文字靠右（覆盖通用 .author{text-align:left}） */
     @media(max-width:1099px){
       html[lang="ar"] .author{justify-items:start;text-align:right}
@@ -548,6 +584,11 @@
         <div class="pic">🪟</div>
         <h3 data-i18n="plat3.name">PC 桌面版 · Windows</h3>
         <p data-i18n="plat3.desc">Windows 安装版 / 便携版（免安装）。崩溃恢复、自动保存等增强。</p>
+        <div class="meta">
+          <span><b data-i18n="plat.version">版本</b> <span data-size-ver>…</span></span>
+          <span><b data-i18n="plat.req">系统要求</b> <span data-i18n="plat3.req">Windows 10+</span></span>
+          <span><b data-i18n="plat.size">体积</b> 安装版 <span class="size" data-size-for="setup">…</span> · 便携版 <span class="size" data-size-for="portable">…</span></span>
+        </div>
         <div class="acts">
           <a class="lbtn main" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup.exe" data-i18n="plat3.setup">下载安装版</a>
           <a class="lbtn" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Portable.exe" data-i18n="plat3.portable">下载便携版</a>
@@ -557,6 +598,11 @@
         <div class="pic">🤖</div>
         <h3 data-i18n="plat4.name">Android 移动版</h3>
         <p data-i18n="plat4.desc">安卓手机/平板安装包（release 签名）。全屏、分享导出等增强。</p>
+        <div class="meta">
+          <span><b data-i18n="plat.version">版本</b> <span data-size-ver>…</span></span>
+          <span><b data-i18n="plat.req">系统要求</b> <span data-i18n="plat4.req">Android 7.0+</span></span>
+          <span><b data-i18n="plat.size">体积</b> <span class="size" data-size-for="apk">…</span></span>
+        </div>
         <div class="acts">
           <a class="lbtn main" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor.apk" data-i18n="plat4.btn">下载 .apk</a>
         </div>
@@ -653,6 +699,10 @@
       <details class="reveal d2"><summary><span data-i18n="faq.q2">三个平台的功能一样吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a2">绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。</div></details>
       <details class="reveal d3"><summary><span data-i18n="faq.q3">工程文件能在设备间通用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a3">可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。</div></details>
       <details class="reveal d4"><summary><span data-i18n="faq.q5">支持哪些语言？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a5">界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية 九种语言，切换时文案同步更新。</div></details>
+      <details class="reveal"><summary><span data-i18n="faq.q6">会收费吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a6">不会。Cub3D Editor 完全免费，所有基础功能无需付费即可使用，目前没有付费计划。</div></details>
+      <details class="reveal"><summary><span data-i18n="faq.q7">会联网或上传我的数据吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a7">不会主动上传。编辑器离线优先，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。</div></details>
+      <details class="reveal"><summary><span data-i18n="faq.q8">能商用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a8">可以。本项目采用木兰宽松许可证第2版（MulanPSL-2），允许自由使用、修改与分发，商用友好。</div></details>
+      <details class="reveal"><summary><span data-i18n="faq.q9">各平台有什么系统要求？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a9">Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；网页版只需现代浏览器，无需安装。</div></details>
     </div>
   </section>
 
@@ -685,6 +735,7 @@
         <p data-i18n="author.bio">致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。</p>
         <div class="meta">
           <a class="gh" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="author.repo">⭐ GitHub 仓库</a>
+          <a class="donate" href="https://afdian.com/a/cub3d-editor" target="_blank" rel="noopener" data-i18n="author.donate">♥ 赞助支持</a>
           <span class="tag-soft" data-i18n="author.tools">本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成</span>
           <span class="tag-soft" data-i18n="author.license">许可证：木兰宽松许可证第2版 (MulanPSL-2)</span>
         </div>
@@ -700,6 +751,11 @@
       <a href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="footer.repo">GitHub</a>
       <a href="#platforms" data-i18n="footer.download">下载</a>
     </div>
+    <div class="foot-legal">
+      <a href="legal-tos.html" class="legal-link" data-i18n="footer.tos">服务协议</a>
+      <a href="legal-disclaimer.html" class="legal-link" data-i18n="footer.disclaimer">免责声明</a>
+      <a href="legal-privacy.html" class="legal-link" data-i18n="footer.privacy">隐私政策</a>
+    </div>
     <div class="foot-info">
       <div class="brand" style="margin-bottom:8px"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></div>
       <div class="foot-copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
@@ -708,6 +764,12 @@
     </div>
   </div>
 </footer>
+
+<div class="float-btns" aria-hidden="false">
+  <button class="fab" id="shareBtn" type="button" title="Share" aria-label="Share"><span>📤</span></button>
+  <button class="fab" id="toTop" type="button" title="Back to top" aria-label="Back to top"><span>↑</span></button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ============ 多语言文案 ============ */
@@ -730,6 +792,7 @@ const T = {
     "plat2.name":"网页版 · 触屏","plat2.desc":"手机/平板浏览器，或 URL 加 ?touch 切换触控布局。","plat2.btn":"触屏模式打开",
     "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安装版 / 便携版（免安装）。崩溃恢复、自动保存等增强。","plat3.setup":"下载安装版","plat3.portable":"下载便携版",
     "plat4.name":"Android 移动版","plat4.desc":"安卓手机/平板安装包（release 签名）。全屏、分享导出等增强。","plat4.btn":"下载 .apk",
+    "plat.version":"版本","plat.req":"系统要求","plat.size":"体积","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"核心能力","features.title":"从涂鸦到参数化建模","features.sub":"一套工具覆盖 3D 与 2D 创作全流程，并在不同平台提供专属增强。",
     "f1.t":"绘制与形状","f1.d":"画笔、橡皮擦（整体/局部）、形状工具，支持 3D 与 2D。",
     "f2.t":"对象操作","f2.d":"移动、旋转、缩放；撤销/重做、复制/粘贴/克隆。",
@@ -744,9 +807,9 @@ const T = {
     "cmp.cap":"能力","cmp.web":"网页版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
     "leg.yes":"完整支持","leg.part":"部分支持","leg.no":"不适用",
     "author.eyebrow":"关于","author.title":"关于作者与项目","author.name":"Yushichadao","author.role":"独立开发者 · Cub3D Editor 作者",
-    "author.bio":"致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。","author.repo":"⭐ GitHub 仓库",
+    "author.bio":"致力于打造离线优先、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。","author.repo":"⭐ GitHub 仓库","author.donate":"♥ 赞助支持","toast.copied":"链接已复制","toast.fail":"复制失败",
     "author.tools":"本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成","author.license":"许可证：木兰宽松许可证第2版 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载","footer.tos":"服务协议","footer.disclaimer":"免责声明","footer.privacy":"隐私政策",
     "detect.windows":"检测到您正在使用 Windows，推荐下载 PC 桌面版。",
     "detect.android":"检测到您正在使用 Android，推荐下载 Android 移动版。",
     "detect.other":"未识别到具体系统，推荐使用网页版。",
@@ -768,6 +831,10 @@ const T = {
     "faq.q2":"三个平台的功能一样吗？","faq.a2":"绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。",
     "faq.q3":"工程文件能在设备间通用吗？","faq.a3":"可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。",
     "faq.q5":"支持哪些语言？","faq.a5":"界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية 九种语言，切换时文案同步更新。",
+    "faq.q6":"会收费吗？","faq.a6":"不会。Cub3D Editor 完全免费，所有基础功能无需付费即可使用，目前没有付费计划。",
+    "faq.q7":"会联网或上传我的数据吗？","faq.a7":"不会主动上传。编辑器离线优先，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。",
+    "faq.q8":"能商用吗？","faq.a8":"可以。本项目采用木兰宽松许可证第2版（MulanPSL-2），允许自由使用、修改与分发，商用友好。",
+    "faq.q9":"各平台有什么系统要求？","faq.a9":"Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；网页版只需现代浏览器，无需安装。",
     "changelog.eyebrow":"更新记录","changelog.title":"更新记录",
     "log.v1.date":"2026 · 首发",
     "log.v1.1":"网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备",
@@ -793,6 +860,7 @@ const T = {
     "plat2.name":"Web · Táctil","plat2.desc":"Navegador de móvil/tableta, o añade ?touch a la URL para el diseño táctil.","plat2.btn":"Modo táctil",
     "plat3.name":"PC de escritorio · Windows","plat3.desc":"Versión de instalación / portátil (sin instalar) de Windows. Con recuperación tras bloqueo y autoguardado.","plat3.setup":"Descargar instalable","plat3.portable":"Descargar portátil",
     "plat4.name":"Android móvil","plat4.desc":"Paquete de instalación para móvil/tableta Android (firma release). Con pantalla completa, compartir y exportar.","plat4.btn":"Descargar .apk",
+    "plat.version":"Versión","plat.req":"Sistema","plat.size":"Tamaño","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Capacidades centrales","features.title":"Del boceto al modelado paramétrico","features.sub":"Un conjunto de herramientas cubre todo el flujo creativo 3D y 2D, con mejoras específicas por plataforma.",
     "f1.t":"Dibujo y formas","f1.d":"Pincel y borrador (total/parcial), herramientas de forma, en 3D y 2D.",
     "f2.t":"Operación de objetos","f2.d":"Mover, rotar, escalar; deshacer/rehacer, copiar/pegar/clonar.",
@@ -807,9 +875,9 @@ const T = {
     "cmp.cap":"Capacidad","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"Soporte completo","leg.part":"Soporte parcial","leg.no":"No aplicable",
     "author.eyebrow":"Acerca de","author.title":"Sobre el autor y el proyecto","author.name":"Yushichadao","author.role":"Desarrollador independiente · Autor de Cub3D Editor",
-    "author.bio":"Me dedico a crear herramientas creativas 3D/2D sin conexión y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.","author.repo":"⭐ Repositorio de GitHub",
+    "author.bio":"Me dedico a crear herramientas creativas 3D/2D sin conexión y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.","author.repo":"⭐ Repositorio de GitHub","author.donate":"♥ Apoyar","toast.copied":"Enlace copiado","toast.fail":"Error al copiar",
     "author.tools":"Este sitio fue generado con asistencia de IA usando TRAE y CodeBuddy","author.license":"Licencia: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Entrar al editor","footer.repo":"GitHub","footer.download":"Descargar",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Entrar al editor","footer.repo":"GitHub","footer.download":"Descargar","footer.tos":"Términos del servicio","footer.disclaimer":"Exención de responsabilidad","footer.privacy":"Política de privacidad",
     "detect.windows":"Detectamos Windows; se recomienda la versión de escritorio para PC.",
     "detect.android":"Detectamos Android; se recomienda la versión móvil de Android.",
     "detect.other":"No se identificó un sistema concreto; se recomienda la versión web.",
@@ -831,6 +899,10 @@ const T = {
     "faq.q2":"¿Son iguales las funciones en las tres plataformas?","faq.a2":"La gran mayoría son idénticas, con el mismo motor central. Las diferencias provienen solo del modo de instalación, y de los diálogos nativos de guardar/abrir y el botón Atrás de Android. La «pantalla completa» de Android es solo visual (ajuste a la barra de estado).",
     "faq.q3":"¿Son compatibles los archivos entre dispositivos?","faq.a3":"Sí. Los proyectos .json exportados funcionan en web, Windows y Android; puedes bocetar en el móvil y retocar en el PC libremente.",
     "faq.q5":"¿Qué idiomas admite?","faq.a5":"La interfaz admite nueve idiomas: chino simplificado, chino tradicional, English, 日本語, 한국어, Русский, Español y Français, العربية, con sincronización al cambiar.",
+    "faq.q6":"¿Cuesta dinero?","faq.a6":"No. Cub3D Editor es totalmente gratuito: todas las funciones básicas funcionan sin pago y no hay planes de pago.",
+    "faq.q7":"¿Se conecta o sube mis datos?","faq.a7":"No. El editor es offline-first: los datos se guardan en tu dispositivo, no se requiere cuenta y nunca se suben tus archivos.",
+    "faq.q8":"¿Puedo usarlo comercialmente?","faq.a8":"Sí. El proyecto se distribuye bajo la Licencia de Software Permisiva Mulan v2 (MulanPSL-2), que permite uso, modificación y distribución libres, incluido el uso comercial.",
+    "faq.q9":"¿Qué requisitos de sistema hay?","faq.a9":"La versión de escritorio Windows requiere Windows 10 o superior; Android requiere Android 7.0 o superior; la versión web solo necesita un navegador moderno, sin instalar.",
     "changelog.eyebrow":"Registro de cambios","changelog.title":"Registro de cambios",
     "log.v1.date":"2026 · Primera versión",
     "log.v1.1":"Las tres plataformas listas: web (ratón/táctil), escritorio Windows y móvil Android",
@@ -856,6 +928,7 @@ const T = {
     "plat2.name":"網頁版 · 觸控","plat2.desc":"手機/平板瀏覽器，或 URL 加 ?touch 切換觸控佈局。","plat2.btn":"觸控模式開啟",
     "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安裝版 / 免安裝版。崩潰復原、自動儲存等增強。","plat3.setup":"下載安裝版","plat3.portable":"下載免安裝版",
     "plat4.name":"Android 行動版","plat4.desc":"安卓手機/平板安裝檔（release 簽章）。全螢幕、分享匯出等增強。","plat4.btn":"下載 .apk",
+    "plat.version":"版本","plat.req":"系統需求","plat.size":"體積","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"核心能力","features.title":"從塗鴉到參數化建模","features.sub":"一套工具涵蓋 3D 與 2D 創作全流程，並在不同平台提供專屬增強。",
     "f1.t":"繪製與形狀","f1.d":"畫筆、橡皮擦（整體/局部）、形狀工具，支援 3D 與 2D。",
     "f2.t":"物件操作","f2.d":"移動、旋轉、縮放；復原/重做、複製/貼上/克隆。",
@@ -870,9 +943,9 @@ const T = {
     "cmp.cap":"能力","cmp.web":"網頁版","cmp.pc":"PC 版 (Windows)","cmp.android":"Android 版",
     "leg.yes":"完整支援","leg.part":"部分支援","leg.no":"不適用",
     "author.eyebrow":"關於","author.title":"關於作者與專案","author.name":"Yushichadao","author.role":"獨立開發者 · Cub3D Editor 作者",
-    "author.bio":"致力於打造離線優先、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。","author.repo":"⭐ GitHub 倉庫",
+    "author.bio":"致力於打造離線優先、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。","author.repo":"⭐ GitHub 倉庫","author.donate":"♥ 贊助支持","toast.copied":"連結已複製","toast.fail":"複製失敗",
     "author.tools":"本網站由 TRAE 與 CodeBuddy 工具 AI 輔助生成","author.license":"授權條款：木蘭寬鬆授權條款第2版 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載","footer.tos":"服務協議","footer.disclaimer":"免責聲明","footer.privacy":"隱私政策",
     "detect.windows":"偵測到您正在使用 Windows，推薦下載 PC 桌面版。",
     "detect.android":"偵測到您正在使用 Android，推薦下載 Android 行動版。",
     "detect.other":"未識別到具體系統，推薦使用網頁版。",
@@ -894,6 +967,10 @@ const T = {
     "faq.q2":"三個平台的功能一樣嗎？","faq.a2":"絕大多數功能完全一致，共享同一套核心引擎。差異僅來自安裝方式，以及 Android 的原生儲存/開啟對話方塊與返回鍵。Android 的「全螢幕」僅為貼合狀態列的視覺全螢幕。",
     "faq.q3":"工程檔案能在裝置間通用嗎？","faq.a3":"可以。匯出的 .json 工程檔案在網頁、Windows、Android 三端之間通用，可在手機起草、電腦精修之間自由接力。",
     "faq.q5":"支援哪些語言？","faq.a5":"介面支援簡體中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية 九種語言，切換時文案同步更新。",
+    "faq.q6":"會收費嗎？","faq.a6":"不會。Cub3D Editor 完全免費，所有基礎功能無需付費即可使用，目前沒有付費計畫。",
+    "faq.q7":"會連網或上傳我的資料嗎？","faq.a7":"不會主動上傳。編輯器離線優先，預設所有資料保存在本機設備，無需登入，也不會上傳你的工程檔案。",
+    "faq.q8":"能商用嗎？","faq.a8":"可以。本專案採用木蘭寬鬆許可證第2版（MulanPSL-2），允許自由使用、修改與散布，商用友好。",
+    "faq.q9":"各平台有什麼系統需求？","faq.a9":"Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；網頁版只需現代瀏覽器，無需安裝。",
     "changelog.eyebrow":"更新記錄","changelog.title":"更新記錄",
     "log.v1.date":"2026 · 首發",
     "log.v1.1":"網頁（滑鼠/觸控）、Windows 桌面、Android 移動版三端齊備",
@@ -919,6 +996,7 @@ const T = {
     "plat2.name":"Web · Touch","plat2.desc":"Phones/tablets, or add ?touch to the URL for the touch layout.","plat2.btn":"Open Touch Mode",
     "plat3.name":"PC · Windows","plat3.desc":"Windows setup / portable (no install). Crash recovery, autosave and more.","plat3.setup":"Download Setup","plat3.portable":"Download Portable",
     "plat4.name":"Android","plat4.desc":"Android phone/tablet package (release-signed). Fullscreen, share-export and more.","plat4.btn":"Download .apk",
+    "plat.version":"Version","plat.req":"System","plat.size":"Size","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Core Capabilities","features.title":"From doodles to parametric modeling","features.sub":"One toolset for the whole 3D & 2D pipeline, with platform-specific extras.",
     "f1.t":"Draw & Shapes","f1.d":"Brush, eraser (whole/partial), shape tools for both 3D and 2D.",
     "f2.t":"Object Ops","f2.d":"Move, rotate, scale; undo/redo, copy/paste/clone.",
@@ -933,9 +1011,9 @@ const T = {
     "cmp.cap":"Capability","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"Full support","leg.part":"Partial","leg.no":"Not applicable",
     "author.eyebrow":"About","author.title":"About the Author & Project","author.name":"Yushichadao","author.role":"Independent Developer · Creator of Cub3D Editor",
-    "author.bio":"Building offline-first, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.","author.repo":"⭐ GitHub Repo",
+    "author.bio":"Building offline-first, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.","author.repo":"⭐ GitHub Repo","author.donate":"♥ Support","toast.copied":"Link copied","toast.fail":"Copy failed",
     "author.tools":"This site was AI-assisted by TRAE & CodeBuddy tools","author.license":"License: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download","footer.tos":"Terms of Service","footer.disclaimer":"Disclaimer","footer.privacy":"Privacy Policy",
     "detect.windows":"We detected Windows — the PC desktop edition is recommended.",
     "detect.android":"We detected Android — the Android edition is recommended.",
     "detect.other":"Could not detect your OS — the Web version is recommended.",
@@ -957,6 +1035,10 @@ const T = {
     "faq.q2":"Are the three platforms identical in features?","faq.a2":"The vast majority of features are exactly the same, sharing the same core engine. Differences come only from the install method, and from Android's native save/open dialogs and back key confirm. Android's \"Fullscreen\" is only a visual fullscreen that fits the status bar.",
     "faq.q3":"Can project files be used across devices?","faq.a3":"Yes. Exported .json project files work across Web, Windows, and Android, letting you freely hand off between drafting on your phone and refining on your computer.",
     "faq.q5":"Which languages are supported?","faq.a5":"The UI supports nine languages — Simplified Chinese, Traditional Chinese, English, Japanese, Korean, Russian, Spanish, French, and Arabic — with text syncing on switch.",
+    "faq.q6":"Will it cost money?","faq.a6":"No. Cub3D Editor is completely free—all basic features work without payment, and there are no paid plans.",
+    "faq.q7":"Does it go online or upload my data?","faq.a7":"It does not upload anything by default. The editor is offline-first: all data stays on your device, no login required, and your project files are never uploaded.",
+    "faq.q8":"Can I use it commercially?","faq.a8":"Yes. This project is licensed under the Mulan Permissive Software License v2 (MulanPSL-2), allowing free use, modification and distribution, including commercial use.",
+    "faq.q9":"What are the system requirements?","faq.a9":"Windows desktop requires Windows 10 or later; Android requires Android 7.0 or later; the web version just needs a modern browser—no install.",
     "changelog.eyebrow":"Changelog","changelog.title":"What's new",
     "log.v1.date":"2026 · First release",
     "log.v1.1":"Web (mouse/touch), Windows desktop, and Android mobile — all three platforms available",
@@ -982,6 +1064,7 @@ const T = {
     "plat2.name":"Web・タッチ","plat2.desc":"スマホ/タブレット、またはURLに ?touch を付けてタッチレイアウト。","plat2.btn":"タッチモードで開く",
     "plat3.name":"PC・Windows","plat3.desc":"Windows インストーラ / ポータブル（インストール不要）。クラッシュ復旧・自動保存など。","plat3.setup":"インストーラを取得","plat3.portable":"ポータブルを取得",
     "plat4.name":"Android","plat4.desc":"Android スマホ/タブレット向けパッケージ（リリース署名）。全画面・共有書き出しなど。","plat4.btn":" .apk を取得",
+    "plat.version":"バージョン","plat.req":"システム要件","plat.size":"サイズ","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"主要機能","features.title":"落書きからパラメトリック建模まで","features.sub":"3Dと2Dの制作全体をカバーし、プラットフォームごとに専用強化を提供。",
     "f1.t":"描画と図形","f1.d":"ブラシ、消しゴム（全体/部分）、図形ツール。3D/2D対応。",
     "f2.t":"オブジェクト操作","f2.d":"移動・回転・拡大縮小。元に戻す/やり直し、コピー/貼り付け/複製。",
@@ -996,9 +1079,9 @@ const T = {
     "cmp.cap":"機能","cmp.web":"Web","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"完全対応","leg.part":"一部対応","leg.no":"該当なし",
     "author.eyebrow":"について","author.title":"作者とソフトウェアについて","author.name":"Yushichadao","author.role":"独立開発者・Cub3D Editor 作者",
-    "author.bio":"オフライン優先でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。","author.repo":"⭐ GitHub リポジトリ",
+    "author.bio":"オフライン優先でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。","author.repo":"⭐ GitHub リポジトリ","author.donate":"♥ 支援する","toast.copied":"リンクをコピーしました","toast.fail":"コピーに失敗",
     "author.tools":"本サイトは TRAE と CodeBuddy ツールで AI 補助生成","author.license":"ライセンス：木蘭緩和ライセンス第2版 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード","footer.tos":"利用規約","footer.disclaimer":"免責事項","footer.privacy":"プライバシーポリシー",
     "detect.windows":"Windows を検出しました。PC デスクトップ版をおすすめします。",
     "detect.android":"Android を検出しました。Android 版をおすすめします。",
     "detect.other":"OS を特定できませんでした。Web 版をおすすめします。",
@@ -1020,6 +1103,10 @@ const T = {
     "faq.q2":"3つのプラットフォームで機能は同じですか？","faq.a2":"ほとんどの機能は完全に同一で、同じコアエンジンを共有。違いはインストール方式と、Android のネイティブ保存/開くダイアログと戻るキーのみ。Android の「全画面」はステータスバーに合わせる視覚的なものです。",
     "faq.q3":"シーンファイルは端末間で共有できますか？","faq.a3":"はい。書き出した .json シーンは Web・Windows・Android の3端末間で共通。スマホで下書き、PCで仕上げ、と自由に引き継げます。",
     "faq.q5":"対応言語は？","faq.a5":"簡体字中国語・繁体字中国語・English・日本語・한국어・ロシア語・Español・Français・العربيةの9言語。切替でテキストが同期します。",
+    "faq.q6":"料金はかかりますか？","faq.a6":"いいえ。Cub3D Editor は完全無料で、すべての基本機能を無償で利用でき、現在有料プランはありません。",
+    "faq.q7":"通信やデータのアップロードはありますか？","faq.a7":"ありません。エディタはオフライン優先で、データは既定で端末内に保存され、ログイン不要、プロジェクトをアップロードすることもありません。",
+    "faq.q8":"商用利用できますか？","faq.a8":"できます。本プロジェクトは木蘭緩和ライセンス第2版（MulanPSL-2）で、自由な利用・変更・配布を認めており、商用にも好適です。",
+    "faq.q9":"各プラットフォームのシステム要件は？","faq.a9":"Windows デスクトップ版は Windows 10 以上、Android 版は Android 7.0 以上が必要です。Web 版はモダンブラウザのみでインストール不要です。",
     "changelog.eyebrow":"更新履歴","changelog.title":"更新履歴",
     "log.v1.date":"2026・初回リリース",
     "log.v1.1":"Web（マウス/タッチ）、Windows デスクトップ、Android モバイルの3プラットフォームがそろう",
@@ -1045,6 +1132,7 @@ const T = {
     "plat2.name":"웹 · 터치","plat2.desc":"스마트폰/태블릿, 또는 URL에 ?touch 를 붙여 터치 레이아웃으로.","plat2.btn":"터치 모드 열기",
     "plat3.name":"PC · Windows","plat3.desc":"Windows 설치판 / 포터블(설치 불필요). 크래시 복구·자동 저장 등.","plat3.setup":"설치판 다운로드","plat3.portable":"포터블 다운로드",
     "plat4.name":"Android","plat4.desc":"Android 폰/태블릿 패키지(릴리스 서명). 전체 화면·공유 내보내기 등.","plat4.btn":" .apk 다운로드",
+    "plat.version":"버전","plat.req":"시스템 요구","plat.size":"용량","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"핵심 기능","features.title":"낙서에서 파라메트릭 모델링까지","features.sub":"3D와 2D 제작 전 과정을 아우르는 하나의 툴셋, 플랫폼별 전용 기능 제공.",
     "f1.t":"그리기 & 도형","f1.d":"브러시, 지우개(전체/부분), 도형 도구로 3D와 2D 모두 지원.",
     "f2.t":"객체 조작","f2.d":"이동·회전·크기 조절, 실행 취소/다시 실행, 복사/붙여넣기/복제.",
@@ -1059,9 +1147,9 @@ const T = {
     "cmp.cap":"기능","cmp.web":"웹","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"완전 지원","leg.part":"일부 지원","leg.no":"해당 없음",
     "author.eyebrow":"소개","author.title":"제작자 및 프로젝트","author.name":"Yushichadao","author.role":"독립 개발자 · Cub3D Editor 제작자",
-    "author.bio":"오프라인 우선, 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.","author.repo":"⭐ GitHub 저장소",
+    "author.bio":"오프라인 우선, 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.","author.repo":"⭐ GitHub 저장소","author.donate":"♥ 후원하기","toast.copied":"링크가 복사되었습니다","toast.fail":"복사 실패",
     "author.tools":"이 사이트는 TRAE 및 CodeBuddy 도구의 AI 지원으로 생성되었습니다.","author.license":"라이선스: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"편집기 열기","footer.repo":"GitHub","footer.download":"다운로드",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"편집기 열기","footer.repo":"GitHub","footer.download":"다운로드","footer.tos":"서비스 약관","footer.disclaimer":"면책 조항","footer.privacy":"개인정보 처리방침",
     "detect.windows":"Windows를 사용 중이시군요. PC 데스크톱 버전을 권장합니다.","detect.android":"Android를 사용 중이시군요. Android 버전을 권장합니다.","detect.other":"운영체제를 확인하지 못했으니 웹 버전을 권장합니다.",
     "nav.scenarios":"활용 사례","nav.quickstart":"빠른 시작","nav.roadmap":"로드맵","nav.faq":"자주 묻는 질문",
     "scenarios.eyebrow":"누가 쓰나요","scenarios.title":"이런 상황에 딱","scenarios.sub":"영감 메모든 수업 데모든 본격적인 디자인이든, 알맞은 진입점과 속도를 찾을 수 있습니다.",
@@ -1081,6 +1169,10 @@ const T = {
     "faq.q2":"세 플랫폼의 기능이 동일한가요?","faq.a2":"대부분의 기능은 완전히 동일하며 동일한 코어 엔진을 공유합니다. 차이는 설치 방식과 Android의 네이티브 저장/열기 대화상자 및 뒤로 가기 키에서만 발생합니다. Android의 '전체 화면'은 상태 표시줄에 맞춘 시각적인 것일 뿐입니다.",
     "faq.q3":"프로젝트 파일을 기기 간에 쓸 수 있나요?","faq.a3":"네. 내보낸 .json 프로젝트 파일은 웹·Windows·Android 세 플랫폼 간에 호환되어 폰에서 초안을 잡고 PC에서 손질하는 식으로 자유롭게 이어갈 수 있습니다.",
     "faq.q5":"어떤 언어를 지원하나요?","faq.a5":"간체 중국어·번체 중국어·English·日本語·한국어·러시아어·Español·Français·العربية, 아홉 가지 언어를 지원하며 전환 시 텍스트가 동기화됩니다.",
+    "faq.q6":"비용이 드나요?","faq.a6":"아닙니다. Cub3D Editor는 완전 무료이며 모든 기본 기능을 무료로 사용할 수 있고 유료 플랜은 없습니다.",
+    "faq.q7":"인터넷 연결이나 데이터 업로드가 있나요?","faq.a7":"없습니다. 에디터는 오프라인 우선이며 데이터는 기본적으로 기기에 저장되고 로그인이 필요 없으며 프로젝트 파일을 업로드하지 않습니다.",
+    "faq.q8":"상업적으로 사용할 수 있나요?","faq.a8":"네. 이 프로젝트는 Mulan Permissive Software License v2(MulanPSL-2)로 라이선스되어 자유로운 사용·수정·배포와 상업 이용을 허용합니다.",
+    "faq.q9":"각 플랫폼의 시스템 요구 사항은?","faq.a9":"Windows 데스크톱은 Windows 10 이상, Android는 Android 7.0 이상이 필요하며 웹 버전은 최신 브라우저만 있으면 설치가 필요 없습니다.",
     "changelog.eyebrow":"업데이트 기록","changelog.title":"업데이트 기록",
     "log.v1.date":"2026 · 첫 릴리스",
     "log.v1.1":"웹(마우스/터치), Windows 데스크톱, Android 모바일 3플랫폼 완비",
@@ -1106,6 +1198,7 @@ const T = {
     "plat2.name":"Веб · Сенсор","plat2.desc":"Телефоны/планшеты или добавьте ?touch к URL для сенсорной раскладки.","plat2.btn":"Открыть сенсорный режим",
     "plat3.name":"ПК · Windows","plat3.desc":"Установщик Windows / портативная версия (без установки). Восстановление после сбоя, автосохранение и др.","plat3.setup":"Скачать установщик","plat3.portable":"Скачать портативную",
     "plat4.name":"Android","plat4.desc":"Пакет для телефона/планшета Android (подпись release). Полноэкранный режим, экспорт через «Поделиться» и др.","plat4.btn":"Скачать .apk",
+    "plat.version":"Версия","plat.req":"Система","plat.size":"Размер","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Ключевые возможности","features.title":"От наброска до параметрического моделирования","features.sub":"Один набор инструментов для всего процесса 3D- и 2D-творчества с расширениями под каждую платформу.",
     "f1.t":"Рисование и фигуры","f1.d":"Кисть, ластик (полностью/частично), инструменты фигур для 3D и 2D.",
     "f2.t":"Работа с объектами","f2.d":"Перемещение, поворот, масштаб; отмена/повтор, копирование/вставка/клонирование.",
@@ -1120,9 +1213,9 @@ const T = {
     "cmp.cap":"Возможность","cmp.web":"Веб","cmp.pc":"ПК (Windows)","cmp.android":"Android",
     "leg.yes":"Полная поддержка","leg.part":"Частично","leg.no":"Не применимо",
     "author.eyebrow":"Об авторе","author.title":"Об авторе и проекте","author.name":"Yushichadao","author.role":"Независимый разработчик · Создатель Cub3D Editor",
-    "author.bio":"Создаю офлайн-приоритетные, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.","author.repo":"⭐ Репозиторий GitHub",
+    "author.bio":"Создаю офлайн-приоритетные, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.","author.repo":"⭐ Репозиторий GitHub","author.donate":"♥ Поддержать","toast.copied":"Ссылка скопирована","toast.fail":"Не удалось скопировать",
     "author.tools":"Этот сайт создан при помощи ИИ инструментами TRAE и CodeBuddy","author.license":"Лицензия: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Открыть редактор","footer.repo":"GitHub","footer.download":"Скачать",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Открыть редактор","footer.repo":"GitHub","footer.download":"Скачать","footer.tos":"Условия обслуживания","footer.disclaimer":"Дисклеймер","footer.privacy":"Политика конфиденциальности",
     "detect.windows":"Обнаружена система Windows — рекомендуем ПК-версию.","detect.android":"Обнаружен Android — рекомендуем версию для Android.","detect.other":"Не удалось определить ОС — рекомендуем веб-версию.",
     "nav.scenarios":"Сценарии","nav.quickstart":"Быстрый старт","nav.roadmap":"План развития","nav.faq":"Частые вопросы",
     "scenarios.eyebrow":"Кто использует","scenarios.title":"Подойдёт для этих ситуаций","scenarios.sub":"Будь то быстрая заметка-идея, учебная демонстрация или серьёзный дизайн — найдётся подходящий вход и темп.",
@@ -1142,6 +1235,10 @@ const T = {
     "faq.q2":"Функции на трёх платформах одинаковы?","faq.a2":"Подавляющее большинство функций полностью совпадает, используя один и тот же основной движок. Различия — только в способе установки и в нативных диалогах сохранения/открытия и кнопке «Назад» Android. «Полноэкранный режим» Android — лишь визуальное совмещение со строкой состояния.",
     "faq.q3":"Можно ли использовать файлы проектов на разных устройствах?","faq.a3":"Да. Экспортированные .json проекты работают в вебе, Windows и Android, позволяя свободно передавать работу между телефоном и компьютером.",
     "faq.q5":"Какие языки поддерживаются?","faq.a5":"Интерфейс поддерживает девять языков — упрощённый китайский, традиционный китайский, English, 日本語, 한국어, Русский, Español и Français, العربية — с синхронизацией текста при переключении.",
+    "faq.q6":"Это платно?","faq.a6":"Нет. Cub3D Editor полностью бесплатен — все основные функции доступны без оплаты, платных тарифов нет.",
+    "faq.q7":"Подключается к сети или загружает мои данные?","faq.a7":"Нет. Редактор офлайн-приоритетный: по умолчанию все данные хранятся на устройстве, вход не требуется, файлы проектов не загружаются.",
+    "faq.q8":"Можно ли использовать в коммерческих целях?","faq.a8":"Да. Проект распространяется по лицензии Mulan Permissive Software License v2 (MulanPSL-2), допускающей свободное использование, изменение и распространение, включая коммерческое.",
+    "faq.q9":"Какие системные требования?","faq.a9":"Для Windows-версии нужна Windows 10 и выше; для Android — Android 7.0 и выше; веб-версия требует только современный браузер без установки.",
     "changelog.eyebrow":"История изменений","changelog.title":"Что нового",
     "log.v1.date":"2026 · Первый выпуск",
     "log.v1.1":"Веб (мышь/сенсор), Windows-десктоп и Android-мобайл — все три платформы готовы",
@@ -1166,6 +1263,7 @@ const T = {
     "plat2.name":"Web · Tactile","plat2.desc":"Téléphones/tablettes, ou ajoutez ?touch au lien pour basculer en disposition tactile.","plat2.btn":"Ouvrir le mode tactile",
     "plat3.name":"Bureau PC · Windows","plat3.desc":"Version d'installation Windows / version portable (sans installation). Récupération après crash, auto-sauvegarde, etc.","plat3.setup":"Télécharger l'installateur","plat3.portable":"Télécharger la version portable",
     "plat4.name":"Version Android","plat4.desc":"Paquet pour téléphone/tablette Android (signé). Plein écran, partage, export, etc.","plat4.btn":"Télécharger .apk",
+    "plat.version":"Version","plat.req":"Système","plat.size":"Taille","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"Capacités de base","features.title":"Du croquis à la modélisation paramétrique","features.sub":"Une seule boîte à outils couvre l'ensemble du flux créatif 3D et 2D, avec des optimisations propres à chaque plateforme.",
     "f1.t":"Dessin et formes","f1.d":"Pinceau, gomme (totale/partielle), outils de forme, prend en charge 3D et 2D.",
     "f2.t":"Opérations d'objet","f2.d":"Déplacer, pivoter, mettre à l'échelle ; annuler/rétablir, copier/coller/dupliquer.",
@@ -1192,9 +1290,9 @@ const T = {
     "cmp.r_lang":["Langues d'interface","Chinois simplifié, chinois traditionnel, anglais, japonais, coréen, russe, espagnol, français, arabe","Identique","Identique"],
     "leg.yes":"Prise en charge complète","leg.part":"Prise en charge partielle","leg.no":"Non applicable",
     "author.eyebrow":"À propos","author.title":"À propos de l'auteur et du projet","author.name":"Yushichadao","author.role":"Développeur indépendant · Auteur de Cub3D Editor",
-    "author.bio":"Nous cherchons à construire des outils créatifs 3D/2D hors-ligne d'abord et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.","author.repo":"⭐ Dépôt GitHub",
+    "author.bio":"Nous cherchons à construire des outils créatifs 3D/2D hors-ligne d'abord et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.","author.repo":"⭐ Dépôt GitHub","author.donate":"♥ Soutenir","toast.copied":"Lien copié","toast.fail":"Échec de la copie",
     "author.tools":"Ce site a été généré à l'aide des outils IA TRAE et CodeBuddy","author.license":"Licence : Licence logicielle permissive Mulan v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Ouvrir l'éditeur","footer.repo":"GitHub","footer.download":"Télécharger",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Ouvrir l'éditeur","footer.repo":"GitHub","footer.download":"Télécharger","footer.tos":"Conditions d'utilisation","footer.disclaimer":"Avis de non-responsabilité","footer.privacy":"Politique de confidentialité",
     "detect.windows":"Système Windows détecté — la version PC est recommandée.","detect.android":"Android détecté — la version Android est recommandée.","detect.other":"Impossible de détecter le système — la version Web est recommandée.",
     "nav.scenarios":"Scénarios","nav.quickstart":"Démarrage rapide","nav.roadmap":"Feuille de route","nav.faq":"FAQ",
     "scenarios.eyebrow":"Qui l'utilise","scenarios.title":"Adapté à ces situations","scenarios.sub":"Qu'il s'agisse d'une note d'idée rapide, d'une démonstration pédagogique ou d'un design sérieux, vous trouverez une entrée et un rythme adaptés.",
@@ -1214,6 +1312,10 @@ const T = {
     "faq.q2":"Les fonctions sont-elles identiques sur les trois plateformes ?","faq.a2":"La grande majorité des fonctions sont totalement identiques, utilisant le même moteur principal. Les différences concernent uniquement la méthode d'installation et les boîtes de dialogue natives d'enregistrement/ouverture et le bouton « Retour » d'Android. Le « plein écran » d'Android n'est qu'une fusion visuelle avec la barre d'état.",
     "faq.q3":"Puis-je utiliser les fichiers de projet sur différents appareils ?","faq.a3":"Oui. Les projets .json exportés fonctionnent sur le Web, Windows et Android, permettant de transférer librement le travail entre téléphone et ordinateur.",
     "faq.q5":"Quelles langues sont prises en charge ?","faq.a5":"L'interface prend en charge neuf langues — chinois simplifié, chinois traditionnel, English, 日本語, 한국어, Русский, Español et Français, العربية — avec synchronisation du texte lors du changement.",
+    "faq.q6":"Est-ce payant ?","faq.a6":"Non. Cub3D Editor est entièrement gratuit : toutes les fonctionnalités de base fonctionnent sans paiement et il n'y a aucun plan payant.",
+    "faq.q7":"Se connecte-t-il ou téléverse-t-il mes données ?","faq.a7":"Non. L'éditeur est hors-ligne d'abord : les données restent sur votre appareil, aucun compte requis, et vos fichiers ne sont jamais téléversés.",
+    "faq.q8":"Puis-je l'utiliser à des fins commerciales ?","faq.a8":"Oui. Ce projet est sous Licence de logiciel permissive Mulan v2 (MulanPSL-2), autorisant l'usage, la modification et la distribution libres, y compris commercial.",
+    "faq.q9":"Quelles sont les exigences système ?","faq.a9":"La version Windows nécessite Windows 10 ou plus ; Android nécessite Android 7.0 ou plus ; la version Web nécessite seulement un navigateur moderne, sans installation.",
     "changelog.eyebrow":"Journal des modifications","changelog.title":"Nouveautés",
     "log.v1.date":"2026 · Première version",
     "log.v1.1":"Web (souris/tactile), bureau Windows et mobile Android — les trois plateformes sont prêtes",
@@ -1239,6 +1341,7 @@ const T = {
     "plat2.name":"الويب · اللمس","plat2.desc":"هواتف/أجهزة لوحية، أو أضف ?touch إلى الرابط لتبديل تخطيط اللمس.","plat2.btn":"افتح وضع اللمس",
     "plat3.name":"سطح المكتب PC · Windows","plat3.desc":"نسخة تثبيت Windows / نسخة محمولة (بدون تثبيت). استرداد من الانهيار وحفظ تلقائي وغيرها.","plat3.setup":"تنزيل نسخة التثبيت","plat3.portable":"تنزيل النسخة المحمولة",
     "plat4.name":"إصدار Android","plat4.desc":"حزمة هاتف/جهاز لوحي Android (موقّعة بإصدار). ملء الشاشة والمشاركة والتصدير وغيرها.","plat4.btn":"تنزيل .apk",
+    "plat.version":"الإصدار","plat.req":"متطلبات النظام","plat.size":"الحجم","plat3.req":"Windows 10+","plat4.req":"Android 7.0+",
     "features.eyebrow":"القدرات الأساسية","features.title":"من الخربشة إلى النمذجة المعاملية","features.sub":"مجموعة أدوات واحدة تغطي سير عمل الإبداع ثلاثي الأبعاد وثنائي الأبعاد بالكامل، مع تحسينات خاصة بكل منصة.",
     "f1.t":"الرسم والأشكال","f1.d":"فرشاة، ممحاة (كلي/جزئي)، أدوات الأشكال، تدعم 3D و2D.",
     "f2.t":"عمليات الكائن","f2.d":"نقل، تدوير، تكبير؛ تراجع/إعادة، نسخ/لصق/استنساخ.",
@@ -1253,9 +1356,9 @@ const T = {
     "cmp.cap":"القدرة","cmp.web":"الويب","cmp.pc":"PC (Windows)","cmp.android":"Android",
     "leg.yes":"دعم كامل","leg.part":"دعم جزئي","leg.no":"غير منطبق",
     "author.eyebrow":"عن","author.title":"عن المؤلف والمشروع","author.name":"Yushichadao","author.role":"مطوّر مستقل · مؤلف Cub3D Editor",
-    "author.bio":"نسعى لبناء أدوات إبداعية 3D/2D دون اتصال أولاً وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان.","author.repo":"⭐ مستودع GitHub",
+    "author.bio":"نسعى لبناء أدوات إبداعية 3D/2D دون اتصال أولاً وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان.","author.repo":"⭐ مستودع GitHub","author.donate":"♥ دعم","toast.copied":"تم نسخ الرابط","toast.fail":"فشل النسخ",
     "author.tools":"تم توليد هذا الموقع بمساعدة أدوات TRAE وCodeBuddy","author.license":"الترخيص: رخصة مولان المتساهلة الإصدار 2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"ادخل المحرر","footer.repo":"GitHub","footer.download":"تنزيل",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"ادخل المحرر","footer.repo":"GitHub","footer.download":"تنزيل","footer.tos":"شروط الخدمة","footer.disclaimer":"إخلاء المسؤولية","footer.privacy":"سياسة الخصوصية",
     "detect.windows":"تم اكتشاف Windows — يوصى بإصدار سطح المكتب PC.","detect.android":"تم اكتشاف Android — يوصى بإصدار Android.","detect.other":"تعذّر اكتشاف النظام — يوصى بإصدار الويب.",
     "nav.scenarios":"حالات الاستخدام","nav.quickstart":"البدء السريع","nav.roadmap":"خارطة الطريق","nav.faq":"الأسئلة الشائعة",
     "scenarios.eyebrow":"من يستخدمه","scenarios.title":"مناسب لهذه السيناريوهات","scenarios.sub":"سواء كانت ملاحظة فكرة سريعة أو عرضاً تعليمياً أو تصميماً رسمياً، ستجد نقطة دخول وتيرة مناسبة.",
@@ -1275,6 +1378,10 @@ const T = {
     "faq.q2":"هل الميزات متطابقة على المنصات الثلاث؟","faq.a2":"الغالبية العظمى من الميزات متطابقة تماماً، وتشترك في نفس المحرك الأساسي. الاختلافات تنشأ فقط من طريقة التثبيت، ومن حوارات حفظ/فتح Android الأصلية وزر الرجوع.",
     "faq.q3":"هل يمكن استخدام ملفات المشروع عبر الأجهزة؟","faq.a3":"نعم. ملفات مشروع .json المصدّرة تعمل عبر الويب وWindows وAndroid، مما يتيح لك التسليم بحرية بين المسودة على الهاتف والصقل على الحاسوب.",
     "faq.q5":"ما اللغات المدعومة؟","faq.a5":"يدعم الواجهة تسع لغات — الصينية المبسطة، الصينية التقليدية، English، 日本語، 한국어، Русский، Español، Français، العربية — مع مزامنة النص عند التبديل.",
+    "faq.q6":"هل هو مدفوع؟","faq.a6":"لا. Cub3D Editor مجاني تماماً — جميع الميزات الأساسية تعمل دون دفع ولا توجد خطط مدفوعة.",
+    "faq.q7":"هل يتصل بالإنترنت أو يرفع بياناتي؟","faq.a7":"لا. المحرر يعمل دون اتصال أولاً: البيانات تبقى على جهازك، لا حاجة لتسجيل الدخول، ولا يتم رفع ملفات مشاريعك.",
+    "faq.q8":"هل يمكنني استخدامه تجارياً؟","faq.a8":"نعم. هذا المشروع مرخّص بموجب رخصة Mulan البرمجية المتساهلة الإصدار 2 (MulanPSL-2)، التي تسمح بالاستخدام والتعديل والتوزيع بحرية بما في ذلك الاستخدام التجاري.",
+    "faq.q9":"ما متطلبات النظام؟","faq.a9":"نسخة سطح المكتب Windows تتطلب Windows 10 أو أحدث؛ نسخة Android تتطلب Android 7.0 أو أحدث؛ نسخة الويب تحتاج فقط إلى متصفح حديث دون تثبيت.",
     "changelog.eyebrow":"سجل التحديثات","changelog.title":"سجل التحديثات",
     "log.v1.date":"2026 · الإصدار الأول",
     "log.v1.1":"الويب (ماوس/لمس) وسطح مكتب Windows وموبايل Android — المنصات الثلاث متاحة",
@@ -1317,7 +1424,9 @@ const CMPLABEL = {
 const SYM = {Y:'<span class="yes">✓</span>', P:'<span class="part">~</span>', N:'<span class="no">—</span>'};
 
 /* ============ 语言应用 ============ */
+// 优先级：已保存偏好(localStorage) > URL ?lang 参数（仅作初始语言）> 系统语言 > 简体中文
 let cur = localStorage.getItem('cub3d_lang')
+      || new URLSearchParams(location.search).get('lang')
       || (navigator.language||'zh-CN').slice(0,7)
       || 'zh-CN';
 if(!T[cur]) cur = cur.startsWith('zh') ? (cur.includes('TW')||cur.includes('HK')||cur.includes('Hant')?'zh-TW':'zh-CN')
@@ -1341,6 +1450,10 @@ function applyLang(lang){
     `<tr><td>${labels[k]}</td><td>${SYM[w]}</td><td>${SYM[p]}</td><td>${SYM[a]}</td></tr>`).join('');
   // 语言按钮高亮（顶栏 + 移动端下拉）
   document.querySelectorAll('#lang button, #langMobile button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  // 法律文档入口：带上当前语言参数跳转
+  document.querySelectorAll('.legal-link').forEach(a=>{
+    a.href = a.getAttribute('href').split('?')[0] + '?lang=' + encodeURIComponent(lang);
+  });
   // 重新识别（文案依赖语言）
   detectDevice();
 }
@@ -1461,6 +1574,64 @@ buildLangBars();
   document.querySelector('meta[property="og:image"]').setAttribute('content', imgUrl);
   document.querySelector('meta[name="twitter:image"]').setAttribute('content', imgUrl);
 })();
+
+/* ============ 下载体积/版本动态拉取：实时读取 latest Release（文件会经常替换，体积不硬编码） ============ */
+(function(){
+  const match = { 'Cub3D-Editor-Setup.exe':'setup', 'Cub3D-Editor-Portable.exe':'portable', 'Cub3D-Editor.apk':'apk' };
+  const fmt = b => (b/1048576).toFixed(1)+' MB';
+  fetch('https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', { cache:'no-store' })
+    .then(r=>r.ok?r.json():Promise.reject(new Error('release fetch failed')))
+    .then(data=>{
+      document.querySelectorAll('[data-size-ver]').forEach(el=>{ if(data.tag_name) el.textContent=data.tag_name; });
+      (data.assets||[]).forEach(a=>{
+        const key=match[a.name]; if(!key) return;
+        document.querySelectorAll('[data-size-for="'+key+'"]').forEach(el=>{ el.textContent=fmt(a.size); });
+      });
+    })
+    .catch(()=>{
+      document.querySelectorAll('[data-size-ver]').forEach(el=>el.textContent='—');
+      document.querySelectorAll('[data-size-for]').forEach(el=>el.textContent='—');
+    });
+})();
+
+/* ============ 返回顶部 + 分享（Web Share API + 复制兜底） ============ */
+const shareBtn = document.getElementById('shareBtn');
+const toTopBtn = document.getElementById('toTop');
+const toastEl = document.getElementById('toast');
+let toastTimer = null;
+function showToast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2200);
+}
+function getShareUrl(){ return location.origin + location.pathname + '?lang=' + encodeURIComponent(cur); }
+async function copyText(txt){
+  try { await navigator.clipboard.writeText(txt); return true; }
+  catch(e){
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy'); ta.remove(); return ok;
+    } catch(e2){ return false; }
+  }
+}
+if (shareBtn) shareBtn.addEventListener('click', async ()=>{
+  const dict = T[cur] || {};
+  const title = (dict['hero.title'] ? dict['hero.title'] + ' — Cub3D Editor' : 'Cub3D Editor');
+  const url = getShareUrl();
+  if (navigator.share) {
+    try { await navigator.share({ title, url }); return; }
+    catch(e){ if (e && e.name==='AbortError') return; /* 用户取消不计为失败 */ }
+  }
+  const ok = await copyText(url);
+  showToast(ok ? (dict['toast.copied']||'Link copied') : (dict['toast.fail']||'Copy failed'));
+});
+if (toTopBtn) toTopBtn.addEventListener('click', ()=>window.scrollTo({ top:0, behavior:'smooth' }));
+window.addEventListener('scroll', ()=>{
+  if (toTopBtn) toTopBtn.classList.toggle('show', window.scrollY > 420);
+}, { passive:true });
 
 /* 初始化 */
 applyLang(cur);
