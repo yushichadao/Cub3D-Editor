@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); // 脚本置于 tools/ 下，反推仓库根
 
 // Русский перевод: тексты всплывающих окон + полные юридические тексты (локальный 3D-редактор, без учётной записи)
 const TRANS = {

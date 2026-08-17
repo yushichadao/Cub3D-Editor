@@ -62,7 +62,7 @@ Write-Host '=================================='
 
 if (-not (Test-Path (Join-Path $root 'docs'))) {
     Write-Host '[警告] 未找到 docs/ 目录，使用说明书将无法打开。' -ForegroundColor Yellow
-    Write-Host '       请在仓库根目录执行: node sync-shared.mjs' -ForegroundColor Yellow
+    Write-Host '       请在仓库根目录执行: node tools/sync-shared.mjs' -ForegroundColor Yellow
 }
 
 while ($listener.IsListening) {

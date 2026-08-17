@@ -13,6 +13,8 @@ for (const f of targets) {
     i++;
     const code = m[1];
     if (!code.trim()) continue;
+    // importmap 内容是 JSON 而非 JS，跳过（由浏览器解析，node --check 无法校验）
+    if (/type=["']importmap["']/i.test(m[0])) { console.log('SKIP', f, 'script#' + i, '[importmap]', code.length + ' chars'); continue; }
     const isModule = /type=["']module["']/i.test(m[0]);
     const tmp = path.join(os.tmpdir(), 'chk_' + Date.now() + '_' + i + (isModule ? '.mjs' : '.js'));
     fs.writeFileSync(tmp, code);

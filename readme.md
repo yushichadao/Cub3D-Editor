@@ -34,7 +34,7 @@
 
 ## 下载与发布
 
-各平台的正式版安装包统一命名为通用名，**作为 GitHub Releases 附件发布，不再随源码入库**（当前版本 `v1.0.0`）：
+各平台的正式版安装包统一命名为通用名，**作为 GitHub Releases 附件发布，不再随源码入库**（当前版本 `v1.1.0`）：
 
 | 产物 | 说明 |
 | :--- | :--- |
@@ -44,12 +44,12 @@
 
 下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮会跳转到最新 Release 的对应附件。
 
-> 注：安装包不再进 git，因此 `.git` 不会再因反复打包而膨胀；各端自身的 `dist/`、`build/`、`node_modules/` 按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。发布新版本请运行仓库根 `release.mjs`（自动构建三端产物并上传为 Release 附件）：
+> 注：安装包不再进 git，因此 `.git` 不会再因反复打包而膨胀；各端自身的 `dist/`、`build/`、`node_modules/` 按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。发布新版本请运行 `tools/release.mjs`（自动构建三端产物并上传为 Release 附件）：
 >
 > ```powershell
-> node release.mjs          # 默认按 package.json 的 version 发布，如 v1.0.0
-> node release.mjs 1.1.0    # 指定版本
-> node release.mjs --replace # 已存在同名 Release 时删除重建
+> node tools/release.mjs          # 默认按 package.json 的 version 发布，如 v1.0.0
+> node tools/release.mjs 1.1.0    # 指定版本
+> node tools/release.mjs --replace # 已存在同名 Release 时删除重建
 > ```
 
 ---
@@ -87,7 +87,7 @@
 各端 `docs/` 目录均为同步生成的副本，**请勿直接编辑**。修改统一在 `shared/docs/` 进行，完成后运行：
 
 ```powershell
-node sync-shared.mjs
+node tools/sync-shared.mjs
 ```
 
 界面语言文案集中维护在 `shared/language/`（`en.js` / `ja.js` / `zh-TW.js` / `ko.js` / `ru.js` / `es.js` / `fr.js` / `ar.js`，简体中文为内置默认值）。
@@ -110,16 +110,20 @@ Cub3D Editor/
 │   └── electron/           # Electron 主进程
 ├── Android/                # Android 版（Capacitor）
 │   └── android/            # Capacitor 原生工程（含 release.keystore 签名，不入库）
-├── sync-shared.mjs         # 同步 shared/ → 各端 + 生成语言包
-├── _i18n_en.mjs            # 英文文案生成
-├── _i18n_ja.mjs            # 日文文案生成
-├── _i18n_zh-TW.mjs         # 繁体中文文案生成
-├── _i18n_ko.mjs            # 韩文文案生成
-├── _i18n_ru.mjs            # 俄文文案生成
-├── _i18n_es.mjs            # 西班牙语文案生成
-├── _i18n_fr.mjs            # 法语文案生成
-├── _i18n_ar.mjs            # 阿拉伯语文案生成（简体中文为内置默认，无需对应脚本）
-└── check_manual.mjs        # 说明书 ↔ 界面文案一致性校验
+├── tools/                  # 仓库维护脚本（同步 / 语言包 / 校验 / 发布）
+│   ├── sync-shared.mjs     # 同步 shared/ → 各端 + 生成语言包
+│   ├── release.mjs         # 构建三端产物并发布为 GitHub Release 附件
+│   ├── check_manual.mjs    # 说明书 ↔ 界面文案一致性校验
+│   ├── _check_syntax.mjs   # 三端 index.html 语法检查
+│   ├── sync-wiki.mjs       # 同步 wiki/Home.md 到 GitHub Wiki
+│   ├── _i18n_en.mjs        # 英文文案生成
+│   ├── _i18n_ja.mjs        # 日文文案生成
+│   ├── _i18n_zh-TW.mjs     # 繁体中文文案生成
+│   ├── _i18n_ko.mjs        # 韩文文案生成
+│   ├── _i18n_ru.mjs        # 俄文文案生成
+│   ├── _i18n_es.mjs        # 西班牙语文案生成
+│   ├── _i18n_fr.mjs        # 法语文案生成
+│   └── _i18n_ar.mjs        # 阿拉伯语文案生成（简体中文为内置默认，无需对应脚本）
 ```
 
 ---
@@ -129,7 +133,7 @@ Cub3D Editor/
 所有平台构建前请先同步共享资源：
 
 ```powershell
-node sync-shared.mjs
+node tools/sync-shared.mjs
 ```
 
 各端的 `npm start` / `npm run dist` 已通过 `pre*` 钩子自动执行同步。
@@ -171,17 +175,16 @@ npm run apk:debug       # 调试包
 
 > 注：若本机启用了文件删除防护（如部分 IDE 会拦截 `cap sync` 的批量删除），构建时请临时关闭该防护（例如设置 `CODEBUDDY_SAFE_DELETE_ENABLED=0`），否则 `cap sync` 会中断。
 
-产物位于 `Android/dist/Cub3D-Editor.apk`（发布时复制到仓库根 `dist/`）。
+产物位于 `Android/dist/Cub3D-Editor.apk`；发布时由 `tools/release.mjs` 收集，与 PC 版一起作为 GitHub Release 附件上传（不再复制到仓库根 `dist/`）。
 
 ### 部署到 GitHub Pages
 
-仓库根 `index.html`（宣传页）、`Web/`（编辑器）与 `dist/`（下载）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
+仓库根 `index.html`（宣传页）与 `Web/`（网页版编辑器）由 `.github/workflows/pages.yml` 在 push 到 `main` 时自动聚合发布：
 
 - `/` → 宣传页（产品介绍、九语言切换、下载入口）
 - `/Web/` → 网页版编辑器
-- `/dist/` → 安装包下载
 
-无需手动构建；修改上述任一目录并推送即触发部署。
+**安装包不随站点发布**：PC / Android 安装包由 `tools/release.mjs` 上传到 GitHub Releases，宣传页的「下载」按钮指向 `releases/latest/download/` 对应附件。修改上述任一目录并推送即触发部署。
 
 本地预览（从仓库根启动静态服务器即可同时看到宣传页与编辑器）：
 
@@ -198,11 +201,11 @@ python -m http.server 8090
 ## 校验
 
 ```powershell
-node sync-shared.mjs     # 同步 shared/ → 各端 + 生成语言包
-node check_manual.mjs    # 核对说明书中的界面名词是否与代码一致
+node tools/sync-shared.mjs     # 同步 shared/ → 各端 + 生成语言包
+node tools/check_manual.mjs    # 核对说明书中的界面名词是否与代码一致
 ```
 
-`check_manual.mjs` 会列出说明书提到但在界面文案中找不到匹配的名词，供人工判断是否需要修正。部分教学用语（如"想一想"）属于正常误报。
+`tools/check_manual.mjs` 会列出说明书提到但在界面文案中找不到匹配的名词，供人工判断是否需要修正。部分教学用语（如"想一想"）属于正常误报。
 
 ---
 

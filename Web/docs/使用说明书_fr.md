@@ -361,8 +361,8 @@ Téléchargez sur la page **Releases** du dépôt du projet. Il y a deux types d
 
 | Type de paquet | Nom de fichier ressemblant à | Caractéristiques | Public recommandé |
 | --- | --- | --- | --- |
-| **Version installable** | `...-Setup-1.0.0.exe` | Double-clic pour installer, crée un menu Démarrer et un raccourci bureau, désinstallable via « Applications et fonctionnalités » | Ordinateur principal que vous utilisez sur le long terme |
-| **Version portable** | `...-1.0.0-portable.exe` | **Sans installation**, double-clic pour exécuter directement, peut être placée sur clé USB | Ordinateur public, sans droits administrateur, vouloir transporter avec soi |
+| **Version installable** | `...-Setup-1.1.0.exe` | Double-clic pour installer, crée un menu Démarrer et un raccourci bureau, désinstallable via « Applications et fonctionnalités » | Ordinateur principal que vous utilisez sur le long terme |
+| **Version portable** | `...-1.1.0-portable.exe` | **Sans installation**, double-clic pour exécuter directement, peut être placée sur clé USB | Ordinateur public, sans droits administrateur, vouloir transporter avec soi |
 
 > 📥 Adresse de téléchargement : [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
 

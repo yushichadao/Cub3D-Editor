@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const root = resolve(__dirname);
+const root = resolve(__dirname, '..'); // 脚本置于 tools/ 下，反推仓库根
 const wikiSrc = resolve(root, 'wiki/Home.md');
 const wikiTmp = resolve(root, 'wiki-tmp');
 const wikiDst = resolve(wikiTmp, 'Home.md');

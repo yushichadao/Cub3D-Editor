@@ -35,6 +35,13 @@ function lanIp() {
   return null;
 }
 
+// 静态根目录：优先使用构建产物目录 www（Android 通过 build-www.mjs 生成，
+// 内含完整的 index.html / three / language / docs 资源）；不存在则回退到本目录
+// （Web/PC 直接以根目录提供资源，无需 www）。这样三端共用同一份 server.js 都能正确命中资源。
+const WEBROOT = fs.existsSync(path.join(__dirname, 'www', 'index.html'))
+  ? path.join(__dirname, 'www')
+  : __dirname;
+
 const server = http.createServer((req, res) => {
   const parsed = new URL(req.url, 'http://localhost');
   let pathname = parsed.pathname;
@@ -49,7 +56,7 @@ const server = http.createServer((req, res) => {
   try { pathname = decodeURIComponent(pathname); } catch (e) {}
 
   let urlPath = pathname === '/' ? '/index.html' : pathname;
-  let filePath = path.join(__dirname, urlPath.split('?')[0]);
+  let filePath = path.join(WEBROOT, urlPath.split('?')[0]);
   const ext = path.extname(filePath).toLowerCase();
   const contentType = mimeTypes[ext] || 'application/octet-stream';
   fs.readFile(filePath, (err, data) => {
@@ -78,6 +85,7 @@ server.on('error', (err) => {
 server.listen(port, '0.0.0.0', () => {
   const ip = lanIp();
   console.log('===== 3D 编辑器本地服务已启动 =====');
+  console.log('静态根目录: ' + WEBROOT);
   console.log('电脑版（主站）:  http://localhost:' + port + '/');
   console.log('手机版（触屏版）: http://localhost:' + port + '/touch   (主站后加后缀 /touch)');
   if (ip) {
@@ -85,9 +93,9 @@ server.listen(port, '0.0.0.0', () => {
     console.log('电脑版:  http://' + ip + ':' + port + '/');
     console.log('手机版:  http://' + ip + ':' + port + '/touch');
   }
-  if (!fs.existsSync(path.join(__dirname, 'docs'))) {
+  if (!fs.existsSync(path.join(WEBROOT, 'docs'))) {
     console.log('[警告] 未找到 docs/ 目录，使用说明书将无法打开。');
-    console.log('        请在仓库根目录执行: node sync-shared.mjs');
+    console.log('        请在仓库根目录执行: node tools/sync-shared.mjs');
   }
   console.log('==================================');
 });

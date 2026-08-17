@@ -8,9 +8,13 @@ const SHARED = path.resolve(ROOT, '../shared'); // 共享源：three / language 
 const WWW = path.join(ROOT, 'www');
 
 // Android 版触屏适配已够用，纯复制进 APK 壳，不做任何移动端注入
-// three / language / docs 统一来自仓库根的 shared/ 单一源，避免各端重复维护出现版本差
-const COPY_DIRS = ['three', 'language', 'docs'];
-const COPY_FILES = ['index.html', 'lang-override.js'];
+// three / language / docs / fonts 统一来自仓库根的 shared/ 单一源，避免各端重复维护出现版本差
+// fonts 供 index.html 内 @font-face（阿拉伯语字体）引用，缺失会导致 RTL 界面字体回退。
+const COPY_DIRS = ['three', 'language', 'docs', 'fonts'];
+// version.txt 必须一并复制：index.html 启动时会 fetch('version.txt') 做版本探测，
+// 若 www/ 内缺失，server 返回的 404 错误页文本会被当成版本号，与 BOOTV 不同而触发
+// 无限「强制刷新」跳转，导致页面永远卡在加载页（Web/PC 直接服务根目录，天然有该文件）。
+const COPY_FILES = ['index.html', 'lang-override.js', 'version.txt'];
 
 async function copyDir(src, dest) {
   await fs.mkdir(dest, { recursive: true });

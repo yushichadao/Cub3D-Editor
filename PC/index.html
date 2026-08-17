@@ -262,7 +262,7 @@
   .shape-btn:hover { background: rgba(110,231,255,0.1); color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
   .shape-btn:active { cursor: grabbing; }
   .shape-btn.active { background: rgba(110,231,255,0.18); color: var(--accent); border-color: var(--accent); }
-  .shape-btn svg { width: 15px; height: 15px; }
+  .shape-btn svg { width: 22px; height: 22px; }
   .shape-btn.dragging { opacity: 0.5; }
 
   .tool-btn {
@@ -274,6 +274,8 @@
   .tool-btn:hover { border-color: var(--accent); background: rgba(110,231,255,0.08); }
   .tool-btn.active { border-color: var(--accent); background: rgba(110,231,255,0.16); }
   .tool-btn svg { width: 18px; height: 18px; }
+  #tool-brush2d svg { width: 21px; height: 21px; stroke-width: 1.9; margin-right: -3px; }
+  #tool-brush3d svg { width: 21px; height: 21px; margin-right: -3px; }
 
   .transform-modes { display: flex; gap: 6px; }
   .mode-btn {
@@ -655,18 +657,52 @@
     border: 1px solid var(--border); border-radius: 8px;
   }
 
-  /* 加载层 */
+  /* 加载层（缓冲页）：保留原三方块图案，扩展状态/错误/重试/版本提示 */
+  /* 加载层 z-index 需高于 tos-gate(100000)/terms-modal(100020) 等所有遮罩，首访时先展示加载页，__bootDone 隐藏后才露出 TOS 门禁 */
   .loader {
-    position: fixed; inset:0; z-index: 200; display:flex; align-items:center; justify-content:center;
-    background: var(--bg-deep); transition: opacity .5s;
+    position: fixed; inset:0; z-index: 200000; display:flex; align-items:center; justify-content:center;
+    background: var(--bg-deep); transition: opacity .5s, visibility 0s .5s;
   }
-  .loader.hidden { opacity:0; pointer-events:none; }
-  .loader-box { width:56px; height:56px; position: relative; }
+  .loader.hidden { opacity:0; pointer-events:none; visibility:hidden; }
+  /* 统一内列：所有元素约束在同一宽度内，左右对齐、节奏一致 */
+  .loader-inner { width: min(360px, 84vw); display:flex; flex-direction:column; align-items:center; }
+  .loader-box { width:56px; height:56px; position: relative; margin-bottom: 30px; }
   .loader-box div { position:absolute; inset:0; border:2px solid transparent; border-radius:8px; animation: pulse 1.5s ease-in-out infinite; }
   .loader-box div:nth-child(1){ border-color: var(--accent); }
   .loader-box div:nth-child(2){ border-color: var(--accent-2); animation-delay:.25s; transform:rotate(30deg); }
   .loader-box div:nth-child(3){ border-color: var(--accent-3); animation-delay:.5s; transform:rotate(60deg); }
   @keyframes pulse { 0%,100%{ transform:scale(.8) rotate(0); opacity:.4;} 50%{ transform:scale(1.1) rotate(180deg); opacity:1;} }
+  .loader-progress { display:flex; align-items:center; gap:12px; width:100%; margin-bottom: 16px; }
+  .loader-track { flex:1; height:5px; border-radius:99px; background:rgba(255,255,255,.12); overflow:hidden; }
+  .loader-bar { height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .35s ease; }
+  .loader-pct { font-size:13px; color:var(--text-dim); min-width:40px; text-align:right; font-variant-numeric:tabular-nums; letter-spacing:.5px; }
+  .loader-state { width:100%; font-size: 18px; font-weight: 500; color: var(--text); letter-spacing: 1px; min-height: 26px; text-align:center; margin-bottom: 12px; }
+  .loader-hint { width:100%; font-size: 13px; color: var(--text-dim); opacity: .6; letter-spacing: .6px; text-align:center; }
+  .loader-stale { display:none; box-sizing:border-box; width:100%; font-size: 13.5px; color: var(--warn); line-height: 1.7; text-align:center;
+    background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.35); border-radius: 8px; padding: 10px 16px; margin: 0 0 14px; }
+  .loader-error { display:none; width:100%; font-size: 14px; color: var(--accent-3); line-height: 1.7; text-align:center; padding: 0 4px; margin: 0 0 14px; }
+  .loader-retry { display:none; padding: 10px 32px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+    background: var(--accent); color: var(--primary-btn-text); border: none; border-radius: 8px; margin-top: 4px; }
+  .loader-retry:hover { filter: brightness(1.12); }
+  /* 失败时：图标继续旋转（不暂停），并染成警示色；隐藏半成品进度条，错误与重试做成卡片式分组 */
+  .loader.fail .loader-box { margin-bottom: 22px; }
+  .loader.fail .loader-box div { opacity:.6; }
+  .loader.fail .loader-box div:nth-child(1){ border-color: var(--accent-3); }
+  .loader.fail .loader-box div:nth-child(2){ border-color: #fda4af; }
+  .loader.fail .loader-box div:nth-child(3){ border-color: var(--warn); }
+  .loader.fail .loader-progress { display: none; }
+  .loader.fail .loader-state { color: var(--accent-3); margin-bottom: 14px; }
+  .loader.fail .loader-error {
+    display:block; width:100%;
+    background: rgba(251,113,133,.08); border:1px solid rgba(251,113,133,.35);
+    border-radius:10px; padding:12px 16px; margin:0 0 18px;
+  }
+  .loader.fail .loader-retry { display:inline-flex; margin-top:0; padding:11px 40px; font-size:14px; }
+  /* 失败态：用分隔线把"操作区(按钮)"与"页脚说明"明确分开，避免重新加载与提示文字关系暧昧 */
+  .loader.fail .loader-hint {
+    margin-top: 20px; padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
 
   .panel::-webkit-scrollbar { display: none; }
   .panel { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; -ms-overflow-style: none; }
@@ -1116,16 +1152,103 @@
 .md-block code { background:var(--control-bg); border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:0.83em; font-family:ui-monospace,Menlo,Consolas,monospace; }
 .md-block hr { border:none; border-top:1px solid var(--border); margin:14px 0; }
 </style>
+  <meta name="bootv" content="20260818">
+  <script>
+    // —— 加载页（缓冲页）轻量翻译：在主应用 I18N/_t 就绪前即可使用 ——
+    // 简体中文作为默认与回退；其余语言来自 window.__packs（language/ 目录，已在 <head> 注入）。
+    (function () {
+      // 加载页专用文案（键名 → 简体中文回退）。其余语言包需包含同名键。
+      var BOOT_ZH = {
+        bootLoading: '正在加载…',
+        bootLangReady: '界面语言已就绪',
+        bootEngineReady: '核心引擎已就绪，正在初始化…',
+        bootStale: '检测到浏览器缓存了旧版本页面，正在更新…',
+        bootRetry: '重新加载',
+        bootFail: '加载失败',
+        bootSlow: '加载时间较长，请耐心等待…',
+        bootHint: '离线优先 · 无需账号 · 数据本地保存',
+        bootFailResource: '资源加载失败：{0}',
+        bootFailPage: '页面加载出错：{0}',
+        bootFailUnknown: '页面加载出错：未知错误'
+      };
+      function _bootDetectLang() {
+        var saved = (function () { try { return localStorage.getItem('lang'); } catch (e) { return null; } })();
+        if (saved) return saved;
+        var sys = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        if (sys.indexOf('en') === 0) return 'en';
+        if (sys.indexOf('ja') === 0) return 'ja';
+        if (sys.indexOf('ko') === 0) return 'ko';
+        if (sys.indexOf('zh') === 0 && (sys.indexOf('tw') > -1 || sys.indexOf('hk') > -1 || sys.indexOf('hant') > -1)) return 'zh-TW';
+        if (sys.indexOf('ar') === 0) return 'ar';
+        if (sys.indexOf('es') === 0) return 'es';
+        if (sys.indexOf('fr') === 0) return 'fr';
+        if (sys.indexOf('ru') === 0) return 'ru';
+        return 'zh-CN';
+      }
+      window.__bootLang = _bootDetectLang();
+      window._tBoot = function (key) {
+        var packs = window.__packs || window.I18N_PACKS || {};
+        var dict = (packs[window.__bootLang] && (packs[window.__bootLang].dict || packs[window.__bootLang])) || {};
+        return (dict[key] !== undefined) ? dict[key] : (BOOT_ZH[key] !== undefined ? BOOT_ZH[key] : key);
+      };
+      // 把带 {0} 占位符的模板翻译后填入参数（用于失败详情的国际化）
+      window._tBootFmt = function (key, arg) {
+        var tpl = window._tBoot(key);
+        return (arg !== undefined && arg !== null) ? String(tpl).replace('{0}', String(arg)) : tpl;
+      };
+      // 最终的 __bootStage：将阶段键名翻译为对应语言后写入加载页。
+      window.__bootStage = function (key) {
+        window.__bootStageKey = key;
+        var el = document.getElementById('loader-state');
+        if (el) el.textContent = window._tBoot(key);
+      };
+      // 刷新此前（<head> 中 lang-override.js）暂存的阶段文案
+      if (window.__bootStageKey) {
+        var el = document.getElementById('loader-state');
+        if (el) el.textContent = window._tBoot(window.__bootStageKey);
+      }
+      // 加载页初始静态文案（元素在下方，待 DOM 解析后设置，避免初始中文闪烁）
+      function _bootInitTexts() {
+        var _ls = document.getElementById('loader-state');
+        if (_ls) _ls.textContent = window._tBoot(window.__bootStageKey || 'bootLoading');
+        var _lh = document.getElementById('loader-hint');
+        if (_lh) _lh.textContent = window._tBoot('bootHint');
+        var _lrt = document.getElementById('loader-retry');
+        if (_lrt) _lrt.textContent = window._tBoot('bootRetry');
+        var _lst = document.getElementById('loader-stale');
+        if (_lst) _lst.textContent = window._tBoot('bootStale');
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _bootInitTexts);
+      else _bootInitTexts();
+    })();
+    // 缓冲页阶段进度：dom 15% → 语言包逐个(6×10%) → 核心引擎 15% → 初始化完成 10%
+    window.__bootProg = { dom: 0, lang: 0, engine: 0, done: 0 };
+    window.__bootProgress = function (step) {
+      var p = window.__bootProg;
+      if (step === 'dom') p.dom = 1;
+      else if (step === 'lang') p.lang = Math.min(6, p.lang + 1);
+      else if (step === 'engine') p.engine = 1;
+      else if (step === 'done') p.done = 1;
+      var pct = Math.round(p.dom * 15 + (p.lang / 6) * 60 + p.engine * 15 + p.done * 10);
+      var apply = function () {
+        var bar = document.getElementById('loader-bar'); if (bar) bar.style.width = pct + '%';
+        var num = document.getElementById('loader-pct'); if (num) num.textContent = pct + '%';
+      };
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', apply); } else { apply(); }
+    };
+    // 加载阶段文案：由上方 _tBoot IIFE 中的最终 window.__bootStage 统一处理（支持翻译与暂存）
+    document.addEventListener('DOMContentLoaded', function () { window.__bootProgress('dom'); });
+  </script>
   <!-- 语言包：每语言独立文件，与简体中文（index.html 内 ZH_CN）分开存储；新增语言只需加文件并在此处引用 -->
-  <script src="language/zh-TW.js"></script>
-  <script src="language/en.js"></script>
-  <script src="language/ja.js"></script>
-  <script src="language/ko.js"></script>
-  <script src="language/ru.js"></script>
-  <script src="language/es.js"></script>
-  <script src="language/fr.js"></script>
-  <script src="language/ar.js"></script>
-  <script src="lang-override.js"></script>
+  <script src="language/zh-TW.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="language/en.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="language/ja.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="language/ko.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="language/ru.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="language/es.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="language/fr.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="language/ar.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
+  <script src="lang-override.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang');window.__bootStage&&window.__bootStage('bootLangReady')"></script>
   <!-- 桌面版（Electron）适配层：网页版加载后自动跳过，无任何副作用 -->
   <style>
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/noto-kufi-arabic-400.woff2') format('woff2');}
@@ -1155,7 +1278,7 @@ input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; appear
 .num-field > input[type="number"]{
   flex:1 1 auto; min-width:0;
   border:none !important; border-radius:0 !important; background:transparent !important;
-  color:var(--text); font-family:inherit; font-size:12px; padding:3px 6px; -moz-appearance:textfield; outline:none;
+  color:var(--text); font-family:inherit; font-size:12px; padding:3px 6px; -moz-appearance:textfield; appearance:textfield; outline:none;
 }
 .num-field > input[type="number"]::-webkit-outer-spin-button,
 .num-field > input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
@@ -1180,7 +1303,18 @@ html[dir="rtl"] .num-field{ direction:rtl; }
 </head>
 <body oncontextmenu="return false" ondragstart="return false">
 
-<div class="loader" id="loader"><div class="loader-box"><div></div><div></div><div></div></div></div>
+<div class="loader" id="loader">
+  <div class="loader-inner">
+    <div class="loader-box"><div></div><div></div><div></div></div>
+    <div class="loader-progress"><div class="loader-track"><div class="loader-bar" id="loader-bar"></div></div><span class="loader-pct" id="loader-pct">0%</span></div>
+    <div class="loader-state" id="loader-state">正在加载…</div>
+    <div class="loader-stale" id="loader-stale">检测到浏览器缓存了旧版本页面，正在更新…</div>
+    <div class="loader-error" id="loader-error"></div>
+    <button class="loader-retry" id="loader-retry">重新加载</button>
+    <div class="loader-hint" id="loader-hint">离线优先 · 无需账号 · 数据本地保存</div>
+  </div>
+</div>
+
 
 <!-- 画布 -->
 <div id="canvas-wrap"><canvas id="three-canvas"></canvas></div>
@@ -1243,11 +1377,11 @@ html[dir="rtl"] .num-field{ direction:rtl; }
         <span data-i18n="toolNameSelect">选择/变换</span>
       </button>
       <button class="tool-btn" id="tool-brush3d" style="margin-top:6px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+        <svg viewBox="343.5 249.7 206.2 231.9" fill="currentColor" stroke="none"><g transform="translate(800,0) scale(-1,1)"><g transform="translate(186.256137,619.293051) scale(0.053706,-0.053706)"><path d="M1460 6827 c-132 -37 -230 -166 -230 -302 0 -98 28 -143 273 -437 154 -186 470 -569 767 -929 464 -564 788 -955 1046 -1265 138 -165 188 -204 272 -209 44 -3 47 -6 137 -112 91 -109 93 -111 135 -239 61 -186 91 -244 154 -301 35 -31 151 -102 337 -205 349 -193 422 -228 472 -228 50 0 113 33 137 73 35 57 35 88 -3 219 -20 68 -64 218 -97 333 -34 116 -74 238 -90 272 -36 78 -93 134 -206 203 -107 64 -184 118 -201 139 -7 8 -13 26 -13 39 0 27 -38 86 -105 160 -46 51 -46 52 -35 88 16 48 6 115 -26 174 -18 34 -386 408 -1245 1266 -1018 1019 -1227 1223 -1269 1243 -62 28 -149 35 -210 18z m1210 -1342 l1095 -1096 -41 -37 c-22 -20 -88 -81 -146 -134 -59 -54 -110 -98 -115 -98 -8 0 -376 436 -498 590 -16 21 -186 226 -376 456 -190 231 -397 481 -460 558 -63 76 -226 273 -364 438 -137 165 -258 315 -268 334 -18 32 -18 36 -3 59 12 18 25 25 48 25 29 0 132 -99 1128 -1095z m1280 -1285 c0 -5 -15 -22 -32 -38 -18 -16 -82 -73 -141 -126 -59 -53 -113 -96 -120 -96 -14 1 108 117 205 196 37 29 70 58 73 64 8 13 15 13 15 0z m97 -298 c14 -23 14 -23 -73 -99 -53 -47 -74 -59 -83 -50 -6 6 -11 16 -11 21 0 10 139 144 150 146 3 0 10 -8 17 -18z m189 -283 c22 -17 96 -69 166 -114 79 -52 132 -94 141 -112 12 -22 56 -170 135 -446 4 -16 -3 -14 -44 11 -27 16 -140 80 -252 142 -111 63 -208 123 -215 134 -12 19 -107 285 -107 299 0 6 128 117 134 117 2 0 21 -14 42 -31z"/></g></g></svg>
         <span data-i18n="toolNameBrush3D">3D 画笔</span>
       </button>
       <button class="tool-btn" id="tool-brush2d" style="margin-top:6px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c0-3 3-5 9-5s9 2 9 5"/><path d="M12 3v18"/><path d="M3 12h18"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg viewBox="0 0 1024 1024" fill="currentColor"><g transform="scale(1,-1) translate(0,-1024)"><path d="M118.272 93.044364c2.792727-0.232727 5.678545 0 8.610909 0.698181l568.459636 137.216a27.461818 27.461818 0 0 1 20.48 21.317819l48.733091 243.712 2.978909-2.885819a27.461818 27.461818 0 0 1 38.81891 0l117.620363 117.620364a27.461818 27.461818 0 0 1 0 38.772364l-274.478545 274.478545a27.461818 27.461818 0 0 1-38.772364 0l-117.620364-117.620363a27.461818 27.461818 0 0 1 0-38.81891l2.885819-2.978909L252.276364 715.869091a27.461818 27.461818 0 0 1-19.874909-16.151273l-1.396364-4.328727L93.696 126.882909A27.648 27.648 0 0 1 93.090909 118.225455L93.090909 117.527273a22.202182 22.202182 0 0 1 0.558546-3.444364l0.372363-1.303273a21.317818 21.317818 0 0 1 0.930909-2.792727l0.651637-1.396364a25.460364 25.460364 0 0 1 1.908363-3.397818l0.279273-0.372363 0.698182-0.930909a27.927273 27.927273 0 0 1 10.053818-8.238546 22.574545 22.574545 0 0 1 4.189091-1.582545l1.349818-0.372364A21.922909 21.922909 0 0 1 117.480727 93.090909h0.605091z m668.672 458.24l-235.659636 235.659636 78.848 78.801455 235.613091-235.613091-78.801455-78.848zM208.756364 169.937455l211.595636 211.642181a105.844364 105.844364 0 1 1-38.772364 38.772364L169.937455 208.756364l110.312727 456.704 262.423273 52.456727 175.243636-175.243636-52.456727-262.469819-456.704-110.266181z m264.517818 252.369454a50.967273 50.967273 0 1 0 0 101.934546 50.967273 50.967273 0 0 0 0-101.934546z"/></g></g></g></svg>
         <span data-i18n="toolNameBrush2D">2D 画笔</span>
       </button>
       <button class="tool-btn" id="tool-eraser" style="margin-top:6px;">
@@ -1864,29 +1998,95 @@ html[dir="rtl"] .num-field{ direction:rtl; }
 
 <script>
 // 全局错误处理：确保即使模块加载失败也能显示错误信息
-window.addEventListener('error', function(e) {
-  console.error('Global error:', e.message);
+// ============ 缓冲页控制（Boot Overlay）============
+// 原则：加载未完成前绝不隐藏 loader，避免暴露半成品/错乱界面。
+
+// 发版版本号（与 <head> 中 meta[name=bootv] 保持一致）
+const BOOTV = '20260818';
+
+// 加载完成：由主模块在初始化结束后调用，淡出缓冲页
+window.__bootDone = function () {
+  if (window.__bootProgress) window.__bootProgress('done');
   const loader = document.getElementById('loader');
-  if (loader && !loader.classList.contains('hidden')) {
-    loader.classList.add('hidden');
-    setTimeout(() => alert('页面加载失败，请刷新重试：\n' + (e && e.message ? e.message : e)), 100);
+  if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+};
+
+// 加载失败：在缓冲页内显示错误信息与重试按钮（不隐藏缓冲页）
+function bootFail(msg) {
+  const loader = document.getElementById('loader');
+  if (!loader || loader.classList.contains('hidden')) return; // 已就绪，忽略运行时噪音
+  loader.classList.add('fail');
+  const st = document.getElementById('loader-state');  if (st) st.textContent = window._tBoot('bootFail');
+  const err = document.getElementById('loader-error'); if (err) { err.textContent = msg; err.style.display = 'block'; }
+  const rt = document.getElementById('loader-retry');  if (rt) rt.style.display = 'inline-flex';
+}
+
+// 重试按钮：带版本号强制重新加载，绕过一切缓存
+// 重试按钮：带版本号强制重新加载，绕过一切缓存（用 URL 正确编码路径，避免含空格的工作区路径导致 file:// 白屏）
+const retryBtn = document.getElementById('loader-retry');
+if (retryBtn) retryBtn.addEventListener('click', function () {
+  try {
+    var u = new URL(location.href);
+    u.searchParams.set('bootv', BOOTV);
+    u.searchParams.set('retry', String(Date.now()));
+    location.replace(u.toString());
+  } catch (e) {
+    location.reload(true); // 兜底：强制刷新绕过缓存
   }
 });
-// 备用超时：3秒后强制隐藏 loader
-setTimeout(function() {
+
+// 资源加载失败（script / link）：显示失败态；其余资源（如图片贴图）的失败不阻塞启动
+window.addEventListener('error', function (e) {
+  if (e && e.target && e.target !== window && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+    const src = e.target.src || e.target.href || '未知资源';
+    bootFail(window._tBootFmt('bootFailResource', String(src).split('?')[0].split('/').pop()));
+    return;
+  }
+  if (e && e.target === window) {
+    console.error('Global error:', e.message);
+    if (e && e.message) bootFail(window._tBootFmt('bootFailPage', e.message));
+    else bootFail(window._tBoot('bootFailUnknown'));
+  }
+});
+
+// 加载超时提示：只提示、不隐藏缓冲页（绝不暴露半成品界面）
+setTimeout(function () {
   const loader = document.getElementById('loader');
   if (loader && !loader.classList.contains('hidden')) {
-    loader.classList.add('hidden');
-    const status = document.getElementById('status');
-    if (status) status.textContent = '加载超时，请刷新页面';
+    const st = document.getElementById('loader-state');
+    if (st && st.textContent.indexOf(window._tBoot('bootFail')) < 0) st.textContent = window._tBoot('bootSlow');
   }
-}, 3000);
+}, 15000);
+
+// 版本记录 + 远端版本探测：
+// 1) 记录本次版本号，供后续版本变化检测；
+// 2) 对比 version.txt 的远端版本，若当前 HTML 是浏览器缓存下来的旧版，则带版本号跳转强制更新。
+(function () {
+  try { localStorage.setItem('cub3d_bootv', BOOTV); } catch (e) {}
+  if (location.protocol !== 'http:' && location.protocol !== 'https:') return; // file://（PC/本地）跳过
+  fetch('version.txt?v=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.text() : ''; }) // 404/失败视为无版本文件，静默跳过，避免错误页文本被当版本号触发无限跳转
+    .then(function (t) {
+      const v = String(t || '').trim();
+      if (v && v !== BOOTV) { // 当前 HTML 是旧缓存 -> 显示提示并强制刷新为新版本
+        const stale = document.getElementById('loader-stale');
+        if (stale) stale.style.display = 'block';
+        setTimeout(function () {
+          location.replace(location.pathname + '?bootv=' + encodeURIComponent(v) + (location.hash || ''));
+        }, 300);
+      }
+    })
+    .catch(function () {}); // 探测失败静默（如纯静态托管无 version.txt）
+})();
 </script>
 
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js?v=6';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
+window.__bootProgress && window.__bootProgress('engine');
+window.__bootStage && window.__bootStage('bootEngineReady');
+window.__bootEngineStarted = true;
 // 全局禁用浏览器原生右键菜单与文本/图片拖放（capture 阶段，确保即使内联属性被缓存/CSP 影响也生效）。
 // 仅 preventDefault 不 stopPropagation：说明书内的右键选词监听器仍会执行，不受此拦截影响。
 document.addEventListener('contextmenu', e => e.preventDefault(), true);
@@ -2632,26 +2832,26 @@ const SHAPES_2D = {
 
 const ICONS = {
   // ===== 3D 图形（等距线框，对应实际几何体）=====
-  box:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2.5 20 7v10l-8 4.5L4 17V7z"/><path d="M4 7l8 4.5L20 7"/><path d="M12 11.5V21.5"/></svg>',
-  sphere:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3.4"/><ellipse cx="12" cy="12" rx="3.4" ry="9"/></svg>',
-  cylinder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="7" ry="2.6"/><path d="M5 5v14"/><path d="M19 5v14"/><ellipse cx="12" cy="19" rx="7" ry="2.6"/></svg>',
-  cone:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 4.5 19"/><path d="M12 3l7.5 16"/><ellipse cx="12" cy="19" rx="7.5" ry="2.6"/></svg>',
-  torus:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="12" rx="9" ry="5"/><ellipse cx="12" cy="12" rx="4" ry="2.2"/></svg>',
-  knot:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="9" cy="12" rx="5" ry="8" transform="rotate(28 9 12)"/><ellipse cx="15" cy="12" rx="5" ry="8" transform="rotate(-28 15 12)"/></svg>',
-  icosa:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l8 4.6v9L12 21l-8-4.4v-9z"/><path d="M4 7.6l8 4.4 8-4.4"/><path d="M12 12v9"/><path d="M4 16.4l8-4.4 8 4.4"/></svg>',
-  octa:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 4 12l8 9 8-9z"/><path d="M4 12h16"/><path d="M12 3v18"/></svg>',
-  dodeca:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5l8.5 6.2v9L12 21.5l-8.5-4.4v-9z"/><path d="M12 7l5.4 3.9v6.2L12 21l-5.4-3.9v-6.2z"/></svg>',
-  capsule:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="8" y="3" width="8" height="18" rx="4"/></svg>',
-  pyramid:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 3 20h18z"/><path d="M12 3 7.5 20M12 3l4.5 17" opacity=".5"/><path d="M3 20l9-4 9 4" opacity=".6"/></svg>',
-  prism:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 8l7-4 7 4v10l-7 4-7-4z"/><path d="M5 8l7 4 7-4"/><path d="M12 12v10"/></svg>',
-  tube:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 7c0-3 4-5 7-5s7 2 7 5-4 5-7 5-7-2-7-5z"/><path d="M5 7v8c0 3 4 5 7 5s7-2 7-5V7"/></svg>',
-  lathe:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3c-2 3-3 6-3 9s1 6 3 9"/><path d="M14 3c2 3 3 6 3 9s-1 6-3 9"/><path d="M8.5 6h7"/><path d="M9 12h6"/><path d="M8.5 18h7"/></svg>',
-  tetra:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 4 4 19h16z"/><path d="M12 4 7 14l5 5 5-5z" opacity=".5"/></svg>',
-  barrel:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M7 4c0-1 2-2 5-2s5 1 5 2"/><path d="M7 4v16c0 1 2 2 5 2s5-1 5-2V4"/><path d="M6.5 8c0 1 2 2 5.5 2s5.5-1 5.5-2" opacity=".4"/><path d="M6.5 16c0 1 2 2 5.5 2s5.5-1 5.5-2" opacity=".4"/></svg>',
-  dome:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 14a9 9 0 0118 0"/><path d="M3 14h18"/><path d="M6.5 14a5.5 5.5 0 0111 0" opacity=".4"/></svg>',
-  helix:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M19 7.5a8.5 8.5 0 1 0 0 9"/><path d="M15 10a4.6 4.6 0 1 0 0 4" opacity=".5"/></svg>',
-  octaPrism:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M9 3h6l4 3v12l-4 3H9l-4-3V6z"/><path d="M5 6h14"/><path d="M5 18h14"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3" opacity=".4"/></svg>',
-  star3d:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l2.3 6.4H21l-5 3.8 2 6.3L12 16l-6 3.5 2-6.3-5-3.8h6.7z"/><path d="M12 3v13" opacity=".3"/><path d="M4 13h16" opacity=".3"/></svg>',
+  box: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12.0 22.4 L3.0 17.2"/><path d="M21.0 17.2 L12.0 22.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 12.0 L21.0 17.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 12.0 L3.0 17.2"/><path d="M12.0 1.6 L21.0 6.8"/><path d="M21.0 6.8 L12.0 12.0"/><path d="M12.0 12.0 L3.0 6.8"/><path d="M12.0 1.6 L3.0 6.8"/><path d="M12.0 22.4 L12.0 12.0"/><path d="M3.0 17.2 L3.0 6.8"/><path d="M21.0 17.2 L21.0 6.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 12.0 L12.0 1.6"/></svg>',
+  sphere: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M22.4 12.0 L22.3 13.4 L22.0 14.7 L21.6 16.0 L21.0 17.2 L20.3 18.3 L19.4 19.4 L18.3 20.3 L17.2 21.0 L16.0 21.6 L14.7 22.0 L13.4 22.3 L12.0 22.4 L10.6 22.3 L9.3 22.0 L8.0 21.6 L6.8 21.0 L5.7 20.3 L4.6 19.4 L3.7 18.3 L3.0 17.2 L2.4 16.0 L2.0 14.7 L1.7 13.4 L1.6 12.0 L1.7 10.6 L2.0 9.3 L2.4 8.0 L3.0 6.8 L3.7 5.7 L4.6 4.6 L5.7 3.7 L6.8 3.0 L8.0 2.4 L9.3 2.0 L10.6 1.7 L12.0 1.6 L13.4 1.7 L14.7 2.0 L16.0 2.4 L17.2 3.0 L18.3 3.7 L19.4 4.6 L20.3 5.7 L21.0 6.8 L21.6 8.0 L22.0 9.3 L22.3 10.6 L22.4 12.0"/><path d="M19.4 16.2 L18.3 16.8 L17.2 17.2 L16.0 17.5 L14.7 17.8 L13.4 18.0 L12.0 18.0 L10.6 18.0 L9.3 17.8 L8.0 17.5 L6.8 17.2 L5.7 16.8 L4.6 16.2 L3.7 15.7 L3.0 15.0 L2.4 14.3 L2.0 13.6 L1.7 12.8 L1.6 12.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M1.6 12.0 L1.7 11.2 L2.0 10.4 L2.4 9.7 L3.0 9.0 L3.7 8.3 L4.6 7.8 L5.7 7.2 L6.8 6.8 L8.0 6.5 L9.3 6.2 L10.6 6.0 L12.0 6.0 L13.4 6.0 L14.7 6.2 L16.0 6.5 L17.2 6.8 L18.3 7.2 L19.4 7.8 L20.3 8.3 L21.0 9.0 L21.6 9.7 L22.0 10.4 L22.3 11.2 L22.4 12.0"/><path d="M22.4 12.0 L22.3 12.8 L22.0 13.6 L21.6 14.3 L21.0 15.0 L20.3 15.7 L19.4 16.2"/><path d="M10.2 17.9 L10.2 16.8 L10.3 15.5 L10.3 14.2 L10.4 12.9 L10.6 11.5 L10.7 10.2 L10.9 8.9 L11.1 7.6 L11.3 6.4 L11.5 5.3 L11.8 4.4 L12.0 3.5 L12.2 2.8 L12.5 2.3 L12.7 1.9 L12.9 1.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.9 1.7 L13.1 1.7 L13.3 1.8 L13.4 2.1 L13.6 2.6 L13.7 3.3 L13.7 4.1 L13.8 5.0 L13.8 6.1 L13.8 7.2 L13.7 8.5 L13.7 9.8 L13.6 11.1 L13.4 12.5 L13.3 13.8 L13.1 15.1 L12.9 16.4 L12.7 17.6 L12.5 18.7 L12.2 19.6 L12.0 20.5 L11.8 21.2 L11.5 21.7 L11.3 22.1 L11.1 22.3"/><path d="M11.1 22.3 L10.9 22.3 L10.7 22.2 L10.6 21.9 L10.4 21.4 L10.3 20.7 L10.3 19.9 L10.2 19.0 L10.2 17.9"/></svg>',
+  cylinder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M5.6 18.7 L5.6 18.6 L5.6 18.5 L5.6 18.3 L5.6 18.2 L5.6 18.0 L5.6 17.9 L5.6 17.8 L5.6 17.6 L5.6 17.5 L5.6 17.3 L5.6 17.2 L5.6 17.1 L5.6 16.9 L5.6 16.8 L5.6 16.6 L5.6 16.5 L5.6 16.4 L5.6 16.2 L5.6 16.1 L5.6 15.9 L5.6 15.8 L5.6 15.7 L5.6 15.5 L5.6 15.4 L5.6 15.2 L5.6 15.1 L5.6 14.9 L5.6 14.8 L5.6 14.7 L5.6 14.5 L5.6 14.4 L5.6 14.2 L5.6 14.1 L5.6 14.0 L5.6 13.8 L5.6 13.7 L5.6 13.5 L5.6 13.4 L5.6 13.3 L5.6 13.1 L5.6 13.0 L5.6 12.8 L5.6 12.7 L5.6 12.6 L5.6 12.4 L5.6 12.3 L5.6 12.1 L5.6 12.0 L5.6 11.9 L5.6 11.7 L5.6 11.6 L5.6 11.4 L5.6 11.3 L5.6 11.2 L5.6 11.0 L5.6 10.9 L5.6 10.7 L5.6 10.6 L5.6 10.5 L5.6 10.3 L5.6 10.2 L5.6 10.0 L5.6 9.9 L5.6 9.8 L5.6 9.6 L5.6 9.5 L5.6 9.3 L5.6 9.2 L5.6 9.1 L5.6 8.9 L5.6 8.8 L5.6 8.6 L5.6 8.5 L5.6 8.3 L5.6 8.2 L5.6 8.1 L5.6 7.9 L5.6 7.8 L5.6 7.6 L5.6 7.5 L5.6 7.4 L5.6 7.2 L5.6 7.1 L5.6 6.9 L5.6 6.8 L5.6 6.7 L5.6 6.5 L5.6 6.4 L5.6 6.2 L5.6 6.1 L5.6 6.0 L5.6 5.8 L5.6 5.7 L5.6 5.5 L5.6 5.4 L5.6 5.3"/><path d="M18.4 18.7 L18.4 18.6 L18.4 18.5 L18.4 18.3 L18.4 18.2 L18.4 18.0 L18.4 17.9 L18.4 17.8 L18.4 17.6 L18.4 17.5 L18.4 17.3 L18.4 17.2 L18.4 17.1 L18.4 16.9 L18.4 16.8 L18.4 16.6 L18.4 16.5 L18.4 16.4 L18.4 16.2 L18.4 16.1 L18.4 15.9 L18.4 15.8 L18.4 15.7 L18.4 15.5 L18.4 15.4 L18.4 15.2 L18.4 15.1 L18.4 14.9 L18.4 14.8 L18.4 14.7 L18.4 14.5 L18.4 14.4 L18.4 14.2 L18.4 14.1 L18.4 14.0 L18.4 13.8 L18.4 13.7 L18.4 13.5 L18.4 13.4 L18.4 13.3 L18.4 13.1 L18.4 13.0 L18.4 12.8 L18.4 12.7 L18.4 12.6 L18.4 12.4 L18.4 12.3 L18.4 12.1 L18.4 12.0 L18.4 11.9 L18.4 11.7 L18.4 11.6 L18.4 11.4 L18.4 11.3 L18.4 11.2 L18.4 11.0 L18.4 10.9 L18.4 10.7 L18.4 10.6 L18.4 10.5 L18.4 10.3 L18.4 10.2 L18.4 10.0 L18.4 9.9 L18.4 9.8 L18.4 9.6 L18.4 9.5 L18.4 9.3 L18.4 9.2 L18.4 9.1 L18.4 8.9 L18.4 8.8 L18.4 8.6 L18.4 8.5 L18.4 8.3 L18.4 8.2 L18.4 8.1 L18.4 7.9 L18.4 7.8 L18.4 7.6 L18.4 7.5 L18.4 7.4 L18.4 7.2 L18.4 7.1 L18.4 6.9 L18.4 6.8 L18.4 6.7 L18.4 6.5 L18.4 6.4 L18.4 6.2 L18.4 6.1 L18.4 6.0 L18.4 5.8 L18.4 5.7 L18.4 5.5 L18.4 5.4 L18.4 5.3"/><path d="M16.5 7.9 L15.8 8.2 L15.0 8.5 L14.2 8.7 L13.4 8.8 L12.5 8.9 L11.5 8.9 L10.6 8.8 L9.8 8.7 L9.0 8.5 L8.2 8.2 L7.5 7.9 L6.9 7.5 L6.4 7.0 L6.0 6.5 L5.8 6.0 L5.7 5.5 L5.7 5.0 L5.8 4.5 L6.0 4.0 L6.4 3.5 L6.9 3.1 L7.5 2.7 L8.2 2.3 L9.0 2.0 L9.8 1.8 L10.6 1.7 L11.5 1.6 L12.5 1.6 L13.4 1.7 L14.2 1.8 L15.0 2.0 L15.8 2.3 L16.5 2.7 L17.1 3.1 L17.6 3.5 L18.0 4.0 L18.2 4.5 L18.3 5.0 L18.3 5.5 L18.2 6.0 L18.0 6.5 L17.6 7.0 L17.1 7.5 L16.5 7.9"/><path d="M16.5 21.3 L15.8 21.7 L15.0 22.0 L14.2 22.2 L13.4 22.3 L12.5 22.4 L11.5 22.4 L10.6 22.3 L9.8 22.2 L9.0 22.0 L8.2 21.7 L7.5 21.3 L6.9 20.9 L6.4 20.5 L6.0 20.0 L5.8 19.5 L5.7 19.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M5.7 19.0 L5.7 18.5 L5.8 18.0 L6.0 17.5 L6.4 17.0 L6.9 16.5 L7.5 16.1 L8.2 15.8 L9.0 15.5 L9.8 15.3 L10.6 15.2 L11.5 15.1 L12.5 15.1 L13.4 15.2 L14.2 15.3 L15.0 15.5 L15.8 15.8 L16.5 16.1 L17.1 16.5 L17.6 17.0 L18.0 17.5 L18.2 18.0 L18.3 18.5"/><path d="M18.3 18.5 L18.3 19.0 L18.2 19.5 L18.0 20.0 L17.6 20.5 L17.1 20.9 L16.5 21.3"/></svg>',
+  cone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M2.6 17.0 L2.6 17.4 L2.7 17.7 L2.8 18.1 L3.0 18.5 L3.2 18.9 L3.4 19.2 L3.7 19.6 L4.1 19.9 L4.5 20.2 L4.9 20.5 L5.3 20.8 L5.8 21.1 L6.4 21.3 L6.9 21.5 L7.5 21.7 L8.1 21.9 L8.7 22.1 L9.3 22.2 L10.0 22.3 L10.7 22.3 L11.3 22.4 L12.0 22.4 L12.7 22.4 L13.3 22.3 L14.0 22.3 L14.7 22.2 L15.3 22.1 L15.9 21.9 L16.5 21.7 L17.1 21.5 L17.6 21.3 L18.2 21.1 L18.7 20.8 L19.1 20.5 L19.5 20.2 L19.9 19.9 L20.3 19.6 L20.6 19.2 L20.8 18.9 L21.0 18.5 L21.2 18.1 L21.3 17.7 L21.4 17.4 L21.4 17.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M2.6 17.0 L2.6 16.6 L2.7 16.2 L2.8 15.8 L3.0 15.4 L3.2 15.1 L3.4 14.7 L3.7 14.4 L4.1 14.0 L4.5 13.7 L4.9 13.4 L5.3 13.1 L5.8 12.9 L6.4 12.6 L6.9 12.4 L7.5 12.2 L8.1 12.0 L8.7 11.9 L9.3 11.8 L10.0 11.7 L10.7 11.6 L11.3 11.5 L12.0 11.5 L12.7 11.5 L13.3 11.6 L14.0 11.7 L14.7 11.8 L15.3 11.9 L15.9 12.0 L16.5 12.2 L17.1 12.4 L17.6 12.6 L18.2 12.9 L18.7 13.1 L19.1 13.4 L19.5 13.7 L19.9 14.0 L20.3 14.4 L20.6 14.7 L20.8 15.1 L21.0 15.4 L21.2 15.8 L21.3 16.2 L21.4 16.6 L21.4 17.0"/><path d="M12.0 1.6 L2.6 17.0"/><path d="M12.0 1.6 L21.4 17.0"/></svg>',
+  torus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M18.8 17.6 L18.1 17.9 L17.4 18.2 L16.7 18.5 L15.9 18.7 L15.2 18.9 L14.4 19.0 L13.6 19.2 L12.8 19.2 L12.0 19.2 L11.2 19.2 L10.4 19.2 L9.6 19.0 L8.8 18.9 L8.1 18.7 L7.3 18.5 L6.6 18.2 L5.9 17.9 L5.2 17.6 L4.6 17.2 L4.0 16.7 L3.5 16.2 L2.9 15.7 L2.5 15.0 L2.1 14.3 L1.8 13.6 L1.7 12.8 L1.6 12.0 L1.7 11.2 L1.8 10.4 L2.1 9.7 L2.5 9.0 L2.9 8.3 L3.5 7.8 L4.0 7.3 L4.6 6.8 L5.2 6.4 L5.9 6.1 L6.6 5.8 L7.3 5.5 L8.1 5.3 L8.8 5.1 L9.6 5.0 L10.4 4.8 L11.2 4.8 L12.0 4.8 L12.8 4.8 L13.6 4.8 L14.4 5.0 L15.2 5.1 L15.9 5.3 L16.7 5.5 L17.4 5.8 L18.1 6.1 L18.8 6.4 L19.4 6.8 L20.0 7.3 L20.5 7.8 L21.1 8.3 L21.5 9.0 L21.9 9.7 L22.2 10.4 L22.3 11.2 L22.4 12.0 L22.3 12.8 L22.2 13.6 L21.9 14.3 L21.5 15.0 L21.1 15.7 L20.5 16.2 L20.0 16.7 L19.4 17.2 L18.8 17.6"/><path d="M15.9 12.5 L15.6 12.7 L15.2 12.9 L14.8 13.0 L14.4 13.1 L14.0 13.2 L13.5 13.3 L13.0 13.4 L12.5 13.4 L12.0 13.4 L11.5 13.4 L11.0 13.4 L10.5 13.3 L10.0 13.2 L9.6 13.1 L9.2 13.0 L8.8 12.9 L8.4 12.7 L8.1 12.5 L7.9 12.4 L7.7 12.2 L7.6 12.1 L7.5 12.0 L7.4 11.9 L7.4 11.9 L7.4 11.9 L7.4 11.9 L7.4 12.0 L7.4 12.1 L7.4 12.1 L7.4 12.1 L7.4 12.1 L7.5 12.0 L7.6 11.9 L7.7 11.8 L7.9 11.6 L8.1 11.5 L8.4 11.3 L8.8 11.1 L9.2 11.0 L9.6 10.9 L10.0 10.8 L10.5 10.7 L11.0 10.6 L11.5 10.6 L12.0 10.6 L12.5 10.6 L13.0 10.6 L13.5 10.7 L14.0 10.8 L14.4 10.9 L14.8 11.0 L15.2 11.1 L15.6 11.3 L15.9 11.5 L16.1 11.6 L16.3 11.8 L16.4 11.9 L16.5 12.0 L16.6 12.1 L16.6 12.1 L16.6 12.1 L16.6 12.1 L16.6 12.0 L16.6 11.9 L16.6 11.9 L16.6 11.9 L16.6 11.9 L16.5 12.0 L16.4 12.1 L16.3 12.2 L16.1 12.4 L15.9 12.5"/><path d="M19.4 16.2 L19.3 15.7 L19.2 15.2 L19.0 14.6 L18.7 14.1 L18.3 13.6 L17.9 13.2 L17.5 12.8 L17.1 12.6 L16.7 12.4 L16.3 12.4 L15.9 12.5"/><path stroke-dasharray="2 1.8" opacity=".55" d="M15.9 12.5 L15.6 12.7 L15.4 13.0 L15.3 13.4 L15.2 13.9 L15.3 14.4 L15.4 14.9 L15.6 15.5 L15.9 16.0 L16.3 16.5 L16.7 16.9 L17.1 17.3 L17.5 17.5 L17.9 17.7 L18.3 17.7 L18.7 17.6"/><path d="M18.7 17.6 L19.0 17.4 L19.2 17.1 L19.3 16.7 L19.4 16.2"/><path d="M9.3 17.8 L9.3 17.3 L9.4 16.7 L9.5 16.1 L9.6 15.5 L9.7 14.9 L9.8 14.4 L10.0 14.0 L10.1 13.7 L10.3 13.4 L10.4 13.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M10.4 13.3 L10.6 13.3 L10.7 13.5 L10.7 13.7 L10.8 14.1 L10.8 14.6 L10.8 15.1 L10.7 15.7 L10.7 16.3 L10.6 16.9 L10.4 17.4 L10.3 17.9 L10.1 18.4 L10.0 18.7 L9.8 18.9 L9.7 19.0"/><path d="M9.7 19.0 L9.6 19.0 L9.5 18.9 L9.4 18.6 L9.3 18.3 L9.3 17.8"/><path d="M2.0 13.6 L2.0 13.1 L2.2 12.6 L2.5 12.1 L2.9 11.6 L3.4 11.3 L3.9 11.0 L4.5 10.8 L5.1 10.7 L5.6 10.7 L6.2 10.9 L6.6 11.1 L7.0 11.4 L7.3 11.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M7.3 11.8 L7.5 12.2 L7.6 12.7 L7.5 13.2 L7.3 13.7 L7.0 14.2 L6.6 14.6 L6.2 15.0 L5.6 15.2 L5.1 15.4 L4.5 15.5 L3.9 15.5 L3.4 15.4 L2.9 15.2 L2.5 14.9 L2.2 14.5"/><path d="M2.2 14.5 L2.0 14.0 L2.0 13.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M4.6 7.8 L4.7 7.3 L4.8 6.9 L5.0 6.6"/><path d="M5.0 6.6 L5.3 6.4 L5.7 6.3 L6.1 6.3 L6.5 6.5 L6.9 6.7 L7.3 7.1 L7.7 7.5 L8.1 8.0 L8.4 8.5 L8.6 9.1 L8.7 9.6 L8.8 10.1 L8.7 10.6 L8.6 11.0 L8.4 11.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.4 11.3 L8.1 11.5 L7.7 11.6 L7.3 11.6 L6.9 11.4 L6.5 11.2 L6.1 10.8 L5.7 10.4 L5.3 9.9 L5.0 9.4 L4.8 8.8 L4.7 8.3 L4.6 7.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.7 6.2 L14.7 5.7 L14.6 5.4 L14.5 5.1 L14.4 5.0"/><path d="M14.4 5.0 L14.3 5.0 L14.2 5.1 L14.0 5.3 L13.9 5.6 L13.7 6.1 L13.6 6.6 L13.4 7.1 L13.3 7.7 L13.3 8.3 L13.2 8.9 L13.2 9.4 L13.2 9.9 L13.3 10.3 L13.3 10.5 L13.4 10.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M13.4 10.7 L13.6 10.7 L13.7 10.6 L13.9 10.3 L14.0 10.0 L14.2 9.6 L14.3 9.1 L14.4 8.5 L14.5 7.9 L14.6 7.3 L14.7 6.7 L14.7 6.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M22.0 10.4 L22.0 10.0"/><path d="M22.0 10.0 L21.8 9.5 L21.5 9.1 L21.1 8.8 L20.6 8.6 L20.1 8.5 L19.5 8.5 L18.9 8.6 L18.4 8.8 L17.8 9.0 L17.4 9.4 L17.0 9.8 L16.7 10.3 L16.5 10.8 L16.4 11.3 L16.5 11.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.5 11.8 L16.7 12.2 L17.0 12.6 L17.4 12.9 L17.8 13.1 L18.4 13.3 L18.9 13.3 L19.5 13.2 L20.1 13.0 L20.6 12.7 L21.1 12.4 L21.5 11.9 L21.8 11.4 L22.0 10.9 L22.0 10.4"/></svg>',
+  knot: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M19.3 17.1 L18.6 17.1 L17.7 17.1 L16.9 17.0 L16.0 16.9 L15.1 16.7 L14.2 16.4 L13.3 16.1 L12.5 15.8 L11.7 15.5 L11.0 15.2 L10.3 14.8 L9.8 14.5 L9.3 14.2 L8.9 13.9 L8.6 13.7 L8.4 13.5 L8.3 13.5 L8.4 13.5"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.4 13.5 L8.8 13.6 L9.4 13.5 L9.7 13.3 L9.8 13.3 L9.7 13.4 L9.5 13.5 L9.2 13.8"/><path d="M9.2 13.8 L8.9 14.0 L8.4 14.1 L7.8 14.1 L7.2 14.0 L6.6 13.6 L6.2 13.0 L6.0 12.4 L6.0 11.7 L6.1 11.1 L6.3 10.5 L6.6 10.0 L7.0 9.4 L7.5 8.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M7.5 8.8 L8.1 8.2 L8.8 7.6 L9.5 7.1 L10.3 6.6 L11.2 6.1"/><path d="M11.2 6.1 L12.1 5.7 L13.1 5.3 L14.0 5.1 L15.0 4.9 L15.9 4.7 L16.7 4.7 L17.6 4.7 L18.3 4.9 L19.1 5.1 L19.7 5.5 L20.3 6.1 L20.7 6.8 L20.8 7.6 L20.7 8.3 L20.5 9.0 L20.2 9.5 L19.9 10.0 L19.5 10.5 L19.1 11.0 L18.8 11.4 L18.4 11.8 L18.1 12.2 L17.8 12.6 L17.5 13.0 L17.2 13.4 L16.9 13.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.9 13.7 L16.7 14.1 L16.5 14.6 L16.2 15.0 L15.9 15.5 L15.6 16.0 L15.3 16.5"/><path d="M15.3 16.5 L14.8 17.1 L14.4 17.6 L13.8 18.1 L13.1 18.5 L12.4 18.8 L11.6 19.1 L10.7 19.3 L9.8 19.3 L8.9 19.3 L7.9 19.1 L7.0 18.8 L6.0 18.4 L5.1 17.9 L4.3 17.3 L3.6 16.5 L2.9 15.7 L2.4 14.8 L2.0 13.9 L1.7 12.9 L1.6 11.9 L1.7 10.8 L1.9 9.9 L2.3 8.9 L2.8 8.1 L3.4 7.3 L4.1 6.7 L4.9 6.1 L5.7 5.7 L6.6 5.4 L7.5 5.2 L8.4 5.1 L9.2 5.2 L10.0 5.3 L10.8 5.5 L11.5 5.8 L12.1 6.2 L12.7 6.6 L13.2 7.0 L13.6 7.4 L14.0 7.8 L14.4 8.1 L14.7 8.5 L15.1 8.8 L15.4 9.1 L15.7 9.3 L16.1 9.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.1 9.6 L16.5 9.8 L16.9 10.1 L17.4 10.4 L17.9 10.6 L18.5 10.9"/><path d="M18.5 10.9 L19.0 11.2 L19.6 11.5 L20.2 11.8 L20.7 12.1 L21.2 12.5 L21.7 12.9 L22.1 13.5 L22.4 14.2 L22.4 15.1 L22.0 16.0 L21.4 16.5 L20.7 16.8 L20.1 17.0 L19.4 17.1"/><path d="M19.2 14.1 L18.6 14.1 L18.0 14.1 L17.3 14.0 L16.6 13.9 L15.8 13.7 L15.0 13.5 L14.3 13.3 L13.6 13.0 L13.0 12.7 L12.4 12.4 L11.8 12.1 L11.4 11.9 L11.0 11.6 L10.7 11.4 L10.4 11.2 L10.2 11.1 L10.0 10.9 L9.6 10.7 L9.1 10.5 L8.3 10.7 L7.8 10.9 L7.6 11.1 L7.5 11.2 L7.5 11.2 L7.5 11.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M7.5 11.2 L7.6 11.1 L7.8 11.1 L8.1 11.1 L8.5 11.2 L8.8 11.4 L9.0 11.7 L9.0 11.9 L9.0 12.0 L9.1 11.9 L9.1 11.8 L9.2 11.5 L9.4 11.2 L9.8 10.8"/><path d="M9.8 10.8 L10.2 10.5 L10.6 10.0 L11.2 9.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M11.2 9.6 L11.9 9.2 L12.6 8.9 L13.3 8.5 L14.0 8.3"/><path d="M14.0 8.3 L14.8 8.0 L15.5 7.9 L16.2 7.8 L16.8 7.7 L17.2 7.8 L17.6 7.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M17.6 7.8 L17.8 7.9 L17.9 7.9 L17.8 7.9 L17.8 7.7"/><path d="M17.8 7.7 L17.8 7.6 L17.7 7.6 L17.7 7.7 L17.6 8.0 L17.4 8.3 L17.1 8.6 L16.8 9.0 L16.5 9.4 L16.1 9.8 L15.7 10.2 L15.4 10.7 L15.0 11.2 L14.7 11.6 L14.3 12.1 L14.0 12.6 L13.8 13.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M13.8 13.1 L13.5 13.5 L13.3 14.0 L13.0 14.4 L12.8 14.7 L12.5 15.0 L12.3 15.3"/><path d="M12.3 15.3 L12.0 15.6 L11.6 15.8 L11.2 16.0 L10.8 16.1 L10.3 16.2 L9.8 16.3 L9.2 16.2 L8.6 16.1 L8.0 15.9 L7.4 15.7 L6.8 15.3 L6.3 14.9 L5.8 14.5 L5.4 14.0 L5.1 13.4 L4.9 12.9 L4.7 12.3 L4.7 11.8 L4.7 11.3 L4.8 10.8 L5.0 10.3 L5.3 9.8 L5.6 9.4 L6.0 9.1 L6.5 8.8 L6.9 8.5 L7.4 8.4 L7.9 8.2 L8.4 8.2 L8.9 8.2 L9.3 8.3 L9.8 8.4 L10.2 8.6 L10.5 8.8 L10.9 9.0 L11.2 9.3 L11.5 9.6 L11.9 9.9 L12.2 10.3 L12.6 10.7 L13.0 11.0 L13.4 11.4 L13.9 11.8 L14.4 12.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.4 12.1 L14.9 12.5 L15.4 12.8 L16.0 13.1 L16.6 13.4"/><path d="M16.6 13.4 L17.1 13.6 L17.6 13.9"/><path stroke-dasharray="2 1.8" opacity=".55" d="M17.6 13.9 L18.1 14.2 L18.6 14.4 L19.0 14.7 L19.3 14.9 L19.4 15.0 L19.5 15.1 L19.4 14.9 L19.4 14.5 L19.6 14.1"/><path d="M19.6 14.1 L19.7 13.9 L19.7 13.9 L19.5 14.0 L19.0 14.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M18.8 17.0 L18.5 16.7 L18.3 16.3 L18.1 15.9 L18.1 15.4 L18.2 14.9 L18.4 14.5 L18.7 14.2 L19.0 14.1"/><path d="M19.0 14.1 L19.3 14.1 L19.7 14.2 L20.0 14.5 L20.2 14.9 L20.3 15.3 L20.3 15.8 L20.2 16.3 L20.0 16.7 L19.8 16.9 L19.4 17.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M19.4 17.1 L19.1 17.1 L18.8 17.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.8 10.8 L8.3 10.8 L7.9 11.0"/><path d="M7.9 11.0 L7.5 11.2 L7.2 11.6 L7.1 12.1 L7.1 12.5 L7.3 13.0 L7.6 13.4 L8.0 13.6 L8.4 13.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.4 13.8 L8.9 13.8 L9.3 13.6 L9.7 13.3 L10.0 13.0 L10.1 12.5 L10.1 12.0 L9.9 11.6 L9.6 11.2 L9.2 10.9 L8.8 10.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M15.0 6.9 L15.0 7.4 L15.0 7.7 L14.9 7.9"/><path d="M14.9 7.9 L14.8 8.0 L14.6 8.0 L14.4 7.8 L14.2 7.5 L14.0 7.1 L13.9 6.6 L13.8 6.2 L13.8 5.7 L13.8 5.4 L13.9 5.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M13.9 5.2 L14.0 5.1 L14.2 5.1 L14.4 5.3 L14.6 5.6 L14.8 6.0 L14.9 6.5 L15.0 6.9"/><path d="M14.4 12.1 L14.3 12.1 L14.5 12.2 L14.7 12.3 L15.0 12.6 L15.4 12.8 L15.8 13.0 L16.2 13.3 L16.5 13.5 L16.8 13.6 L16.9 13.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.9 13.7 L16.9 13.7 L16.8 13.7 L16.6 13.5 L16.3 13.3 L15.9 13.1 L15.5 12.8 L15.1 12.6 L14.7 12.4 L14.5 12.2 L14.4 12.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M2.3 14.7 L2.4 14.9 L2.6 15.0 L2.9 15.1 L3.3 15.0 L3.7 14.9 L4.1 14.7 L4.5 14.5 L4.8 14.2 L5.0 13.9 L5.1 13.6"/><path d="M5.1 13.6 L5.1 13.4 L4.9 13.3 L4.6 13.2 L4.2 13.2 L3.8 13.4 L3.3 13.6 L2.9 13.8 L2.6 14.1 L2.4 14.4 L2.3 14.7"/><path d="M12.2 9.8 L12.5 9.6 L12.9 9.4 L13.2 9.0 L13.5 8.7 L13.8 8.3 L14.0 8.1 L14.1 7.9"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.1 7.9 L14.0 7.8 L13.9 7.8 L13.7 7.9 L13.4 8.1 L13.0 8.3 L12.7 8.7 L12.4 9.0 L12.1 9.3 L11.9 9.6 L11.9 9.8"/><path d="M11.9 9.8 L11.9 9.9 L12.0 9.9 L12.2 9.8"/><path d="M21.6 15.1 L21.6 15.6 L21.5 16.0 L21.3 16.4 L21.0 16.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M21.0 16.7 L20.6 16.9 L20.1 16.9 L19.7 16.8 L19.3 16.5 L19.1 16.1 L18.9 15.7 L18.8 15.2 L18.9 14.7 L19.1 14.3 L19.5 14.1"/><path d="M19.5 14.1 L19.9 13.9 L20.3 13.9 L20.7 14.0 L21.1 14.3 L21.4 14.7 L21.6 15.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M18.8 17.0 L18.6 16.8 L18.4 16.6 L18.3 16.3 L18.2 16.0 L18.1 15.7 L18.1 15.4 L18.2 15.1 L18.3 14.8 L18.4 14.5"/><path d="M18.4 14.5 L18.6 14.3 L18.8 14.2 L19.0 14.1 L19.2 14.1 L19.4 14.1 L19.7 14.2 L19.9 14.4 L20.0 14.6 L20.2 14.9 L20.3 15.2 L20.3 15.5 L20.3 15.8 L20.3 16.1 L20.2 16.4 L20.0 16.7 L19.8 16.9 L19.6 17.0 L19.4 17.1 L19.2 17.1 L19.0 17.1 L18.8 17.0"/><path d="M20.4 15.4 L20.4 15.7 L20.4 16.0 L20.3 16.3 L20.2 16.6 L20.0 16.8 L19.8 17.0 L19.6 17.1 L19.3 17.1 L19.1 17.1 L18.8 17.0 L18.6 16.9"/><path stroke-dasharray="2 1.8" opacity=".55" d="M18.6 16.9 L18.4 16.7 L18.2 16.4 L18.1 16.1 L18.0 15.8 L18.0 15.5 L18.0 15.2 L18.1 14.9 L18.2 14.6 L18.4 14.4"/><path d="M18.4 14.4 L18.6 14.2 L18.8 14.1 L19.1 14.1 L19.3 14.1 L19.6 14.2 L19.8 14.3 L20.0 14.5 L20.2 14.8 L20.3 15.0 L20.4 15.4"/></svg>',
+  icosa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M8.0 6.9 L16.0 2.3"/><path d="M16.0 2.3 L18.4 11.1"/><path d="M8.0 6.9 L18.4 11.1"/><path d="M16.0 2.3 L5.6 3.7"/><path d="M8.0 6.9 L5.6 3.7"/><path d="M8.0 6.9 L9.5 18.0"/><path d="M9.5 18.0 L1.6 13.4"/><path d="M8.0 6.9 L1.6 13.4"/><path d="M9.5 18.0 L18.4 11.1"/><path d="M1.6 13.4 L5.6 3.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M22.4 10.6 L14.5 6.0"/><path d="M16.0 2.3 L22.4 10.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.0 2.3 L14.5 6.0"/><path d="M22.4 10.6 L18.4 11.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.5 6.0 L5.6 3.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.0 17.1 L18.4 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.0 21.7 L16.0 17.1"/><path d="M8.0 21.7 L18.4 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.0 17.1 L5.6 12.9"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.0 21.7 L5.6 12.9"/><path d="M8.0 21.7 L9.5 18.0"/><path d="M8.0 21.7 L1.6 13.4"/><path d="M9.5 18.0 L18.4 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M1.6 13.4 L5.6 12.9"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.0 17.1 L22.4 10.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.0 17.1 L14.5 6.0"/><path d="M22.4 10.6 L18.4 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.5 6.0 L5.6 12.9"/><path d="M18.4 11.1 L18.4 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M5.6 3.7 L5.6 12.9"/></svg>',
+  octa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M21.0 17.2 L3.0 17.2"/><path d="M3.0 17.2 L12.0 1.6"/><path d="M21.0 17.2 L12.0 1.6"/><path d="M21.0 17.2 L21.0 6.8"/><path d="M21.0 6.8 L12.0 1.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M3.0 6.8 L21.0 6.8"/><path d="M3.0 6.8 L12.0 1.6"/><path d="M3.0 6.8 L3.0 17.2"/><path d="M21.0 17.2 L12.0 22.4"/><path d="M3.0 17.2 L12.0 22.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M21.0 6.8 L12.0 22.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M3.0 6.8 L12.0 22.4"/></svg>',
+  dodeca: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M14.8 5.2 L9.2 2.0"/><path d="M14.8 5.2 L12.0 12.0"/><path d="M4.7 13.0 L12.0 12.0"/><path d="M4.7 13.0 L3.0 6.8"/><path d="M9.2 2.0 L3.0 6.8"/><path d="M19.3 4.6 L12.0 1.6"/><path d="M19.3 4.6 L21.0 6.8"/><path d="M14.8 5.2 L21.0 6.8"/><path d="M9.2 2.0 L12.0 1.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.8 22.0 L9.2 18.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M9.2 18.8 L3.0 17.2"/><path d="M4.7 19.4 L3.0 17.2"/><path d="M4.7 19.4 L12.0 22.4"/><path d="M14.8 22.0 L12.0 22.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M19.3 11.0 L21.0 17.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M19.3 11.0 L12.0 12.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M9.2 18.8 L12.0 12.0"/><path d="M14.8 22.0 L21.0 17.2"/><path d="M12.0 12.0 L16.5 17.8"/><path d="M12.0 22.4 L16.5 17.8"/><path d="M4.7 13.0 L4.7 19.4"/><path d="M3.0 17.2 L1.9 9.4"/><path d="M3.0 6.8 L1.9 9.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M19.3 4.6 L19.3 11.0"/><path d="M21.0 17.2 L22.1 14.6"/><path d="M21.0 6.8 L22.1 14.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 1.6 L7.5 6.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 12.0 L7.5 6.2"/><path d="M16.5 17.8 L22.1 14.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M1.9 9.4 L7.5 6.2"/></svg>',
+  capsule: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12.0 22.1 L12.0 22.3 L12.0 22.4 L12.0 22.4 L10.6 22.2 L9.7 21.9 L9.2 21.6 L8.7 21.4 L8.3 21.1 L8.0 20.8 L7.7 20.5 L7.5 20.2 L7.3 19.9 L7.1 19.6 L6.9 19.3 L6.8 19.0 L6.7 18.7 L6.5 18.4 L6.5 18.1 L6.4 17.8 L6.3 17.6 L6.3 17.3 L6.3 17.0 L6.3 16.7 L6.3 16.5 L6.3 16.3 L6.3 16.1 L6.3 15.9 L6.3 15.7 L6.3 15.5 L6.3 15.3 L6.3 15.1 L6.3 14.9 L6.3 14.7 L6.3 14.5 L6.3 14.3 L6.3 14.1 L6.3 13.9 L6.3 13.8 L6.3 13.6 L6.3 13.4 L6.3 13.2 L6.3 13.0 L6.3 12.8 L6.3 12.6 L6.3 12.4 L6.3 12.2 L6.3 12.0 L6.3 11.8 L6.3 11.6 L6.3 11.4 L6.3 11.2 L6.3 11.0 L6.3 10.8 L6.3 10.6 L6.3 10.4 L6.3 10.2 L6.3 10.1 L6.3 9.9 L6.3 9.7 L6.3 9.5 L6.3 9.3 L6.3 9.1 L6.3 8.9 L6.3 8.7 L6.3 8.5 L6.3 8.3 L6.3 8.1 L6.3 7.9 L6.3 7.7 L6.3 7.5 L6.3 7.3 L6.3 7.0 L6.3 6.7 L6.3 6.4 L6.4 6.2 L6.5 5.9 L6.5 5.6 L6.7 5.3 L6.8 5.0 L6.9 4.7 L7.1 4.4 L7.3 4.1 L7.5 3.8 L7.7 3.5 L8.0 3.2 L8.3 2.9 L8.7 2.6 L9.2 2.4 L9.7 2.1 L10.6 1.8 L12.0 1.6 L12.0 1.6 L12.0 1.7 L12.0 1.9"/><path d="M12.0 22.1 L12.0 22.3 L12.0 22.4 L12.0 22.4 L13.4 22.2 L14.3 21.9 L14.8 21.6 L15.3 21.4 L15.7 21.1 L16.0 20.8 L16.3 20.5 L16.5 20.2 L16.7 19.9 L16.9 19.6 L17.1 19.3 L17.2 19.0 L17.3 18.7 L17.5 18.4 L17.5 18.1 L17.6 17.8 L17.7 17.6 L17.7 17.3 L17.7 17.0 L17.7 16.7 L17.7 16.5 L17.7 16.3 L17.7 16.1 L17.7 15.9 L17.7 15.7 L17.7 15.5 L17.7 15.3 L17.7 15.1 L17.7 14.9 L17.7 14.7 L17.7 14.5 L17.7 14.3 L17.7 14.1 L17.7 13.9 L17.7 13.8 L17.7 13.6 L17.7 13.4 L17.7 13.2 L17.7 13.0 L17.7 12.8 L17.7 12.6 L17.7 12.4 L17.7 12.2 L17.7 12.0 L17.7 11.8 L17.7 11.6 L17.7 11.4 L17.7 11.2 L17.7 11.0 L17.7 10.8 L17.7 10.6 L17.7 10.4 L17.7 10.2 L17.7 10.1 L17.7 9.9 L17.7 9.7 L17.7 9.5 L17.7 9.3 L17.7 9.1 L17.7 8.9 L17.7 8.7 L17.7 8.5 L17.7 8.3 L17.7 8.1 L17.7 7.9 L17.7 7.7 L17.7 7.5 L17.7 7.3 L17.7 7.0 L17.7 6.7 L17.7 6.4 L17.6 6.2 L17.5 5.9 L17.5 5.6 L17.3 5.3 L17.2 5.0 L17.1 4.7 L16.9 4.4 L16.7 4.1 L16.5 3.8 L16.3 3.5 L16.0 3.2 L15.7 2.9 L15.3 2.6 L14.8 2.4 L14.3 2.1 L13.4 1.8 L12.0 1.6 L12.0 1.6 L12.0 1.7 L12.0 1.9"/><path d="M16.0 14.3 L15.3 14.7 L14.4 15.0 L13.5 15.2 L12.5 15.3 L11.5 15.3 L10.5 15.2 L9.6 15.0 L8.7 14.7 L8.0 14.3 L7.3 13.9 L6.8 13.4 L6.5 12.9 L6.3 12.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.3 12.3 L6.3 11.7 L6.5 11.1 L6.8 10.6 L7.3 10.1 L8.0 9.7 L8.7 9.3 L9.6 9.0 L10.5 8.8 L11.5 8.7 L12.5 8.7 L13.5 8.8 L14.4 9.0 L15.3 9.3 L16.0 9.7 L16.7 10.1 L17.2 10.6 L17.5 11.1 L17.7 11.7"/><path d="M17.7 11.7 L17.7 12.3 L17.5 12.9 L17.2 13.4 L16.7 13.9 L16.0 14.3"/></svg>',
+  pyramid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 9.8 L22.4 15.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M1.6 15.8 L12.0 9.8"/><path d="M12.0 21.8 L1.6 15.8"/><path d="M12.0 21.8 L22.4 15.8"/><path d="M1.6 15.8 L12.0 2.2"/><path d="M12.0 21.8 L12.0 2.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 9.8 L12.0 2.2"/><path d="M22.4 15.8 L12.0 2.2"/></svg>',
+  prism: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M5.2 9.5 L8.8 1.6"/><path d="M8.8 1.6 L18.8 7.4"/><path d="M5.2 9.5 L18.8 7.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.8 14.5 L18.8 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M5.2 22.4 L8.8 14.5"/><path d="M5.2 22.4 L18.8 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.8 1.6 L8.8 14.5"/><path d="M5.2 9.5 L5.2 22.4"/><path d="M18.8 7.4 L18.8 20.3"/></svg>',
+  tube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M5.4 5.9 L5.5 5.9 L5.5 5.9 L5.5 5.9 L5.5 5.8 L5.5 5.8 L5.5 5.8 L5.6 5.7 L5.6 5.7 L5.6 5.7 L5.6 5.6 L5.6 5.6 L5.7 5.5 L5.7 5.5 L5.7 5.5 L5.7 5.5 L9.2 7.5 L9.2 7.5 L9.1 7.5 L9.1 7.5 L9.1 7.6 L9.1 7.6 L9.0 7.7 L9.0 7.8 L8.9 7.9 L8.9 8.0 L8.7 8.2 L8.6 8.4 L8.4 8.6 L8.2 8.9 L8.0 9.1 L7.8 9.3 L7.6 9.6 L7.4 9.8 L7.2 10.1 L7.0 10.4 L6.8 10.6 L6.6 10.9 L6.4 11.2 L6.2 11.4 L6.0 11.7 L5.9 11.9 L5.8 12.1 L5.7 12.3 L5.6 12.5 L5.6 12.6 L5.6 12.6 L5.6 12.6 L5.6 12.5 L5.6 12.5 L5.5 12.2 L5.5 12.4 L5.6 12.4 L5.6 12.5 L5.7 12.6 L5.8 12.7 L6.0 12.9 L6.1 13.0 L6.3 13.2 L6.5 13.3 L6.8 13.5 L7.0 13.7 L7.3 13.8 L7.6 14.0 L7.9 14.1 L8.2 14.3 L8.5 14.4 L8.8 14.5 L9.1 14.7 L9.4 14.8 L9.7 14.9 L10.0 14.9 L10.3 15.0 L10.6 15.1 L11.0 15.1 L10.8 15.1 L11.2 15.1 L11.5 15.1 L11.8 15.1 L12.2 15.1 L12.6 15.0 L13.0 15.0 L13.5 14.9 L14.0 14.8 L14.4 14.7 L14.9 14.6 L15.4 14.5 L15.9 14.4 L16.4 14.3 L16.9 14.1 L17.4 14.0 L17.9 13.9 L18.3 13.7 L18.7 13.6 L19.1 13.5 L19.5 13.4 L19.9 13.3 L20.2 13.2 L20.6 13.1 L20.8 13.1 L20.9 13.1 L21.1 13.0 L21.2 13.0 L21.4 13.0 L21.5 13.0 L21.6 13.0 L21.6 12.9 L21.6 12.9 L21.6 12.9 L22.4 16.8 L22.4 16.8 L22.3 16.9 L22.3 16.9 L22.2 16.9 L22.2 16.9 L22.1 16.9 L22.0 16.9 L21.9 16.9 L21.9 16.9 L21.8 17.0 L21.7 17.0 L21.7 17.0 L21.7 17.0 L21.6 17.0 L21.6 17.0"/><path d="M8.9 7.9 L8.9 7.9 L8.9 7.9 L8.9 7.9 L8.9 7.8 L9.0 7.8 L9.0 7.8 L9.0 7.7 L9.0 7.7 L9.0 7.6 L9.1 7.6 L9.1 7.6 L9.1 7.5 L9.1 7.5 L9.1 7.5 L9.2 7.5 L5.7 5.5 L5.7 5.5 L5.7 5.5 L5.7 5.5 L5.7 5.6 L5.6 5.6 L5.6 5.7 L5.5 5.8 L5.4 5.9 L5.5 5.8 L5.4 5.9 L5.4 6.0 L5.3 6.2 L5.1 6.4 L4.9 6.6 L4.8 6.8 L4.6 7.0 L4.3 7.3 L4.1 7.6 L3.9 7.9 L3.6 8.2 L3.4 8.5 L3.1 8.9 L2.9 9.2 L2.7 9.5 L2.5 9.9 L2.2 10.3 L2.1 10.7 L1.9 11.1 L1.8 11.5 L1.6 12.0 L1.6 12.5 L1.6 13.1 L1.7 13.5 L1.8 13.8 L1.9 14.1 L2.2 14.5 L2.4 14.8 L2.7 15.1 L2.9 15.5 L3.2 15.8 L3.5 16.0 L3.9 16.3 L4.2 16.6 L4.6 16.8 L4.9 17.0 L5.3 17.3 L5.7 17.5 L6.1 17.7 L6.5 17.9 L6.9 18.1 L7.3 18.2 L7.8 18.4 L8.2 18.6 L8.7 18.7 L9.1 18.8 L9.6 18.9 L10.0 19.0 L10.4 19.0 L10.5 19.1 L11.0 19.1 L11.5 19.1 L12.0 19.1 L12.5 19.0 L13.1 19.0 L13.6 18.9 L14.2 18.8 L14.7 18.7 L15.3 18.6 L15.8 18.5 L16.3 18.4 L16.9 18.2 L17.4 18.1 L17.9 18.0 L18.4 17.8 L18.9 17.7 L19.4 17.6 L19.8 17.5 L20.2 17.4 L20.6 17.3 L20.9 17.2 L21.2 17.1 L21.4 17.0 L21.7 17.0 L21.6 17.0 L21.8 17.0 L22.0 16.9 L22.1 16.9 L22.2 16.9 L22.3 16.9 L22.4 16.8 L22.4 16.8 L22.4 16.8 L21.6 12.9 L21.6 12.9 L21.6 12.9 L21.5 13.0 L21.5 13.0 L21.4 13.0 L21.3 13.0 L21.3 13.0 L21.2 13.0 L21.1 13.0 L21.0 13.0 L21.0 13.1 L20.9 13.1 L20.9 13.1 L20.9 13.1 L20.9 13.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M7.2 8.5 L7.8 8.6 L8.3 8.4 L8.7 8.2"/><path d="M8.7 8.2 L9.0 7.8 L9.1 7.3 L9.0 6.8 L8.7 6.3 L8.3 5.8 L7.8 5.5 L7.2 5.3 L6.6 5.3 L6.1 5.4 L5.6 5.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M5.6 5.7 L5.4 6.1 L5.3 6.6 L5.4 7.1 L5.6 7.6 L6.1 8.0 L6.6 8.3 L7.2 8.5"/><path d="M7.4 4.9 L8.0 5.1 L8.5 5.5 L8.9 5.9 L9.2 6.4 L9.3 6.9 L9.2 7.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M9.2 7.4 L8.9 7.8 L8.5 8.1 L8.0 8.2 L7.4 8.2 L6.8 8.0 L6.3 7.7 L5.8 7.2 L5.6 6.7 L5.5 6.2 L5.6 5.7"/><path d="M5.6 5.7 L5.8 5.3 L6.3 5.0 L6.8 4.9 L7.4 4.9"/><path d="M4.4 9.0 L4.9 9.2 L5.5 9.5 L5.9 10.0 L6.1 10.5 L6.2 11.0 L6.1 11.5"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.1 11.5 L5.9 11.9 L5.5 12.1 L4.9 12.3 L4.4 12.2 L3.8 12.0 L3.3 11.7 L2.8 11.2 L2.6 10.7 L2.5 10.2 L2.6 9.7"/><path d="M2.6 9.7 L2.8 9.3 L3.3 9.1 L3.8 8.9 L4.4 9.0"/><path d="M5.7 13.5 L6.1 13.4 L6.5 13.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.5 13.4 L6.9 13.6 L7.1 13.9 L7.2 14.4 L7.1 14.9 L6.9 15.5 L6.5 16.0 L6.1 16.5 L5.7 16.8 L5.2 16.9 L4.8 16.9"/><path d="M4.8 16.9 L4.4 16.7 L4.2 16.4 L4.2 15.9 L4.2 15.4 L4.4 14.8 L4.8 14.3 L5.2 13.8 L5.7 13.5"/><path d="M12.8 15.4 L12.7 15.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.7 15.1 L12.6 15.0 L12.5 15.1 L12.4 15.4 L12.4 15.9 L12.4 16.4 L12.5 17.1 L12.6 17.7 L12.7 18.2 L12.8 18.6 L13.0 18.9"/><path d="M13.0 18.9 L13.1 19.0 L13.2 18.9 L13.2 18.6 L13.3 18.1 L13.2 17.6 L13.2 17.0 L13.1 16.4 L13.0 15.8 L12.8 15.4"/><path d="M21.2 13.4 L21.0 13.2 L20.9 13.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M20.9 13.1 L20.7 13.2 L20.6 13.5 L20.6 13.9 L20.6 14.5 L20.7 15.1 L20.9 15.7 L21.0 16.2 L21.2 16.7 L21.4 16.9 L21.6 17.0"/><path d="M21.6 17.0 L21.8 16.9 L21.8 16.6 L21.9 16.1 L21.8 15.6 L21.8 15.0 L21.6 14.4 L21.4 13.8 L21.2 13.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M21.4 16.6 L21.2 16.2 L21.0 15.7 L20.9 15.1 L20.8 14.5 L20.7 13.9 L20.8 13.5 L20.9 13.2"/><path d="M20.9 13.2 L21.0 13.1 L21.2 13.1 L21.4 13.4 L21.6 13.8 L21.7 14.3 L21.9 14.9 L22.0 15.5 L22.0 16.1 L22.0 16.6 L21.9 16.9"/><path stroke-dasharray="2 1.8" opacity=".55" d="M21.9 16.9 L21.7 17.0 L21.6 16.9 L21.4 16.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M7.2 8.5 L7.6 8.6 L7.9 8.5 L8.3 8.4 L8.6 8.3 L8.8 8.0"/><path d="M8.8 8.0 L9.0 7.8 L9.0 7.4 L9.0 7.1 L9.0 6.8 L8.8 6.4 L8.6 6.1 L8.3 5.8 L7.9 5.6 L7.6 5.4 L7.2 5.3 L6.8 5.2 L6.4 5.3 L6.1 5.4 L5.8 5.6 L5.5 5.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M5.5 5.8 L5.4 6.1 L5.3 6.4 L5.3 6.7 L5.4 7.1 L5.5 7.4 L5.8 7.7 L6.1 8.0 L6.4 8.3 L6.8 8.4 L7.2 8.5"/><path d="M21.2 16.7 L21.1 16.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M21.1 16.4 L21.0 16.1 L20.9 15.7 L20.8 15.3 L20.7 14.9 L20.6 14.5 L20.6 14.1"/><path d="M20.6 14.1 L20.6 13.8 L20.6 13.5 L20.7 13.3 L20.8 13.1 L20.9 13.1 L21.0 13.1 L21.1 13.2 L21.2 13.4 L21.4 13.7 L21.5 14.0 L21.6 14.4 L21.7 14.8 L21.8 15.2 L21.8 15.6 L21.9 16.0 L21.9 16.3 L21.8 16.6 L21.8 16.8 L21.7 16.9 L21.6 17.0 L21.5 17.0 L21.4 16.9 L21.2 16.7"/></svg>',
+  lathe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M7.0 19.9 L7.0 19.7 L7.0 19.5 L6.9 19.4 L6.9 19.2 L6.9 19.1 L6.8 18.9 L6.8 18.8 L6.8 18.6 L6.7 18.4 L6.7 18.3 L6.7 18.1 L6.6 18.0 L6.6 17.8 L6.6 17.7 L6.5 17.5 L6.5 17.3 L6.5 17.2 L6.4 17.0 L6.4 16.9 L6.4 16.8 L6.4 16.6 L6.3 16.4 L6.3 16.3 L6.2 16.1 L6.2 16.0 L6.2 15.8 L6.1 15.7 L6.1 15.5 L6.1 15.3 L6.0 15.2 L6.0 15.0 L6.0 14.9 L5.9 14.7 L5.9 14.6 L5.9 14.4 L5.8 14.2 L6.3 12.2 L6.4 12.1 L6.5 11.9 L6.6 11.8 L6.7 11.7 L6.8 11.5 L6.9 11.4 L7.0 11.3 L7.1 11.1 L7.2 11.0 L7.3 10.9 L7.4 10.7 L7.5 10.6 L7.6 10.5 L7.7 10.3 L7.8 10.2 L7.9 10.0 L8.0 9.9 L8.1 9.8 L8.2 9.6 L8.3 9.5 L8.4 9.4 L8.5 9.2 L8.3 10.4 L8.2 10.2 L8.2 10.1 L8.1 9.9 L8.1 9.8 L8.0 9.6 L8.0 9.5 L7.9 9.3 L7.9 9.2 L7.8 9.0 L7.7 8.9 L7.7 8.7 L7.6 8.6 L7.6 8.4 L7.5 8.2 L7.5 8.1 L7.4 7.9 L7.4 7.8 L7.3 7.6 L7.2 7.5 L7.2 7.3 L7.1 7.2 L7.0 6.1 L7.1 5.9 L7.1 5.8 L7.2 5.6 L7.2 5.4 L7.2 5.3 L7.3 5.1 L7.3 5.0 L7.3 4.8 L7.4 4.7 L7.4 4.5 L7.4 4.3 L7.5 4.2 L7.5 4.0 L7.5 3.9"/><path d="M17.0 19.9 L17.0 19.7 L17.0 19.5 L17.1 19.4 L17.1 19.2 L17.1 19.1 L17.2 18.9 L17.2 18.8 L17.2 18.6 L17.3 18.4 L17.3 18.3 L17.3 18.1 L17.4 18.0 L17.4 17.8 L17.4 17.7 L17.5 17.5 L17.5 17.3 L17.5 17.2 L17.6 17.0 L17.6 16.9 L17.6 16.8 L17.6 16.6 L17.7 16.4 L17.7 16.3 L17.8 16.1 L17.8 16.0 L17.8 15.8 L17.9 15.7 L17.9 15.5 L17.9 15.3 L18.0 15.2 L18.0 15.0 L18.0 14.9 L18.1 14.7 L18.1 14.6 L18.1 14.4 L18.2 14.2 L17.7 12.2 L17.6 12.1 L17.5 11.9 L17.4 11.8 L17.3 11.7 L17.2 11.5 L17.1 11.4 L17.0 11.3 L16.9 11.1 L16.8 11.0 L16.7 10.9 L16.6 10.7 L16.5 10.6 L16.4 10.5 L16.3 10.3 L16.2 10.2 L16.1 10.0 L16.0 9.9 L15.9 9.8 L15.8 9.6 L15.7 9.5 L15.6 9.4 L15.5 9.2 L15.7 10.4 L15.8 10.2 L15.8 10.1 L15.9 9.9 L15.9 9.8 L16.0 9.6 L16.0 9.5 L16.1 9.3 L16.1 9.2 L16.2 9.0 L16.3 8.9 L16.3 8.7 L16.4 8.6 L16.4 8.4 L16.5 8.2 L16.5 8.1 L16.6 7.9 L16.6 7.8 L16.7 7.6 L16.8 7.5 L16.8 7.3 L16.9 7.2 L17.0 6.1 L16.9 5.9 L16.9 5.8 L16.8 5.6 L16.8 5.4 L16.8 5.3 L16.7 5.1 L16.7 5.0 L16.7 4.8 L16.6 4.7 L16.6 4.5 L16.6 4.3 L16.5 4.2 L16.5 4.0 L16.5 3.9"/><path d="M15.2 6.0 L14.7 6.3 L14.2 6.5 L13.6 6.6 L13.0 6.7 L12.3 6.8 L11.7 6.8 L11.0 6.7 L10.4 6.6 L9.8 6.5 L9.3 6.3 L8.8 6.0 L8.4 5.8 L8.0 5.4 L7.8 5.1 L7.6 4.7 L7.5 4.4 L7.5 4.0 L7.6 3.6 L7.8 3.3 L8.0 2.9 L8.4 2.6 L8.8 2.4 L9.3 2.1 L9.8 1.9 L10.4 1.8 L11.0 1.7 L11.7 1.6 L12.3 1.6 L13.0 1.7 L13.6 1.8 L14.2 1.9 L14.7 2.1 L15.2 2.4 L15.6 2.6 L16.0 2.9 L16.2 3.3 L16.4 3.6 L16.5 4.0 L16.5 4.4 L16.4 4.7 L16.2 5.1 L16.0 5.4 L15.6 5.8 L15.2 6.0"/><path d="M15.5 21.6 L15.0 21.8 L14.4 22.1 L13.7 22.2 L13.1 22.3 L12.4 22.4 L11.6 22.4 L10.9 22.3 L10.3 22.2 L9.6 22.1 L9.0 21.8 L8.5 21.6 L8.0 21.2 L7.6 20.9 L7.3 20.5 L7.1 20.1 L7.0 19.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M7.0 19.7 L7.0 19.3 L7.1 18.9 L7.3 18.5 L7.6 18.1 L8.0 17.8 L8.5 17.5 L9.0 17.2 L9.6 17.0 L10.3 16.8 L10.9 16.7 L11.6 16.6 L12.4 16.6 L13.1 16.7 L13.7 16.8 L14.4 17.0 L15.0 17.2 L15.5 17.5 L16.0 17.8 L16.4 18.1 L16.7 18.5 L16.9 18.9 L17.0 19.3"/><path d="M17.0 19.3 L17.0 19.7 L16.9 20.1 L16.7 20.5 L16.4 20.9 L16.0 21.2 L15.5 21.6"/><path d="M16.2 17.4 L15.4 17.7 L14.5 18.0 L13.5 18.3 L12.5 18.4 L11.5 18.4 L10.5 18.3 L9.5 18.0 L8.6 17.7 L7.8 17.4 L7.1 16.9 L6.6 16.4 L6.2 15.8"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.2 15.8 L6.0 15.2 L6.0 14.6 L6.2 14.0 L6.6 13.5 L7.1 12.9 L7.8 12.5 L8.6 12.1 L9.5 11.8 L10.5 11.6 L11.5 11.5 L12.5 11.5 L13.5 11.6 L14.5 11.8 L15.4 12.1 L16.2 12.5 L16.9 12.9 L17.4 13.5 L17.8 14.0 L18.0 14.6 L18.0 15.2"/><path d="M18.0 15.2 L17.8 15.8 L17.4 16.4 L16.9 16.9 L16.2 17.4"/><path d="M15.0 10.5 L14.4 10.8 L13.8 11.0 L13.1 11.1 L12.4 11.2 L11.6 11.2 L10.9 11.1 L10.2 11.0 L9.6 10.8 L9.0 10.5 L8.6 10.2 L8.2 9.8 L8.0 9.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M8.0 9.4 L7.8 9.0 L7.8 8.6 L8.0 8.2 L8.2 7.8 L8.6 7.4 L9.0 7.1 L9.6 6.8 L10.2 6.6 L10.9 6.5 L11.6 6.4 L12.4 6.4 L13.1 6.5 L13.8 6.6 L14.4 6.8 L15.0 7.1 L15.4 7.4 L15.8 7.8 L16.0 8.2 L16.2 8.6 L16.2 9.0"/><path d="M16.2 9.0 L16.0 9.4 L15.8 9.8 L15.4 10.2 L15.0 10.5"/></svg>',
+  tetra: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12.0 15.0 L22.4 21.0"/><path d="M22.4 21.0 L1.6 21.0"/><path d="M12.0 15.0 L1.6 21.0"/><path d="M22.4 21.0 L12.0 3.0"/><path d="M12.0 15.0 L12.0 3.0"/><path d="M1.6 21.0 L12.0 3.0"/></svg>',
+  barrel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4.8 18.1 L4.8 18.0 L4.8 17.9 L4.8 17.7 L4.8 17.6 L4.8 17.4 L4.8 17.3 L4.8 17.2 L4.8 17.0 L4.8 16.9 L4.9 16.8 L4.9 16.6 L4.9 16.5 L4.9 16.4 L4.9 16.2 L4.9 16.1 L4.9 16.0 L4.9 15.8 L4.9 15.7 L4.9 15.6 L4.9 15.4 L4.9 15.3 L4.9 15.2 L4.9 15.0 L4.9 14.9 L5.0 14.8 L5.0 14.6 L5.0 14.5 L5.0 14.4 L5.0 14.2 L5.0 14.1 L5.0 14.0 L5.0 13.8 L5.0 13.7 L5.0 13.6 L5.0 13.4 L5.0 13.3 L5.0 13.2 L5.0 13.0 L5.0 12.9 L5.1 12.8 L5.1 12.6 L5.1 12.5 L5.1 12.4 L5.1 12.2 L5.1 12.1 L5.1 12.0 L5.1 11.8 L5.1 11.7 L5.1 11.6 L5.1 11.4 L5.1 11.3 L5.1 11.2 L5.1 11.0 L5.2 10.9 L5.2 10.8 L5.2 10.6 L5.2 10.5 L5.2 10.4 L5.2 10.2 L5.2 10.1 L5.2 10.0 L5.2 9.8 L5.2 9.7 L5.2 9.6 L5.2 9.4 L5.2 9.3 L5.2 9.2 L5.2 9.0 L5.3 8.9 L5.3 8.7 L5.3 8.6 L5.3 8.5 L5.3 8.3 L5.3 8.2 L5.3 8.1 L5.3 7.9 L5.3 7.8 L5.3 7.7 L5.3 7.5 L5.3 7.4 L5.3 7.3 L5.3 7.1 L5.4 7.0 L5.4 6.9 L5.4 6.7 L5.4 6.6 L5.4 6.5 L5.4 6.3 L5.4 6.2 L5.4 6.1 L5.4 5.9 L5.4 5.8 L5.4 5.7 L5.4 5.5 L5.4 5.4 L5.4 5.3"/><path d="M19.2 18.1 L19.2 18.0 L19.2 17.9 L19.2 17.7 L19.2 17.6 L19.2 17.4 L19.2 17.3 L19.2 17.2 L19.2 17.0 L19.2 16.9 L19.1 16.8 L19.1 16.6 L19.1 16.5 L19.1 16.4 L19.1 16.2 L19.1 16.1 L19.1 16.0 L19.1 15.8 L19.1 15.7 L19.1 15.6 L19.1 15.4 L19.1 15.3 L19.1 15.2 L19.1 15.0 L19.1 14.9 L19.0 14.8 L19.0 14.6 L19.0 14.5 L19.0 14.4 L19.0 14.2 L19.0 14.1 L19.0 14.0 L19.0 13.8 L19.0 13.7 L19.0 13.6 L19.0 13.4 L19.0 13.3 L19.0 13.2 L19.0 13.0 L19.0 12.9 L18.9 12.8 L18.9 12.6 L18.9 12.5 L18.9 12.4 L18.9 12.2 L18.9 12.1 L18.9 12.0 L18.9 11.8 L18.9 11.7 L18.9 11.6 L18.9 11.4 L18.9 11.3 L18.9 11.2 L18.9 11.0 L18.8 10.9 L18.8 10.8 L18.8 10.6 L18.8 10.5 L18.8 10.4 L18.8 10.2 L18.8 10.1 L18.8 10.0 L18.8 9.8 L18.8 9.7 L18.8 9.6 L18.8 9.4 L18.8 9.3 L18.8 9.2 L18.8 9.0 L18.7 8.9 L18.7 8.7 L18.7 8.6 L18.7 8.5 L18.7 8.3 L18.7 8.2 L18.7 8.1 L18.7 7.9 L18.7 7.8 L18.7 7.7 L18.7 7.5 L18.7 7.4 L18.7 7.3 L18.7 7.1 L18.6 7.0 L18.6 6.9 L18.6 6.7 L18.6 6.6 L18.6 6.5 L18.6 6.3 L18.6 6.2 L18.6 6.1 L18.6 5.9 L18.6 5.8 L18.6 5.7 L18.6 5.5 L18.6 5.4 L18.6 5.3"/><path d="M16.6 8.1 L15.9 8.4 L15.1 8.7 L14.3 8.9 L13.4 9.1 L12.5 9.2 L11.5 9.2 L10.6 9.1 L9.7 8.9 L8.9 8.7 L8.1 8.4 L7.4 8.1 L6.7 7.7 L6.2 7.2 L5.9 6.7 L5.6 6.2 L5.5 5.7 L5.5 5.1 L5.6 4.6 L5.9 4.1 L6.2 3.6 L6.7 3.1 L7.4 2.7 L8.1 2.3 L8.9 2.1 L9.7 1.8 L10.6 1.7 L11.5 1.6 L12.5 1.6 L13.4 1.7 L14.3 1.8 L15.1 2.1 L15.9 2.3 L16.6 2.7 L17.3 3.1 L17.8 3.6 L18.1 4.1 L18.4 4.6 L18.5 5.1 L18.5 5.7 L18.4 6.2 L18.1 6.7 L17.8 7.2 L17.3 7.7 L16.6 8.1"/><path d="M17.1 21.2 L16.3 21.6 L15.5 21.9 L14.5 22.1 L13.5 22.3 L12.5 22.4 L11.5 22.4 L10.5 22.3 L9.5 22.1 L8.5 21.9 L7.7 21.6 L6.9 21.2 L6.2 20.7 L5.7 20.2 L5.2 19.7 L4.9 19.1 L4.8 18.5"/><path stroke-dasharray="2 1.8" opacity=".55" d="M4.8 18.5 L4.8 17.9 L4.9 17.4 L5.2 16.8 L5.7 16.2 L6.2 15.7 L6.9 15.3 L7.7 14.9 L8.5 14.6 L9.5 14.3 L10.5 14.2 L11.5 14.1 L12.5 14.1 L13.5 14.2 L14.5 14.3 L15.5 14.6 L16.3 14.9 L17.1 15.3 L17.8 15.7 L18.3 16.2 L18.8 16.8 L19.1 17.4 L19.2 17.9"/><path d="M19.2 17.9 L19.2 18.5 L19.1 19.1 L18.8 19.7 L18.3 20.2 L17.8 20.7 L17.1 21.2"/></svg>',
+  dome: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M1.6 14.2 L1.6 14.1 L1.6 13.9 L1.6 13.8 L1.6 13.7 L1.6 13.5 L1.6 13.4 L1.6 13.3 L1.7 13.1 L1.7 13.0 L1.7 12.9 L1.7 12.7 L1.7 12.6 L1.7 12.5 L1.8 12.3 L1.8 12.2 L1.8 12.1 L1.8 11.9 L1.9 11.8 L1.9 11.7 L1.9 11.6 L2.0 11.4 L2.0 11.3 L2.1 11.2 L2.1 11.0 L2.1 10.9 L2.2 10.8 L2.2 10.6 L2.3 10.5 L2.3 10.4 L2.4 10.2 L2.4 10.1 L2.5 10.0 L2.6 9.8 L2.6 9.7 L2.7 9.6 L2.8 9.4 L2.8 9.3 L2.9 9.2 L3.0 9.0 L3.1 8.9 L3.1 8.8 L3.2 8.6 L3.3 8.5 L3.4 8.4 L3.5 8.2 L3.6 8.1 L3.7 8.0 L3.8 7.8 L3.9 7.7 L4.0 7.6 L4.1 7.4 L4.2 7.3 L4.3 7.2 L4.5 7.0 L4.6 6.9 L4.7 6.8 L4.9 6.6 L5.0 6.5 L5.2 6.4 L5.3 6.2 L5.5 6.1 L5.6 6.0 L5.8 5.8 L6.0 5.7 L6.2 5.6 L6.4 5.4 L6.6 5.3 L6.8 5.2 L7.1 5.1 L7.3 4.9 L7.6 4.8 L7.9 4.7 L8.2 4.5 L8.6 4.4 L9.0 4.3 L9.5 4.1 L10.1 4.0 L11.0 3.9 L12.0 3.8 L12.0 3.8 L12.0 3.8 L12.0 3.8 L12.0 3.8 L12.0 3.9 L12.0 3.9 L12.0 3.9 L12.0 4.0 L12.0 4.0 L12.0 4.1 L12.0 4.2 L12.0 4.2 L12.0 4.4 L12.0 4.5 L12.0 4.7 L12.0 4.9"/><path d="M22.4 14.2 L22.4 14.1 L22.4 13.9 L22.4 13.8 L22.4 13.7 L22.4 13.5 L22.4 13.4 L22.4 13.3 L22.3 13.1 L22.3 13.0 L22.3 12.9 L22.3 12.7 L22.3 12.6 L22.3 12.5 L22.2 12.3 L22.2 12.2 L22.2 12.1 L22.2 11.9 L22.1 11.8 L22.1 11.7 L22.1 11.6 L22.0 11.4 L22.0 11.3 L21.9 11.2 L21.9 11.0 L21.9 10.9 L21.8 10.8 L21.8 10.6 L21.7 10.5 L21.7 10.4 L21.6 10.2 L21.6 10.1 L21.5 10.0 L21.4 9.8 L21.4 9.7 L21.3 9.6 L21.2 9.4 L21.2 9.3 L21.1 9.2 L21.0 9.0 L20.9 8.9 L20.9 8.8 L20.8 8.6 L20.7 8.5 L20.6 8.4 L20.5 8.2 L20.4 8.1 L20.3 8.0 L20.2 7.8 L20.1 7.7 L20.0 7.6 L19.9 7.4 L19.8 7.3 L19.7 7.2 L19.5 7.0 L19.4 6.9 L19.3 6.8 L19.1 6.6 L19.0 6.5 L18.8 6.4 L18.7 6.2 L18.5 6.1 L18.4 6.0 L18.2 5.8 L18.0 5.7 L17.8 5.6 L17.6 5.4 L17.4 5.3 L17.2 5.2 L16.9 5.1 L16.7 4.9 L16.4 4.8 L16.1 4.7 L15.8 4.5 L15.4 4.4 L15.0 4.3 L14.5 4.1 L13.9 4.0 L13.0 3.9 L12.0 3.8 L12.0 3.8 L12.0 3.8 L12.0 3.8 L12.0 3.8 L12.0 3.9 L12.0 3.9 L12.0 3.9 L12.0 4.0 L12.0 4.0 L12.0 4.1 L12.0 4.2 L12.0 4.2 L12.0 4.4 L12.0 4.5 L12.0 4.7 L12.0 4.9"/><path d="M19.4 18.5 L18.2 19.0 L17.0 19.5 L15.6 19.8 L14.2 20.1 L12.7 20.2 L11.3 20.2 L9.8 20.1 L8.4 19.8 L7.0 19.5 L5.8 19.0 L4.6 18.5 L3.7 17.8 L2.9 17.1 L2.3 16.3 L1.8 15.5 L1.6 14.6 L1.6 13.8 L1.8 12.9 L2.3 12.1 L2.9 11.3 L3.7 10.6 L4.6 10.0 L5.8 9.4 L7.0 8.9 L8.4 8.6 L9.8 8.3 L11.3 8.2 L12.7 8.2 L14.2 8.3 L15.6 8.6 L17.0 8.9 L18.2 9.4 L19.4 10.0 L20.3 10.6 L21.1 11.3 L21.7 12.1 L22.2 12.9 L22.4 13.8 L22.4 14.6 L22.2 15.5 L21.7 16.3 L21.1 17.1 L20.3 17.8 L19.4 18.5"/><path d="M18.4 13.6 L17.2 14.2 L15.8 14.7 L14.3 15.0 L12.8 15.1 L11.2 15.1 L9.7 15.0 L8.2 14.7 L6.8 14.2 L5.6 13.6 L4.6 12.9 L3.8 12.2 L3.3 11.3 L3.0 10.4 L3.0 9.5 L3.3 8.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M3.3 8.6 L3.8 7.8 L4.6 7.0 L5.6 6.3 L6.8 5.7 L8.2 5.2 L9.7 4.9 L11.2 4.8 L12.8 4.8 L14.3 4.9 L15.8 5.2 L17.2 5.7 L18.4 6.3 L19.4 7.0 L20.2 7.8"/><path d="M20.2 7.8 L20.7 8.6 L21.0 9.5 L21.0 10.4 L20.7 11.3 L20.2 12.2 L19.4 12.9 L18.4 13.6"/></svg>',
+  helix: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M21.8 18.3 L21.2 18.6 L20.6 18.9 L20.0 19.1 L19.4 19.4 L18.7 19.6 L18.0 19.7 L17.3 19.9 L16.6 20.0 L15.9 20.1 L15.2 20.2 L14.5 20.2 L13.8 20.2 L13.1 20.2 L12.3 20.2 L11.6 20.1 L10.9 20.0 L10.2 19.9 L9.5 19.7 L8.9 19.6 L8.2 19.4 L7.6 19.1 L6.9 18.9 L6.3 18.6 L5.8 18.3 L5.2 17.9 L4.7 17.5 L4.2 17.1 L3.7 16.7 L3.2 16.2 L2.8 15.7 L2.5 15.2 L2.2 14.6 L1.9 14.0 L1.8 13.3 L1.6 12.7 L1.6 12.0 L1.6 11.3 L1.8 10.7 L1.9 10.0 L2.2 9.4 L2.5 8.8 L2.8 8.3 L3.2 7.8 L3.7 7.3 L4.2 6.9 L4.7 6.5 L5.2 6.1 L5.8 5.7 L6.3 5.4 L6.9 5.1 L7.6 4.9 L8.2 4.6 L8.9 4.4 L9.5 4.3 L10.2 4.1 L10.9 4.0 L11.6 3.9 L12.3 3.8 L13.1 3.8 L13.8 3.8 L14.5 3.8 L15.2 3.8 L15.9 3.9 L16.6 4.0 L17.3 4.1 L18.0 4.3 L18.7 4.4 L19.4 4.6 L20.0 4.9 L20.6 5.1 L21.2 5.4 L21.8 5.7"/><path d="M19.0 13.4 L18.7 13.6 L18.4 13.7 L18.0 13.9 L17.6 14.0 L17.2 14.1 L16.7 14.3 L16.3 14.4 L15.8 14.4 L15.3 14.5 L14.8 14.6 L14.3 14.6 L13.8 14.6 L13.3 14.6 L12.8 14.6 L12.3 14.5 L11.8 14.4 L11.3 14.4 L10.9 14.3 L10.4 14.1 L10.0 14.0 L9.6 13.9 L9.2 13.7 L8.9 13.6 L8.6 13.4 L8.3 13.2 L8.0 13.0 L7.8 12.9 L7.7 12.7 L7.5 12.6 L7.4 12.4 L7.3 12.3 L7.3 12.2 L7.3 12.1 L7.2 12.1 L7.2 12.0 L7.2 12.0 L7.2 12.0 L7.2 11.9 L7.3 11.9 L7.3 11.8 L7.3 11.7 L7.4 11.6 L7.5 11.4 L7.7 11.3 L7.8 11.1 L8.0 11.0 L8.3 10.8 L8.6 10.6 L8.9 10.4 L9.2 10.3 L9.6 10.1 L10.0 10.0 L10.4 9.9 L10.9 9.7 L11.3 9.6 L11.8 9.6 L12.3 9.5 L12.8 9.4 L13.3 9.4 L13.8 9.4 L14.3 9.4 L14.8 9.4 L15.3 9.5 L15.8 9.6 L16.3 9.6 L16.7 9.7 L17.2 9.9 L17.6 10.0 L18.0 10.1 L18.4 10.3 L18.7 10.4 L19.0 10.6"/><path d="M17.5 18.7 L17.5 18.2 L17.5 17.6 L17.4 17.0 L17.3 16.5 L17.1 15.9 L16.9 15.4 L16.8 15.0 L16.6 14.7 L16.4 14.5 L16.2 14.4"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.2 14.4 L16.1 14.4 L16.0 14.5 L15.9 14.8 L15.8 15.2 L15.8 15.6 L15.8 16.1 L15.9 16.7 L16.0 17.2 L16.1 17.8 L16.2 18.4 L16.4 18.9 L16.6 19.3 L16.8 19.6 L16.9 19.8 L17.1 19.9"/><path d="M17.1 19.9 L17.3 19.9 L17.4 19.7 L17.5 19.5 L17.5 19.1 L17.5 18.7"/><path d="M6.6 17.7 L6.7 17.2 L6.8 16.6 L6.9 16.1 L7.2 15.6 L7.4 15.0 L7.8 14.6 L8.1 14.2 L8.4 14.0 L8.8 13.8 L9.1 13.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M9.1 13.7 L9.4 13.8 L9.6 14.0 L9.8 14.2 L9.9 14.6 L9.9 15.1 L9.9 15.6 L9.8 16.1 L9.6 16.7 L9.4 17.2 L9.1 17.7 L8.8 18.2 L8.4 18.5 L8.1 18.8 L7.8 19.0 L7.4 19.0"/><path d="M7.4 19.0 L7.2 19.0 L6.9 18.8 L6.8 18.5 L6.7 18.1 L6.6 17.7"/><path d="M1.6 12.0 L1.7 11.5 L1.8 11.1 L2.1 10.7 L2.5 10.3 L3.0 10.0 L3.5 9.8 L4.1 9.7 L4.7 9.7 L5.3 9.8 L5.8 10.0 L6.3 10.3 L6.7 10.7 L7.0 11.1 L7.2 11.5 L7.2 12.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M7.2 12.0 L7.2 12.5 L7.0 12.9 L6.7 13.3 L6.3 13.7 L5.8 14.0 L5.3 14.2 L4.7 14.3 L4.1 14.3 L3.5 14.2 L3.0 14.0 L2.5 13.7 L2.1 13.3 L1.8 12.9 L1.7 12.5 L1.6 12.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.6 6.3 L6.7 5.9 L6.8 5.5 L6.9 5.2 L7.2 5.0"/><path d="M7.2 5.0 L7.4 5.0 L7.8 5.0 L8.1 5.2 L8.4 5.5 L8.8 5.8 L9.1 6.3 L9.4 6.8 L9.6 7.3 L9.8 7.9 L9.9 8.4 L9.9 8.9 L9.9 9.4 L9.8 9.8 L9.6 10.0 L9.4 10.2"/><path stroke-dasharray="2 1.8" opacity=".55" d="M9.4 10.2 L9.1 10.3 L8.8 10.2 L8.4 10.0 L8.1 9.8 L7.8 9.4 L7.4 9.0 L7.2 8.4 L6.9 7.9 L6.8 7.4 L6.7 6.8 L6.6 6.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M17.5 5.3 L17.5 4.9 L17.5 4.5 L17.4 4.3 L17.3 4.1"/><path d="M17.3 4.1 L17.1 4.1 L16.9 4.2 L16.8 4.4 L16.6 4.7 L16.4 5.1 L16.2 5.6 L16.1 6.2 L16.0 6.8 L15.9 7.3 L15.8 7.9 L15.8 8.4 L15.8 8.8 L15.9 9.2 L16.0 9.5 L16.1 9.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.1 9.6 L16.2 9.6 L16.4 9.5 L16.6 9.3 L16.8 9.0 L16.9 8.6 L17.1 8.1 L17.3 7.5 L17.4 7.0 L17.5 6.4 L17.5 5.8 L17.5 5.3"/><path d="M19.0 16.6 L19.3 17.1 L19.7 17.6 L20.1 17.9 L20.5 18.2 L20.9 18.3 L21.3 18.4 L21.7 18.3 L22.0 18.2 L22.2 17.9 L22.3 17.5 L22.4 17.1 L22.4 16.6 L22.3 16.1 L22.1 15.5 L21.8 15.0 L21.5 14.5 L21.1 14.1 L20.7 13.7 L20.3 13.5 L19.9 13.3 L19.5 13.3 L19.2 13.3 L18.9 13.5 L18.6 13.8 L18.5 14.1 L18.4 14.6 L18.4 15.1 L18.6 15.6 L18.7 16.1 L19.0 16.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M21.8 15.0 L21.5 14.5 L21.1 14.1 L20.7 13.7 L20.3 13.5 L19.9 13.3 L19.5 13.3 L19.2 13.3 L18.9 13.5 L18.6 13.8 L18.5 14.1 L18.4 14.6 L18.4 15.1 L18.6 15.6 L18.7 16.1 L19.0 16.6 L19.3 17.1 L19.7 17.6 L20.1 17.9 L20.5 18.2 L20.9 18.3 L21.3 18.4 L21.7 18.3 L22.0 18.2 L22.2 17.9 L22.3 17.5 L22.4 17.1 L22.4 16.6 L22.3 16.1 L22.1 15.5 L21.8 15.0"/><path d="M22.4 7.0 L22.4 6.6 L22.2 6.2 L22.0 5.9 L21.7 5.7 L21.4 5.6 L21.0 5.6 L20.6 5.8 L20.2 6.0 L19.8 6.3 L19.4 6.8 L19.1 7.2 L18.8 7.8 L18.6 8.3 L18.5 8.8 L18.4 9.3 L18.5 9.8 L18.6 10.2 L18.8 10.5 L19.1 10.6 L19.4 10.7 L19.8 10.7 L20.2 10.6 L20.6 10.3 L21.0 10.0 L21.4 9.6 L21.7 9.1 L22.0 8.6 L22.2 8.1 L22.4 7.5 L22.4 7.0"/></svg>',
+  octaPrism: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M17.8 9.7 L12.0 11.0"/><path d="M12.0 11.0 L6.2 9.7"/><path d="M6.2 9.7 L3.8 6.3"/><path d="M3.8 6.3 L6.2 3.0"/><path d="M6.2 3.0 L12.0 1.6"/><path d="M12.0 1.6 L17.8 3.0"/><path d="M17.8 3.0 L20.2 6.3"/><path d="M17.8 9.7 L20.2 6.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M17.8 14.3 L20.2 17.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 13.0 L17.8 14.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.2 14.3 L12.0 13.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M3.8 17.7 L6.2 14.3"/><path d="M6.2 21.0 L3.8 17.7"/><path d="M12.0 22.4 L6.2 21.0"/><path d="M17.8 21.0 L12.0 22.4"/><path d="M17.8 21.0 L20.2 17.7"/><path d="M12.0 11.0 L12.0 22.4"/><path d="M17.8 9.7 L17.8 21.0"/><path d="M6.2 9.7 L6.2 21.0"/><path d="M3.8 6.3 L3.8 17.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.2 3.0 L6.2 14.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M12.0 1.6 L12.0 13.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M17.8 3.0 L17.8 14.3"/><path d="M20.2 6.3 L20.2 17.7"/></svg>',
+  star3d: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M3.6 14.6 L6.7 10.5"/><path d="M6.7 10.5 L1.6 7.1"/><path d="M1.6 7.1 L9.3 7.6"/><path d="M9.3 7.6 L13.2 3.7"/><path d="M13.2 3.7 L14.9 8.1"/><path d="M14.9 8.1 L22.4 9.0"/><path d="M22.4 9.0 L15.8 11.3"/><path d="M15.8 11.3 L16.5 15.7"/><path d="M16.5 15.7 L10.7 12.8"/><path d="M10.7 12.8 L3.6 14.6"/><path d="M10.7 17.3 L16.5 20.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M16.5 20.3 L15.8 15.8"/><path d="M15.8 15.8 L22.4 13.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M22.4 13.6 L14.9 12.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.9 12.6 L13.2 8.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M13.2 8.3 L9.3 12.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M9.3 12.1 L1.6 11.7"/><path d="M1.6 11.7 L6.7 15.0"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.7 15.0 L3.6 19.1"/><path d="M3.6 19.1 L10.7 17.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M6.7 10.5 L6.7 15.0"/><path d="M3.6 19.1 L3.6 14.6"/><path d="M1.6 7.1 L1.6 11.7"/><path stroke-dasharray="2 1.8" opacity=".55" d="M9.3 7.6 L9.3 12.1"/><path stroke-dasharray="2 1.8" opacity=".55" d="M13.2 3.7 L13.2 8.3"/><path stroke-dasharray="2 1.8" opacity=".55" d="M14.9 8.1 L14.9 12.6"/><path d="M22.4 9.0 L22.4 13.6"/><path stroke-dasharray="2 1.8" opacity=".55" d="M15.8 11.3 L15.8 15.8"/><path d="M16.5 15.7 L16.5 20.3"/><path d="M10.7 12.8 L10.7 17.3"/></svg>',
   // ===== 2D 图形（平面轮廓，对应实际几何体）=====
   square2:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/></svg>',
   circle2:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg>',
@@ -2667,7 +2867,7 @@ const ICONS = {
   diamond:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 3 12l9 9 9-9z"/></svg>',
   rightTri: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 20 20 20 4 4z"/></svg>',
   arrow:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h13"/><path d="M13 7l5 5-5 5"/></svg>',
-  crescent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M16 4a8 8 0 1 0 0 16 7 7 0 1 0 0-16z"/></svg>',
+  crescent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M18.99 2.98 A9.9 9.9 0 1 0 18.99 21.02 A9.02 9.02 0 1 1 18.99 2.98 Z"/></svg>',
   semicircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 19h16a8 8 0 0 0-16 0z"/></svg>',
   ring2d:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>',
   cross:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z"/></svg>',
@@ -6837,7 +7037,7 @@ applyLang(); updateLangActive();
 // 导出场景 JSON
 function defaultJsonName(prefix){ const d=new Date(), p=x=>String(x).padStart(2,'0'); return prefix+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'; }
 // 软件版本号（可由构建脚本注入 window.__CUB3D_VERSION__ 覆盖）
-const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.0.0';
+const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.1.0';
 // 说明书语言名（用于导入提示中填充 {0}/{1}）
 const MANUAL_LANG_NAME = { 'zh-CN':'简体中文', 'zh-TW':'繁體中文', 'en':'English', 'ja':'日本語', 'ko':'한국어', 'ar':'العربية', 'ru':'Русский', 'es':'Español', 'fr':'Français' };
 function manualLangName(code){ return MANUAL_LANG_NAME[code] || code || ''; }
@@ -11087,7 +11287,8 @@ updateCopyCloneButtonState(); // 无选中对象，灰度禁用复制/克隆
 updateClearButtonState(); // 无对象，灰度禁用清空
 pushHistory(); // 初始空状态
 setTimeout(() => {
-  document.getElementById('loader').classList.add('hidden');
+  if (window.__bootDone) window.__bootDone();
+  else document.getElementById('loader').classList.add('hidden');
   toast(_t('toastWelcome'));
 }, 500);
 

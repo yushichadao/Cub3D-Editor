@@ -1,8 +1,8 @@
 // 发布脚本：构建三端产物并作为 GitHub Release 附件上传。
 // 用法：
-//   node release.mjs            # 按 package.json 的 version 发布（如 v1.0.0）
-//   node release.mjs 1.1.0      # 指定版本
-//   node release.mjs --replace  # 同名 Release 已存在时删除重建
+//   node tools/release.mjs            # 按 package.json 的 version 发布（如 v1.0.0）
+//   node tools/release.mjs 1.1.0      # 指定版本
+//   node tools/release.mjs --replace  # 同名 Release 已存在时删除重建
 //
 // 安装包不再随源码入库；本脚本用 `gh` 把产物发布到 Releases，
 // 宣传页/说明书的「下载」按钮会跳转到 releases/latest/download/<文件>。
@@ -13,7 +13,12 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)));
+// 某些环境下系统根 CA 未纳入 Node 默认信任库（如存在 HTTPS 拦截代理），
+// 导致 electron-builder 下载 Electron 时报 “unable to verify the first certificate”。
+// 让 Node 改用系统 CA 存储来修复。
+process.env.NODE_OPTIONS = [process.env.NODE_OPTIONS, '--use-system-ca'].filter(Boolean).join(' ');
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); // 脚本置于 tools/ 下，反推仓库根
 const PC_DIR = path.join(ROOT, 'PC');
 const AND_DIR = path.join(ROOT, 'Android');
 const REPO = 'yushichadao/Cub3D-Editor';
@@ -49,7 +54,7 @@ try { run('gh auth status'); }
 catch { console.error('❌ 请先运行 `gh auth login` 登录 GitHub CLI。'); process.exit(1); }
 
 // 2) 同步共享资源
-run('node sync-shared.mjs');
+run('node tools/sync-shared.mjs');
 
 // 3) 构建 PC 版（安装版 + 便携版）
 if (!fs.existsSync(path.join(PC_DIR, 'node_modules'))) run('npm install --no-audit --no-fund', PC_DIR);

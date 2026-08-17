@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); // 脚本置于 tools/ 下，反推仓库根
 
 // 한국어 번역: 팝업 문구 + ZH_CN 신규 구조와 일치하는 법적 전문 본문 (로컬형 3D 편집기, 계정 불필요)
 const TRANS = {

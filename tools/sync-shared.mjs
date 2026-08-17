@@ -8,13 +8,13 @@
 //      新增语言只需把语言包放入 shared/language 并运行本脚本，即可同步到各端。
 // 平台专属文件（lang-override.js、index.html、各端 build-*.mjs、_genicon.mjs 等）不在此同步，保持各端独立。
 //
-// 用法：在仓库根目录执行 `node sync-shared.mjs`
+// 用法：在仓库根目录执行 `node tools/sync-shared.mjs`
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = __dirname;
+const ROOT = path.resolve(__dirname, '..'); // 脚本置于 tools/ 下，反推仓库根
 
 // 1) 说明书（各语言版）
 const DOCS_SRC = path.join(ROOT, 'shared', 'docs');
@@ -62,8 +62,34 @@ const LANG_DESTS = [
   path.join(ROOT, 'Android', 'android', 'app', 'src', 'main', 'assets', 'public', 'language'),
 ];
 
+// 5) Three.js 引擎（三端运行必需，逐字节一致）
+// Web/PC 以各自根目录直接提供服务，Android 除了根目录（开发预览回退），
+// 还要同步到原生 assets，避免 APK 打包后引擎缺失。
+const THREE_SRC = path.join(ROOT, 'shared', 'three');
+const THREE_DESTS = [
+  path.join(ROOT, 'Web', 'three'),
+  path.join(ROOT, 'PC', 'three'),
+  path.join(ROOT, 'Android', 'three'),
+  path.join(ROOT, 'Android', 'android', 'app', 'src', 'main', 'assets', 'public', 'three'),
+];
+
 async function exists(p) {
   return fs.stat(p).then(() => true).catch(() => false);
+}
+
+// 兼容 Windows 上偶发的目录条目损坏（Node fs 对损坏目录报 UNKNOWN 而非 EEXIST）：
+// 先尝试正常创建，失败时若已存在目录则忽略，否则移除损坏条目后重试。
+async function mkdirSafe(d) {
+  try {
+    await fs.mkdir(d, { recursive: true });
+  } catch (e) {
+    if (e.code === 'EEXIST') return;
+    let isDir = false;
+    try { isDir = (await fs.stat(d)).isDirectory(); } catch (_) { /* 损坏条目 */ }
+    if (isDir) return;
+    try { await fs.rm(d, { recursive: true, force: true }); } catch (_) {}
+    await fs.mkdir(d, { recursive: true });
+  }
 }
 
 async function syncFile(srcDir, file, destDirs) {
@@ -73,9 +99,46 @@ async function syncFile(srcDir, file, destDirs) {
     process.exit(1);
   }
   for (const d of destDirs) {
-    await fs.mkdir(d, { recursive: true });
-    await fs.copyFile(src, path.join(d, file));
-    console.log(`[sync-shared] ${file}  ->  ${path.relative(ROOT, d)}`);
+    try {
+      await mkdirSafe(d);
+      await fs.copyFile(src, path.join(d, file));
+      console.log(`[sync-shared] ${file}  ->  ${path.relative(ROOT, d)}`);
+    } catch (e) {
+      // 单一目标端（如 Android）写入失败不应中断其他端（Web/PC）的同步，
+      // 否则 predev 退出非 0 会导致 npm start 的 server 无法启动。
+      console.error(`[sync-shared] 同步到 ${path.relative(ROOT, d)} 失败（已跳过，不影响其他端）：${e.message}`);
+    }
+  }
+}
+
+// 递归复制整个目录（用于 three 引擎等含子目录的资源，覆盖式同步）
+async function copyDirRecursive(srcDir, destDir) {
+  await mkdirSafe(destDir);
+  const entries = await fs.readdir(srcDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const s = path.join(srcDir, entry.name);
+    const d = path.join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      await copyDirRecursive(s, d);
+    } else {
+      await fs.copyFile(s, d);
+    }
+  }
+}
+
+async function syncDir(srcDir, destDirs) {
+  if (!(await exists(srcDir))) {
+    console.error('[sync-shared] 源目录缺失，请检查：', srcDir);
+    process.exit(1);
+  }
+  for (const d of destDirs) {
+    try {
+      await copyDirRecursive(srcDir, d);
+      console.log(`[sync-shared] ${path.basename(srcDir)}/  ->  ${path.relative(ROOT, d)}`);
+    } catch (e) {
+      // 与 syncFile 相同的单端容错策略
+      console.error(`[sync-shared] 同步到 ${path.relative(ROOT, d)} 失败（已跳过，不影响其他端）：${e.message}`);
+    }
   }
 }
 
@@ -106,6 +169,12 @@ async function main() {
   const langFiles = (await fs.readdir(LANG_SRC)).filter((f) => f.endsWith('.js'));
   for (const f of langFiles) await syncFile(LANG_SRC, f, LANG_DESTS);
   console.log('[sync-shared] 语言包同步完成。');
+
+  // 6) Three.js 引擎同步：以 shared/three 为单一源，覆盖到各端。
+  //    缺失会导致 index.html 的 importmap 找不到 three.module.js，
+  //    页面卡在加载页「界面语言已就绪」之后（engine 进度永不触发）。
+  await syncDir(THREE_SRC, THREE_DESTS);
+  console.log('[sync-shared] Three.js 引擎同步完成。');
 
   console.log('[sync-shared] 完成：共享资源已统一同步到各端，并完成法律文本国际化。');
 }

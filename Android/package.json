@@ -1,11 +1,11 @@
 {
   "name": "3d-editor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "立方 · 三维设计工坊 — 3D/2D 场景编辑器（Web + Android APK）",
   "scripts": {
-    "predev": "node ../sync-shared.mjs",
-    "prestart": "node ../sync-shared.mjs",
+    "predev": "node ../tools/sync-shared.mjs && npm run build:www",
+    "prestart": "node ../tools/sync-shared.mjs && npm run build:www",
     "start": "node server.js",
     "dev": "node server.js",
     "icon": "node scripts/_genicon-android.mjs",

@@ -5,10 +5,10 @@ on:
     branches: [ main ]
     paths:
       - 'index.html'
+      - 'assets/**'
       - 'Web/**'
       - 'shared/**'
-      - 'sync-shared.mjs'
-      - '_i18n_*.mjs'
+      - 'tools/**'
       - '.nojekyll'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
@@ -38,7 +38,7 @@ jobs:
           node-version: 20
 
       - name: Sync shared resources
-        run: node sync-shared.mjs
+        run: node tools/sync-shared.mjs
 
       - name: Build site (landing page + Web app)
         run: |
@@ -46,6 +46,8 @@ jobs:
           mkdir -p _site
           cp index.html _site/
           cp -r Web _site/Web
+          cp -r assets _site/assets
+          cp legal-*.html _site/ 2>/dev/null || true
           cp .nojekyll _site/
 
       - name: Upload artifact

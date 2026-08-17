@@ -5,11 +5,11 @@
 // 之后由 sync-shared.mjs 的“语言包同步”步骤把 shared 分发到 Web / PC / Android 各端，
 // 完成阿拉伯语的正式接入。
 //
-// 用法：node _i18n_ar.mjs   （也可被 sync-shared.mjs 统一调用）
+// 用法：node tools/_i18n_ar.mjs   （也可被 sync-shared.mjs 统一调用）
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); // 脚本置于 tools/ 下，反推仓库根
 
 const SRC = path.join(__dirname, 'i18n-draft', 'language', 'ar.js');
 const DEST = path.join(__dirname, 'shared', 'language', 'ar.js');
@@ -30,5 +30,5 @@ src = src.replace(/^\r?\n/, '');                // 可选地剥离草稿头后�
 fs.mkdirSync(path.dirname(DEST), { recursive: true });
 fs.writeFileSync(DEST, src, 'utf8');
 console.log('[i18n-ar] 已写入共享语言包：', path.relative(__dirname, DEST));
-console.log('[i18n-ar] 完成。下一步运行 `node sync-shared.mjs` 把 ar.js 分发到各端。');
+console.log('[i18n-ar] 完成。下一步运行 `node tools/sync-shared.mjs` 把 ar.js 分发到各端。');
 }

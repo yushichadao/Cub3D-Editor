@@ -347,8 +347,8 @@ Descarga desde la página de **Releases** del repositorio del proyecto; hay dos 
 
 | Tipo de paquete | Nombre de archivo similar a | Características | Público recomendado |
 | --- | --- | --- | --- |
-| **Versión de instalación** | `...-Setup-1.0.0.exe` | Doble clic para instalar, crea acceso en el menú Inicio y en el escritorio, se puede desinstalar desde "Aplicaciones y funciones" | El equipo principal que usas a largo plazo |
-| **Versión portátil** | `...-1.0.0-portable.exe` | **Sin instalar**, se ejecuta con doble clic, se puede guardar en un USB | Equipos públicos, sin permisos de administrador, querer llevarlo siempre |
+| **Versión de instalación** | `...-Setup-1.1.0.exe` | Doble clic para instalar, crea acceso en el menú Inicio y en el escritorio, se puede desinstalar desde "Aplicaciones y funciones" | El equipo principal que usas a largo plazo |
+| **Versión portátil** | `...-1.1.0-portable.exe` | **Sin instalar**, se ejecuta con doble clic, se puede guardar en un USB | Equipos públicos, sin permisos de administrador, querer llevarlo siempre |
 
 > 📥 Dirección de descarga: [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
 

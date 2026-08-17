@@ -1,7 +1,7 @@
 {
   "name": "cube3d-studio",
   "productName": "立方三维设计工坊",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "立方·3D设计工坊 — 离线桌面版 3D/2D 场景编辑器，支持多语言界面与多编程语言插件扩展",
   "author": {
@@ -11,10 +11,10 @@
   "license": "SEE LICENSE IN LICENSE",
   "main": "electron/main.js",
   "scripts": {
-    "predev": "node ../sync-shared.mjs",
-    "prestart": "node ../sync-shared.mjs",
-    "prepack": "node scripts/_deref-junctions.mjs && node ../sync-shared.mjs",
-    "predist": "node scripts/_deref-junctions.mjs && node ../sync-shared.mjs",
+    "predev": "node ../tools/sync-shared.mjs",
+    "prestart": "node ../tools/sync-shared.mjs",
+    "prepack": "node scripts/_deref-junctions.mjs && node ../tools/sync-shared.mjs",
+    "predist": "node scripts/_deref-junctions.mjs && node ../tools/sync-shared.mjs",
     "start": "electron .",
     "dev": "electron . --dev",
     "web": "node server.js",

@@ -69,7 +69,7 @@ Cub3D Editor 配套了九语言使用说明书，源文件位于仓库 `shared/d
 | Français | [`shared/docs/使用说明书_fr.md`](https://github.com/yushichadao/Cub3D-Editor/blob/main/shared/docs/使用说明书_fr.md) |
 | العربية | [`shared/docs/使用说明书_ar.md`](https://github.com/yushichadao/Cub3D-Editor/blob/main/shared/docs/使用说明书_ar.md) |
 
-> 各端 `docs/` 目录为同步生成的副本，**请勿直接编辑**。如需修改，请在 `shared/docs/` 中编辑后运行 `node sync-shared.mjs` 同步。
+> 各端 `docs/` 目录为同步生成的副本，**请勿直接编辑**。如需修改，请在 `shared/docs/` 中编辑后运行 `node tools/sync-shared.mjs` 同步。
 
 ---
 
@@ -79,7 +79,7 @@ Cub3D Editor 配套了九语言使用说明书，源文件位于仓库 `shared/d
 
 ```powershell
 # 1. 同步共享资源
-node sync-shared.mjs
+node tools/sync-shared.mjs
 
 # 2. 进入对应平台目录构建
 cd Web   && npm start          # 本地预览 Web 版
