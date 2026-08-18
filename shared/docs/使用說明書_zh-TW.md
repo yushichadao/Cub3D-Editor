@@ -37,8 +37,8 @@
 | 適用形態 | **網頁版（滑鼠）/ 網頁版（觸屏）/ PC 桌面版 / Android 版** 四種形態全覆蓋 |
 | 座標系口徑 | 本書**一律以介面上實際顯示的軸標註為準**（頁面標註：X 藍=前後、Y 紅=左右、Z 綠=高度，Z 軸向上）。程式碼內部實現軸與頁面標註不同，普通讀者無需關心 |
 | 閱讀建議 | 先讀[第0章 四種形態與本書讀法](jump:第0章 四種形態與本書讀法)，認準自己用的是哪一端；前四篇按順序讀；後八篇可按需查閱。每章末尾的「想一想」「練一練」務必動手 |
-| 線上地址 | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) （開啟網頁即可動手練） |
-| 官方宣傳網站 | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （產品介紹、九語言切換、下載入口） |
+| 線上地址 | [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html)（境內推薦，中國大陸直連較快）或 [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)（境外） |
+| 官方宣傳網站 | [https://cub3d-editor.cn](https://cub3d-editor.cn)（境內，中國大陸直連推薦）或 [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor)（境外；產品介紹、九語言切換、下載入口） |
 | 專案倉庫 | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) （原始碼、安裝包與本文件都在這裡） |
 
 **跳轉連結（jump:）怎麼用**
@@ -199,7 +199,7 @@
 💡 **網頁版是自動判斷的**：它檢測你的裝置是"精確指標（滑鼠）"還是"粗略指標（手指）"，然後自動切換到對應模式，**你不需要做任何設定**。
 
 ⚠️ 若你想在電腦瀏覽器裡**預覽觸屏版**長什麼樣（例如做教學演示），可在網址後面加 `?touch`，例如：
-[`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch)。反之，Android 版預設恆為觸屏佈局。
+[`https://cub3d-editor.cn/Web/index.html?touch`](https://cub3d-editor.cn/Web/index.html?touch)（境內）或 [`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch)（境外）。反之，Android 版預設恆為觸屏佈局。
 
 ### 0.2 四種形態的能力對照總表
 
@@ -334,7 +334,7 @@ Android 版最需要注意的是**手機返回鍵**的行為，它是分層的�
 
 直接用瀏覽器開啟下面的公網地址：
 
-> 🌐 **線上地址**：[https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
+> 🌐 **線上地址**：[https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html)（境內推薦）或 [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)（境外）
 
 把網址複製到任意現代瀏覽器的位址列，回車即可進入主介面。手機、平板、電腦都能用，只要能上網、有瀏覽器就行。**它會自動判斷你是滑鼠裝置還是觸屏裝置**，切換到對應佈局。
 

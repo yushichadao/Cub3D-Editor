@@ -12745,6 +12745,15 @@ function openGuide(){
   window.addEventListener('pagehide', markClosed);
   window.addEventListener('beforeunload', markClosed);
 })();
+
+/* 项目主页按当前域名自适应：境内 cub3d-editor.cn / 境外 GitHub Pages；ICP 框仅境内显示 */
+(function(){
+  const isCnHost = /(^|\.)cub3d-editor\.cn$/i.test(location.hostname||'');
+  const home = document.getElementById('about-home');
+  if(home) home.href = isCnHost ? 'https://cub3d-editor.cn/' : 'https://yushichadao.github.io/Cub3D-Editor/';
+  const icp = document.querySelector('.icp-slot');
+  if(icp) icp.style.display = isCnHost ? '' : 'none';
+})();
 </script>
 
 <div class="modal-mask" id="manual-modal">

@@ -2283,6 +2283,12 @@ function detectSystemLang(){
 }
 let currentLang = localStorage.getItem('lang') || detectSystemLang();
 let currentTheme = localStorage.getItem('theme') || 'neon';
+// 项目主页按界面语言自适应：简体中文 → 境内 cub3d-editor.cn，其余 → 境外 GitHub Pages
+function updateAboutHome(){
+  const el = document.getElementById('about-home');
+  if(el) el.href = (currentLang === 'zh-CN') ? 'https://cub3d-editor.cn/' : 'https://yushichadao.github.io/Cub3D-Editor/';
+}
+updateAboutHome();
 
 // ============ 渲染器 / 场景 / 相机 ============
 const canvas = document.getElementById('three-canvas');
@@ -6907,6 +6913,7 @@ function populateFontSelect() {
   sel.value = (keep ? keep.value : list[0].value);
 }
 function applyLang() {
+  updateAboutHome();
   const dict = I18N[currentLang] || I18N['zh-CN'];
   const fallback = I18N['zh-CN'];
   // 阿拉伯语为从右到左（RTL）语言：设置文档方向，界面布局自动翻转

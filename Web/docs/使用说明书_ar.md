@@ -39,8 +39,8 @@
 | الصيغ | **الويب (ماوس) / الويب (لمس) / PC / Android** — تغطية كاملة |
 | الإحداثيات | استرشد **بعلامات المحاور على الشاشة**: X أزرق=أمام/خلف، Y أحمر=يسار/يمين، Z أخضر=الارتفاع (Z للأعلى). التنفيذ الداخلي للكود يختلف عن علامات الصفحة، ولا يهم القارئ العادي |
 | القراءة | اقرأ أولاً [الفصل 0. أربع صيغ وقراءة الكتاب](jump:الفصل 0. أربع صيغ وقراءة الكتاب) لتحديد إصدارك؛ الأجزاء الأربعة الأولى بالترتيب، والثمانية الباقية حسب الحاجة. «فكّر» و«جرّب» في نهاية كل فصل واجب عملي |
-| العنوان عبر الإنترنت | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) （افتح صفحة الويب للتدرّب فوراً） |
-| الموقع الترويجي الرسمي | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （تعريف المنتج، تبديل تسع لغات، روابط التنزيل） |
+| العنوان عبر الإنترنت | [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (مُوصى به داخل الصين، اتصال مباشر أسرع) أو [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (خارج الصين) |
+| الموقع الترويجي الرسمي | [https://cub3d-editor.cn](https://cub3d-editor.cn) (الصين، مُوصى به للاتصال المباشر) أو [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (خارج الصين؛ تعريف المنتج، تبديل تسع لغات، روابط التنزيل) |
 | مستودع المشروع | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) （الكود المصدري، حزم التثبيت، وهذا المستند كلها هنا） |
 
 **اتفاقية علامات الصيغة**
@@ -201,7 +201,7 @@
 💡 **إصدار الويب يقرّر تلقائياً**: يكشف إن كان جهازك «مؤشراً دقيقاً (ماوس)» أم «مؤشراً خشناً (إصبع)»، ثم يبدّل تلقائياً إلى الوضع المقابل، **دون أي إعداد منك**.
 
 ⚠️ إن أردت **معاينة شكل الإصدار اللمسي** في متصفح الكمبيوتر (مثلاً لعرض تعليمي)، أضف `?touch` إلى نهاية الرابط، مثل:
-[`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch). أما إصدار Android فتخطيطه اللمسي دائماً.
+[`https://cub3d-editor.cn/Web/index.html?touch`](https://cub3d-editor.cn/Web/index.html?touch) (الصين) أو [`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch) (خارج الصين). أما إصدار Android فتخطيطه اللمسي دائماً.
 
 ### 0.2 الجدول الإجمالي لمقارنة قدرات الصيغ الأربع
 
@@ -336,7 +336,7 @@
 
 افتح العنوان العام التالي مباشرة في المتصفح:
 
-> 🌐 **العنوان عبر الإنترنت**: [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
+> 🌐 **العنوان عبر الإنترنت**: [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (مُوصى به داخل الصين) أو [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (خارج الصين)
 
 انسخ الرابط إلى شريط عنوان أي متصفح حديث، واضغط Enter للدخول إلى الواجهة الرئيسية. يعمل على الهاتف والجهاز اللوحي والكمبيوتر، ما دام به اتصال ومتصفح. **يقرّر تلقائياً إن كنت جهاز ماوس أم لمس**، ويتبدّل إلى التخطيط المقابل.
 

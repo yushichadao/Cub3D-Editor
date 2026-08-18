@@ -37,8 +37,8 @@ Quelle que soit la plateforme utilisée, le **premier lancement** de cet outil a
 | Formes applicables | Couverture complète des **quatre formes : Version Web (souris) / Version Web (tactile) / Version PC (Windows) / Version Android** |
 | Référentiel du système de coordonnées | Ce livre **se conforme toujours aux annotations d'axe réellement affichées sur l'interface** (annotations de la page : X bleu = avant-arrière, Y rouge = gauche-droite, Z vert = hauteur, axe Z vers le haut). L'implémentation interne du code diffère des annotations de la page ; les lecteurs ordinaires n'ont pas à s'en soucier |
 | Recommandation de lecture | Lisez d'abord [Chapitre 0 : Quatre formes et comment lire ce livre](jump:Chapitre 0 : Quatre formes et comment lire ce livre), et identifiez quelle plateforme vous utilisez ; lisez les quatre premières parties dans l'ordre ; les huit parties suivantes peuvent être consultées selon vos besoins. Les sections « Réfléchissez » et « Entraînez-vous » à la fin de chaque chapitre doivent impérativement être pratiquées |
-| Adresse en ligne | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (ouvrez la page web pour pratiquer directement) |
-| Site Web officiel | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (présentation du produit, commutation en neuf langues, entrée de téléchargement) |
+| Adresse en ligne | [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (recommandé en Chine, accès direct plus rapide) ou [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (à l'étranger) |
+| Site Web officiel | [https://cub3d-editor.cn](https://cub3d-editor.cn) (Chine, recommandé pour un accès direct) ou [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (à l'étranger ; présentation du produit, commutation en neuf langues, entrée de téléchargement) |
 | Dépôt du projet | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (code source, paquets d'installation et cette documentation s'y trouvent) |
 
 **Conventions des annotations de forme**
@@ -214,7 +214,7 @@ Cet outil propose **trois versions**, mais comme la Version Web s'adapte automat
 💡 **La Version Web se détermine automatiquement** : elle détecte si votre appareil est un « pointeur précis (souris) » ou un « pointeur grossier (doigt) », puis bascule automatiquement vers le mode correspondant, **vous n'avez aucun réglage à faire**.
 
 ⚠️ Si vous souhaitez **prévisualiser à quoi ressemble la version tactile** dans le navigateur de votre ordinateur (par exemple pour une démonstration pédagogique), ajoutez `?touch` après l'URL, par exemple :
-[`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch). À l'inverse, la Version Android est par défaut toujours en disposition tactile.
+[`https://cub3d-editor.cn/Web/index.html?touch`](https://cub3d-editor.cn/Web/index.html?touch) (Chine) ou [`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch) (à l'étranger). À l'inverse, la Version Android est par défaut toujours en disposition tactile.
 
 ### 0.2 Tableau comparatif global des capacités des quatre formes
 
@@ -349,7 +349,7 @@ Les avantages communs des trois :
 
 Ouvrez directement l'adresse publique ci-dessous dans un navigateur :
 
-> 🌐 **Adresse en ligne** : [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
+> 🌐 **Adresse en ligne** : [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (recommandé en Chine) ou [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (à l'étranger)
 
 Copiez l'URL dans la barre d'adresse de n'importe quel navigateur moderne, et appuyez sur Entrée pour accéder à l'interface principale. Téléphone, tablette et ordinateur peuvent l'utiliser, tant qu'il y a un réseau et un navigateur. **Il détermine automatiquement si vous êtes un appareil souris ou tactile**, et bascule vers la disposition correspondante.
 

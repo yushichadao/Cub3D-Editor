@@ -600,8 +600,8 @@
           </span>
         </div>
         <div class="acts">
-          <a class="lbtn main" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup.exe" data-i18n="plat3.setup">下载安装版</a>
-          <a class="lbtn" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Portable.exe" data-i18n="plat3.portable">下载便携版</a>
+          <a class="lbtn main" data-dl="Cub3D-Editor-Setup.exe" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup.exe" data-i18n="plat3.setup">下载安装版</a>
+          <a class="lbtn" data-dl="Cub3D-Editor-Portable.exe" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Portable.exe" data-i18n="plat3.portable">下载便携版</a>
         </div>
       </div>
       <div class="card reveal">
@@ -614,7 +614,7 @@
           <span><b data-i18n="plat.size">体积</b> <span class="size" data-size-for="apk">…</span></span>
         </div>
         <div class="acts">
-          <a class="lbtn main" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor.apk" data-i18n="plat4.btn">下载 .apk</a>
+          <a class="lbtn main" data-dl="Cub3D-Editor.apk" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor.apk" data-i18n="plat4.btn">下载 .apk</a>
         </div>
       </div>
     </div>
@@ -760,6 +760,8 @@
       <a href="Web/index.html" data-i18n="footer.app">进入编辑器</a>
       <a href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="footer.repo">GitHub</a>
       <a href="#platforms" data-i18n="footer.download">下载</a>
+      <a class="site-switch" href="https://cub3d-editor.cn/?stay=1" data-i18n="footer.cnEntry">境内入口</a>
+      <a class="site-switch" href="https://yushichadao.github.io/Cub3D-Editor/?stay=1" data-i18n="footer.intlEntry">国际版入口</a>
     </div>
     <div class="foot-legal">
       <a href="legal-tos.html" class="legal-link" data-i18n="footer.tos">服务协议</a>
@@ -784,6 +786,19 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+/* ============ 境内外双站配置（唯一入口：备案号取得后填 SITE.cn.icp） ============ */
+const SITE = {
+  cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/',
+         downloadBase:'https://cub3d-editor.cn/downloads/',
+         versionsUrl:'downloads/versions.json', icp:'' },
+  ovs: { host:'yushichadao.github.io', home:'https://yushichadao.github.io/Cub3D-Editor/',
+         releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
+         apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }
+};
+const isCnHost = /(^|\.)cub3d-editor\.cn$/i.test(location.hostname||'');
+const curSite = isCnHost ? SITE.cn : SITE.ovs;
+const dl = f => (isCnHost ? SITE.cn.downloadBase : SITE.ovs.releaseBase) + f;
+
 /* ============ 多语言文案 ============ */
 const T = {
   "zh-CN":{
@@ -821,7 +836,7 @@ const T = {
     "author.eyebrow":"关于","author.title":"关于作者与项目","author.name":"Yushichadao","author.role":"独立开发者 · Cub3D Editor 作者",
     "author.bio":"致力于打造轻量化、隐私友好的 3D/2D 创作工具。同一套代码同时覆盖网页、Windows 与 Android，让创作随时随地、自由接力。","author.repo":"⭐ GitHub 仓库","author.donate":"♥ 赞助支持","toast.copied":"链接已复制","toast.fail":"复制失败","fab.share":"分享页面","fab.top":"返回顶部","fab.bottom":"一键到底","fab.hide":"隐藏按钮","fab.show":"显示按钮",
     "author.tools":"本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成","author.license":"许可证：木兰宽松许可证第2版 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载","footer.tos":"服务协议","footer.disclaimer":"免责声明","footer.privacy":"隐私政策",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"进入编辑器","footer.repo":"GitHub","footer.download":"下载","footer.cnEntry":"境内入口","footer.intlEntry":"国际版入口","footer.tos":"服务协议","footer.disclaimer":"免责声明","footer.privacy":"隐私政策",
     "detect.windows":"检测到您正在使用 Windows，推荐下载 PC 桌面版。",
     "detect.android":"检测到您正在使用 Android，推荐下载 Android 移动版。",
     "detect.harmonyos":"检测到鸿蒙设备，推荐网页触屏版。",
@@ -894,7 +909,7 @@ const T = {
     "author.eyebrow":"Acerca de","author.title":"Sobre el autor y el proyecto","author.name":"Yushichadao","author.role":"Desarrollador independiente · Autor de Cub3D Editor",
     "author.bio":"Me dedico a crear herramientas creativas 3D/2D ligeras y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.","author.repo":"⭐ Repositorio de GitHub","author.donate":"♥ Apoyar","toast.copied":"Enlace copiado","toast.fail":"Error al copiar","fab.share":"Compartir página","fab.top":"Volver arriba","fab.bottom":"Ir al final","fab.hide":"Ocultar botones","fab.show":"Mostrar botones",
     "author.tools":"Este sitio fue generado con asistencia de IA usando TRAE y CodeBuddy","author.license":"Licencia: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Entrar al editor","footer.repo":"GitHub","footer.download":"Descargar","footer.tos":"Términos del servicio","footer.disclaimer":"Exención de responsabilidad","footer.privacy":"Política de privacidad",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Entrar al editor","footer.repo":"GitHub","footer.download":"Descargar","footer.cnEntry":"Sitio de China","footer.intlEntry":"Sitio internacional","footer.tos":"Términos del servicio","footer.disclaimer":"Exención de responsabilidad","footer.privacy":"Política de privacidad",
     "detect.windows":"Detectamos Windows; se recomienda la versión de escritorio para PC.",
     "detect.android":"Detectamos Android; se recomienda la versión móvil de Android.",
     "detect.harmonyos":"Detectamos HarmonyOS; se recomienda la versión web táctil.",
@@ -967,7 +982,7 @@ const T = {
     "author.eyebrow":"關於","author.title":"關於作者與專案","author.name":"Yushichadao","author.role":"獨立開發者 · Cub3D Editor 作者",
     "author.bio":"致力於打造輕量化、隱私友善的 3D/2D 創作工具。同一套程式碼同時涵蓋網頁、Windows 與 Android，讓創作隨時隨地、自由接力。","author.repo":"⭐ GitHub 倉庫","author.donate":"♥ 贊助支持","toast.copied":"連結已複製","toast.fail":"複製失敗","fab.share":"分享頁面","fab.top":"返回頂部","fab.bottom":"一鍵到底","fab.hide":"隱藏按鈕","fab.show":"顯示按鈕",
     "author.tools":"本網站由 TRAE 與 CodeBuddy 工具 AI 輔助生成","author.license":"授權條款：木蘭寬鬆授權條款第2版 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載","footer.tos":"服務協議","footer.disclaimer":"免責聲明","footer.privacy":"隱私政策",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"進入編輯器","footer.repo":"GitHub","footer.download":"下載","footer.cnEntry":"境內入口","footer.intlEntry":"國際版入口","footer.tos":"服務協議","footer.disclaimer":"免責聲明","footer.privacy":"隱私政策",
     "detect.windows":"偵測到您正在使用 Windows，推薦下載 PC 桌面版。",
     "detect.android":"偵測到您正在使用 Android，推薦下載 Android 行動版。",
     "detect.harmonyos":"偵測到鴻蒙裝置，推薦網頁觸屏版。",
@@ -1040,7 +1055,7 @@ const T = {
     "author.eyebrow":"About","author.title":"About the Author & Project","author.name":"Yushichadao","author.role":"Independent Developer · Creator of Cub3D Editor",
     "author.bio":"Building lightweight, privacy-friendly 3D/2D creation tools. One codebase spans Web, Windows and Android so your creativity flows anywhere.","author.repo":"⭐ GitHub Repo","author.donate":"♥ Support","toast.copied":"Link copied","toast.fail":"Copy failed","fab.share":"Share this page","fab.top":"Back to top","fab.bottom":"Go to bottom","fab.hide":"Hide buttons","fab.show":"Show buttons",
     "author.tools":"This site was AI-assisted by TRAE & CodeBuddy tools","author.license":"License: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download","footer.tos":"Terms of Service","footer.disclaimer":"Disclaimer","footer.privacy":"Privacy Policy",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Open Editor","footer.repo":"GitHub","footer.download":"Download","footer.cnEntry":"China Site","footer.intlEntry":"International Site","footer.tos":"Terms of Service","footer.disclaimer":"Disclaimer","footer.privacy":"Privacy Policy",
     "detect.windows":"We detected Windows — the PC desktop edition is recommended.",
     "detect.android":"We detected Android — the Android edition is recommended.",
     "detect.harmonyos":"We detected HarmonyOS — the web touch version is recommended.",
@@ -1113,7 +1128,7 @@ const T = {
     "author.eyebrow":"について","author.title":"作者とソフトウェアについて","author.name":"Yushichadao","author.role":"独立開発者・Cub3D Editor 作者",
     "author.bio":"軽量でプライバシーに配慮した 3D/2D 制作ツールを開発。1つのコードベースで Web・Windows・Android をカバーし、創作をいつでもどこでも。","author.repo":"⭐ GitHub リポジトリ","author.donate":"♥ 支援する","toast.copied":"リンクをコピーしました","toast.fail":"コピーに失敗","fab.share":"ページを共有","fab.top":"トップに戻る","fab.bottom":"最下部へ","fab.hide":"ボタンを隠す","fab.show":"ボタンを表示",
     "author.tools":"本サイトは TRAE と CodeBuddy ツールで AI 補助生成","author.license":"ライセンス：木蘭緩和ライセンス第2版 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード","footer.tos":"利用規約","footer.disclaimer":"免責事項","footer.privacy":"プライバシーポリシー",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"エディタを開く","footer.repo":"GitHub","footer.download":"ダウンロード","footer.cnEntry":"中国国内サイト","footer.intlEntry":"国際版サイト","footer.tos":"利用規約","footer.disclaimer":"免責事項","footer.privacy":"プライバシーポリシー",
     "detect.windows":"Windows を検出しました。PC デスクトップ版をおすすめします。",
     "detect.android":"Android を検出しました。Android 版をおすすめします。",
     "detect.harmonyos":"HarmonyOS を検出しました。Web タッチ版をおすすめします。",
@@ -1186,7 +1201,7 @@ const T = {
     "author.eyebrow":"소개","author.title":"제작자 및 프로젝트","author.name":"Yushichadao","author.role":"독립 개발자 · Cub3D Editor 제작자",
     "author.bio":"가볍고 프라이버시 친화적인 3D/2D 제작 도구를 만듭니다. 하나의 코드베이스가 웹·Windows·Android를 아우르며 언제 어디서나 창작이 이어집니다.","author.repo":"⭐ GitHub 저장소","author.donate":"♥ 후원하기","toast.copied":"링크가 복사되었습니다","toast.fail":"복사 실패","fab.share":"페이지 공유","fab.top":"맨 위로","fab.bottom":"맨 아래로","fab.hide":"버튼 숨기기","fab.show":"버튼 표시",
     "author.tools":"이 사이트는 TRAE 및 CodeBuddy 도구의 AI 지원으로 생성되었습니다.","author.license":"라이선스: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"편집기 열기","footer.repo":"GitHub","footer.download":"다운로드","footer.tos":"서비스 약관","footer.disclaimer":"면책 조항","footer.privacy":"개인정보 처리방침",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"편집기 열기","footer.repo":"GitHub","footer.download":"다운로드","footer.cnEntry":"중국 사이트","footer.intlEntry":"국제판 사이트","footer.tos":"서비스 약관","footer.disclaimer":"면책 조항","footer.privacy":"개인정보 처리방침",
     "detect.windows":"Windows를 사용 중이시군요. PC 데스크톱 버전을 권장합니다.","detect.android":"Android를 사용 중이시군요. Android 버전을 권장합니다.","detect.harmonyos":"HarmonyOS를 사용 중이시군요. 웹 터치 버전을 권장합니다.","detect.ios":"iOS/iPadOS를 사용 중이시군요. 웹 터치 버전을 권장합니다.","detect.macos":"macOS를 사용 중이시군요. 웹 버전을 권장합니다.","detect.linux":"Linux를 사용 중이시군요. 웹 버전을 권장합니다.","detect.other":"운영체제를 확인하지 못했으니 웹 버전을 권장합니다.",
     "nav.scenarios":"활용 사례","nav.quickstart":"빠른 시작","nav.roadmap":"로드맵","nav.faq":"자주 묻는 질문",
     "scenarios.eyebrow":"누가 쓰나요","scenarios.title":"이런 상황에 딱","scenarios.sub":"영감 메모든 수업 데모든 본격적인 디자인이든, 알맞은 진입점과 속도를 찾을 수 있습니다.",
@@ -1253,7 +1268,7 @@ const T = {
     "author.eyebrow":"Об авторе","author.title":"Об авторе и проекте","author.name":"Yushichadao","author.role":"Независимый разработчик · Создатель Cub3D Editor",
     "author.bio":"Создаю лёгкие, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.","author.repo":"⭐ Репозиторий GitHub","author.donate":"♥ Поддержать","toast.copied":"Ссылка скопирована","toast.fail":"Не удалось скопировать","fab.share":"Поделиться страницей","fab.top":"Наверх","fab.bottom":"Вниз","fab.hide":"Скрыть кнопки","fab.show":"Показать кнопки",
     "author.tools":"Этот сайт создан при помощи ИИ инструментами TRAE и CodeBuddy","author.license":"Лицензия: Mulan Permissive Software License v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Открыть редактор","footer.repo":"GitHub","footer.download":"Скачать","footer.tos":"Условия обслуживания","footer.disclaimer":"Дисклеймер","footer.privacy":"Политика конфиденциальности",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Открыть редактор","footer.repo":"GitHub","footer.download":"Скачать","footer.cnEntry":"Сайт в Китае","footer.intlEntry":"Международный сайт","footer.tos":"Условия обслуживания","footer.disclaimer":"Дисклеймер","footer.privacy":"Политика конфиденциальности",
     "detect.windows":"Обнаружена система Windows — рекомендуем ПК-версию.","detect.android":"Обнаружен Android — рекомендуем версию для Android.","detect.harmonyos":"Обнаружена система HarmonyOS — рекомендуем веб-версию (сенсорную).","detect.ios":"Обнаружено устройство iOS/iPadOS — рекомендуем веб-версию (сенсорную).","detect.macos":"Обнаружена система macOS — рекомендуем веб-версию.","detect.linux":"Обнаружен Linux — рекомендуем веб-версию.","detect.other":"Не удалось определить ОС — рекомендуем веб-версию.",
     "nav.scenarios":"Сценарии","nav.quickstart":"Быстрый старт","nav.roadmap":"План развития","nav.faq":"Частые вопросы",
     "scenarios.eyebrow":"Кто использует","scenarios.title":"Подойдёт для этих ситуаций","scenarios.sub":"Будь то быстрая заметка-идея, учебная демонстрация или серьёзный дизайн — найдётся подходящий вход и темп.",
@@ -1331,7 +1346,7 @@ const T = {
     "author.eyebrow":"À propos","author.title":"À propos de l'auteur et du projet","author.name":"Yushichadao","author.role":"Développeur indépendant · Auteur de Cub3D Editor",
     "author.bio":"Nous cherchons à construire des outils créatifs 3D/2D légers et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.","author.repo":"⭐ Dépôt GitHub","author.donate":"♥ Soutenir","toast.copied":"Lien copié","toast.fail":"Échec de la copie","fab.share":"Partager la page","fab.top":"Haut de page","fab.bottom":"Bas de page","fab.hide":"Masquer les boutons","fab.show":"Afficher les boutons",
     "author.tools":"Ce site a été généré à l'aide des outils IA TRAE et CodeBuddy","author.license":"Licence : Licence logicielle permissive Mulan v2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Ouvrir l'éditeur","footer.repo":"GitHub","footer.download":"Télécharger","footer.tos":"Conditions d'utilisation","footer.disclaimer":"Avis de non-responsabilité","footer.privacy":"Politique de confidentialité",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"Ouvrir l'éditeur","footer.repo":"GitHub","footer.download":"Télécharger","footer.cnEntry":"Site en Chine","footer.intlEntry":"Site international","footer.tos":"Conditions d'utilisation","footer.disclaimer":"Avis de non-responsabilité","footer.privacy":"Politique de confidentialité",
     "detect.windows":"Système Windows détecté — la version PC est recommandée.","detect.android":"Android détecté — la version Android est recommandée.","detect.harmonyos":"Système HarmonyOS détecté — la version Web tactile est recommandée.","detect.ios":"Appareil iOS/iPadOS détecté — la version Web tactile est recommandée.","detect.macos":"macOS détecté — la version Web est recommandée.","detect.linux":"Linux détecté — la version Web est recommandée.","detect.other":"Impossible de détecter le système — la version Web est recommandée.",
     "nav.scenarios":"Scénarios","nav.quickstart":"Démarrage rapide","nav.roadmap":"Feuille de route","nav.faq":"FAQ",
     "scenarios.eyebrow":"Qui l'utilise","scenarios.title":"Adapté à ces situations","scenarios.sub":"Qu'il s'agisse d'une note d'idée rapide, d'une démonstration pédagogique ou d'un design sérieux, vous trouverez une entrée et un rythme adaptés.",
@@ -1398,7 +1413,7 @@ const T = {
     "author.eyebrow":"عن","author.title":"عن المؤلف والمشروع","author.name":"Yushichadao","author.role":"مطوّر مستقل · مؤلف Cub3D Editor",
     "author.bio":"نسعى لبناء أدوات إبداعية 3D/2D خفيفة وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان.","author.repo":"⭐ مستودع GitHub","author.donate":"♥ دعم","toast.copied":"تم نسخ الرابط","toast.fail":"فشل النسخ","fab.share":"مشاركة الصفحة","fab.top":"العودة إلى الأعلى","fab.bottom":"الانتقال إلى الأسفل","fab.hide":"إخفاء الأزرار","fab.show":"إظهار الأزرار",
     "author.tools":"تم توليد هذا الموقع بمساعدة أدوات TRAE وCodeBuddy","author.license":"الترخيص: رخصة مولان المتساهلة الإصدار 2 (MulanPSL-2)",
-    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"ادخل المحرر","footer.repo":"GitHub","footer.download":"تنزيل","footer.tos":"شروط الخدمة","footer.disclaimer":"إخلاء المسؤولية","footer.privacy":"سياسة الخصوصية",
+    "footer.copy":"Copyright © 2026-Present Yushichadao. All Rights Reserved.","footer.app":"ادخل المحرر","footer.repo":"GitHub","footer.download":"تنزيل","footer.cnEntry":"الموقع في الصين","footer.intlEntry":"الموقع الدولي","footer.tos":"شروط الخدمة","footer.disclaimer":"إخلاء المسؤولية","footer.privacy":"سياسة الخصوصية",
     "detect.windows":"تم اكتشاف Windows — يوصى بإصدار سطح المكتب PC.","detect.android":"تم اكتشاف Android — يوصى بإصدار Android.","detect.harmonyos":"تم اكتشاف HarmonyOS — يوصى بإصدار الويب اللمسي.","detect.ios":"تم اكتشاف جهاز iOS/iPadOS — يوصى بإصدار الويب اللمسي.","detect.macos":"تم اكتشاف macOS — يوصى بإصدار الويب.","detect.linux":"تم اكتشاف Linux — يوصى بإصدار الويب.","detect.other":"تعذّر اكتشاف النظام — يوصى بإصدار الويب.",
     "nav.scenarios":"حالات الاستخدام","nav.quickstart":"البدء السريع","nav.roadmap":"خارطة الطريق","nav.faq":"الأسئلة الشائعة",
     "scenarios.eyebrow":"من يستخدمه","scenarios.title":"مناسب لهذه السيناريوهات","scenarios.sub":"سواء كانت ملاحظة فكرة سريعة أو عرضاً تعليمياً أو تصميماً رسمياً، ستجد نقطة دخول وتيرة مناسبة.",
@@ -1551,8 +1566,8 @@ function detectDevice(){
   const heroText = document.getElementById('heroCtaText');
 
   const map = {
-    windows:{url:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup.exe', t:'hero.ctaWin'},
-    android:{url:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor.apk', t:'hero.ctaAnd'},
+    windows:{url:dl('Cub3D-Editor-Setup.exe'), t:'hero.ctaWin'},
+    android:{url:dl('Cub3D-Editor.apk'), t:'hero.ctaAnd'},
     harmonyos:{url:'Web/index.html?touch', t:'hero.ctaTouch'},
     ios:{url:'Web/index.html?touch', t:'hero.ctaTouch'},
     macos:{url:'Web/index.html', t:'hero.ctaWeb'},
@@ -1665,23 +1680,103 @@ buildLangBars();
   document.querySelector('meta[name="twitter:image"]').setAttribute('content', imgUrl);
 })();
 
-/* ============ 下载体积/版本动态拉取：实时读取 latest Release（文件会经常替换，体积不硬编码） ============ */
+/* ============ 下载体积/版本动态拉取：境外读 GitHub latest Release，境内优先同源 versions.json（与 /downloads/ 配套），均带回退 ============ */
 (function(){
   const match = { 'Cub3D-Editor-Setup.exe':'setup', 'Cub3D-Editor-Portable.exe':'portable', 'Cub3D-Editor.apk':'apk' };
   const fmt = b => (b/1048576).toFixed(1)+' MB';
-  fetch('https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', { cache:'no-store' })
-    .then(r=>r.ok?r.json():Promise.reject(new Error('release fetch failed')))
-    .then(data=>{
-      document.querySelectorAll('[data-size-ver]').forEach(el=>{ if(data.tag_name) el.textContent=data.tag_name; });
-      (data.assets||[]).forEach(a=>{
-        const key=match[a.name]; if(!key) return;
-        document.querySelectorAll('[data-size-for="'+key+'"]').forEach(el=>{ el.textContent=fmt(a.size); });
-      });
-    })
-    .catch(()=>{
-      document.querySelectorAll('[data-size-ver]').forEach(el=>el.textContent='—');
-      document.querySelectorAll('[data-size-for]').forEach(el=>el.textContent='—');
+  function render(ver, assets){
+    const list = Array.isArray(assets) ? assets : Object.keys(assets||{}).map(n=>({name:n, size:assets[n]}));
+    if(ver) document.querySelectorAll('[data-size-ver]').forEach(el=>el.textContent=ver);
+    list.forEach(a=>{
+      const key=match[a.name]; if(!key) return;
+      document.querySelectorAll('[data-size-for="'+key+'"]').forEach(el=>{ el.textContent=fmt(a.size); });
     });
+  }
+  function renderFail(){
+    document.querySelectorAll('[data-size-ver]').forEach(el=>el.textContent='—');
+    document.querySelectorAll('[data-size-for]').forEach(el=>el.textContent='—');
+  }
+  function fromGitHub(){
+    fetch(SITE.ovs.apiUrl, { cache:'no-store' })
+      .then(r=>r.ok?r.json():Promise.reject(new Error('release fetch failed')))
+      .then(data=>render(data.tag_name, data.assets||[]))
+      .catch(renderFail);
+  }
+  if(isCnHost){
+    fetch(SITE.cn.versionsUrl, { cache:'no-store' })
+      .then(r=>r.ok?r.json():Promise.reject(new Error('versions.json missing')))
+      .then(v=>render(v.version, v.assets||{}))
+      .catch(fromGitHub);   // 文件未联通或缺失时回退 GitHub API
+  } else {
+    fromGitHub();
+  }
+})();
+
+/* ============ 境内外双站：链接/ICP 自适应（备案号取得后填 SITE.cn.icp 即自动生效） ============ */
+function initSite(){
+  // 下载链接按当前站点重写（无 JS 时保留 HTML 中的 GitHub 直链兜底）
+  document.querySelectorAll('[data-dl]').forEach(a=>{ a.href = dl(a.dataset.dl); });
+  // ICP：境内显示占位框（无内容），境外隐藏
+  const icpEl = document.querySelector('.icp-slot');
+  if(icpEl){
+    if(isCnHost){
+      icpEl.style.display='';
+      if(SITE.cn.icp) icpEl.textContent = SITE.cn.icp;
+    } else {
+      icpEl.style.display='none';
+    }
+  }
+}
+
+/* ============ 境内外双站：IP 归属检测与双向自动跳转（仅宣传页；编辑器页面不参与，避免打断编辑） ============ */
+(function(){
+  if(!window.fetch || typeof AbortController==='undefined') return;
+  const qs = location.search;
+  if(/[?&](stay|from)=1/.test(qs)) return;                     // 手动覆盖 / 已完成分流，不再跳转
+  const host = location.hostname || '';
+  if(!host || /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(host) || /\.local$/i.test(host)) return; // 本地预览不跳
+  const me = isCnHost ? 'cn' : 'ovs';
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), 2500);      // 2.5s 超时，不阻塞首屏
+  const opt = { signal:controller.signal, cache:'no-store' };
+  function jget(url, pick){
+    return fetch(url, opt).then(r=>r.ok?r.json():Promise.reject()).then(pick)
+      .then(v=>v==='CN'||v==='OVS'?v:null).catch(()=>null);
+  }
+  function jsp(url){                                           // JSONP 回退（接口防跳链/HTTPS 受限时静默失败）
+    return new Promise(res=>{
+      const cb = 'ipcb' + Date.now();
+      const s = document.createElement('script');
+      const done = v=>{ clearTimeout(t2); try{delete window[cb]}catch(e){} s.remove(); res(v); };
+      const t2 = setTimeout(()=>done(null), 3000);
+      window[cb] = d=>done((d && (d.pro || d.province)) ? 'CN' : null);
+      s.src = url.replace('{cb}', cb) + '&_t=' + Date.now();
+      s.onerror = ()=>{ clearTimeout(t2); s.remove(); res(null); };
+      document.head.appendChild(s);
+    });
+  }
+  async function classify(){
+    if(me==='cn'){  // 境内站：国内接口优先
+      let r = await jget('https://qifu-api.baidubce.com/ip/geo/v1/district', d=>{
+        const c = d && d.data && d.data.country;
+        return c ? (c==='中国' ? 'CN' : 'OVS') : null;
+      });
+      if(r!==null) return r;
+      r = await jsp('https://whois.pconline.com.cn/ipJson.jsp?callback={cb}');
+      if(r!==null) return r;
+    } else {        // 境外站：国外接口优先
+      let r = await jget('https://ip-api.com/json/?lang=zh-CN', d=>d&&d.countryCode ? (d.countryCode==='CN'?'CN':'OVS') : null);
+      if(r!==null) return r;
+      r = await jget('https://ipwho.is/', d=>d&&d.country_code ? (d.country_code==='CN'?'CN':'OVS') : null);
+      if(r!==null) return r;
+    }
+    return null;    // 全部失败 → 静默留在当前站
+  }
+  classify().then(region=>{
+    clearTimeout(timer);
+    if(region==='CN' && me==='ovs') location.replace(SITE.cn.home + '?from=gh&stay=1');
+    else if(region==='OVS' && me==='cn') location.replace(SITE.ovs.home + '?from=cn&stay=1');
+  }).catch(()=>clearTimeout(timer));
 })();
 
 /* ============ 返回顶部 + 分享（Web Share API + 复制兜底） ============ */
@@ -1745,6 +1840,7 @@ window.addEventListener('scroll', syncFabScroll, { passive:true });
 syncFabScroll();
 
 /* 初始化 */
+initSite();
 applyLang(cur);
 </script>
 </body>

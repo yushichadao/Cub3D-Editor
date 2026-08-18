@@ -37,8 +37,8 @@
 | 対応形態 | **Web版（マウス）/ Web版（タッチ）/ PCデスクトップ版 / Android版** の四つの形態を完全カバー |
 | 座標系の基準 | 本書は**画面に実際に表示される軸のラベルを唯一の基準とする**（ページ表記：X 青=前後、Y 赤=左右、Z 緑=高さ、Z軸は上向き）。コード内部の実装軸はページ表記と異なるが、一般読者は気にする必要はない |
 | 読書の提案 | 先に[第0章 四つの形態と本書の読み方](jump:第0章 四つの形態と本書の読み方)を読み、自分が使っている端末を確認する；最初の四篇は順番に読む；後の八篇は必要に応じて参照する。各章末の「考えてみよう」「やってみよう」は必ず手を動かすこと |
-| オンラインアドレス | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) （Webページを開くだけで練習できる） |
-| 公式サイト | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （製品紹介、9言語切り替え、ダウンロード案内） |
+| オンラインアドレス | [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html)（中国国内におすすめ、直結が速い）または [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)（海外） |
+| 公式サイト | [https://cub3d-editor.cn](https://cub3d-editor.cn)（中国国内、直結におすすめ）または [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor)（海外；製品紹介、9言語切り替え、ダウンロード案内） |
 | プロジェクトリポジトリ | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) （ソースコード、インストーラー、本ドキュメントはすべてここにある） |
 
 **ジャンプリンク（jump:）のしくみ**
@@ -198,7 +198,7 @@
 💡 **Web版は自動判別される**：デバイスが「精密ポインタ（マウス）」か「粗略ポインタ（指）」かを検出し、それに応じて対応モードに自動切り替えるため、**あなたが設定することは何もない**。
 
 ⚠️ パソコンのブラウザで**タッチ版**がどう見えるかをプレビューしたい場合（例：授業デモ用）、URLの後ろに `?touch` を付ければよい。例：
-[`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch)。逆に、Android版はデフォルトで常にタッチレイアウトである。
+[`https://cub3d-editor.cn/Web/index.html?touch`](https://cub3d-editor.cn/Web/index.html?touch)（中国国内）または [`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch)（海外）。逆に、Android版はデフォルトで常にタッチレイアウトである。
 
 ### 0.2 四つの形態の能力対照総表
 
@@ -333,7 +333,7 @@ Android版で最も注意すべきは**スマホの戻るキー**の挙動であ
 
 以下の公開アドレスをブラウザで直接開く：
 
-> 🌐 **オンラインアドレス**：[https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
+> 🌐 **オンラインアドレス**：[https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html)（中国国内におすすめ）または [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)（海外）
 
 URLを任意のモダンブラウザのアドレスバーにコピーし、Enterでメイン画面に入る。スマホ、タブレット、パソコン、どれでも使える——ネットに繋がり、ブラウザがあればよい。**マウスデバイスかタッチデバイスかを自動判別し**、対応レイアウトに切り替える。
 

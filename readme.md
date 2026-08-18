@@ -23,8 +23,8 @@
 
 ## 快速开始
 
-- **主页（宣传页）**：<https://yushichadao.github.io/Cub3D-Editor/> —— 产品介绍、九语言切换、下载入口
-- **网页版编辑器（无需安装）**：<https://yushichadao.github.io/Cub3D-Editor/Web/index.html>
+- **主页（宣传页）**：<https://cub3d-editor.cn/>（境内，国内直连推荐）或 <https://yushichadao.github.io/Cub3D-Editor/>（境外）—— 产品介绍、九语言切换、下载入口
+- **网页版编辑器（无需安装）**：<https://cub3d-editor.cn/Web/index.html>（境内）或 <https://yushichadao.github.io/Cub3D-Editor/Web/index.html>（境外）
 - **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
 - **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor.apk`
 
@@ -42,7 +42,7 @@
 | `Cub3D-Editor-Portable.exe` | Windows 便携版（免安装） |
 | `Cub3D-Editor.apk` | Android 安装包（release 签名，包名 `com.cub3deditor.app`） |
 
-下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮会跳转到最新 Release 的对应附件。
+下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮默认跳转到最新 Release 的对应附件；境内站点（cub3d-editor.cn）联通后，「下载」按钮自动改指 `https://cub3d-editor.cn/downloads/` 下的镜像文件。
 
 > 注：安装包不再进 git，因此 `.git` 不会再因反复打包而膨胀；各端自身的 `dist/`、`build/`、`node_modules/` 按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。发布新版本请运行 `tools/release.mjs`（自动构建三端产物并上传为 Release 附件）：
 >
@@ -189,6 +189,30 @@ npm run apk:debug       # 调试包
 - `/Web/` → 网页版编辑器
 
 **安装包不随站点发布**：PC / Android 安装包由 `tools/release.mjs` 上传到 GitHub Releases，宣传页的「下载」按钮指向 `releases/latest/download/` 对应附件。修改上述任一目录并推送即触发部署。
+
+### 部署到境内站点（cub3d-editor.cn）
+
+境内站点与境外 GitHub Pages 共用同一份静态代码（宣传页按域名自动切换下载链接、版本信息与 ICP 显示），部署到轻量云服务器。`cub3d-editor.cn` 需要 **ICP 备案**；备案号取得后填入 `index.html` 顶部 `SITE.cn.icp` 字段，境内页脚即自动显示，境外 GitHub Pages 自动隐藏。
+
+部署步骤：
+
+1. **备案与解析**：完成 ICP 备案后，将 `cub3d-editor.cn` 的 A 记录解析到轻量云服务器公网 IP。
+2. **上传静态产物**：将仓库根下列文件/目录上传到服务器站点根目录：
+   - `index.html`（宣传页，含境内外链接自适应与 IP 自动分流）
+   - `Web/`（网页版编辑器）
+   - `assets/`（宣传页与法律页静态资源）
+   - `legal-tos.html` / `legal-disclaimer.html` / `legal-privacy.html`（法律页）
+   - `.nojekyll`（如使用 GitHub Pages 产物则已包含）
+3. **配置 HTTPS**：为 `cub3d-editor.cn` 签发免费证书（如 Let's Encrypt 或云厂商免费证书）。
+4. **放置安装包与版本信息**：将 `Cub3D-Editor-Setup.exe`、`Cub3D-Editor-Portable.exe`、`Cub3D-Editor.apk` 及 `versions.json` 放入站点根目录的 `downloads/`，境内页面的「下载」按钮即自动指向 `https://cub3d-editor.cn/downloads/<文件名>`，版本/体积信息从 `versions.json` 读取。
+
+`downloads/versions.json` 约定格式（`assets` 键为文件名 → 字节数）：
+
+```json
+{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup.exe": 66060288, "Cub3D-Editor-Portable.exe": 58720256, "Cub3D-Editor.apk": 25165824 } }
+```
+
+> 注：境内站 `downloads/` 未放置文件前，下载按钮与版本信息自动回退到 GitHub Releases；安装包镜像与服务器联通为后续阶段工作。
 
 本地预览（从仓库根启动静态服务器即可同时看到宣传页与编辑器）：
 

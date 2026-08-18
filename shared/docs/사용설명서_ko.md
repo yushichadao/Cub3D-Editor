@@ -37,8 +37,8 @@
 | 적용 형태 | **웹판(마우스) / 웹판(터치) / PC 데스크톱판 / Android판** 네 가지 형태 전면 커버 |
 | 좌표계 기준 | 본 책은 **일률적으로 화면에 실제 표시되는 축 표기를 기준**으로 합니다 (페이지 표기: X 파랑=앞뒤, Y 빨강=좌우, Z 초록=높이, Z축 위쪽). 코드 내부 구현 축은 페이지 표기와 다르며, 일반 독자는 신경 쓸 필요 없습니다 |
 | 읽기 제안 | 먼저 [제0장 네 가지 형태와 이 책 읽는 법](jump:제0장 네 가지 형태와 이 책 읽는 법)을 읽고 자신이 사용하는 플랫폼을 확인하세요; 처음 네 편은 순서대로 읽고, 뒤 여덟 편은 필요에 따라 조회하세요. 각 장끝의 「생각해 보기」「연습해 보기」은 반드시 직접 해보세요 |
-| 온라인 주소 | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (웹페이지를 열면 바로 연습 가능) |
-| 공식 웹사이트 | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) （제품 소개, 9개 언어 전환, 다운로드） |
+| 온라인 주소 | [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (중국 국내 추천, 직결이 빠름) 또는 [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (해외) |
+| 공식 웹사이트 | [https://cub3d-editor.cn](https://cub3d-editor.cn) (중국 국내, 직결 추천) 또는 [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (해외; 제품 소개, 9개 언어 전환, 다운로드) |
 | 프로젝트 저장소 | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (소스코드, 설치 파일 및 본 문서는 모두 여기에 있음) |
 
 **점프 링크(jump:) 사용법**
@@ -199,7 +199,7 @@
 💡 **웹판은 자동 판단됩니다**: 기기가 "정밀 포인터(마우스)"인지 "대략적 포인터(손가락)"인지 감지한 뒤, 자동으로 해당 모드로 전환되며, **별도 설정이 필요 없습니다**.
 
 ⚠️ 컴퓨터 브라우저에서 **터치판이 어떻게 생겼는지 미리 보기** 싶다면(예: 강의 시연), 주소 끝에 `?touch`를 붙이면 됩니다, 예:
-[`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch). 반대로, Android판은 기본적으로 항상 터치 레이아웃입니다.
+[`https://cub3d-editor.cn/Web/index.html?touch`](https://cub3d-editor.cn/Web/index.html?touch) (중국 국내) 또는 [`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch) (해외). 반대로, Android판은 기본적으로 항상 터치 레이아웃입니다.
 
 ### 0.2 네 가지 형태의 기능 대조 총표
 
@@ -334,7 +334,7 @@ Android판에서 가장 주의할 점은 **휴대폰 뒤로 가기 키**의 동�
 
 아래 공개 주소를 브라우저로 바로 여세요:
 
-> 🌐 **온라인 주소**: [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
+> 🌐 **온라인 주소**: [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (중국 국내 추천) 또는 [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (해외)
 
 주소를 아무 최신 브라우저의 주소창에 복사해 넣고 엔터를 치면 메인 화면으로 들어갑니다. 휴대폰, 태블릿, 컴퓨터 모두 사용 가능하며, 인터넷만 되고 브라우저만 있으면 됩니다. **마우스 기기인지 터치형 기기인지 자동으로 판단**해 해당 레이아웃으로 전환합니다.
 

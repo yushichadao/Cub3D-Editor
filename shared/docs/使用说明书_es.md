@@ -37,8 +37,8 @@ Sin importar qué extremo uses, al **iniciar por primera vez** esta herramienta 
 | Formas compatibles | Cobertura total de las cuatro formas: **versión web (ratón) / versión web (táctil) / versión de escritorio PC / versión Android** |
 | Criterio del sistema de coordenadas | Este libro **siempre se basa en las etiquetas de ejes que se muestran realmente en la interfaz** (etiquetas de la página: X azul = adelante-atrás, Y rojo = izquierda-derecha, Z verde = altura, eje Z hacia arriba). La implementación interna de ejes en el código difiere de las etiquetas de la página; los lectores comunes no necesitan preocuparse |
 | Sugerencia de lectura | Lee primero [Capítulo 0 Cuatro formas y cómo leer este libro](jump:Capítulo 0: Cuatro formas y cómo leer este libro), y confirma qué extremo usas; lee las primeras cuatro partes en orden; las ocho partes siguientes se pueden consultar según necesidad. Los «Piénsalo» y «Practica» al final de cada capítulo deben hacerse sin falta |
-| Dirección en línea | [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (abre la página web y podrás practicar de inmediato) |
-| Sitio web oficial | [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (presentación del producto, cambio de nueve idiomas, entrada de descarga) |
+| Dirección en línea | [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (recomendado en China, acceso directo más rápido) o [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (en el extranjero) |
+| Sitio web oficial | [https://cub3d-editor.cn](https://cub3d-editor.cn) (China, recomendado para acceso directo) o [https://yushichadao.github.io/Cub3D-Editor](https://yushichadao.github.io/Cub3D-Editor) (en el extranjero; presentación del producto, cambio de nueve idiomas, entrada de descarga) |
 | Repositorio del proyecto | [https://github.com/yushichadao/Cub3D-Editor](https://github.com/yushichadao/Cub3D-Editor) (código fuente, paquetes de instalación y esta documentación están aquí) |
 
 **Convención de marcas de forma**
@@ -200,7 +200,7 @@ Esta herramienta se publica en **tres versiones**, pero como la versión web se 
 💡 **La versión web se determina automáticamente**: detecta si tu dispositivo es un «puntero preciso (ratón)» o un «puntero aproximado (dedo)», y luego cambia automáticamente al modo correspondiente; **no necesitas hacer ninguna configuración**.
 
 ⚠️ Si quieres **previsualizar qué aspecto tiene la versión táctil** en el navegador de tu computadora (por ejemplo, para una demostración educativa), puedes añadir `?touch` al final de la URL, por ejemplo:
-[`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch). A la inversa, la versión Android tiene siempre, por defecto, el diseño táctil.
+[`https://cub3d-editor.cn/Web/index.html?touch`](https://cub3d-editor.cn/Web/index.html?touch) (China) o [`https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch`](https://yushichadao.github.io/Cub3D-Editor/Web/index.html?touch) (en el extranjero). A la inversa, la versión Android tiene siempre, por defecto, el diseño táctil.
 
 ### 0.2 Tabla general comparativa de capacidades de las cuatro formas
 
@@ -335,7 +335,7 @@ Beneficios comunes a las tres:
 
 Abre la siguiente dirección pública directamente en el navegador:
 
-> 🌐 **Dirección en línea**: [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html)
+> 🌐 **Dirección en línea**: [https://cub3d-editor.cn/Web/index.html](https://cub3d-editor.cn/Web/index.html) (recomendado en China) o [https://yushichadao.github.io/Cub3D-Editor/Web/index.html](https://yushichadao.github.io/Cub3D-Editor/Web/index.html) (en el extranjero)
 
 Copia la URL en la barra de direcciones de cualquier navegador moderno y pulsa Enter para entrar a la interfaz principal. Funciona en teléfono, tableta y computadora, siempre que tengas conexión y un navegador. **Detecta automáticamente si usas dispositivo de ratón o táctil** y cambia a la disposición correspondiente.
 
