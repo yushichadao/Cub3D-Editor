@@ -4,8 +4,10 @@
 //   node tools/release.mjs 1.1.0      # 指定版本
 //   node tools/release.mjs --replace  # 同名 Release 已存在时删除重建
 //
-// 安装包不再随源码入库；本脚本用 `gh` 把产物发布到 Releases，
-// 宣传页/说明书的「下载」按钮会跳转到 releases/latest/download/<文件>。
+// 构建产物统一集中到仓库根目录 release/（Cub3D-Editor-Setup.exe / Portable.exe / .apk），
+// 上传时直接从 release/ 读取。该目录在 .gitignore 中忽略，不入库；
+// 本脚本用 `gh` 把产物发布到 Releases，宣传页/说明书的「下载」按钮
+// 会跳转到 releases/latest/download/<文件>。
 
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -21,6 +23,7 @@ process.env.NODE_OPTIONS = [process.env.NODE_OPTIONS, '--use-system-ca'].filter(
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); // 脚本置于 tools/ 下，反推仓库根
 const PC_DIR = path.join(ROOT, 'PC');
 const AND_DIR = path.join(ROOT, 'Android');
+const RELEASE_DIR = path.join(ROOT, 'release'); // 产物集中目录（不入库）
 const REPO = 'yushichadao/Cub3D-Editor';
 
 const args = process.argv.slice(2);
@@ -64,7 +67,7 @@ run('npm run dist', PC_DIR);
 if (!fs.existsSync(path.join(AND_DIR, 'node_modules'))) run('npm install --no-audit --no-fund', AND_DIR);
 run('npm run apk:release', AND_DIR);
 
-// 5) 收集产物（统一命名为通用名）
+// 5) 收集产物，统一复制到根目录 release/（集中存放）
 const setupSrc = globOne(PC_DIR, 'dist', /^Cube3D-Studio-Setup-.*\.exe$/);
 const portableSrc = globOne(PC_DIR, 'dist', /^Cube3D-Studio-Portable-.*\.exe$/);
 const apkSrc = path.join(AND_DIR, 'dist', 'Cub3D-Editor.apk');
@@ -72,18 +75,19 @@ if (!setupSrc || !portableSrc || !fs.existsSync(apkSrc)) {
   console.error('❌ 找不到构建产物，发布中止。');
   process.exit(1);
 }
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cub3d-release-'));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cub3d-release-')); // 仅用于 NOTES.md
 const artifacts = {
   'Cub3D-Editor-Setup.exe': setupSrc,
   'Cub3D-Editor-Portable.exe': portableSrc,
   'Cub3D-Editor.apk': apkSrc,
 };
+fs.mkdirSync(RELEASE_DIR, { recursive: true });
 const assetPaths = [];
 for (const [name, src] of Object.entries(artifacts)) {
-  const dest = path.join(tmp, name);
+  const dest = path.join(RELEASE_DIR, name);
   fs.copyFileSync(src, dest);
   assetPaths.push(dest);
-  console.log(`✓ 收集 ${name}  (${(fs.statSync(dest).size / 1e6).toFixed(1)} MB)`);
+  console.log(`✓ 已更新 release/${name}  (${(fs.statSync(dest).size / 1e6).toFixed(1)} MB)`);
 }
 
 // 6) 处理已存在的 Release / 标签
