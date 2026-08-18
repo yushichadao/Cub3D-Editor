@@ -63,8 +63,12 @@ function main() {
     process.exit(1);
   }
 
+  // 产物命名仿照 exe 版：Cub3D-Editor-<模式>-<版本>-<架构>.apk
+  // （Capacitor 默认产出含全部 ABI 的 universal 包）
+  const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  const version = (pkg.version || '0.0.0').replace(/^v/, '');
   mkdirSync(DIST, { recursive: true });
-  const target = path.join(DIST, 'Cub3D-Editor.apk');
+  const target = path.join(DIST, `Cub3D-Editor-${mode}-${version}-universal.apk`);
   copyFileSync(built, target);
 
   const mb = (statSync(target).size / 1024 / 1024).toFixed(2);

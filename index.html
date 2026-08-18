@@ -650,7 +650,7 @@
           <span><b data-i18n="plat.size">体积</b> <span class="size" data-size-for="apk">…</span></span>
         </div>
         <div class="acts">
-          <a class="lbtn main" data-dl="Cub3D-Editor.apk" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor.apk" data-i18n="plat4.btn">下载 .apk</a>
+          <a class="lbtn main" data-dl="Cub3D-Editor-release-1.1.0-universal.apk" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-release-1.1.0-universal.apk" data-i18n="plat4.btn">下载 .apk</a>
         </div>
       </div>
     </div>
@@ -1636,7 +1636,7 @@ function detectDevice(){
 
   const map = {
     windows:{url:dl('Cub3D-Editor-Setup.exe'), t:'hero.ctaWin'},
-    android:{url:dl('Cub3D-Editor.apk'), t:'hero.ctaAnd'},
+    android:{url:dl('Cub3D-Editor-release-1.1.0-universal.apk'), t:'hero.ctaAnd'},
     harmonyos:{url:editorUrl(true), t:'hero.ctaTouch'},
     ios:{url:editorUrl(true), t:'hero.ctaTouch'},
     macos:{url:editorUrl(false), t:'hero.ctaWeb'},
@@ -1751,7 +1751,7 @@ buildLangBars();
 
 /* ============ 下载体积/版本动态拉取：境外读 GitHub latest Release，境内优先同源 versions.json（与 /downloads/ 配套），均带回退 ============ */
 (function(){
-  const match = { 'Cub3D-Editor-Setup.exe':'setup', 'Cub3D-Editor-Portable.exe':'portable', 'Cub3D-Editor.apk':'apk' };
+  const match = { 'Cub3D-Editor-Setup.exe':'setup', 'Cub3D-Editor-Portable.exe':'portable', 'Cub3D-Editor-release-1.1.0-universal.apk':'apk' };
   const fmt = b => (b/1048576).toFixed(1)+' MB';
   function render(ver, assets){
     const list = Array.isArray(assets) ? assets : Object.keys(assets||{}).map(n=>({name:n, size:assets[n]}));

@@ -26,7 +26,7 @@
 - **主页（宣传页）**：<https://cub3d-editor.cn/>（境内，国内直连推荐）或 <https://yushichadao.github.io/Cub3D-Editor/>（境外）—— 产品介绍、九语言切换、下载入口
 - **网页版编辑器（无需安装）**：<https://cub3d-editor.cn/Web/index.html>（境内）或 <https://yushichadao.github.io/Cub3D-Editor/Web/index.html>（境外）
 - **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
-- **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor.apk`
+- **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor-release-1.1.0-universal.apk`
 
 导出为 `.json` 的工程文件在三端之间通用。
 
@@ -34,13 +34,13 @@
 
 ## 下载与发布
 
-各平台的正式版安装包统一命名为通用名，**作为 GitHub Releases 附件发布，不再随源码入库**（当前版本 `v1.1.0`）：
+各平台的正式版安装包（Android 包文件名携带版本与架构，仿照 exe 版），**作为 GitHub Releases 附件发布，不再随源码入库**（当前版本 `v1.1.0`）：
 
 | 产物 | 说明 |
 | :--- | :--- |
 | `Cub3D-Editor-Setup.exe` | Windows 安装版 |
 | `Cub3D-Editor-Portable.exe` | Windows 便携版（免安装） |
-| `Cub3D-Editor.apk` | Android 安装包（release 签名，包名 `com.cub3deditor.app`） |
+| `Cub3D-Editor-release-1.1.0-universal.apk` | Android 安装包（release 签名，universal 全 ABI，包名 `com.cub3deditor.app`） |
 
 下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮默认跳转到最新 Release 的对应附件；境内站点（cub3d-editor.cn）联通后，「下载」按钮自动改指 `https://cub3d-editor.cn/downloads/` 下的镜像文件。
 
@@ -173,13 +173,13 @@ npm run dist:portable   # 仅便携版
 cd Android
 npm install
 npm run keystore        # 首次构建前生成签名密钥（CN=Cub3D Editor）
-npm run apk:release     # 构建 release 签名版 Cub3D-Editor.apk
+npm run apk:release     # 构建 release 签名版（Android/dist/Cub3D-Editor-release-1.1.0-universal.apk）
 npm run apk:debug       # 调试包
 ```
 
 > 注：若本机启用了文件删除防护（如部分 IDE 会拦截 `cap sync` 的批量删除），构建时请临时关闭该防护（例如设置 `CODEBUDDY_SAFE_DELETE_ENABLED=0`），否则 `cap sync` 会中断。
 
-产物位于 `Android/dist/Cub3D-Editor.apk`；发布时由 `tools/release.mjs` 收集，与 PC 版一起作为 GitHub Release 附件上传（不再复制到仓库根 `dist/`）。
+产物位于 `Android/dist/Cub3D-Editor-release-1.1.0-universal.apk`；发布时由 `tools/release.mjs` 收集，与 PC 版一起作为 GitHub Release 附件上传（不再复制到仓库根 `dist/`）。
 
 ### 部署到 GitHub Pages
 
@@ -206,12 +206,12 @@ npm run apk:debug       # 调试包
    - `legal-tos.html` / `legal-disclaimer.html` / `legal-privacy.html`（法律页）
    - `.nojekyll`（如使用 GitHub Pages 产物则已包含）
 3. **配置 HTTPS**：为 `cub3d-editor.cn` 签发免费证书（如 Let's Encrypt 或云厂商免费证书）。
-4. **放置安装包与版本信息**：将 `Cub3D-Editor-Setup.exe`、`Cub3D-Editor-Portable.exe`、`Cub3D-Editor.apk` 及 `versions.json` 放入站点根目录的 `downloads/`，境内页面的「下载」按钮即自动指向 `https://cub3d-editor.cn/downloads/<文件名>`，版本/体积信息从 `versions.json` 读取。
+4. **放置安装包与版本信息**：将 `Cub3D-Editor-Setup.exe`、`Cub3D-Editor-Portable.exe`、`Cub3D-Editor-release-1.1.0-universal.apk` 及 `versions.json` 放入站点根目录的 `downloads/`，境内页面的「下载」按钮即自动指向 `https://cub3d-editor.cn/downloads/<文件名>`，版本/体积信息从 `versions.json` 读取。
 
 `downloads/versions.json` 约定格式（`assets` 键为文件名 → 字节数）：
 
 ```json
-{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup.exe": 100672045, "Cub3D-Editor-Portable.exe": 90580208, "Cub3D-Editor.apk": 4274504 } }
+{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup.exe": 100672045, "Cub3D-Editor-Portable.exe": 90580208, "Cub3D-Editor-release-1.1.0-universal.apk": 4274504 } }
 ```
 
 > 注：境内站 `downloads/` 未放置文件前，下载按钮与版本信息自动回退到 GitHub Releases；安装包镜像与服务器联通为后续阶段工作。

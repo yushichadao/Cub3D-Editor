@@ -35,7 +35,7 @@
 3. 运行即可开始使用。
 
 ### Android 版
-1. 下载 Release 中的 `Cub3D-Editor.apk`。
+1. 下载 Release 中的 `Cub3D-Editor-release-1.1.0-universal.apk`。
 2. 允许「未知来源」应用安装。
 3. 安装后打开，支持全屏运行与系统分享面板导出。
 

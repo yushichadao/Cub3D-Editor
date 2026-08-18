@@ -70,8 +70,8 @@ run('npm run apk:release', AND_DIR);
 // 5) 收集产物，统一复制到根目录 release/（集中存放）
 const setupSrc = globOne(PC_DIR, 'dist', /^Cub3D-Editor-Setup-.*\.exe$/);
 const portableSrc = globOne(PC_DIR, 'dist', /^Cub3D-Editor-Portable-.*\.exe$/);
-const apkSrc = path.join(AND_DIR, 'dist', 'Cub3D-Editor.apk');
-if (!setupSrc || !portableSrc || !fs.existsSync(apkSrc)) {
+const apkSrc = globOne(AND_DIR, 'dist', /^Cub3D-Editor-release-.*\.apk$/);
+if (!setupSrc || !portableSrc || !apkSrc) {
   console.error('❌ 找不到构建产物，发布中止。');
   process.exit(1);
 }
@@ -79,7 +79,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cub3d-release-')); // 仅用�
 const artifacts = {
   'Cub3D-Editor-Setup.exe': setupSrc,
   'Cub3D-Editor-Portable.exe': portableSrc,
-  'Cub3D-Editor.apk': apkSrc,
+  [`Cub3D-Editor-release-${version}-universal.apk`]: apkSrc,
 };
 fs.mkdirSync(RELEASE_DIR, { recursive: true });
 const assetPaths = [];
@@ -113,7 +113,7 @@ fs.writeFileSync(notesFile,
   `Cub3D Editor ${version}\n\n` +
   `- \`Cub3D-Editor-Setup.exe\` — Windows 安装版\n` +
   `- \`Cub3D-Editor-Portable.exe\` — Windows 便携版（免安装）\n` +
-  `- \`Cub3D-Editor.apk\` — Android 安装包（release 签名）\n`);
+  `- \`Cub3D-Editor-release-${version}-universal.apk\` — Android 安装包（release 签名）\n`);
 run(`gh release create ${tag} --title ${q('Cub3D Editor ' + version)} --notes-file ${q(notesFile)} ${assetPaths.map(q).join(' ')}`);
 
 // 9) 同步安装包到境内站点 downloads/ 镜像目录，并更新 versions.json
