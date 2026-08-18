@@ -68,8 +68,8 @@ if (!fs.existsSync(path.join(AND_DIR, 'node_modules'))) run('npm install --no-au
 run('npm run apk:release', AND_DIR);
 
 // 5) 收集产物，统一复制到根目录 release/（集中存放）
-const setupSrc = globOne(PC_DIR, 'dist', /^Cube3D-Studio-Setup-.*\.exe$/);
-const portableSrc = globOne(PC_DIR, 'dist', /^Cube3D-Studio-Portable-.*\.exe$/);
+const setupSrc = globOne(PC_DIR, 'dist', /^Cub3D-Editor-Setup-.*\.exe$/);
+const portableSrc = globOne(PC_DIR, 'dist', /^Cub3D-Editor-Portable-.*\.exe$/);
 const apkSrc = path.join(AND_DIR, 'dist', 'Cub3D-Editor.apk');
 if (!setupSrc || !portableSrc || !fs.existsSync(apkSrc)) {
   console.error('❌ 找不到构建产物，发布中止。');
@@ -116,6 +116,19 @@ fs.writeFileSync(notesFile,
   `- \`Cub3D-Editor.apk\` — Android 安装包（release 签名）\n`);
 run(`gh release create ${tag} --title ${q('Cub3D Editor ' + version)} --notes-file ${q(notesFile)} ${assetPaths.map(q).join(' ')}`);
 
-// 9) 清理临时文件
+// 9) 同步安装包到境内站点 downloads/ 镜像目录，并更新 versions.json
+const dlDir = path.join(ROOT, 'downloads');
+fs.mkdirSync(dlDir, { recursive: true });
+const versions = { version: tag, assets: {} };
+for (const [name, src] of Object.entries(artifacts)) {
+  const dest = path.join(dlDir, name);
+  fs.copyFileSync(src, dest);
+  versions.assets[name] = fs.statSync(dest).size;
+  console.log(`✓ 已同步 downloads/${name}  (${(versions.assets[name] / 1e6).toFixed(1)} MB)`);
+}
+fs.writeFileSync(path.join(dlDir, 'versions.json'), JSON.stringify(versions, null, 2) + '\n');
+console.log(`✓ 已更新 downloads/versions.json (${tag})`);
+
+// 10) 清理临时文件
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n✅ 已发布 ${tag}：${`https://github.com/${REPO}/releases/tag/${tag}`}`);

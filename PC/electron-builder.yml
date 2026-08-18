@@ -41,7 +41,7 @@ buildDependenciesFromSource: false
 
 win:
   icon: build/icon.ico
-  executableName: cube3d-studio
+  executableName: cub3d-editor
   target:
     - target: nsis
       arch: [x64]
@@ -50,12 +50,12 @@ win:
   requestedExecutionLevel: asInvoker
 
 portable:
-  artifactName: Cube3D-Studio-Portable-${version}-x64.${ext}
+  artifactName: Cub3D-Editor-Portable-${version}-x64.${ext}
   requestExecutionLevel: user
   unicode: true
 
 nsis:
-  artifactName: Cube3D-Studio-Setup-${version}-x64.${ext}
+  artifactName: Cub3D-Editor-Setup-${version}-x64.${ext}
   installerIcon: build/icon.ico
   uninstallerIcon: build/icon.ico
   installerHeaderIcon: build/icon.ico
