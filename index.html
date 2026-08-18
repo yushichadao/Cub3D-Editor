@@ -761,8 +761,8 @@
       <a href="Web/index.html" data-i18n="footer.app">进入编辑器</a>
       <a href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="footer.repo">GitHub</a>
       <a href="#platforms" data-i18n="footer.download">下载</a>
-      <a class="site-switch" href="https://cub3d-editor.cn/?stay=1" data-i18n="footer.cnEntry">境内入口</a>
-      <a class="site-switch" href="https://yushichadao.github.io/Cub3D-Editor/?stay=1" data-i18n="footer.intlEntry">国际版入口</a>
+      <!-- 站点切换入口：国内版显示「国际版入口」、国际版显示「国内版入口」，同一位置（JS 按当前站修正文案/链接） -->
+      <a class="site-switch" id="siteSwitch" href="https://yushichadao.github.io/Cub3D-Editor/?stay=1" data-i18n="footer.intlEntry">国际版入口</a>
     </div>
     <div class="foot-legal">
       <a href="legal-tos.html" class="legal-link" data-i18n="footer.tos">服务协议</a>
@@ -1496,6 +1496,18 @@ if(!T[cur]) cur = cur.startsWith('zh') ? (cur.includes('TW')||cur.includes('HK')
             : (cur.startsWith('ar')?'ar': cur.startsWith('ja')?'ja': cur.startsWith('ko')?'ko': cur.startsWith('ru')?'ru': cur.startsWith('es')?'es': cur.startsWith('en')?'en':'zh-CN');
 if(!T[cur]) cur='zh-CN';
 
+// 编辑器入口 URL：官网语言透传给编辑器（?lang=），编辑器据此联动并写入缓存
+function editorUrl(touch){
+  const base = (touch ? 'Web/index.html?touch' : 'Web/index.html');
+  return (cur && cur !== 'zh-CN') ? (base + (base.indexOf('?')>-1 ? '&' : '?') + 'lang=' + encodeURIComponent(cur)) : base;
+}
+// 刷新页面内所有指向编辑器的链接，让语言随官网切换
+function refreshEditorLinks(){
+  document.querySelectorAll('a[href^="Web/index.html"]').forEach(a=>{
+    const touch = (a.getAttribute('href')||'').indexOf('?touch') > -1;
+    a.href = editorUrl(touch);
+  });
+}
 function applyLang(lang){
   cur = lang; localStorage.setItem('cub3d_lang', lang);
   document.documentElement.lang = lang;
@@ -1540,6 +1552,8 @@ function applyLang(lang){
   document.querySelectorAll('.legal-link').forEach(a=>{
     a.href = a.getAttribute('href').split('?')[0] + '?lang=' + encodeURIComponent(lang);
   });
+  // 官网语言联动编辑器：刷新所有进入编辑器的链接，带上当前语言参数
+  refreshEditorLinks();
   // 重新识别（文案依赖语言）
   detectDevice();
 }
@@ -1575,11 +1589,11 @@ function detectDevice(){
   const map = {
     windows:{url:dl('Cub3D-Editor-Setup.exe'), t:'hero.ctaWin'},
     android:{url:dl('Cub3D-Editor.apk'), t:'hero.ctaAnd'},
-    harmonyos:{url:'Web/index.html?touch', t:'hero.ctaTouch'},
-    ios:{url:'Web/index.html?touch', t:'hero.ctaTouch'},
-    macos:{url:'Web/index.html', t:'hero.ctaWeb'},
-    linux:{url:'Web/index.html', t:'hero.ctaWeb'},
-    other:{url:'Web/index.html', t:'hero.ctaWeb'}
+    harmonyos:{url:editorUrl(true), t:'hero.ctaTouch'},
+    ios:{url:editorUrl(true), t:'hero.ctaTouch'},
+    macos:{url:editorUrl(false), t:'hero.ctaWeb'},
+    linux:{url:editorUrl(false), t:'hero.ctaWeb'},
+    other:{url:editorUrl(false), t:'hero.ctaWeb'}
   };
   // 额外 hero 文案
   const extra = {
@@ -1723,11 +1737,16 @@ buildLangBars();
 function initSite(){
   // 下载链接按当前站点重写（无 JS 时保留 HTML 中的 GitHub 直链兜底）
   document.querySelectorAll('[data-dl]').forEach(a=>{ a.href = dl(a.dataset.dl); });
-  // 站点切换：境内入口指向当前境内入口（IP 或域名），国际版入口指向境外站
-  const cnLink = document.querySelector('.site-switch[data-i18n="footer.cnEntry"]');
-  const intlLink = document.querySelector('.site-switch[data-i18n="footer.intlEntry"]');
-  if(cnLink) cnLink.href = cnBase + '?stay=1';
-  if(intlLink) intlLink.href = SITE.ovs.home + '?stay=1';
+  // 站点切换：单一入口，按当前站只显示对方入口（同一位置）
+  //   境内版 → 国际版入口（指向境外站）；国际版 → 境内入口（指向境内站）
+  const siteSwitch = document.getElementById('siteSwitch');
+  if(siteSwitch){
+    const toCn = !isCnHost; // 国际版才显示「境内入口」
+    siteSwitch.href = (toCn ? cnBase : SITE.ovs.home) + '?stay=1';
+    siteSwitch.dataset.i18n = toCn ? 'footer.cnEntry' : 'footer.intlEntry';
+    const dict = T[cur] || {};
+    siteSwitch.textContent = dict[siteSwitch.dataset.i18n] || (toCn ? '境内入口' : '国际版入口');
+  }
   // ICP：境内显示占位框（无内容），境外隐藏
   const icpEl = document.querySelector('.icp-slot');
   if(icpEl){
