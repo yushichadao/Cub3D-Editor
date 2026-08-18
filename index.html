@@ -437,6 +437,8 @@
       font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
       line-height:1.7;
     }
+    /* 阿拉伯语专项：标题取消负字距（连写文字用 -letter-spacing 会导致字母粘连重叠）并放宽行高 */
+    html[lang="ar"] .hero h1{letter-spacing:normal;line-height:1.45;max-width:none}
     html[lang="ar"] [data-i18n], html[lang="ar"] input, html[lang="ar"] select, html[lang="ar"] button, html[lang="ar"] textarea{
       font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
     }
