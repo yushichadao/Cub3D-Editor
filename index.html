@@ -58,16 +58,18 @@
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:.01em;flex:0 0 auto;min-width:0}
   .brand .mark{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
     background:var(--accent);color:#0c1413;font-weight:800;font-size:15px;flex:0 0 auto}
-  .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand span{white-space:nowrap;flex-shrink:0}   /* 品牌名永不压缩/省略 */
   .nav-right{display:flex;gap:12px;align-items:center;flex:0 0 auto}
   .lang{display:flex;gap:2px;background:var(--bg-soft);border:1px solid var(--line);border-radius:8px;padding:2px}
   .lang-mobile{display:none}
   .lang button{border:0;background:transparent;color:var(--dim);font-size:12.5px;font-weight:600;
     padding:5px 9px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit}
   .lang button.active{background:var(--accent);color:#0c1413}
-  /* 中窄屏：顶栏 9 个语言按钮压缩，避免导航栏溢出换行 */
+  /* 窄屏：顶栏只保留 品牌 + ☰ 菜单；9 语言按钮组移入菜单面板（单行显示），确保品牌完整显示 */
   @media (max-width:900px){
-    .lang button{padding:4px 7px;font-size:12px}
+    .lang{display:none}
+    .nav-right{gap:8px}
+    .nav-links .lang-mobile{display:flex !important}
   }
   .menu-btn{display:flex;align-items:center;justify-content:center;background:var(--bg-soft);
     border:1px solid var(--line);color:var(--text);width:42px;height:38px;border-radius:8px;font-size:17px;cursor:pointer;flex:0 0 auto}
@@ -78,6 +80,11 @@
     background:var(--bg);border-bottom:1px solid var(--line);border-radius:0 0 16px 16px;
     padding:8px 0 16px;box-shadow:0 20px 48px rgba(0,0,0,.45);
     transform:translateY(-12px);opacity:0;visibility:hidden;transition:transform .22s,opacity .22s,visibility .22s;z-index:100}
+  /* 菜单面板内的语言按钮组：9 语言单行、等宽，宽度与顶栏按钮区一致；默认隐藏（顶栏已展示），窄屏时显示 */
+  .nav-links .lang-mobile{display:none;flex-wrap:nowrap;gap:2px;padding:10px 16px 2px}
+  .nav-links .lang-mobile button{flex:1 1 0;min-width:0;border:0;background:var(--bg-soft);color:var(--dim);
+    font-size:12.5px;font-weight:600;padding:7px 4px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit;white-space:nowrap}
+  .nav-links .lang-mobile button.active{background:var(--accent);color:#0c1413}
   .nav-links.open{transform:none;opacity:1;visibility:visible}
   .nav-links a{color:var(--dim);font-size:15px;white-space:nowrap;flex:0 0 auto;
     padding:15px 28px;border-bottom:1px solid rgba(255,255,255,.05)}
@@ -238,30 +245,25 @@
     font-size:13.5px;font-weight:600;opacity:0;visibility:hidden;transition:.25s;box-shadow:0 12px 32px -12px rgba(90,209,196,.4)}
   .toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
 
-  /* ===== 页脚 ===== */
+  /* ===== 页脚：三组纵向居中（链接组 / 法律组 / 品牌信息组） ===== */
   footer{border-top:1px solid var(--line);padding:40px 0 56px;margin-top:0;background:var(--bg)}
-  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center;
-    color:var(--dim-2);font-size:13px}
+  .foot{display:flex;flex-direction:column;align-items:center;gap:26px;
+    color:var(--dim-2);font-size:13px;text-align:center}
   .foot a{color:var(--dim);transition:color .2s}
   .foot a:hover{color:var(--accent)}
-  .foot-links{display:flex;gap:22px;flex-wrap:wrap}
-  /* 法律文档入口 */
-  .foot-legal{display:flex;gap:18px;flex-wrap:wrap}
+  /* 组1：进入编辑器 / GitHub / 下载 / XX入口 */
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}
+  /* 组2：服务协议 / 免责声明 / 隐私政策 */
+  .foot-legal{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
   .foot-legal .legal-link{color:var(--dim);font-size:12.5px;transition:color .2s}
   .foot-legal .legal-link:hover{color:var(--accent);text-decoration:underline}
-  .foot-info{display:flex;flex-direction:column;min-width:0;align-items:flex-end;text-align:right;
-    /* 始终把信息块（品牌/版权/ICP）推到行尾（inline 方向 end）：
-       一行放下时与 space-between 行为一致；多行换行时（窄屏或阿拉伯语等宽屏），
-       space-between 对单 item 放行首会造成 RTL=右 / LTR=左，跳变。逻辑 margin
-       推回行尾：LTR 下=left:auto 靠右，RTL 下=right:auto 靠左，与设计意图一致 */
-    margin-inline-start:auto}
+  /* 组3：品牌行 + 权利声明 + ICP（有则显示），整体居中 */
+  .foot-info{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
   .foot-info .brand{flex-wrap:nowrap}
   .foot-copy{white-space:normal;direction:ltr;unicode-bidi:isolate}
-  /* ICP 备案号预留空框：现阶段只画框占位、不写任何内容，后续在此填写备案号 */
-  .icp-slot{display:inline-flex;align-items:center;gap:8px;margin-top:10px;
-    min-width:170px;min-height:26px;padding:3px 12px;
-    border:1px dashed var(--line);border-radius:7px;color:transparent;
-    font-size:12px;white-space:nowrap}
+  /* ICP 备案号：有备案才显示（无内容时不占位） */
+  .icp-slot{display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;white-space:nowrap;color:var(--dim-2)}
 
   /* ===== 场景卡片 ===== */
   .scn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:36px}
@@ -404,16 +406,10 @@
     .detect .go .btn{width:100%;justify-content:center}
   }
 
-  /* 手机端：顶栏语言切换器收进下拉面板，避免溢出 */
+  /* 手机端：仅收紧间距；语言切换器已统一收进菜单面板（见 .nav-links .lang-mobile），
+     品牌图标与品牌名无论宽窄屏均完整显示 */
   @media(max-width:560px){
     .nav{gap:10px}
-    .nav .lang{display:none}
-    .brand span{display:none}
-    .lang-mobile{display:flex;gap:2px;background:var(--bg-soft);border:1px solid var(--line);
-      border-radius:8px;padding:3px;margin:6px 16px 2px;flex-wrap:wrap;justify-content:center}
-    .lang-mobile button{border:0;background:transparent;color:var(--dim);font-size:13px;font-weight:600;
-      padding:8px 10px;border-radius:6px;cursor:pointer;font-family:inherit;flex:1 1 auto}
-    .lang-mobile button.active{background:var(--accent);color:#0c1413}
   }
 </style>
   <!-- 阿拉伯语（实验）：仅作用于 html[lang="ar"]，不影响其它语言 -->
@@ -466,7 +462,7 @@
        信息块自身继承 rtl：column 交叉轴 align-items:flex-end 在 RTL 下指向物理左，
        故头像/标题整体靠左；品牌行随 rtl 镜像（头像在右、标题在左）。
        切勿给 .foot-info 加 direction:ltr —— 那会把 .brand 也翻成 LTR（头像左、标题右），违背 RTL 设计 */
-    html[lang="ar"] .foot-info{align-items:flex-end;text-align:right}
+    html[lang="ar"] .foot-info{align-items:center;text-align:center}
     /* RTL：句尾是英语/技术词（如 Cub3D Editor、.json）时，用 isolate 把拉丁片段包成独立双向单元，
        避免后续的阿拉伯语把句号/问号等中性标点拉到拉丁词左侧，造成标点位置异常 */
     html[lang="ar"] .brand span[data-i18n]{unicode-bidi:isolate}
@@ -770,9 +766,10 @@
       <a href="legal-privacy.html" class="legal-link" data-i18n="footer.privacy">隐私政策</a>
     </div>
     <div class="foot-info">
-      <div class="brand" style="margin-bottom:8px"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></div>
+      <!-- 品牌行：图标 + 品牌名，布局与顶栏一致 -->
+      <a class="brand" href="#top"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></a>
       <div class="foot-copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
-      <!-- ICP 备案号预留空框：现阶段无备案，仅画框占位不写内容，后续在此填写备案号 -->
+      <!-- ICP 备案号：有备案号时 JS 填文字并显示，无则隐藏不占位 -->
       <span class="icp-slot" aria-hidden="true"></span>
     </div>
   </div>
@@ -1749,13 +1746,14 @@ function initSite(){
     const dict = T[cur] || {};
     siteSwitch.textContent = dict[siteSwitch.dataset.i18n] || (toCn ? '境内入口' : '国际版入口');
   }
-  // ICP：境内显示占位框（无内容），境外隐藏
+  // ICP：仅境内且有备案号时显示，否则隐藏（不占位）
   const icpEl = document.querySelector('.icp-slot');
   if(icpEl){
-    if(isCnHost){
+    if(isCnHost && SITE.cn.icp){
+      icpEl.textContent = SITE.cn.icp;
       icpEl.style.display='';
-      if(SITE.cn.icp) icpEl.textContent = SITE.cn.icp;
     } else {
+      icpEl.textContent = '';
       icpEl.style.display='none';
     }
   }
