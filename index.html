@@ -117,16 +117,22 @@
   .hero-note span{display:inline-flex;align-items:center;gap:7px}
   .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.85}
 
-  /* ===== 捐赠提示横幅（首屏显眼位置） ===== */
+  /* ===== 捐赠提示横幅（首屏显眼位置，可关闭） ===== */
   .donate-banner{margin-top:40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
     border:1px solid var(--accent);border-radius:var(--radius);
     background:linear-gradient(135deg,rgba(111,224,211,.09),rgba(111,224,211,.03));
     padding:16px 20px}
+  .donate-banner.hidden{display:none}
+  /* 关闭按钮：与横幅卡片一致的圆角小按钮，作为 flex 项排在按钮区右侧，视觉统一 */
+  .donate-banner .donate-close{flex:0 0 auto;width:26px;height:26px;display:grid;place-items:center;margin-left:2px;
+    border:1px solid var(--line);background:var(--bg-soft);color:var(--dim);font-size:15px;line-height:1;
+    cursor:pointer;border-radius:7px;transition:.2s;padding:0}
+  .donate-banner .donate-close:hover{color:#0c1413;background:var(--accent);border-color:var(--accent)}
   .donate-banner .donate-heart{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
     background:var(--accent);color:#0c1413;font-size:19px}
   .donate-banner .donate-text{flex:1 1 240px;min-width:200px;line-height:1.6;font-size:14px;color:var(--text)}
   .donate-banner .donate-text b{color:var(--accent)}
-  .donate-banner .donate-btn{margin-left:auto;flex:0 0 auto}
+  .donate-banner .donate-btn{flex:0 0 auto}
   .donate-banner .donate-btn:hover{transform:translateY(-1px)}
 
   /* ===== 设备识别横幅 ===== */
@@ -553,11 +559,12 @@
         <div id="detectText" data-i18n="detect.default">正在识别您的设备…</div>
         <a class="btn btn-primary go" id="detectCta" href="Web/index.html"><span data-i18n="detect.go">前往推荐版本</span></a>
       </div>
-      <!-- 捐赠提示横幅：首屏显眼（位于设备推荐之后），避免用户需滑到底部才发现 -->
-      <div class="donate-banner">
+      <!-- 捐赠提示横幅：首屏显眼（位于设备推荐之后），可点击 ✕ 关闭，7 天内不再显示 -->
+      <div class="donate-banner" id="donateBanner">
         <span class="donate-heart">♥</span>
         <span class="donate-text"><b data-i18n="donate.title">喜欢 Cub3D Editor 吗？</b> <span data-i18n="donate.tip">你的赞助将支持独立开发者持续改进，让项目走得更远。</span></span>
         <a class="btn btn-primary donate-btn" href="https://afdian.com/a/cub3d-editor" target="_blank" rel="noopener" data-i18n="donate.cta">♥ 赞助支持</a>
+        <button class="donate-close" id="donateClose" aria-label="Close">&times;</button>
       </div>
     </div>
   </section>
@@ -1923,6 +1930,24 @@ syncFabScroll();
 /* 初始化 */
 initSite();
 applyLang(cur);
+
+/* ============ 捐赠横幅可关闭：点击 ✕ 后 7 天内不再显示 ============ */
+(function(){
+  const banner = document.getElementById('donateBanner');
+  if(!banner) return;
+  const KEY = 'cub3d_donate_hide_until';
+  let hiddenUntil = 0;
+  try{ hiddenUntil = parseInt(localStorage.getItem(KEY) || '0', 10) || 0; }catch(e){}
+  if(hiddenUntil > Date.now()){ banner.classList.add('hidden'); }
+  const closeBtn = document.getElementById('donateClose');
+  if(closeBtn){
+    closeBtn.addEventListener('click', ()=>{
+      banner.classList.add('hidden');
+      try{ localStorage.setItem(KEY, String(Date.now() + 7*24*60*60*1000)); }catch(e){}
+    });
+  }
+})();
+</script>
 
 /* ============ 统一接口：跨标签页语言实时联动（同源：官网 ↔ Web 编辑器） ============ */
 window.addEventListener('storage', ev=>{
