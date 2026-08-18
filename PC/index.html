@@ -2290,16 +2290,6 @@ function updateAboutHome(){
 }
 updateAboutHome();
 
-// 统一接口：跨标签页语言实时联动（同源页面间）。独立端（file:///Capacitor）不同源不触发，本地缓存记忆仍生效。
-window.addEventListener('storage', function(ev){
-  if(ev.key !== 'lang' && ev.key !== 'cub3d_lang') return;
-  var v = ev.newValue;
-  if(v && LANGS[v] && typeof applyLang === 'function'){
-    currentLang = v;
-    applyLang();
-  }
-});
-
 // ============ 渲染器 / 场景 / 相机 ============
 const canvas = document.getElementById('three-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: true });
