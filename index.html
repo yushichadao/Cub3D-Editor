@@ -117,6 +117,18 @@
   .hero-note span{display:inline-flex;align-items:center;gap:7px}
   .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.85}
 
+  /* ===== 捐赠提示横幅（首屏显眼位置） ===== */
+  .donate-banner{margin-top:40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    border:1px solid var(--accent);border-radius:var(--radius);
+    background:linear-gradient(135deg,rgba(111,224,211,.09),rgba(111,224,211,.03));
+    padding:16px 20px}
+  .donate-banner .donate-heart{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+    background:var(--accent);color:#0c1413;font-size:19px}
+  .donate-banner .donate-text{flex:1 1 240px;min-width:200px;line-height:1.6;font-size:14px;color:var(--text)}
+  .donate-banner .donate-text b{color:var(--accent)}
+  .donate-banner .donate-btn{margin-left:auto;flex:0 0 auto}
+  .donate-banner .donate-btn:hover{transform:translateY(-1px)}
+
   /* ===== 设备识别横幅 ===== */
   .detect{margin-top:40px;border:1px solid var(--line);border-radius:var(--radius);
     background:var(--panel);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -362,10 +374,10 @@
   @keyframes floatGlow{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-4%) scale(1.08)}}
 
   /* ===== Hero 入场（分层错峰）===== */
-  .hero .eyebrow,.hero h1,.hero .tag,.hero .cta-row,.hero .hero-note,.hero .detect{
+  .hero .eyebrow,.hero h1,.hero .tag,.hero .cta-row,.hero .hero-note,.hero .donate-banner,.hero .detect{
     opacity:0;transform:translateY(24px);animation:rise .8s cubic-bezier(.22,.61,.36,1) forwards}
   .hero .eyebrow{animation-delay:.05s}.hero h1{animation-delay:.16s}.hero .tag{animation-delay:.27s}
-  .hero .cta-row{animation-delay:.38s}.hero .hero-note{animation-delay:.49s}.hero .detect{animation-delay:.6s}
+  .hero .cta-row{animation-delay:.38s}.hero .hero-note{animation-delay:.49s}.hero .donate-banner{animation-delay:.58s}.hero .detect{animation-delay:.6s}
   @keyframes rise{to{opacity:1;transform:none}}
 
   /* ===== 路线图节点呼吸 ===== */
@@ -379,7 +391,7 @@
     background:var(--accent);border-radius:2px}
   @media(prefers-reduced-motion:reduce){
     .hero::before,.hero::after{animation:none}
-    .hero .eyebrow,.hero h1,.hero .tag,.hero .cta-row,.hero .hero-note,.hero .detect{animation:none;opacity:1;transform:none}
+    .hero .eyebrow,.hero h1,.hero .tag,.hero .cta-row,.hero .hero-note,.hero .donate-banner,.hero .detect{animation:none;opacity:1;transform:none}
     .road-item.done::before{animation:none}
     .card:hover,.feat:hover,.scn:hover,.step:hover,.sol:hover{transform:none}
   }
@@ -535,6 +547,12 @@
         <span><i class="dot"></i><span data-i18n="note.account">无需账号</span></span>
         <span><i class="dot"></i><span data-i18n="note.local">数据本地保存</span></span>
         <span><i class="dot"></i><span data-i18n="note.sync">工程文件三端互通</span></span>
+      </div>
+      <!-- 捐赠提示横幅：首屏显眼，避免用户需滑到底部才发现 -->
+      <div class="donate-banner">
+        <span class="donate-heart">♥</span>
+        <span class="donate-text"><b data-i18n="donate.title">喜欢 Cub3D Editor 吗？</b> <span data-i18n="donate.tip">你的赞助将支持独立开发者持续改进，让项目走得更远。</span></span>
+        <a class="btn btn-primary donate-btn" href="https://afdian.com/a/cub3d-editor" target="_blank" rel="noopener" data-i18n="donate.cta">♥ 赞助支持</a>
       </div>
       <div class="detect" id="detect">
         <div class="ico">🛰️</div>
@@ -825,6 +843,7 @@ const T = {
     "hero.tag":"同一套代码，覆盖网页、Windows、Android 三端，四种使用形态。",
     "hero.ctaWeb":"在浏览器中打开","hero.ctaAll":"查看全部下载",
     "note.free":"完全免费","note.account":"无需账号","note.local":"数据本地保存","note.sync":"工程文件三端互通",
+    "donate.title":"喜欢 Cub3D Editor 吗？","donate.tip":"你的赞助将支持独立开发者持续改进，让项目走得更远。","donate.cta":"♥ 赞助支持",
     "detect.default":"正在识别您的设备…","detect.go":"前往推荐版本",
     "preview.eyebrow":"编辑器预览","preview.title":"眼见为实","preview.sub":"三端共用同一套核心引擎，界面与画布体验高度一致。以下为编辑器画面示意，点开即可亲自体验。","preview.badge":"点击进入实时编辑器","preview.badgeTouch":"触屏版",
     "stats.eyebrow":"关键数字","stats.title":"用数据说话","stats.l1":"种界面语言，切换即同步","stats.l2":"平台 · 网页 / Windows / Android","stats.l3":"种使用形态，随设备自适应","stats.l4":"离线可用，数据本地保存",
@@ -898,6 +917,7 @@ const T = {
     "hero.tag":"Una misma base de código para web, Windows y Android, en cuatro formas de uso.",
     "hero.ctaWeb":"Abrir en el navegador","hero.ctaAll":"Ver todas las descargas",
     "note.free":"Totalmente gratuito","note.account":"Sin cuenta","note.local":"Datos guardados localmente","note.sync":"Archivos de proyecto compatibles en los tres entornos",
+    "donate.title":"¿Te gusta Cub3D Editor?","donate.tip":"Tu apoyo ayuda al desarrollador independiente a seguir mejorando el proyecto.","donate.cta":"♥ Apoyar",
     "detect.default":"Detectando tu dispositivo…","detect.go":"Ir a la versión recomendada",
     "preview.eyebrow":"Vista previa del editor","preview.title":"Ver para creer","preview.sub":"Las tres plataformas comparten el mismo motor principal, por lo que la interfaz y el lienzo son muy consistentes. A continuación, una muestra del editor: púlsalo para probarlo tú mismo.","preview.badge":"Haz clic para abrir el editor en vivo","preview.badgeTouch":"Táctil",
     "stats.eyebrow":"Cifras clave","stats.title":"En cifras","stats.l1":"idiomas de interfaz, sincronización al cambiar","stats.l2":"Plataformas · Web / Windows / Android","stats.l3":"modos de uso, adaptados al dispositivo","stats.l4":"disponible sin conexión, datos en local",
@@ -971,6 +991,7 @@ const T = {
     "hero.tag":"同一套程式碼，涵蓋網頁、Windows、Android 三端，四種使用形態。",
     "hero.ctaWeb":"在瀏覽器中開啟","hero.ctaAll":"查看全部下載",
     "note.free":"完全免費","note.account":"無需帳號","note.local":"資料本機保存","note.sync":"工程檔案三端互通",
+    "donate.title":"喜歡 Cub3D Editor 嗎？","donate.tip":"你的贊助將支持獨立開發者持續改進，讓專案走得更遠。","donate.cta":"♥ 贊助支持",
     "detect.default":"正在識別您的裝置…","detect.go":"前往推薦版本",
     "preview.eyebrow":"編輯器預覽","preview.title":"眼見為實","preview.sub":"三端共用同一套核心引擎，介面與畫布體驗高度一致。以下為編輯器畫面示意，點開即可親自體驗。","preview.badge":"點擊進入即時編輯器","preview.badgeTouch":"觸屏版",
     "stats.eyebrow":"關鍵數字","stats.title":"用數據說話","stats.l1":"種介面語言，切換即同步","stats.l2":"平台 · 網頁 / Windows / Android","stats.l3":"種使用形態，隨裝置自適應","stats.l4":"離線可用，資料本機保存",
@@ -1044,6 +1065,7 @@ const T = {
     "hero.tag":"One codebase across Web, Windows and Android — four usage modes in total.",
     "hero.ctaWeb":"Open in Browser","hero.ctaAll":"See All Downloads",
     "note.free":"Completely free","note.account":"No account needed","note.local":"Data stays local","note.sync":"Projects sync across devices",
+    "donate.title":"Enjoying Cub3D Editor?","donate.tip":"Your support helps the indie developer keep improving and take the project further.","donate.cta":"♥ Support",
     "detect.default":"Detecting your device…","detect.go":"Go to recommended",
     "preview.eyebrow":"Editor Preview","preview.title":"See It in Action","preview.sub":"All three platforms share the same core engine, so the UI and canvas experience stay consistent. Below is a glimpse of the editor—click to try it yourself.","preview.badge":"Click to open the live editor","preview.badgeTouch":"Touch",
     "stats.eyebrow":"Key Numbers","stats.title":"By the Numbers","stats.l1":"interface languages, switch to sync","stats.l2":"Platforms · Web / Windows / Android","stats.l3":"usage modes, adaptive to device","stats.l4":"offline-ready, data stays local",
@@ -1117,6 +1139,7 @@ const T = {
     "hero.tag":"1つのコードベースが Web・Windows・Android の3プラットフォーム、計4形態に対応。",
     "hero.ctaWeb":"ブラウザで開く","hero.ctaAll":"すべてのダウンロード",
     "note.free":"完全無料","note.account":"アカウント不要","note.local":"データはローカル保存","note.sync":"シーンは端末間共有",
+    "donate.title":"Cub3D Editor は気に入りましたか？","donate.tip":"ご支援が独立開発者の改善を支え、プロジェクトをより遠くへ導きます。","donate.cta":"♥ 支援する",
     "detect.default":"デバイスを判別中…","detect.go":"おすすめへ",
     "preview.eyebrow":"エディタプレビュー","preview.title":"百聞は一見に如かず","preview.sub":"3つのプラットフォームは同じコアエンジンを共有し、UIとキャンバス体験はほぼ同一です。以下はエディタ画面のイメージです。クリックしてお試しください。","preview.badge":"クリックしてライブエディタを開く","preview.badgeTouch":"タッチ版",
     "stats.eyebrow":"主な数字","stats.title":"数字で見る","stats.l1":"言語のUI、切替で同期","stats.l2":"プラットフォーム · Web / Windows / Android","stats.l3":"使用形態、端末に応じて自動調整","stats.l4":"オフライン対応、データはローカル保存",
@@ -1190,6 +1213,7 @@ const T = {
     "hero.tag":"하나의 코드베이스가 웹·Windows·Android를 아우르며, 총 네 가지 사용 형태를 지원합니다.",
     "hero.ctaWeb":"브라우저에서 열기","hero.ctaAll":"모든 다운로드 보기",
     "note.free":"완전 무료","note.account":"계정 불필요","note.local":"데이터는 기기에 저장","note.sync":"프로젝트 기기 간 공유",
+    "donate.title":"Cub3D Editor가 마음에 드시나요?","donate.tip":"후원은 독립 개발자의 지속적인 개선을 지원하고 프로젝트를 더 멀리 이끌어 줍니다.","donate.cta":"♥ 후원하기",
     "detect.default":"기기를 인식하는 중…","detect.go":"추천 버전으로",
     "preview.eyebrow":"에디터 미리보기","preview.title":"백문이불여일견","preview.sub":"세 플랫폼은 동일한 코어 엔진을 공유하여 UI와 캔버스 경험이 거의 같습니다. 아래는 에디터 화면의 예시입니다. 클릭하여 직접 체험해 보세요.","preview.badge":"클릭하여 라이브 에디터 열기","preview.badgeTouch":"터치 버전",
     "stats.eyebrow":"핵심 수치","stats.title":"숫자로 보는","stats.l1":"개 언어 UI, 전환 시 동기화","stats.l2":"플랫폼 · 웹 / Windows / Android","stats.l3":"가지 사용 형태, 기기에 맞춰 자동 조정","stats.l4":"오프라인 지원, 데이터 로컬 저장",
@@ -1257,6 +1281,7 @@ const T = {
     "hero.tag":"Единая кодовая база для Web, Windows и Android — всего четыре режима использования.",
     "hero.ctaWeb":"Открыть в браузере","hero.ctaAll":"Все загрузки",
     "note.free":"Полностью бесплатно","note.account":"Без регистрации","note.local":"Данные локально","note.sync":"Проекты общие на всех устройствах",
+    "donate.title":"Нравится Cub3D Editor?","donate.tip":"Ваша поддержка помогает независимому разработчику улучшать проект и двигаться вперёд.","donate.cta":"♥ Поддержать",
     "detect.default":"Определяем ваше устройство…","detect.go":"К рекомендованной версии",
     "preview.eyebrow":"Предпросмотр редактора","preview.title":"Увидеть своими глазами","preview.sub":"Все три платформы используют один и тот же основной движок, поэтому интерфейс и холст практически идентичны. Ниже — пример экрана редактора. Нажмите, чтобы попробовать самим.","preview.badge":"Нажмите, чтобы открыть живой редактор","preview.badgeTouch":"Сенсорная версия",
     "stats.eyebrow":"Ключевые цифры","stats.title":"Цифры говорят","stats.l1":"языков интерфейса, синхронизация при переключении","stats.l2":"Платформы · Web / Windows / Android","stats.l3":"режима использования, адаптация к устройству","stats.l4":"офлайн-доступ, данные хранятся локально",
@@ -1323,6 +1348,7 @@ const T = {
     "hero.tag":"Un seul code couvre le Web, Windows et Android, sur trois plateformes et quatre modes d'utilisation.",
     "hero.ctaWeb":"Ouvrir dans le navigateur","hero.ctaAll":"Voir tous les téléchargements",
     "note.free":"Entièrement gratuit","note.account":"Sans compte","note.local":"Données enregistrées localement","note.sync":"Projets synchronisés entre appareils",
+    "donate.title":"Vous aimez Cub3D Editor ?","donate.tip":"Votre soutien aide le développeur indépendant à améliorer le projet et à aller plus loin.","donate.cta":"♥ Soutenir",
     "detect.default":"Détection de votre appareil…","detect.go":"Aller à la version recommandée",
     "preview.eyebrow":"Aperçu de l'éditeur","preview.title":"Voir pour croire","preview.sub":"Les trois plateformes partagent le même moteur principal, l'interface et le canevas restent donc cohérents. Voici un aperçu de l'éditeur — cliquez pour l'essayer vous-même.","preview.badge":"Cliquez pour ouvrir l'éditeur en direct","preview.badgeTouch":"Tactile",
     "stats.eyebrow":"Chiffres clés","stats.title":"En chiffres","stats.l1":"langues d'interface, synchronisées au changement","stats.l2":"Plateformes · Web / Windows / Android","stats.l3":"modes d'utilisation, adaptatifs à l'appareil","stats.l4":"hors-ligne, données enregistrées localement",
@@ -1402,6 +1428,7 @@ const T = {
     "hero.tag":"شفرة واحدة تغطي الويب وWindows وAndroid عبر ثلاث منصات وأربعة أشكال استخدام.",
     "hero.ctaWeb":"افتح في المتصفح","hero.ctaAll":"عرض كل التنزيلات",
     "note.free":"مجاني تماماً","note.account":"بدون حساب","note.local":"البيانات محفوظة محلياً","note.sync":"مشاريع متزامنة بين الأجهزة",
+    "donate.title":"هل أعجبك Cub3D Editor؟","donate.tip":"دعمك يساعد المطور المستقل على مواصلة تحسين المشروع والمضي به قدماً.","donate.cta":"♥ ادعم",
     "detect.default":"جارٍ التعرف على جهازك…","detect.go":"انتقل إلى الإصدار الموصى به",
     "preview.eyebrow":"معاينة المحرر","preview.title":"الرؤية خير من الخبر","preview.sub":"تتشارك المنصات الثلاث نفس المحرك الأساسي، لذا تظل الواجهة وسطح الرسم متسقين. فيما يلي لمحة عن المحرر — انقر لتجربته بنفسك.","preview.badge":"انقر لفتح المحرر المباشر","preview.badgeTouch":"اللمس",
     "stats.eyebrow":"أرقام رئيسية","stats.title":"بالأرقام","stats.l1":"لغات الواجهة، تزامن عند التبديل","stats.l2":"منصات · الويب / Windows / Android","stats.l3":"أشكال استخدام، تتكيف مع الجهاز","stats.l4":"متاح دون اتصال، البيانات محفوظة محلياً",
