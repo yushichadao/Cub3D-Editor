@@ -377,7 +377,7 @@
   .hero .eyebrow,.hero h1,.hero .tag,.hero .cta-row,.hero .hero-note,.hero .donate-banner,.hero .detect{
     opacity:0;transform:translateY(24px);animation:rise .8s cubic-bezier(.22,.61,.36,1) forwards}
   .hero .eyebrow{animation-delay:.05s}.hero h1{animation-delay:.16s}.hero .tag{animation-delay:.27s}
-  .hero .cta-row{animation-delay:.38s}.hero .hero-note{animation-delay:.49s}.hero .donate-banner{animation-delay:.58s}.hero .detect{animation-delay:.6s}
+  .hero .cta-row{animation-delay:.38s}.hero .hero-note{animation-delay:.49s}.hero .detect{animation-delay:.58s}.hero .donate-banner{animation-delay:.68s}
   @keyframes rise{to{opacity:1;transform:none}}
 
   /* ===== 路线图节点呼吸 ===== */
@@ -548,16 +548,16 @@
         <span><i class="dot"></i><span data-i18n="note.local">数据本地保存</span></span>
         <span><i class="dot"></i><span data-i18n="note.sync">工程文件三端互通</span></span>
       </div>
-      <!-- 捐赠提示横幅：首屏显眼，避免用户需滑到底部才发现 -->
-      <div class="donate-banner">
-        <span class="donate-heart">♥</span>
-        <span class="donate-text"><b data-i18n="donate.title">喜欢 Cub3D Editor 吗？</b> <span data-i18n="donate.tip">你的赞助将支持独立开发者持续改进，让项目走得更远。</span></span>
-        <a class="btn btn-primary donate-btn" href="https://afdian.com/a/cub3d-editor" target="_blank" rel="noopener" data-i18n="donate.cta">♥ 赞助支持</a>
-      </div>
       <div class="detect" id="detect">
         <div class="ico">🛰️</div>
         <div id="detectText" data-i18n="detect.default">正在识别您的设备…</div>
         <a class="btn btn-primary go" id="detectCta" href="Web/index.html"><span data-i18n="detect.go">前往推荐版本</span></a>
+      </div>
+      <!-- 捐赠提示横幅：首屏显眼（位于设备推荐之后），避免用户需滑到底部才发现 -->
+      <div class="donate-banner">
+        <span class="donate-heart">♥</span>
+        <span class="donate-text"><b data-i18n="donate.title">喜欢 Cub3D Editor 吗？</b> <span data-i18n="donate.tip">你的赞助将支持独立开发者持续改进，让项目走得更远。</span></span>
+        <a class="btn btn-primary donate-btn" href="https://afdian.com/a/cub3d-editor" target="_blank" rel="noopener" data-i18n="donate.cta">♥ 赞助支持</a>
       </div>
     </div>
   </section>
