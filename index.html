@@ -65,8 +65,13 @@
   .lang button{border:0;background:transparent;color:var(--dim);font-size:12.5px;font-weight:600;
     padding:5px 9px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit}
   .lang button.active{background:var(--accent);color:#0c1413}
-  /* 窄屏：顶栏只保留 品牌 + ☰ 菜单；9 语言按钮组移入菜单面板（单行显示），确保品牌完整显示 */
+  /* 中窄屏：顶栏语言按钮适度压缩（语言栏仍留在顶栏） */
   @media (max-width:900px){
+    .lang button{padding:4px 6px;font-size:12px}
+  }
+  /* 窄屏：顶栏只保留 品牌 + ☰ 菜单；9 语言按钮组移入菜单面板（单行显示），确保品牌完整显示。
+     断点设在真正快挤到品牌名的 640px（语言栏+菜单约 358px，品牌约 170px，640 仍留 ~80px 余量） */
+  @media (max-width:640px){
     .lang{display:none}
     .nav-right{gap:8px}
     .nav-links .lang-mobile{display:flex !important}
