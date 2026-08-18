@@ -31,7 +31,7 @@
 
 ### PC 版（Windows）
 1. 前往 [Releases](https://github.com/yushichadao/Cub3D-Editor/releases/latest)。
-2. 下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）。
+2. 下载 `Cub3D-Editor-Setup-1.1.0-x64.exe`（安装版）或 `Cub3D-Editor-Portable-1.1.0-x64.exe`（便携版，免安装）。
 3. 运行即可开始使用。
 
 ### Android 版

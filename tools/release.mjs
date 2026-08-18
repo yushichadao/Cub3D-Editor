@@ -4,7 +4,7 @@
 //   node tools/release.mjs 1.1.0      # 指定版本
 //   node tools/release.mjs --replace  # 同名 Release 已存在时删除重建
 //
-// 构建产物统一集中到仓库根目录 release/（Cub3D-Editor-Setup.exe / Portable.exe / .apk），
+// 构建产物统一集中到仓库根目录 release/（Cub3D-Editor-Setup-<版本>-x64.exe / Portable / .apk），
 // 上传时直接从 release/ 读取。该目录在 .gitignore 中忽略，不入库；
 // 本脚本用 `gh` 把产物发布到 Releases，宣传页/说明书的「下载」按钮
 // 会跳转到 releases/latest/download/<文件>。
@@ -77,8 +77,8 @@ if (!setupSrc || !portableSrc || !apkSrc) {
 }
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cub3d-release-')); // 仅用于 NOTES.md
 const artifacts = {
-  'Cub3D-Editor-Setup.exe': setupSrc,
-  'Cub3D-Editor-Portable.exe': portableSrc,
+  [`Cub3D-Editor-Setup-${version}-x64.exe`]: setupSrc,
+  [`Cub3D-Editor-Portable-${version}-x64.exe`]: portableSrc,
   [`Cub3D-Editor-release-${version}-universal.apk`]: apkSrc,
 };
 fs.mkdirSync(RELEASE_DIR, { recursive: true });
@@ -111,8 +111,8 @@ run(`git push origin ${tag}`);
 const notesFile = path.join(tmp, 'NOTES.md');
 fs.writeFileSync(notesFile,
   `Cub3D Editor ${version}\n\n` +
-  `- \`Cub3D-Editor-Setup.exe\` — Windows 安装版\n` +
-  `- \`Cub3D-Editor-Portable.exe\` — Windows 便携版（免安装）\n` +
+  `- \`Cub3D-Editor-Setup-${version}-x64.exe\` — Windows 安装版\n` +
+  `- \`Cub3D-Editor-Portable-${version}-x64.exe\` — Windows 便携版（免安装）\n` +
   `- \`Cub3D-Editor-release-${version}-universal.apk\` — Android 安装包（release 签名）\n`);
 run(`gh release create ${tag} --title ${q('Cub3D Editor ' + version)} --notes-file ${q(notesFile)} ${assetPaths.map(q).join(' ')}`);
 

@@ -25,7 +25,7 @@
 
 - **主页（宣传页）**：<https://cub3d-editor.cn/>（境内，国内直连推荐）或 <https://yushichadao.github.io/Cub3D-Editor/>（境外）—— 产品介绍、九语言切换、下载入口
 - **网页版编辑器（无需安装）**：<https://cub3d-editor.cn/Web/index.html>（境内）或 <https://yushichadao.github.io/Cub3D-Editor/Web/index.html>（境外）
-- **PC 版**：下载 `Cub3D-Editor-Setup.exe`（安装版）或 `Cub3D-Editor-Portable.exe`（便携版，免安装）
+- **PC 版**：下载 `Cub3D-Editor-Setup-1.1.0-x64.exe`（安装版）或 `Cub3D-Editor-Portable-1.1.0-x64.exe`（便携版，免安装）
 - **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor-release-1.1.0-universal.apk`
 
 导出为 `.json` 的工程文件在三端之间通用。
@@ -38,8 +38,8 @@
 
 | 产物 | 说明 |
 | :--- | :--- |
-| `Cub3D-Editor-Setup.exe` | Windows 安装版 |
-| `Cub3D-Editor-Portable.exe` | Windows 便携版（免安装） |
+| `Cub3D-Editor-Setup-1.1.0-x64.exe` | Windows 安装版 |
+| `Cub3D-Editor-Portable-1.1.0-x64.exe` | Windows 便携版（免安装） |
 | `Cub3D-Editor-release-1.1.0-universal.apk` | Android 安装包（release 签名，universal 全 ABI，包名 `com.cub3deditor.app`） |
 
 下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮默认跳转到最新 Release 的对应附件；境内站点（cub3d-editor.cn）联通后，「下载」按钮自动改指 `https://cub3d-editor.cn/downloads/` 下的镜像文件。
@@ -206,12 +206,12 @@ npm run apk:debug       # 调试包
    - `legal-tos.html` / `legal-disclaimer.html` / `legal-privacy.html`（法律页）
    - `.nojekyll`（如使用 GitHub Pages 产物则已包含）
 3. **配置 HTTPS**：为 `cub3d-editor.cn` 签发免费证书（如 Let's Encrypt 或云厂商免费证书）。
-4. **放置安装包与版本信息**：将 `Cub3D-Editor-Setup.exe`、`Cub3D-Editor-Portable.exe`、`Cub3D-Editor-release-1.1.0-universal.apk` 及 `versions.json` 放入站点根目录的 `downloads/`，境内页面的「下载」按钮即自动指向 `https://cub3d-editor.cn/downloads/<文件名>`，版本/体积信息从 `versions.json` 读取。
+4. **放置安装包与版本信息**：将 `Cub3D-Editor-Setup-1.1.0-x64.exe`、`Cub3D-Editor-Portable-1.1.0-x64.exe`、`Cub3D-Editor-release-1.1.0-universal.apk` 及 `versions.json` 放入站点根目录的 `downloads/`，境内页面的「下载」按钮即自动指向 `https://cub3d-editor.cn/downloads/<文件名>`，版本/体积信息从 `versions.json` 读取。
 
 `downloads/versions.json` 约定格式（`assets` 键为文件名 → 字节数）：
 
 ```json
-{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup.exe": 100672045, "Cub3D-Editor-Portable.exe": 90580208, "Cub3D-Editor-release-1.1.0-universal.apk": 4274504 } }
+{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup-1.1.0-x64.exe": 100672359, "Cub3D-Editor-Portable-1.1.0-x64.exe": 100430321, "Cub3D-Editor-release-1.1.0-universal.apk": 4274840 } }
 ```
 
 > 注：境内站 `downloads/` 未放置文件前，下载按钮与版本信息自动回退到 GitHub Releases；安装包镜像与服务器联通为后续阶段工作。
