@@ -1295,7 +1295,7 @@
   <script src="language/fr.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
   <script src="language/ar.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
   <script src="lang-override.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang');window.__bootStage&&window.__bootStage('bootLangReady')"></script>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" href="favicon.ico">
 <style>
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/noto-kufi-arabic-400.woff2') format('woff2');}
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/noto-kufi-arabic-700.woff2') format('woff2');}
@@ -2070,6 +2070,7 @@ const BOOTV = '20260818';
 
 // 加载完成：由主模块在初始化结束后调用，淡出缓冲页
 window.__bootDone = function () {
+  window.__booted = true;   // 编辑器已就绪：加载页阶段的 IP 分流不再跳转，避免打断会话
   if (window.__bootProgress) window.__bootProgress('done');
   const loader = document.getElementById('loader');
   if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
@@ -12744,6 +12745,69 @@ function openGuide(){
   const markClosed = ()=>{ clearLastSession(); };
   window.addEventListener('pagehide', markClosed);
   window.addEventListener('beforeunload', markClosed);
+})();
+
+/* 打开网页版编辑器时的境内外分流：在加载页阶段探测 IP，目标站可达才跳转（探活防呆，避免盲跳死站）；
+   一旦 window.__booted（编辑器已就绪）则不再跳转，保护编辑会话不被打断 */
+(function(){
+  const CN_HOME = 'https://cub3d-editor.cn/';
+  const OVS_HOME = 'https://yushichadao.github.io/Cub3D-Editor/';
+  const host = location.hostname || '';
+  const isCnHost = /(^|\.)cub3d-editor\.cn$/i.test(host);
+  const isLocal = /^(localhost|127\.|192\.168\.|10\.|\[::1)/i.test(host) || host === '';
+  if (isLocal) return;                              // 本地预览不跳
+  if (/[?&]stay=1\b/.test(location.search)) return; // 用户手动选择停留
+  if (/[?&]from=/.test(location.search)) return;    // 已分流过，防循环
+
+  function reachable(url){
+    const c = new AbortController();
+    const t = setTimeout(()=>c.abort(), 1200);
+    return fetch(url, { method:'HEAD', mode:'no-cors', cache:'no-store', signal:c.signal })
+      .then(()=>{ clearTimeout(t); return true; })
+      .catch(()=>{ clearTimeout(t); return false; });
+  }
+  function jget(url, pick){
+    const c = new AbortController();
+    const t = setTimeout(()=>c.abort(), 2500);
+    return fetch(url, { signal:c.signal, cache:'no-store' })
+      .then(r=>r.ok?r.json():null).then(d=>{ clearTimeout(t); return pick?pick(d):d; })
+      .catch(()=>{ clearTimeout(t); return null; });
+  }
+  function jsp(urlTpl){
+    return new Promise(res=>{
+      const cb = '__geo'+Date.now()+Math.random().toString(36).slice(2,7);
+      const s = document.createElement('script');
+      const t = setTimeout(()=>{ cleanup(); res(null); }, 2500);
+      function cleanup(){ clearTimeout(t); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
+      window[cb] = function(d){ cleanup(); res(d && (d.country || d.address) ? 'CN' : null); };
+      s.src = urlTpl.replace('{cb}', cb);
+      s.onerror = ()=>{ cleanup(); res(null); };
+      document.head.appendChild(s);
+    });
+  }
+  async function classify(){
+    if(isCnHost){ // 境内站：国内接口优先
+      let r = await jget('https://qifu-api.baidubce.com/ip/geo/v1/district', d=>{ const c=d&&d.data&&d.data.country; return c?(c==='中国'?'CN':'OVS'):null; });
+      if(r!==null) return r;
+      r = await jsp('https://whois.pconline.com.cn/ipJson.jsp?callback={cb}');
+      if(r!==null) return r;
+    } else {      // 境外站：国外接口优先
+      let r = await jget('https://ip-api.com/json/?lang=zh-CN', d=>d&&d.countryCode?(d.countryCode==='CN'?'CN':'OVS'):null);
+      if(r!==null) return r;
+      r = await jget('https://ipwho.is/', d=>d&&d.country_code?(d.country_code==='CN'?'CN':'OVS'):null);
+      if(r!==null) return r;
+    }
+    return null;
+  }
+  classify().then(async region=>{
+    if(window.__booted) return;                     // 编辑器已就绪，放弃跳转（保护会话）
+    if(region==='CN' && !isCnHost){                 // 国内用户打开境外站 → 探活境内站
+      if(await reachable(CN_HOME)) location.replace(CN_HOME + '?from=gh&stay=1');
+    } else if(region==='OVS' && isCnHost){          // 国外用户打开境内站 → 探活境外站
+      if(await reachable(OVS_HOME)) location.replace(OVS_HOME + '?from=cn&stay=1');
+    }
+    // 目标不可达（如 .cn 未建站 / GitHub 被墙）→ 安静留在当前站，继续加载编辑器
+  }).catch(()=>{});
 })();
 
 /* 项目主页按当前域名自适应：境内 cub3d-editor.cn / 境外 GitHub Pages；ICP 框仅境内显示 */
