@@ -2283,10 +2283,10 @@ function detectSystemLang(){
 }
 let currentLang = localStorage.getItem('lang') || detectSystemLang();
 let currentTheme = localStorage.getItem('theme') || 'neon';
-// 项目主页按界面语言自适应：简体中文 → 境内 cub3d-editor.cn，其余 → 境外 GitHub Pages
+// 项目主页按界面语言自适应：简体中文 → 境内入口（备案过渡期暂用 IP，备案后改回 https://cub3d-editor.cn/），其余 → 境外 GitHub Pages
 function updateAboutHome(){
   const el = document.getElementById('about-home');
-  if(el) el.href = (currentLang === 'zh-CN') ? 'https://cub3d-editor.cn/' : 'https://yushichadao.github.io/Cub3D-Editor/';
+  if(el) el.href = (currentLang === 'zh-CN') ? 'http://139.196.104.56/' : 'https://yushichadao.github.io/Cub3D-Editor/';
 }
 updateAboutHome();
 
@@ -11372,6 +11372,9 @@ window.__debug = {
 /* ===================== 说明书阅读器（零依赖 Markdown 阅读器） ===================== */
 function mdEscape(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function slugify(s){ return String(s).normalize('NFKC').replace(/\s+/g,'').replace(/["']/g,''); }
+// 解码 HTML 实体：data-goto 由 mdEscape 生成（" → &quot;），某些浏览器下 dataset 取值未自动还原，
+// 导致 slugify 匹配时引号实体残留、与标题 slug 不一致，交叉引用无法跳转。这里统一解码。
+function decodeHtmlEntities(s){ return String(s).replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'").replace(/&#(\d+);/g,(m,n)=>String.fromCharCode(+n)); }
 // 宽松匹配：去掉所有标点/空白，仅保留字母、数字与中日韩文字，用于 jump: 链接容错
 function slugifyLoose(s){ return String(s).normalize('NFKC').replace(/[^0-9a-zA-Z\u4e00-\u9fff\u3040-\u30ff]/g,'').toLowerCase(); }
 function mdInline(text){
@@ -11625,7 +11628,7 @@ function openManual(){
     docEl.addEventListener('touchend', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
     docEl.addEventListener('touchcancel', ()=>{ clearTimeout(_lpTimer); _lpTimer = null; }, {passive:true});
     docEl.addEventListener('contextmenu', e=>{ e.preventDefault(); if(!openManual._sel && (e.clientX || e.clientY)){ selectWordAt(e.clientX, e.clientY); } onSelectionChange(); });
-    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=a.dataset.goto!=null?a.dataset.goto:href.slice(5); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugifyLoose(h.textContent)===slugifyLoose(goto)); if(tgt){ scrollToBlock(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; scrollToBlock(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
+    docEl.addEventListener('click', e=>{ const a=e.target.closest('a'); if(!a) return; const href=(a.getAttribute('href')||'').trim(); if(a.classList.contains('md-jump') || href.indexOf('jump:')===0){ e.preventDefault(); const goto=decodeHtmlEntities(a.dataset.goto!=null?a.dataset.goto:href.slice(5)); const heads=[].slice.call(docEl.querySelectorAll('.md-block[data-type="heading"]')); const slug=slugify(goto); const tgt=heads.find(h=>slugify(h.textContent)===slug) || heads.find(h=>slugifyLoose(h.textContent)===slugifyLoose(goto)); if(tgt){ scrollToBlock(tgt); } return; } if(href.charAt(0)==='#'){ e.preventDefault(); const tgt=document.getElementById(href.slice(1)); if(tgt){ const block=tgt.closest('.md-block')||tgt; scrollToBlock(block); } } else if(/^https?:/i.test(href)){ e.preventDefault(); window.open(href,'_blank','noopener'); } });
     openManual._mo = new MutationObserver(()=>syncStickyVisibility());
     openManual._mo.observe(modal, {attributes:true, attributeFilter:['class']});
   }
@@ -11654,7 +11657,7 @@ function openManual(){
   function blocks(){ return Array.from(docEl.querySelectorAll('.md-block')); }
   function blockLineOf(node){ let el=node.nodeType===3?node.parentElement:node; while(el && el!==docEl){ if(el.classList && el.classList.contains('md-block')) return parseInt(el.dataset.line,10); el=el.parentElement; } return 0; }
   function scrollToBlock(block, instant){ if(!block) return; const baseTop=docEl.getBoundingClientRect().top; const top=block.getBoundingClientRect().top-baseTop+docEl.scrollTop-8; docEl.scrollTo({top:Math.max(0,top), behavior: instant?'auto':'smooth'}); flash(block); }
-  function jumpToLine(n){ const bs=blocks(); let target=null; for(const b of bs){ if(parseInt(b.dataset.line,10)<=n) target=b; else break; } if(target){ scrollToBlock(target); } }
+  function jumpToLine(n){ const bs=blocks(); let target=null; for(const b of bs){ const d=parseInt(b.dataset.line,10); if(!isNaN(d) && d<=n) target=b; } if(target){ scrollToBlock(target); } }
   function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function clearSearchHits(){
     docEl.querySelectorAll('mark.search-hit').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); });
@@ -11961,7 +11964,8 @@ function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); 
     const minLevel=Math.min.apply(null, levels);
     let start=all.findIndex(h=>parseInt(h.getAttribute('data-level')||'1',10)===minLevel);
     if(start<0) start=0;
-    return all.filter((h,i)=>i>=start);
+    // 排除封面大标题本身（第一个 heading），避免目录首项跳到文档最顶部
+    return all.filter((h,i)=>i>start);
   }
   function updateTocActive(){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=null; heads.forEach(h=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=parseInt(h.dataset.line,10); }); tocEl.querySelectorAll('a').forEach(a=>a.classList.toggle('active', parseInt(a.dataset.line,10)===cur)); }
   function goChapter(dir){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=-1; heads.forEach((h,i)=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=i; }); let idx = dir>0 ? Math.min(heads.length-1, cur+1) : Math.max(0, cur-1); if(cur<0) idx = 0; const target=heads[idx]; const top=target.getBoundingClientRect().top-base+docEl.scrollTop; docEl.scrollTo({top:Math.max(0, top-8), behavior:'smooth'}); flash(target); closeDrawers(); }

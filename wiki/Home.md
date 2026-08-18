@@ -18,6 +18,8 @@
 | 问题反馈 | https://github.com/yushichadao/Cub3D-Editor/issues | Bug 报告与功能建议 |
 | 仓库源码 | https://github.com/yushichadao/Cub3D-Editor | README、构建脚本与源代码 |
 
+> **境内备案过渡期**：`cub3d-editor.cn` 正在 ICP 备案，域名暂未解析；境内访问可临时使用 `http://139.196.104.56/`（与正式域名共用同一份静态站点，页面自动识别为境内站）。备案完成后请以 `https://cub3d-editor.cn/` 为准。
+
 ---
 
 ## 平台指南
@@ -106,6 +108,17 @@ Cub3D Editor 完全免费、无广告、离线可用，由独立开发者持续�
 - **爱发电主页**：[afdian.com/a/cub3d-editor](https://afdian.com/a/cub3d-editor)
 
 每一份支持都会投入项目的继续开发。感谢你的鼓励！
+
+---
+
+## 已知问题与修复记录
+
+### v1.1.0
+
+- **说明书全景目录中带引号的条目点击后无法跳转（Web / PC / Android 三端）**
+  - 现象：多语言正文说明书「全景目录」里，标题含直引号（`"` 或 `'`）的条目点击后定位失败、不滚动。
+  - 根因：交叉引用（md-jump）的 `data-goto` 经 HTML 转义为 `&quot;`，点击时 `dataset.goto` 仍是字面实体，而标题文本已解码为 `"`，两侧 `slugify` 结果不一致导致匹配失败。
+  - 修复：新增 `decodeHtmlEntities()`，在跳转逻辑中对 `data-goto` 先解码再匹配；三端同步修改并通过语法校验。简中说明书含引号的 13 个跳转由修复前 10 个失败降为 0 失败。
 
 ---
 

@@ -78,6 +78,7 @@ missing_terms.txt
 
 # ===== 诊断 / 截图 / 探针 / 回归 临时脚本与图片（排查用，不入库）=====
 _diag_*.cjs
+_diag_*.mjs
 _diag_*.png
 _probe*.mjs
 _probe*.ps1
@@ -99,6 +100,11 @@ wiki-tmp/
 # ===== 发布安装包产物（由 release.mjs 生成，经 GitHub Releases 分发，不入库）=====
 Release/
 **/Release/
+
+# 境内站点 downloads/ 镜像安装包（大文件，走站内/Releases，不入库）；
+# 仅 versions.json（版本与体积元数据）入库。
+downloads/*.exe
+downloads/*.apk
 
 # ===== 图标替换/产物整理产生的旧文件备份与检查图（安全网，不入库）=====
 *.bak

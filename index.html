@@ -11,12 +11,12 @@
 <meta property="og:site_name" content="Cub3D Editor">
 <meta property="og:title" content="Cub3D Editor">
 <meta property="og:description" content="Cub3D Editor：轻量化、无需账号的跨平台 3D/2D 场景编辑器。同一套代码覆盖网页、Windows、Android 三端四种形态。">
-<meta property="og:image" content="assets/og-card.png">
+<meta property="og:image" content="assets/preview-zh-CN.png">
 <meta property="og:url" content="">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Cub3D Editor">
 <meta name="twitter:description" content="Cub3D Editor：轻量化、无需账号的跨平台 3D/2D 场景编辑器。同一套代码覆盖网页、Windows、Android 三端四种形态。">
-<meta name="twitter:image" content="assets/og-card.png">
+<meta name="twitter:image" content="assets/preview-zh-CN.png">
 <style>
   :root{
     --bg:#0e0f13; --bg-soft:#16181f; --panel:#181a21; --line:rgba(255,255,255,.09);
@@ -795,9 +795,15 @@ const SITE = {
          releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
          apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }
 };
-const isCnHost = /(^|\.)cub3d-editor\.cn$/i.test(location.hostname||'');
+/* 境内判定：正式域名 cub3d-editor.cn，或 ICP 备案过渡期临时入口 IP 139.196.104.56（IP 打开同样按境内站处理） */
+const CN_HOST_RE = /(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i;
+const isCnHost = CN_HOST_RE.test(location.hostname||'');
+/* 境内站对外入口：备案完成前暂用 IP 直访；备案完成后改回 https://cub3d-editor.cn/ */
+const CN_ENTRY = 'http://139.196.104.56/';
+/* 境内站当前基址：IP/域名访问均以当前 origin 为准，域名解析后自动生效，无需改码 */
+const cnBase = isCnHost ? location.origin + '/' : CN_ENTRY;
 const curSite = isCnHost ? SITE.cn : SITE.ovs;
-const dl = f => (isCnHost ? SITE.cn.downloadBase : SITE.ovs.releaseBase) + f;
+const dl = f => (isCnHost ? (cnBase + 'downloads/') : SITE.ovs.releaseBase) + f;
 
 /* ============ 多语言文案 ============ */
 const T = {
@@ -1674,7 +1680,7 @@ buildLangBars();
 (function(){
   const base = location.origin + location.pathname.replace(/[^/]*$/, ''); // 站点根（去掉文件名）
   const pageUrl = location.origin + location.pathname + location.search;
-  const imgUrl = base + 'assets/og-card.png';
+  const imgUrl = base + 'assets/preview-zh-CN.png';
   document.querySelector('meta[property="og:url"]').setAttribute('content', pageUrl);
   document.querySelector('meta[property="og:image"]').setAttribute('content', imgUrl);
   document.querySelector('meta[name="twitter:image"]').setAttribute('content', imgUrl);
@@ -1716,6 +1722,11 @@ buildLangBars();
 function initSite(){
   // 下载链接按当前站点重写（无 JS 时保留 HTML 中的 GitHub 直链兜底）
   document.querySelectorAll('[data-dl]').forEach(a=>{ a.href = dl(a.dataset.dl); });
+  // 站点切换：境内入口指向当前境内入口（IP 或域名），国际版入口指向境外站
+  const cnLink = document.querySelector('.site-switch[data-i18n="footer.cnEntry"]');
+  const intlLink = document.querySelector('.site-switch[data-i18n="footer.intlEntry"]');
+  if(cnLink) cnLink.href = cnBase + '?stay=1';
+  if(intlLink) intlLink.href = SITE.ovs.home + '?stay=1';
   // ICP：境内显示占位框（无内容），境外隐藏
   const icpEl = document.querySelector('.icp-slot');
   if(icpEl){
@@ -1783,7 +1794,7 @@ function initSite(){
   classify().then(async region=>{
     clearTimeout(timer);
     if(region==='CN' && me==='ovs'){                       // 国内用户访问境外站 → 探活境内站
-      if(await reachable(SITE.cn.home)) location.replace(SITE.cn.home + '?from=gh&stay=1');
+      if(await reachable(cnBase)) location.replace(cnBase + '?from=gh&stay=1');
     } else if(region==='OVS' && me==='cn'){                // 国外用户访问境内站 → 探活境外站
       if(await reachable(SITE.ovs.home)) location.replace(SITE.ovs.home + '?from=cn&stay=1');
     }

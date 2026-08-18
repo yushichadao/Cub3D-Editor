@@ -194,9 +194,11 @@ npm run apk:debug       # 调试包
 
 境内站点与境外 GitHub Pages 共用同一份静态代码（宣传页按域名自动切换下载链接、版本信息与 ICP 显示），部署到轻量云服务器。`cub3d-editor.cn` 需要 **ICP 备案**；备案号取得后填入 `index.html` 顶部 `SITE.cn.icp` 字段，境内页脚即自动显示，境外 GitHub Pages 自动隐藏。
 
+> **备案过渡期（当前状态）**：`cub3d-editor.cn` 的 ICP 备案尚未完成，域名暂不解析，境内访问临时使用 `http://139.196.104.56/`（即本服务器站点根目录 `/www/wwwroot/139.196.104.56/`）。代码已将该 IP 识别为境内站（ICP 框显示、下载走站内 `downloads/`、主页链接指向当前站），本文档中的域名引用保持不变。备案完成后将 A 记录解析到该 IP，页面经 `location.origin` 自动以域名继续工作，**无需改码**。
+
 部署步骤：
 
-1. **备案与解析**：完成 ICP 备案后，将 `cub3d-editor.cn` 的 A 记录解析到轻量云服务器公网 IP。
+1. **备案与解析**：完成 ICP 备案后，将 `cub3d-editor.cn` 的 A 记录解析到轻量云服务器公网 IP（备案完成前，站点根目录内容已可先通过 IP 直接访问）。
 2. **上传静态产物**：将仓库根下列文件/目录上传到服务器站点根目录：
    - `index.html`（宣传页，含境内外链接自适应与 IP 自动分流）
    - `Web/`（网页版编辑器）
@@ -209,7 +211,7 @@ npm run apk:debug       # 调试包
 `downloads/versions.json` 约定格式（`assets` 键为文件名 → 字节数）：
 
 ```json
-{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup.exe": 66060288, "Cub3D-Editor-Portable.exe": 58720256, "Cub3D-Editor.apk": 25165824 } }
+{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup.exe": 100672045, "Cub3D-Editor-Portable.exe": 90580208, "Cub3D-Editor.apk": 4274504 } }
 ```
 
 > 注：境内站 `downloads/` 未放置文件前，下载按钮与版本信息自动回退到 GitHub Releases；安装包镜像与服务器联通为后续阶段工作。
@@ -262,6 +264,18 @@ Cub3D Editor 由独立开发者维护，**完全免费、无广告、离线可�
 ## 许可证
 
 木兰宽松许可证第 2 版（Mulan Permissive Software License v2，MulanPSL-2）。见各端 `LICENSE` 文件，或仓库根 `LICENSE`。
+
+---
+
+## 已知问题与修复记录
+
+### v1.1.0
+
+- **说明书全景目录带引号的条目点击后无法跳转（Web / PC / Android 三端）**
+  - 现象：多语言正文说明书的「全景目录」中，凡是标题含直引号（`"` 或 `'`）的条目（如 `"立方体"工具` 之类），点击后定位失败、页面不滚动。
+  - 根因：交叉引用（md-jump）的 `data-goto` 在生成时经 HTML 转义为 `&quot;`，但点击跳转时 `dataset.goto` 仍是字面实体字符串；而标题 `textContent` 中的 `&quot;` 已被浏览器解码为 `"`，两侧 `slugify` 结果不一致，导致目标 slug 匹配不上。
+  - 修复：新增 `decodeHtmlEntities()`，在 md-jump 点击逻辑中对 `data-goto` 先做实体解码再 `slugify`，与标题侧解码后的值对齐。三端 `index.html` 同步修改并通过 `_check_syntax.mjs` 语法校验。
+  - 验证：以简体中文说明书为例，含引号的 13 个跳转在修复前 10 个失败，修复后 0 失败（playwright 真实浏览器复现）。
 
 ---
 
