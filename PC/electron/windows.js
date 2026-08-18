@@ -64,7 +64,7 @@ function createMainWindow() {
     minHeight: 620,
     show: false,
     frame: !frameless,
-    title: '立方三维设计工坊',
+    title: '立方·3D设计工坊',
     backgroundColor: '#0c0e16',
     icon: path.join(P.resourcesRoot, 'build', 'icon.ico'),
     autoHideMenuBar: true,

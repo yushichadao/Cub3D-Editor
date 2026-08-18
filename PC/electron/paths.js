@@ -6,7 +6,7 @@
  *   1. electron-builder portable target 注入的 PORTABLE_EXECUTABLE_DIR 环境变量
  *   2. exe 同级存在 portable.flag 文件（手工绿色化时使用）
  * 便携版所有用户数据写在 exe 同级的 data/ 目录，可随 U 盘迁移。
- * 安装版写在 %APPDATA%/立方三维设计工坊/ 下。
+ * 安装版写在 %APPDATA%/立方·3D设计工坊/ 下。
  */
 const { app } = require('electron');
 const fs = require('fs');
