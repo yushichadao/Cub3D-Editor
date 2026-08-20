@@ -12,6 +12,7 @@
     --accent: #6ee7ff;
     --accent-2: #c084fc;
     --accent-3: #fb7185;
+    --legal-blue: #5b9dff;   /* 法律文件标题专用蓝 */
     --warn: #fbbf24;
     --text: #e8e8f0;
     --text-dim: #8b8ba0;
@@ -94,10 +95,6 @@
     width: 24px; height: 24px; border-radius: 6px;
     background: conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
     animation: spin 9s linear infinite;
-  }
-  .brand .logo::after {
-    content:''; display:block; width:10px;height:10px;background:var(--bg-deep);
-    border-radius:3px; transform: translate(7px,7px);
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   .top-actions { display: flex; align-items: center; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; min-width: 0; flex: 1 1 0; }
@@ -545,7 +542,8 @@
   }
   @keyframes pop { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes popText { from { transform: translate(-50%, -50%) scale(.92); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
-  .modal-title { font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 10px; }
+  .modal-title { font-size: 14px; font-weight: 600; color: var(--legal-blue); margin-bottom: 10px; }
+  .eff-date { margin-top: 18px; color: var(--dim-2); font-size: 12.5px; }
   .modal-box textarea {
     width: 100%; min-height: 72px; padding: 10px; resize: vertical;
     background: var(--input-bg); color: var(--text);
@@ -588,7 +586,7 @@
   .about-link { display:inline-block; margin:10px 0 6px; color:var(--accent); font-size:13px; text-decoration:none; }
   .about-link + .about-link { margin-inline-start:16px; }
   .about-link:hover { text-decoration:underline; }
-  .about-copy { font-size:12px; color:var(--text-dim); margin-top: 10px; }
+  .about-copy { font-size:12px; color:var(--text-dim); margin-top: 10px; unicode-bidi:isolate; direction:ltr; }
   .about-author { font-size:13px; color:var(--text-dim); margin:8px 0; }
   .about-author span { color:var(--text); font-weight:600; }
   .about-terms { margin:14px 0 4px; display:flex; flex-direction:column; gap:8px; text-align:left; }
@@ -609,7 +607,11 @@
   .terms-box { width:min(560px,92vw); }
   /* 设置及子页面（条款弹窗）不加阴影 */
   #settings-modal .modal-box,
-  #terms-modal .modal-box { box-shadow: none; }
+  #terms-modal .modal-box { box-shadow: none; scrollbar-width:none; -ms-overflow-style:none; }
+  #terms-modal .modal-box::-webkit-scrollbar { display:none; }
+  /* 条款弹窗：题目、已读徽章/按钮区固定，仅正文可滚动 */
+  #terms-modal .modal-box { display:flex; flex-direction:column; max-height:85vh; overflow:hidden; }
+  #terms-modal .terms-body { flex:1; min-height:0; max-height:none; }
   /* 设置弹窗：标题栏与左栏固定，仅右页面栏可滚动且不显示滚动条 */
   #settings-modal .modal-box { display:flex; flex-direction:column; max-height:85vh; overflow:hidden; }
   #settings-modal .settings-body { flex:1; min-height:0; }
@@ -913,7 +915,7 @@
   .manual-confirm-msg { font-size:14px; margin-bottom:14px; line-height:1.5; }
   .manual-confirm-btns { display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; }
   .manual-confirm-btns .manual-btn { min-width:64px; }
-.manual-confirm .manual-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.manual-confirm .manual-btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent-2)); border-color:transparent; color:#fff; }
 /* 说明书内容排版适配亮色/暗色 */
 .manual-doc h1,.manual-doc h2,.manual-doc h3,.manual-doc h4,.manual-doc h5,.manual-doc h6 { color:var(--text); margin:0.65em 0 0.35em; line-height:1.35; }
 .manual-doc h1 { font-size:1.7em; border-bottom:1px solid var(--border); padding-bottom:0.3em; }
@@ -1161,13 +1163,14 @@
       // 加载页专用文案（键名 → 简体中文回退）。其余语言包需包含同名键。
       var BOOT_ZH = {
         bootLoading: '正在加载…',
+        bootLangLoading: '正在加载界面语言…',
         bootLangReady: '界面语言已就绪',
         bootEngineReady: '核心引擎已就绪，正在初始化…',
         bootStale: '检测到浏览器缓存了旧版本页面，正在更新…',
         bootRetry: '重新加载',
         bootFail: '加载失败',
         bootSlow: '加载时间较长，请耐心等待…',
-        bootHint: '离线优先 · 无需账号 · 数据本地保存',
+        bootHint: '轻量化 · 无需账号 · 数据本地保存',
         bootFailResource: '资源加载失败：{0}',
         bootFailPage: '页面加载出错：{0}',
         bootFailUnknown: '页面加载出错：未知错误'
@@ -1222,15 +1225,23 @@
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _bootInitTexts);
       else _bootInitTexts();
     })();
-    // 缓冲页阶段进度：dom 15% → 语言包逐个(6×10%) → 核心引擎 15% → 初始化完成 10%
-    window.__bootProg = { dom: 0, lang: 0, engine: 0, done: 0 };
+    // 缓冲页阶段进度：dom 15% → 语言包逐个(LANG_TOTAL=9：8 语言 + lang-override，每步 60/9%) → 核心引擎 15% → 初始化完成 10%
+    // LANG_TOTAL 需与下方 <script src="language/..."> 数量 + lang-override.js 保持一致；新增/删除语言包时同步修改。
+    // 加载完成（DOMContentLoaded）后会按实际脚本数自动复核修正 total，防止手改遗漏。
+    window.__bootProg = { dom: 0, lang: 0, engine: 0, done: 0, total: 9 };
     window.__bootProgress = function (step) {
       var p = window.__bootProg;
       if (step === 'dom') p.dom = 1;
-      else if (step === 'lang') p.lang = Math.min(6, p.lang + 1);
+      else if (step === 'lang') {
+        if (p.lang === 0 && window.__bootStage) window.__bootStage('bootLangLoading');
+        p.lang = Math.min(p.total, p.lang + 1);
+        // 语言阶段：提示随进度显示 "正在加载界面语言…"（不显示具体计数）
+        var _st = document.getElementById('loader-state');
+        if (_st) _st.textContent = window._tBoot('bootLangLoading');
+      }
       else if (step === 'engine') p.engine = 1;
       else if (step === 'done') p.done = 1;
-      var pct = Math.round(p.dom * 15 + (p.lang / 6) * 60 + p.engine * 15 + p.done * 10);
+      var pct = Math.round(p.dom * 15 + (p.lang / p.total) * 60 + p.engine * 15 + p.done * 10);
       var apply = function () {
         var bar = document.getElementById('loader-bar'); if (bar) bar.style.width = pct + '%';
         var num = document.getElementById('loader-pct'); if (num) num.textContent = pct + '%';
@@ -1238,7 +1249,16 @@
       if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', apply); } else { apply(); }
     };
     // 加载阶段文案：由上方 _tBoot IIFE 中的最终 window.__bootStage 统一处理（支持翻译与暂存）
-    document.addEventListener('DOMContentLoaded', function () { window.__bootProgress('dom'); });
+    document.addEventListener('DOMContentLoaded', function () {
+      window.__bootProgress('dom');
+      // 自动复核语言包脚本数量并修正分配（防止 LANG_TOTAL 手改遗漏）
+      var _n = document.querySelectorAll('script[src^="language/"], script[src="lang-override.js"]').length;
+      if (_n > 0 && _n !== window.__bootProg.total) {
+        window.__bootProg.total = _n;
+        window.__bootProg.lang = Math.min(_n, window.__bootProg.lang);
+        window.__bootProgress('recalc');
+      }
+    });
   </script>
   <!-- 语言包：每语言独立文件，与简体中文（index.html 内 ZH_CN）分开存储；新增语言只需加文件并在此处引用 -->
   <script src="language/zh-TW.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang')"></script>
@@ -1312,7 +1332,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
     <div class="loader-stale" id="loader-stale">检测到浏览器缓存了旧版本页面，正在更新…</div>
     <div class="loader-error" id="loader-error"></div>
     <button class="loader-retry" id="loader-retry">重新加载</button>
-    <div class="loader-hint" id="loader-hint">离线优先 · 无需账号 · 数据本地保存</div>
+    <div class="loader-hint" id="loader-hint">轻量化 · 无需账号 · 数据本地保存</div>
   </div>
 </div>
 
@@ -2094,7 +2114,7 @@ window.__bootEngineStarted = true;
 document.addEventListener('contextmenu', e => e.preventDefault(), true);
 document.addEventListener('dragstart', e => e.preventDefault(), true);
 // 简体中文作为内置默认与回退；其余语言存放在 language/ 目录下独立文件中（见 <head> 的 <script src> 引用）
-const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', ground:'地面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·3D设计工坊', aboutDesc:'基于 Three.js 的 PC 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', aboutHome:'项目主页', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·3D设计工坊（以下简称“本软件”）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按“现状”提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按“现状”提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件“关于”页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按“现状”提供</h4><p>本软件及其功能按“现状”与“可用”基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p>', privacyBody:'<h4>隐私政策</h4><p>立方·3D设计工坊（以下简称“本软件”或“我们”）是由 <strong>Yushichadao</strong> 作为个人开发者向您提供的一款<strong>离线优先</strong>的跨平台 3D/2D 场景编辑器。我们<strong>不会收集您的个人信息</strong>，您的创作内容与本地设置默认仅保存在您自己的设备本地，不存在我们将您的个人信息传输、存储或用于其他用途的情况。使用本软件即表示您同意本政策。</p><h4>1. 我们是否收集您的账号信息</h4><p><strong>本软件没有账号系统，您无需注册或登录即可使用。我们不会收集、存储或把您的用户名、密码、电子邮箱、电话号码或其他账号类个人信息与您的身份绑定。</strong></p><h4>2. 保存在本地的创作数据</h4><p>(1) <strong>您所创作的 3D 模型、场景、便利贴、注释、文字与图片，默认保存在您的本机设备（浏览器存储空间、应用沙箱或您导出的文件），不会上传到任何服务器。</strong></p><p>(2) 除提供本地功能所必需的本机技术处理外，我们不会主动读取、上传或传输您的创作内容。</p><h4>3. 我们不会上线任何需要共享个人信息的第三方 SDK</h4><p><strong>本软件不会接入任何需要收集或共享您个人信息的第三方 SDK（包括统计、崩溃上报、广告、云同步、社交分享等）。本软件仅使用必要的开源图形库（如 Three.js 及 WebGL 组件）在本机运行，这些组件不会向外部传输您的个人信息。</strong></p><h4>4. 委托处理、共享、转让与公开披露</h4><p><strong>我们不会向任何第三方出售您的个人信息。除以下情形外，我们不会共享、转让或公开披露您的个人信息：</strong>(1) 为遵守适用法律法规、司法或监管要求；(2) 为保护本软件、您或公众的合法权益；(3) 经您事先明确同意。由于本软件不收集您的个人信息，上述情形在一般情况下均不会发生。</p><h4>5. 数据安全与您的责任</h4><p>(1) 您的核心创作数据主要保存在您自己的本机设备，请妥善保管您的设备并设置锁屏，避免他人未经授权访问。</p><p>(2) <strong>请定期导出并备份重要作品；因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的数据丢失，我们无法保证恢复，相关风险由您自行承担。</strong></p><p>(3) 如您通过邮箱与我们联系，您提供的邮箱地址仅用于回复您的问题，不会被用于其他用途。</p><h4>6. 您的权利与退出</h4><p><strong>您始终掌控自己的数据：您可以随时清除缓存、删除作品、卸载应用或停止使用本软件。</strong></p><h4>7. 政策更新</h4><p><strong>本政策可能随软件更新而调整，更新版本将在本软件内公告。您继续使用即视为接受；若您不同意，请停止使用本软件。</strong></p><h4>8. 联系我们</h4><p>开发者：<strong>Yushichadao</strong><br>联系邮箱：<strong>yushichadao@qq.com</strong></p><h4>9. 文本效力</h4><p>本政策以简体中文版本为准；如其他语言版本与本简体中文版本不一致，以简体中文版本为准。本政策生效日期：2026年8月14日。</p>', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
+const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', ground:'地面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·3D设计工坊', aboutDesc:'基于 Three.js 的 PC 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', aboutHome:'项目主页', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·3D设计工坊（以下简称"本软件"）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按"现状"提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按"现状"提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件"关于"页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按"现状"提供</h4><p>本软件及其功能按"现状"与"可用"基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p>', privacyBody:'<h4>隐私政策</h4><p>立方·3D设计工坊（以下简称“本软件”或“我们”）是由 <strong>Yushichadao</strong> 作为个人开发者向您提供的一款<strong>轻量化</strong>的跨平台 3D/2D 场景编辑器。我们<strong>不会收集您的个人信息</strong>，您的创作内容与本地设置默认仅保存在您自己的设备本地，不存在我们将您的个人信息传输、存储或用于其他用途的情况。使用本软件即表示您同意本政策。</p><h4>1. 我们是否收集您的账号信息</h4><p><strong>本软件没有账号系统，您无需注册或登录即可使用。我们不会收集、存储或把您的用户名、密码、电子邮箱、电话号码或其他账号类个人信息与您的身份绑定。</strong></p><h4>2. 保存在本地的创作数据</h4><p>(1) <strong>您所创作的 3D 模型、场景、便利贴、注释、文字与图片，默认保存在您的本机设备（浏览器存储空间、应用沙箱或您导出的文件），不会上传到任何服务器。</strong></p><p>(2) 除提供本地功能所必需的本机技术处理外，我们不会主动读取、上传或传输您的创作内容。</p><h4>3. 我们不会上线任何需要共享个人信息的第三方 SDK</h4><p><strong>本软件不会接入任何需要收集或共享您个人信息的第三方 SDK（包括统计、崩溃上报、广告、云同步、社交分享等）。本软件仅使用必要的开源图形库（如 Three.js 及 WebGL 组件）在本机运行，这些组件不会向外部传输您的个人信息。</strong></p><h4>4. 委托处理、共享、转让与公开披露</h4><p><strong>我们不会向任何第三方出售您的个人信息。除以下情形外，我们不会共享、转让或公开披露您的个人信息：</strong>(1) 为遵守适用法律法规、司法或监管要求；(2) 为保护本软件、您或公众的合法权益；(3) 经您事先明确同意。由于本软件不收集您的个人信息，上述情形在一般情况下均不会发生。</p><h4>5. 数据安全与您的责任</h4><p>(1) 您的核心创作数据主要保存在您自己的本机设备，请妥善保管您的设备并设置锁屏，避免他人未经授权访问。</p><p>(2) <strong>请定期导出并备份重要作品；因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的数据丢失，我们无法保证恢复，相关风险由您自行承担。</strong></p><p>(3) 如您通过邮箱与我们联系，您提供的邮箱地址仅用于回复您的问题，不会被用于其他用途。</p><h4>6. 您的权利与退出</h4><p><strong>您始终掌控自己的数据：您可以随时清除缓存、删除作品、卸载应用或停止使用本软件。</strong></p><h4>7. 政策更新</h4><p><strong>本政策可能随软件更新而调整，更新版本将在本软件内公告。您继续使用即视为接受；若您不同意，请停止使用本软件。</strong></p><h4>8. 联系我们</h4><p>开发者：<strong>Yushichadao</strong><br>联系邮箱：<strong>yushichadao@qq.com</strong></p><h4>9. 文本效力</h4><p>本政策以简体中文版本为准；如其他语言版本与本简体中文版本不一致，以简体中文版本为准。</p>', effectiveDate:'本文件生效日期：2026年8月20日', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
   // 面板标题
  sec3D:'3D 图形', sec2D:'2D 图形', secTransform:'变换', secMaterial:'材质', secColor:'颜色', secPattern:'花纹 / 贴图', secTextBox:'文本框', secEraser:'橡皮擦属性', secMouse:'鼠标操作', secKeyboard:'键盘快捷键',
  // Tab 按钮
@@ -2245,7 +2265,7 @@ kbdSliderPgSel:'大幅增/减',
   appTitle:'Cub3D Editor',
   // 说明书阅读器
   tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
-  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manImportLangMismatch:'该便签备份为 {0} 语言，当前说明书为 {1} 语言，已跳过导入以避免混合不同语言', manImportLangUnknown:'该备份未携带语言标识，仅当你确认它导出自当前（{0}）说明书时才可导入', manImportOldVer:'已导入 {0} 条便签，其中部分创建于旧版本（{1}），若说明书已更新请复核', manImportNoVer:'该备份无版本标识，便签已标记为当前版本（{0}）', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', manExportFail:'导出失败', toastExportCancelled:'已取消导出', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', manPrevCh:'上一章', manNextCh:'下一章', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出', tosReadDone:'我已读至文末', tosReadProgress:'已阅读 <b id="tos-progress-num">{0}</b> / 3 份文件', tosReadHint:'尚未阅读到文末', tosReadDoneHint:'✓ 已完整阅读，可关闭',
+  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manImportLangMismatch:'该便签备份为 {0} 语言，当前说明书为 {1} 语言，已跳过导入以避免混合不同语言', manImportLangUnknown:'该备份未携带语言标识，仅当你确认它导出自当前（{0}）说明书时才可导入', manImportOldVer:'已导入 {0} 条便签，其中部分创建于旧版本（{1}），若说明书已更新请复核', manImportNoVer:'该备份无版本标识，便签已标记为当前版本（{0}）', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', manExportFail:'导出失败', toastExportCancelled:'已取消导出', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', manPrevCh:'上一章', manNextCh:'下一章', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出', tosReadDone:'我已读至文末', tosReadProgress:'已阅读 <b id="tos-progress-num">{0}</b> / 3 份文件', tosReadHint:'尚未阅读到文末', tosReadDoneHint:'已完整阅读，可关闭',
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
@@ -9500,8 +9520,41 @@ function buildParametricGeo3D(type, data) {
     }
     case 'octaPrism': {
       // 正八棱柱：底面边长 a → 外接圆半径 R = a/(2·sin(π/8))
+      // 不用 CylinderGeometry：其侧面顶点法线平滑插值，8 条侧棱在光照下被"抹圆"成连续明暗、难以分辨。
+      // 改为非索引几何：每个侧面独立顶点、法线垂直各自面，棱处 90° 硬边清晰可见。
       const R = (data.edge || 0.54) / (2 * Math.sin(Math.PI / 8));
-      return new THREE.CylinderGeometry(R, R, data.height || 1.2, 8);
+      const h = data.height || 1.2;
+      const T = [], B = [];
+      for (let i = 0; i < 8; i++) {
+        const ang = (i / 8) * Math.PI * 2 - Math.PI / 2;
+        T.push([Math.cos(ang) * R, h / 2, Math.sin(ang) * R]);
+        B.push([Math.cos(ang) * R, -h / 2, Math.sin(ang) * R]);
+      }
+      const pos = [], uv = [];
+      const push = (p, u, v) => { pos.push(p[0], p[1], p[2]); uv.push(u, v); };
+      const uvOf = p => [0.5 + p[0] / (2 * R), 0.5 + p[2] / (2 * R)];
+      // 顶面（+Y）：8 个三角形环绕中心（中心顶点居中，法线朝 +Y）
+      for (let i = 0; i < 8; i++) {
+        const j = (i + 1) % 8;
+        push(T[i], ...uvOf(T[i])); push([0, h / 2, 0], 0.5, 0.5); push(T[j], ...uvOf(T[j]));
+      }
+      // 底面（-Y）：绕序与顶面相反，法线朝 -Y
+      for (let i = 0; i < 8; i++) {
+        const j = (i + 1) % 8;
+        push(B[i], ...uvOf(B[i])); push(B[j], ...uvOf(B[j])); push([0, -h / 2, 0], 0.5, 0.5);
+      }
+      // 8 个侧面（每面两个三角形、独立顶点 → 法线垂直各自面，棱角清晰）
+      for (let i = 0; i < 8; i++) {
+        const j = (i + 1) % 8, u0 = i / 8, u1 = (i + 1) / 8;
+        push(B[i], u0, 0); push(T[i], u0, 1); push(T[j], u1, 1);
+        push(B[i], u0, 0); push(T[j], u1, 1); push(B[j], u1, 0);
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+      geo.computeVertexNormals();
+      geo.computeBoundingBox();
+      return geo;
     }
     case 'star3d': {
       // 立体星：外半径 / 内半径 / 角数 / 厚度
@@ -9511,17 +9564,17 @@ function buildParametricGeo3D(type, data) {
       const shape = new THREE.Shape();
       for (let i = 0; i < n * 2; i++) {
         const rr = i % 2 === 0 ? oR : iR;
-        const ang = (i / (n * 2)) * Math.PI * 2 - Math.PI / 2;
+        const ang = (i / (n * 2)) * Math.PI * 2 + Math.PI / 2;
         const x = Math.cos(ang) * rr, y = Math.sin(ang) * rr;
         i === 0 ? shape.moveTo(x, y) : shape.lineTo(x, y);
       }
       shape.closePath();
       const dep = Math.max(0.02, data.thickness || 0.3);
-      const bev = Math.min(0.05, iR * 0.2, dep * 0.2);
-      const geo = new THREE.ExtrudeGeometry(shape, {
-        depth: dep, bevelEnabled: bev > 0.005,
-        bevelSize: bev, bevelThickness: bev * 0.8, bevelSegments: 2
-      });
+      // 关闭 bevel：星形 5 个外尖角处带 bevel 会产生多个法线发散的窄小斜面，
+      // 方向光下在尖角附近形成不自然的放射状暗带（用户反馈"棱附近光影不对"）。
+      // 改为硬边：顶/底面与侧壁在棱处 90° 接边，flat shading 下棱角清晰、无暗斑；
+      // 透视角度仍能看到侧壁厚度，保留立体感。
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: dep, bevelEnabled: false });
       geo.center();
       geo.computeBoundingBox();
       return geo;
@@ -12167,21 +12220,27 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
 #terms-modal { z-index: 100020 !important; }
 .tos-gate { position:fixed; inset:0; z-index:100000; display:none; background:rgba(8,10,18,.55); align-items:center; justify-content:center; padding:22px; }
 .tos-gate.show { display:flex; }
-.tos-gate-inner { width:min(440px, 94vw); max-height:88vh; display:flex; flex-direction:column; background:var(--bg-panel-solid); color:var(--text); border:1px solid var(--border); border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.55); animation:tosIn .25s ease; overflow:hidden; }
+.tos-gate-inner { width:min(440px, 94vw); max-height:88vh; display:flex; flex-direction:column; background:var(--bg-panel-solid); color:var(--text); border:1px solid var(--border); border-radius:18px; box-shadow:none; animation:tosIn .25s ease; overflow:hidden; }
 @keyframes tosIn { from{opacity:0; transform:translateY(10px) scale(.98);} to{opacity:1; transform:none;} }
-.tos-gate-head { padding:20px 20px 12px; border-bottom:1px solid var(--border); }
+.tos-gate-head { padding:20px 20px 12px; }
 .tos-gate-head h2 { margin:0 0 8px; font-size:18px; }
 .tos-gate-head p { margin:0; font-size:12.5px; color:var(--text-dim); line-height:1.7; }
-.tos-gate-links { display:flex; flex-direction:column; gap:10px; padding:16px 20px; overflow-y:auto; }
+.tos-gate-links { display:flex; flex-direction:column; gap:10px; padding:16px 20px; overflow-y:auto; flex:1; min-height:0; scrollbar-width:none; -ms-overflow-style:none; }
+.tos-gate-links::-webkit-scrollbar { display:none; }
 .tos-gate-link { display:flex; align-items:center; gap:10px; width:100%; text-align:start; cursor:pointer; padding:13px 14px; border:1px solid var(--border); border-radius:12px; background:var(--control-bg); color:var(--text); font-size:14px; font-family:inherit; transition:border-color .18s, background .18s; }
 .tos-gate-link:hover { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 8%, var(--bg-panel)); }
 .tos-gate-link:active { transform:scale(.99); }
 .tos-gate-link-ico { color:var(--accent); width:18px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
 .tos-gate-link-title { flex:1; font-weight:600; }
 .tos-gate-link-arrow { color:var(--text-dim); font-size:15px; }
-.tos-gate-actions { display:flex; gap:12px; padding:14px 20px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--border); }
+/* 已读提示：对应文件按钮变绿 + 打勾 */
+.tos-gate-link.done { border-color:color-mix(in srgb, var(--accent) 50%, var(--border)); background:color-mix(in srgb, var(--accent) 6%, var(--bg-panel)); }
+.tos-gate-link.done .tos-gate-link-ico { color:var(--accent); }
+.tos-gate-link.done .tos-gate-link-arrow { color:var(--accent); font-weight:700; }
+.tos-gate-actions { display:flex; gap:12px; padding:14px 20px calc(14px + env(safe-area-inset-bottom)); }
 .tos-gate-btn { flex:1; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--control-bg); color:var(--text); font-size:15px; cursor:pointer; font-family:inherit; }
-.tos-gate-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.tos-gate-btn.primary { background:linear-gradient(135deg, var(--accent), var(--accent-2)); border-color:transparent; color:var(--primary-btn-text); font-weight:600; }
+.tos-gate-btn.primary:hover { filter:brightness(1.08); }
 .tos-gate-btn.exit { background:transparent; }
 .tos-gate-blocked { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:30px 24px; text-align:center; background:var(--bg-panel-solid); border-radius:18px; }
 .tos-gate-blocked-icon { width:52px; height:52px; border-radius:50%; background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.25); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -12203,14 +12262,24 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
 .progress-text { margin-top:7px; font-size:12px; color:var(--text-dim); }
 .progress-text b { color:var(--accent); font-weight:600; }
 /* 同意按钮：未读完时灰度禁用（工程 disabled 语言） */
-.tos-gate-btn.primary.disabled { background:var(--control-bg); border-color:var(--border); color:var(--text-dim); cursor:not-allowed; }
+.tos-gate-btn.primary.disabled { background:var(--control-bg); border-color:var(--border); color:var(--text-dim); cursor:not-allowed; filter:none; font-weight:400; }
 /* 条款弹窗底部：已读徽章 + 我已读至文末按钮 */
 .terms-foot { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 18px; background:var(--bg-panel-solid); }
 .read-badge { font-size:12.5px; color:var(--text-dim); }
 .read-badge.done { color:var(--accent); }
-.terms-read-done { padding:9px 22px; border-radius:10px; font-size:13.5px; cursor:pointer; background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; border:1px solid transparent; font-weight:600; }
+.terms-read-done { padding:9px 22px; border-radius:10px; font-size:13.5px; cursor:pointer; background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:var(--primary-btn-text); border:1px solid transparent; font-weight:600; }
 .terms-read-done:hover { filter:brightness(1.08); }
 .terms-read-done.disabled { background:var(--control-bg); border-color:var(--border); color:var(--text-dim); font-weight:400; cursor:not-allowed; filter:none; }
+/* 手机窄屏：阅读完成后底栏与按钮避免异常换行/溢出 */
+@media (max-width:480px){
+  .terms-foot{ flex-wrap:nowrap; gap:8px; justify-content:space-between; align-items:center; }
+  .read-badge{ flex:1 1 auto; white-space:normal; min-width:0; }
+  .terms-read-done{ white-space:nowrap; flex:0 0 auto; }
+  .modal-actions{ flex-wrap:wrap; }
+  .modal-actions .top-btn{ flex:0 1 auto; white-space:nowrap; margin-left:auto; }
+  .tos-gate-actions{ flex-wrap:wrap; }
+  .tos-gate-btn{ flex:1 1 100%; white-space:nowrap; }
+}
 </style>
 <div id="tos-gate" class="tos-gate">
   <div class="tos-gate-inner">
@@ -12280,9 +12349,15 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
 
       function tosRefreshDone(){
         if(!currentTerm || !termsModalBody) return;
-        var reached = termsModalBody.scrollTop + termsModalBody.clientHeight >= termsModalBody.scrollHeight - 4;
+        // 放宽到底容差：触屏惯性/回弹/脚注高度变化时仍能准确判定
+        var reached = termsModalBody.scrollTop + termsModalBody.clientHeight >= termsModalBody.scrollHeight - 8;
         var btn = document.getElementById('terms-read-done'); if(!btn) return;
-        if(reached){ btn.disabled = false; btn.className = 'terms-read-done'; }
+        if(reached){
+          btn.disabled = false; btn.className = 'terms-read-done';
+          // 每次滚动到底都刷新已读提示（解决二次打开已读文件时徽章不更新的问题）
+          var badge = document.getElementById('terms-read-badge');
+          if(badge){ badge.textContent = T('tosReadDoneHint'); badge.className = 'read-badge done'; }
+        }
         else { btn.disabled = true; btn.className = 'terms-read-done disabled'; }
       }
       function tosMarkRead(){
@@ -12296,8 +12371,13 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
         if(!termsModal || !termsMap) return;
         var m = termsMap[key]; if(!m) return;
         currentTerm = key;
-        termsModalTitle.textContent = T(m.title);
-        termsModalBody.innerHTML = T(m.body);
+        var tt = T(m.title);
+        termsModalTitle.textContent = tt;
+        termsModalTitle.style.display = tt ? '' : 'none';
+        termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
+        // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
+        const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月20日';
+        termsModalBody.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
         termsModalBody.setAttribute('data-term', key);
         termsModal.classList.add('show');
         var foot = document.getElementById('terms-foot'); if(foot) foot.style.display = '';
@@ -12321,6 +12401,20 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
         var done = (tosRead.tos?1:0) + (tosRead.disclaimer?1:0) + (tosRead.privacy?1:0);
         var progText = document.getElementById('tos-progress-text'); if(progText) progText.innerHTML = T('tosReadProgress', done);
         var fill = document.getElementById('tos-progress-fill'); if(fill) fill.style.width = Math.round(done/3*100) + '%';
+        // 已读文件对应按钮打勾提示
+        var tTerms = ['tos','disclaimer','privacy'];
+        for(var ti=0; ti<tTerms.length; ti++){
+          var lnk = g.querySelector('.tos-gate-link[data-term="'+tTerms[ti]+'"]');
+          if(!lnk) continue;
+          var arr = lnk.querySelector('.tos-gate-link-arrow');
+          if(tosRead[tTerms[ti]]){
+            lnk.classList.add('done');
+            if(arr) arr.textContent = '✓';
+          }else{
+            lnk.classList.remove('done');
+            if(arr) arr.textContent = '›';
+          }
+        }
         var btn = document.getElementById('tos-gate-accept');
         if(btn){
           if(tosAllRead()){ btn.disabled = false; btn.classList.remove('disabled'); }
@@ -12387,8 +12481,13 @@ window.dispatchEvent(new CustomEvent('cube3d:ready'));
       function openTermPlain(key){
         if(!termsModal || !termsMap) return;
         var m = termsMap[key]; if(!m) return;
-        termsModalTitle.textContent = T(m.title);
-        termsModalBody.innerHTML = T(m.body);
+        var tt = T(m.title);
+        termsModalTitle.textContent = tt;
+        termsModalTitle.style.display = tt ? '' : 'none';
+        termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
+        // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
+        const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月20日';
+        termsModalBody.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
         termsModalBody.setAttribute('data-term', key);
         var foot = document.getElementById('terms-foot'); if(foot) foot.style.display = 'none';
         termsModal.classList.add('show');

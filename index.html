@@ -65,14 +65,8 @@
   .lang button{border:0;background:transparent;color:var(--dim);font-size:12.5px;font-weight:600;
     padding:5px 9px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit}
   .lang button.active{background:var(--accent);color:#0c1413}
-  /* 中窄屏：顶栏语言按钮逐步压缩，尽量留在顶栏 */
-  @media (max-width:900px){
-    .lang button{padding:4px 6px;font-size:12px}
-  }
-  /* 更窄：语言按钮进一步压缩（语言栏仍保留） */
-  @media (max-width:640px){
-    .lang button{padding:3px 4px;font-size:11.5px}
-  }
+  /* 中窄屏：顶栏语言按钮保持原大小，不压缩（放不下时整体换行或收进菜单） */
+  .lang{flex-wrap:wrap}
   /* 临界窄屏：物理放不下时（语言栏极限约 280px + 品牌 142px + 菜单 42px ≈ 490px，
      视口 ≈ 540px）才把 9 语言按钮组收进菜单面板（单行显示）；品牌图标与名称恒显 */
   @media (max-width:540px){
@@ -89,10 +83,11 @@
     background:var(--bg);border-bottom:1px solid var(--line);border-radius:0 0 16px 16px;
     padding:8px 0 16px;box-shadow:0 20px 48px rgba(0,0,0,.45);
     transform:translateY(-12px);opacity:0;visibility:hidden;transition:transform .22s,opacity .22s,visibility .22s;z-index:100}
-  /* 菜单面板内的语言按钮组：9 语言单行、等宽，宽度与顶栏按钮区一致；默认隐藏（顶栏已展示），窄屏时显示 */
-  .nav-links .lang-mobile{display:none;flex-wrap:nowrap;gap:2px;padding:10px 16px 2px}
-  .nav-links .lang-mobile button{flex:1 1 0;min-width:0;border:0;background:var(--bg-soft);color:var(--dim);
-    font-size:12.5px;font-weight:600;padding:7px 4px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit;white-space:nowrap}
+  /* 菜单面板内的语言选择区：整体按钮区（带边框背景容器），9 个按钮单行等宽、宽度不足时动态压缩 */
+  .nav-links .lang-mobile{display:none;flex-wrap:nowrap;gap:4px;margin:10px 16px 4px;padding:6px;
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:10px}
+  .nav-links .lang-mobile button{flex:1 1 0;min-width:max-content;border:0;background:transparent;color:var(--dim);
+    font-size:12.5px;font-weight:600;padding:5px 4px;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit;white-space:nowrap;text-align:center}
   .nav-links .lang-mobile button.active{background:var(--accent);color:#0c1413}
   .nav-links.open{transform:none;opacity:1;visibility:visible}
   .nav-links a{color:var(--dim);font-size:15px;white-space:nowrap;flex:0 0 auto;
@@ -187,6 +182,8 @@
   @media (pointer:coarse){
     .preview-desktop{display:none}
     .preview-touch{display:block}
+    /* 触屏设备下「鼠标模式打开」按钮置灰不可点击（鼠标模式仅桌面适用） */
+    #plat1Btn{opacity:.45;pointer-events:none;filter:grayscale(1);cursor:default}
   }
   @media (pointer:fine){
     .preview-touch{display:none}
@@ -291,9 +288,11 @@
   .foot-info{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
   .foot-info .brand{flex-wrap:nowrap}
   .foot-copy{white-space:normal;direction:ltr;unicode-bidi:isolate}
-  /* ICP 备案号：有备案才显示（无内容时不占位） */
-  .icp-slot{display:inline-flex;align-items:center;gap:8px;
-    font-size:12px;white-space:nowrap;color:var(--dim-2)}
+  /* ICP 备案号预留空框：无备案时画虚线框占位（文字透明），备案号取得后填文字；境内显示、境外隐藏 */
+  .icp-slot{display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+    min-width:170px;min-height:26px;padding:3px 12px;
+    border:1px dashed var(--line);border-radius:7px;
+    font-size:12px;white-space:nowrap}
 
   /* ===== 场景卡片 ===== */
   .scn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:36px}
@@ -458,8 +457,13 @@
       font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
       line-height:1.7;
     }
-    /* 阿拉伯语专项：标题取消负字距（连写文字用 -letter-spacing 会导致字母粘连重叠）并放宽行高 */
-    html[lang="ar"] .hero h1{letter-spacing:normal;line-height:1.45;max-width:none}
+    /* 阿拉伯语专项：标题取消负字距（连写文字用 -letter-spacing 会导致字母粘连重叠）并放宽行高；
+       保留连字（liga/calt）修复字母割裂，但允许在必要时换行（不 nowrap，避免标题在窄屏溢出） */
+    html[lang="ar"] .hero h1{letter-spacing:normal;line-height:1.45;max-width:none;
+      font-feature-settings:"liga" 1,"calt" 1; /* 启用阿拉伯文连字，避免字母被拆碎 */
+      text-rendering:optimizeLegibility;}
+    /* 中间点分隔符单独包裹，避免被阿拉伯文连字吞掉 */
+    html[lang="ar"] .hero h1 .dot-sep{font-feature-settings:"liga" 0,"calt" 0}
     html[lang="ar"] [data-i18n], html[lang="ar"] input, html[lang="ar"] select, html[lang="ar"] button, html[lang="ar"] textarea{
       font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
     }
@@ -612,7 +616,7 @@
         <h3 data-i18n="plat1.name">网页版 · 鼠标</h3>
         <p data-i18n="plat1.desc">浏览器直接打开，无需安装。适配台式机、笔记本。</p>
         <div class="acts">
-          <a class="lbtn main" href="Web/index.html" data-i18n="plat1.btn">立即打开</a>
+          <a id="plat1Btn" class="lbtn main" href="Web/index.html" data-i18n="plat1.btn">立即打开</a>
         </div>
       </div>
       <div class="card reveal">
@@ -620,7 +624,7 @@
         <h3 data-i18n="plat2.name">网页版 · 触屏</h3>
         <p data-i18n="plat2.desc">手机/平板浏览器，或 URL 加 <code>?touch</code> 切换触控布局。</p>
         <div class="acts">
-          <a class="lbtn main" href="Web/index.html?touch" data-i18n="plat2.btn">触屏模式打开</a>
+          <a id="plat2Btn" class="lbtn main" href="Web/index.html?touch" data-i18n="plat2.btn">触屏模式打开</a>
         </div>
       </div>
       <div class="card reveal">
@@ -667,7 +671,7 @@
       <div class="feat reveal"><div class="fi">🌈</div><h4 data-i18n="f3.t">材质编辑</h4><p data-i18n="f3.d">预设与自定义颜色、图案/纹理贴图。</p></div>
       <div class="feat reveal"><div class="fi">🔤</div><h4 data-i18n="f4.t">文字框</h4><p data-i18n="f4.d">多字体、横排/竖排，自由标注你的场景。</p></div>
       <div class="feat reveal"><div class="fi">📐</div><h4 data-i18n="f5.t">视图辅助</h4><p data-i18n="f5.d">坐标轴、网格、地面参考面、线框模式。</p></div>
-      <div class="feat reveal"><div class="fi">💾</div><h4 data-i18n="f6.t">离线优先</h4><p data-i18n="f6.d">无需账号，数据本地保存；<code>.json</code> 工程三端互通。</p></div>
+      <div class="feat reveal"><div class="fi">💾</div><h4 data-i18n="f6.t">轻量化</h4><p data-i18n="f6.d">无需账号，数据本地保存；<code>.json</code> 工程三端互通。</p></div>
       <div class="feat reveal"><div class="fi">🖥️</div><h4 data-i18n="f7.t">PC 版增强</h4><p data-i18n="f7.d">原生文件对话框（系统级打开/保存）、独立桌面窗口运行、离线安装。</p></div>
       <div class="feat reveal"><div class="fi">📲</div><h4 data-i18n="f8.t">Android 版增强</h4><p data-i18n="f8.d">返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。</p></div>
       <div class="feat reveal"><div class="fi">🌐</div><h4 data-i18n="f9.t">九语言界面</h4><p data-i18n="f9.d">简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية，切换同步更新。</p></div>
@@ -741,8 +745,8 @@
     <h2 class="sec-title reveal" data-i18n="faq.title">你可能想问</h2>
     <div class="faq">
       <details class="reveal d1" open><summary><span data-i18n="faq.q6">会收费吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a6">不会。Cub3D Editor 完全免费，所有基础功能无需付费即可使用，目前没有付费计划。</div></details>
-      <details class="reveal d2"><summary><span data-i18n="faq.q1">需要注册账号吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a1">不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。</div></details>
-      <details class="reveal d3"><summary><span data-i18n="faq.q7">会联网或上传我的数据吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a7">不会主动上传。编辑器离线优先，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。</div></details>
+      <details class="reveal d2"><summary><span data-i18n="faq.q1">需要注册账号吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a1">不需要。Cub3D Editor 轻量化，所有数据保存在本地设备，无需任何账号即可使用。</div></details>
+      <details class="reveal d3"><summary><span data-i18n="faq.q7">会联网或上传我的数据吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a7">不会主动上传。编辑器轻量化，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。</div></details>
       <details class="reveal d4"><summary><span data-i18n="faq.q8">能商用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a8">可以。本项目采用木兰宽松许可证第2版（MulanPSL-2），允许自由使用、修改与分发，商用友好。</div></details>
       <details class="reveal d5"><summary><span data-i18n="faq.q3">工程文件能在设备间通用吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a3">可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。</div></details>
       <details class="reveal"><summary><span data-i18n="faq.q2">三个平台的功能一样吗？</span><span class="ar">+</span></summary><div class="ans" data-i18n="faq.a2">绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。</div></details>
@@ -762,7 +766,7 @@
         <ul>
           <li data-i18n="log.v1.1">网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备</li>
           <li data-i18n="log.v1.2">绘制/形状、对象变换、材质、文字框、视图辅助等核心能力</li>
-          <li data-i18n="log.v1.3">离线优先、本地存储、.json 工程三端互通</li>
+          <li data-i18n="log.v1.3">轻量化、本地存储、.json 工程三端互通</li>
           <li data-i18n="log.v1.4">九语言界面与崩溃恢复 / 自动保存</li>
         </ul>
       </div>
@@ -859,7 +863,7 @@ const T = {
     "stats.eyebrow":"关键数字","stats.title":"用数据说话","stats.l1":"种界面语言，切换即同步","stats.l2":"平台 · 网页 / Windows / Android","stats.l3":"种使用形态，随设备自适应","stats.l4":"离线可用，数据本地保存",
     "platforms.eyebrow":"三种平台 · 四种形态","platforms.title":"选择适合你的方式",
     "platforms.sub":"无论手机、平板、电脑还是浏览器，都能找到对应的入口。下方按钮会直接打开网页或下载安装包。",
-    "plat1.name":"网页版 · 鼠标","plat1.desc":"浏览器直接打开，无需安装。适配台式机、笔记本。","plat1.btn":"立即打开",
+    "plat1.name":"网页版 · 鼠标","plat1.desc":"浏览器直接打开，无需安装。适配台式机、笔记本。","plat1.btn":"立即打开","plat1.btnMouse":"鼠标模式打开",
     "plat2.name":"网页版 · 触屏","plat2.desc":"手机/平板浏览器，或 URL 加 ?touch 切换触控布局。","plat2.btn":"触屏模式打开",
     "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安装版 / 便携版（免安装）。崩溃恢复、自动保存等增强。","plat3.setup":"下载安装版","plat3.portable":"下载便携版","plat.setupTag":"安装版","plat.portableTag":"便携版",
     "plat4.name":"Android 移动版","plat4.desc":"安卓手机/平板安装包（release 签名）。全屏、分享导出等增强。","plat4.btn":"下载 .apk",
@@ -870,7 +874,7 @@ const T = {
     "f3.t":"材质编辑","f3.d":"预设与自定义颜色、图案/纹理贴图。",
     "f4.t":"文字框","f4.d":"多字体、横排/竖排，自由标注你的场景。",
     "f5.t":"视图辅助","f5.d":"坐标轴、网格、地面参考面、线框模式。",
-    "f6.t":"离线优先","f6.d":"无需账号，数据本地保存；.json 工程三端互通。",
+    "f6.t":"轻量化","f6.d":"无需账号，数据本地保存；.json 工程三端互通。",
     "f7.t":"PC 版增强","f7.d":"原生文件对话框（系统级打开/保存）、独立桌面窗口运行、离线安装。",
     "f8.t":"Android 版增强","f8.d":"返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。",
     "f9.t":"九语言界面","f9.d":"简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية，切换同步更新。",
@@ -902,12 +906,12 @@ const T = {
     "road.rel.t":"已发布：三端覆盖","road.rel.tag":"已完成",    "road.rel.d":"网页（鼠标/触屏）、Windows 桌面、Android 移动版齐备，共享同一套核心引擎与 .json 工程互通。",
     "road.feat.t":"持续打磨核心能力","road.feat.tag":"进行中","road.feat.d":"在保持轻量化与隐私友好的前提下，持续完善绘制、材质、文字与视图辅助等创作体验。",
     "faq.eyebrow":"常见问题","faq.title":"你可能想问",
-    "faq.q1":"需要注册账号吗？","faq.a1":"不需要。Cub3D Editor 离线优先，所有数据保存在本地设备，无需任何账号即可使用。",
+    "faq.q1":"需要注册账号吗？","faq.a1":"不需要。Cub3D Editor 轻量化，所有数据保存在本地设备，无需任何账号即可使用。",
     "faq.q2":"三个平台的功能一样吗？","faq.a2":"绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。",
     "faq.q3":"工程文件能在设备间通用吗？","faq.a3":"可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。",
     "faq.q5":"支持哪些语言？","faq.a5":"界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية 九种语言，切换时文案同步更新。",
     "faq.q6":"会收费吗？","faq.a6":"不会。Cub3D Editor 完全免费，所有基础功能无需付费即可使用，目前没有付费计划。",
-    "faq.q7":"会联网或上传我的数据吗？","faq.a7":"不会主动上传。编辑器离线优先，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。",
+    "faq.q7":"会联网或上传我的数据吗？","faq.a7":"不会主动上传。编辑器轻量化，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。",
     "faq.q8":"能商用吗？","faq.a8":"可以。本项目采用木兰宽松许可证第2版（MulanPSL-2），允许自由使用、修改与分发，商用友好。",
     "faq.q9":"各平台有什么系统要求？","faq.a9":"Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；网页版只需现代浏览器，无需安装。",
     "faq.q10":"iOS / macOS / Linux / 鸿蒙系统怎么用？","faq.a10":"这些系统没有原生安装包，直接使用网页版即可：iPhone / iPad / 鸿蒙手机等触屏设备会自动进入触屏布局，macOS / Linux 桌面在浏览器打开即可。工程文件仍与三端互通。",
@@ -915,7 +919,7 @@ const T = {
     "log.v1.date":"2026 · 首发",
     "log.v1.1":"网页（鼠标/触屏）、Windows 桌面、Android 移动版三端齐备",
     "log.v1.2":"绘制/形状、对象变换、材质、文字框、视图辅助等核心能力",
-    "log.v1.3":"离线优先、本地存储、.json 工程三端互通",
+    "log.v1.3":"轻量化、本地存储、.json 工程三端互通",
     "log.v1.4":"九语言界面与崩溃恢复 / 自动保存"
   },
   "es":{
@@ -933,7 +937,7 @@ const T = {
     "stats.eyebrow":"Cifras clave","stats.title":"En cifras","stats.l1":"idiomas de interfaz, sincronización al cambiar","stats.l2":"Plataformas · Web / Windows / Android","stats.l3":"modos de uso, adaptados al dispositivo","stats.l4":"disponible sin conexión, datos en local",
     "platforms.eyebrow":"Tres plataformas · Cuatro formas","platforms.title":"Elige la que te convenga",
     "platforms.sub":"Ya sea móvil, tableta, ordenador o navegador, hay una entrada para ti. Los botones de abajo abren la web o descargan el paquete directamente.",
-    "plat1.name":"Web · Ratón","plat1.desc":"Se abre directamente en el navegador, sin instalar. Para escritorio y portátil.","plat1.btn":"Abrir ahora",
+    "plat1.name":"Web · Ratón","plat1.desc":"Se abre directamente en el navegador, sin instalar. Para escritorio y portátil.","plat1.btn":"Abrir ahora","plat1.btnMouse":"Modo ratón",
     "plat2.name":"Web · Táctil","plat2.desc":"Navegador de móvil/tableta, o añade ?touch a la URL para el diseño táctil.","plat2.btn":"Modo táctil",
     "plat3.name":"PC de escritorio · Windows","plat3.desc":"Versión de instalación / portátil (sin instalar) de Windows. Con recuperación tras bloqueo y autoguardado.","plat3.setup":"Descargar instalable","plat3.portable":"Descargar portátil","plat.setupTag":"Instalable","plat.portableTag":"Portátil",
     "plat4.name":"Android móvil","plat4.desc":"Paquete de instalación para móvil/tableta Android (firma release). Con pantalla completa, compartir y exportar.","plat4.btn":"Descargar .apk",
@@ -981,7 +985,7 @@ const T = {
     "faq.q3":"¿Son compatibles los archivos entre dispositivos?","faq.a3":"Sí. Los proyectos .json exportados funcionan en web, Windows y Android; puedes bocetar en el móvil y retocar en el PC libremente.",
     "faq.q5":"¿Qué idiomas admite?","faq.a5":"La interfaz admite nueve idiomas: chino simplificado, chino tradicional, English, 日本語, 한국어, Русский, Español y Français, العربية, con sincronización al cambiar.",
     "faq.q6":"¿Cuesta dinero?","faq.a6":"No. Cub3D Editor es totalmente gratuito: todas las funciones básicas funcionan sin pago y no hay planes de pago.",
-    "faq.q7":"¿Se conecta o sube mis datos?","faq.a7":"No. El editor es offline-first: los datos se guardan en tu dispositivo, no se requiere cuenta y nunca se suben tus archivos.",
+    "faq.q7":"¿Se conecta o sube mis datos?","faq.a7":"No. El editor es lightweight: los datos se guardan en tu dispositivo, no se requiere cuenta y nunca se suben tus archivos.",
     "faq.q8":"¿Puedo usarlo comercialmente?","faq.a8":"Sí. El proyecto se distribuye bajo la Licencia de Software Permisiva Mulan v2 (MulanPSL-2), que permite uso, modificación y distribución libres, incluido el uso comercial.",
     "faq.q9":"¿Qué requisitos de sistema hay?","faq.a9":"La versión de escritorio Windows requiere Windows 10 o superior; Android requiere Android 7.0 o superior; la versión web solo necesita un navegador moderno, sin instalar.",
     "faq.q10":"¿Cómo se usa en iOS / macOS / Linux / HarmonyOS?","faq.a10":"Estos sistemas no tienen paquete nativo: usa directamente la versión web. Los dispositivos táctiles (iPhone / iPad / móviles HarmonyOS) entran automáticamente en el diseño táctil, y los de escritorio (macOS / Linux) se abren en el navegador. Los proyectos siguen siendo compatibles entre los tres entornos.",
@@ -1007,7 +1011,7 @@ const T = {
     "stats.eyebrow":"關鍵數字","stats.title":"用數據說話","stats.l1":"種介面語言，切換即同步","stats.l2":"平台 · 網頁 / Windows / Android","stats.l3":"種使用形態，隨裝置自適應","stats.l4":"離線可用，資料本機保存",
     "platforms.eyebrow":"三種平台 · 四種形態","platforms.title":"選擇適合你的方式",
     "platforms.sub":"無論手機、平板、電腦還是瀏覽器，都能找到對應的入口。下方按鈕會直接開啟網頁或下載安裝檔。",
-    "plat1.name":"網頁版 · 滑鼠","plat1.desc":"瀏覽器直接開啟，無須安裝。適配桌上型電腦、筆電。","plat1.btn":"立即開啟",
+    "plat1.name":"網頁版 · 滑鼠","plat1.desc":"瀏覽器直接開啟，無須安裝。適配桌上型電腦、筆電。","plat1.btn":"立即開啟","plat1.btnMouse":"滑鼠模式開啟",
     "plat2.name":"網頁版 · 觸控","plat2.desc":"手機/平板瀏覽器，或 URL 加 ?touch 切換觸控佈局。","plat2.btn":"觸控模式開啟",
     "plat3.name":"PC 桌面版 · Windows","plat3.desc":"Windows 安裝版 / 免安裝版。崩潰復原、自動儲存等增強。","plat3.setup":"下載安裝版","plat3.portable":"下載免安裝版","plat.setupTag":"安裝版","plat.portableTag":"免安裝版",
     "plat4.name":"Android 行動版","plat4.desc":"安卓手機/平板安裝檔（release 簽章）。全螢幕、分享匯出等增強。","plat4.btn":"下載 .apk",
@@ -1081,7 +1085,7 @@ const T = {
     "stats.eyebrow":"Key Numbers","stats.title":"By the Numbers","stats.l1":"interface languages, switch to sync","stats.l2":"Platforms · Web / Windows / Android","stats.l3":"usage modes, adaptive to device","stats.l4":"offline-ready, data stays local",
     "platforms.eyebrow":"3 Platforms · 4 Modes","platforms.title":"Pick what fits you",
     "platforms.sub":"Whether phone, tablet, PC or browser — there is an entry for each. Buttons open the web app or download the installer directly.",
-    "plat1.name":"Web · Mouse","plat1.desc":"Open directly in a browser, no install. For desktop and laptop.","plat1.btn":"Open Now",
+    "plat1.name":"Web · Mouse","plat1.desc":"Open directly in a browser, no install. For desktop and laptop.","plat1.btn":"Open Now","plat1.btnMouse":"Mouse Mode",
     "plat2.name":"Web · Touch","plat2.desc":"Phones/tablets, or add ?touch to the URL for the touch layout.","plat2.btn":"Open Touch Mode",
     "plat3.name":"PC · Windows","plat3.desc":"Windows setup / portable (no install). Crash recovery, autosave and more.","plat3.setup":"Download Setup","plat3.portable":"Download Portable","plat.setupTag":"Setup","plat.portableTag":"Portable",
     "plat4.name":"Android","plat4.desc":"Android phone/tablet package (release-signed). Fullscreen, share-export and more.","plat4.btn":"Download .apk",
@@ -1092,7 +1096,7 @@ const T = {
     "f3.t":"Materials","f3.d":"Preset & custom colors, patterns / texture maps.",
     "f4.t":"Text Box","f4.d":"Multiple fonts, horizontal / vertical layout.",
     "f5.t":"View Aids","f5.d":"Axes, grid, ground plane, wireframe mode.",
-    "f6.t":"Offline-first","f6.d":"No account; data saved locally; .json projects work on all platforms.",
+    "f6.t":"Lightweight","f6.d":"No account; data saved locally; .json projects work on all platforms.",
     "f7.t":"PC Extras","f7.d":"Native file dialogs (system open/save), standalone desktop window, offline install.",
     "f8.t":"Android Extras","f8.d":"Back-key confirm, native save/open dialogs (system document picker), fullscreen & status bar integration.",
     "f9.t":"9 Languages","f9.d":"Simplified Chinese, Traditional Chinese, English, Japanese, Korean, Russian, Spanish, French, Arabic — synced on switch.",
@@ -1124,12 +1128,12 @@ const T = {
     "road.rel.t":"Released: three-platform coverage","road.rel.tag":"Done","road.rel.d":"Web (mouse/touch), Windows desktop, and Android mobile are all available, sharing the same core engine with .json project interoperability.",
     "road.feat.t":"Continuously refining core capabilities","road.feat.tag":"In progress","road.feat.d":"While keeping a lightweight, privacy-friendly approach, we keep improving the creative experience for drawing, materials, text, and view aids.",
     "faq.eyebrow":"FAQ","faq.title":"You might be wondering",
-    "faq.q1":"Do I need to register an account?","faq.a1":"No. Cub3D Editor is offline-first; all data is stored on your local device and works without any account.",
+    "faq.q1":"Do I need to register an account?","faq.a1":"No. Cub3D Editor is lightweight; all data is stored on your local device and works without any account.",
     "faq.q2":"Are the three platforms identical in features?","faq.a2":"The vast majority of features are exactly the same, sharing the same core engine. Differences come only from the install method, and from Android's native save/open dialogs and back key confirm. Android's \"Fullscreen\" is only a visual fullscreen that fits the status bar.",
     "faq.q3":"Can project files be used across devices?","faq.a3":"Yes. Exported .json project files work across Web, Windows, and Android, letting you freely hand off between drafting on your phone and refining on your computer.",
     "faq.q5":"Which languages are supported?","faq.a5":"The UI supports nine languages — Simplified Chinese, Traditional Chinese, English, Japanese, Korean, Russian, Spanish, French, and Arabic — with text syncing on switch.",
     "faq.q6":"Will it cost money?","faq.a6":"No. Cub3D Editor is completely free—all basic features work without payment, and there are no paid plans.",
-    "faq.q7":"Does it go online or upload my data?","faq.a7":"It does not upload anything by default. The editor is offline-first: all data stays on your device, no login required, and your project files are never uploaded.",
+    "faq.q7":"Does it go online or upload my data?","faq.a7":"It does not upload anything by default. The editor is lightweight: all data stays on your device, no login required, and your project files are never uploaded.",
     "faq.q8":"Can I use it commercially?","faq.a8":"Yes. This project is licensed under the Mulan Permissive Software License v2 (MulanPSL-2), allowing free use, modification and distribution, including commercial use.",
     "faq.q9":"What are the system requirements?","faq.a9":"Windows desktop requires Windows 10 or later; Android requires Android 7.0 or later; the web version just needs a modern browser—no install.",
     "faq.q10":"How do iOS / macOS / Linux / HarmonyOS users get started?","faq.a10":"These systems have no native package—just use the Web version: touch devices (iPhone / iPad / HarmonyOS phones) automatically switch to the touch layout, and macOS / Linux desktops can open it right in the browser. Projects still sync across all three platforms.",
@@ -1137,7 +1141,7 @@ const T = {
     "log.v1.date":"2026 · First release",
     "log.v1.1":"Web (mouse/touch), Windows desktop, and Android mobile — all three platforms available",
     "log.v1.2":"Core capabilities: drawing/shapes, object transforms, materials, text boxes, view aids",
-    "log.v1.3":"Offline-first, local storage, .json project interoperability across three platforms",
+    "log.v1.3":"Lightweight, local storage, .json project interoperability across three platforms",
     "log.v1.4":"Nine-language UI and crash recovery / auto-save"
   },
   "ja":{
@@ -1155,7 +1159,7 @@ const T = {
     "stats.eyebrow":"主な数字","stats.title":"数字で見る","stats.l1":"言語のUI、切替で同期","stats.l2":"プラットフォーム · Web / Windows / Android","stats.l3":"使用形態、端末に応じて自動調整","stats.l4":"オフライン対応、データはローカル保存",
     "platforms.eyebrow":"3プラットフォーム・4形態","platforms.title":"あなたに合う方法を",
     "platforms.sub":"スマホ・タブレット・PC・ブラウザのいずれでも入り口があります。ボタンでWebアプリを開くか、インストーラを直接ダウンロードします。",
-    "plat1.name":"Web・マウス","plat1.desc":"ブラウザですぐ開く、インストール不要。デスクトップ・ノート向け。","plat1.btn":"今すぐ開く",
+    "plat1.name":"Web・マウス","plat1.desc":"ブラウザですぐ開く、インストール不要。デスクトップ・ノート向け。","plat1.btn":"今すぐ開く","plat1.btnMouse":"マウスモードで開く",
     "plat2.name":"Web・タッチ","plat2.desc":"スマホ/タブレット、またはURLに ?touch を付けてタッチレイアウト。","plat2.btn":"タッチモードで開く",
     "plat3.name":"PC・Windows","plat3.desc":"Windows インストーラ / ポータブル（インストール不要）。クラッシュ復旧・自動保存など。","plat3.setup":"インストーラを取得","plat3.portable":"ポータブルを取得","plat.setupTag":"インストーラ","plat.portableTag":"ポータブル",
     "plat4.name":"Android","plat4.desc":"Android スマホ/タブレット向けパッケージ（リリース署名）。全画面・共有書き出しなど。","plat4.btn":" .apk を取得",
@@ -1229,7 +1233,7 @@ const T = {
     "stats.eyebrow":"핵심 수치","stats.title":"숫자로 보는","stats.l1":"개 언어 UI, 전환 시 동기화","stats.l2":"플랫폼 · 웹 / Windows / Android","stats.l3":"가지 사용 형태, 기기에 맞춰 자동 조정","stats.l4":"오프라인 지원, 데이터 로컬 저장",
     "platforms.eyebrow":"3개 플랫폼 · 4가지 형태","platforms.title":"당신에게 맞는 방식",
     "platforms.sub":"스마트폰·태블릿·PC·브라우저 어디서든 진입점이 있습니다. 버튼을 누르면 웹 앱이 열리거나 설치 파일이 바로 다운로드됩니다.",
-    "plat1.name":"웹 · 마우스","plat1.desc":"브라우저에서 바로 열고 설치 불필요. 데스크톱·노트북용.","plat1.btn":"지금 열기",
+    "plat1.name":"웹 · 마우스","plat1.desc":"브라우저에서 바로 열고 설치 불필요. 데스크톱·노트북용.","plat1.btn":"지금 열기","plat1.btnMouse":"마우스 모드로 열기",
     "plat2.name":"웹 · 터치","plat2.desc":"스마트폰/태블릿, 또는 URL에 ?touch 를 붙여 터치 레이아웃으로.","plat2.btn":"터치 모드 열기",
     "plat3.name":"PC · Windows","plat3.desc":"Windows 설치판 / 포터블(설치 불필요). 크래시 복구·자동 저장 등.","plat3.setup":"설치판 다운로드","plat3.portable":"포터블 다운로드","plat.setupTag":"설치판","plat.portableTag":"포터블",
     "plat4.name":"Android","plat4.desc":"Android 폰/태블릿 패키지(릴리스 서명). 전체 화면·공유 내보내기 등.","plat4.btn":" .apk 다운로드",
@@ -1297,7 +1301,7 @@ const T = {
     "stats.eyebrow":"Ключевые цифры","stats.title":"Цифры говорят","stats.l1":"языков интерфейса, синхронизация при переключении","stats.l2":"Платформы · Web / Windows / Android","stats.l3":"режима использования, адаптация к устройству","stats.l4":"офлайн-доступ, данные хранятся локально",
     "platforms.eyebrow":"3 платформы · 4 режима","platforms.title":"Выберите подходящий вариант",
     "platforms.sub":"Будь то телефон, планшет, ПК или браузер — для каждого есть свой вход. Кнопки открывают веб-приложение или скачивают установщик напрямую.",
-    "plat1.name":"Веб · Мышь","plat1.desc":"Открывается прямо в браузере, без установки. Для настольных ПК и ноутбуков.","plat1.btn":"Открыть сейчас",
+    "plat1.name":"Веб · Мышь","plat1.desc":"Открывается прямо в браузере, без установки. Для настольных ПК и ноутбуков.","plat1.btn":"Открыть сейчас","plat1.btnMouse":"Открыть в режиме мыши",
     "plat2.name":"Веб · Сенсор","plat2.desc":"Телефоны/планшеты или добавьте ?touch к URL для сенсорной раскладки.","plat2.btn":"Открыть сенсорный режим",
     "plat3.name":"ПК · Windows","plat3.desc":"Установщик Windows / портативная версия (без установки). Восстановление после сбоя, автосохранение и др.","plat3.setup":"Скачать установщик","plat3.portable":"Скачать портативную","plat.setupTag":"Установщик","plat.portableTag":"Портативная",
     "plat4.name":"Android","plat4.desc":"Пакет для телефона/планшета Android (подпись release). Полноэкранный режим, экспорт через «Поделиться» и др.","plat4.btn":"Скачать .apk",
@@ -1364,7 +1368,7 @@ const T = {
     "stats.eyebrow":"Chiffres clés","stats.title":"En chiffres","stats.l1":"langues d'interface, synchronisées au changement","stats.l2":"Plateformes · Web / Windows / Android","stats.l3":"modes d'utilisation, adaptatifs à l'appareil","stats.l4":"hors-ligne, données enregistrées localement",
     "platforms.eyebrow":"Trois plateformes · Quatre modes","platforms.title":"Choisissez ce qui vous convient",
     "platforms.sub":"Que ce soit un téléphone, une tablette, un ordinateur ou un navigateur, vous trouverez une entrée adaptée. Les boutons ci-dessous ouvrent le Web ou lancent le téléchargement directement.",
-    "plat1.name":"Web · Souris","plat1.desc":"S'ouvre directement dans le navigateur, sans installation. Adapté aux ordinateurs de bureau et portables.","plat1.btn":"Ouvrir maintenant",
+    "plat1.name":"Web · Souris","plat1.desc":"S'ouvre directement dans le navigateur, sans installation. Adapté aux ordinateurs de bureau et portables.","plat1.btn":"Ouvrir maintenant","plat1.btnMouse":"Mode souris",
     "plat2.name":"Web · Tactile","plat2.desc":"Téléphones/tablettes, ou ajoutez ?touch au lien pour basculer en disposition tactile.","plat2.btn":"Ouvrir le mode tactile",
     "plat3.name":"Bureau PC · Windows","plat3.desc":"Version d'installation Windows / version portable (sans installation). Récupération après crash, auto-sauvegarde, etc.","plat3.setup":"Télécharger l'installateur","plat3.portable":"Télécharger la version portable","plat.setupTag":"Installateur","plat.portableTag":"Portable",
     "plat4.name":"Version Android","plat4.desc":"Paquet pour téléphone/tablette Android (signé). Plein écran, partage, export, etc.","plat4.btn":"Télécharger .apk",
@@ -1444,7 +1448,7 @@ const T = {
     "stats.eyebrow":"أرقام رئيسية","stats.title":"بالأرقام","stats.l1":"لغات الواجهة، تزامن عند التبديل","stats.l2":"منصات · الويب / Windows / Android","stats.l3":"أشكال استخدام، تتكيف مع الجهاز","stats.l4":"متاح دون اتصال، البيانات محفوظة محلياً",
     "platforms.eyebrow":"ثلاث منصات · أربعة أشكال","platforms.title":"اختر الطريقة التي تناسبك",
     "platforms.sub":"سواء كان هاتفاً أو جهازاً لوحياً أو حاسوباً أو متصفحاً، ستجد مدخلاً مناسباً. الأزرار أدناه تفتح الويب أو تبدأ التنزيل مباشرة.",
-    "plat1.name":"الويب · الماوس","plat1.desc":"يفتح مباشرة في المتصفح دون تثبيت. مناسب لأجهزة سطح المكتب والمحمولة.","plat1.btn":"افتح الآن",
+    "plat1.name":"الويب · الماوس","plat1.desc":"يفتح مباشرة في المتصفح دون تثبيت. مناسب لأجهزة سطح المكتب والمحمولة.","plat1.btn":"افتح الآن","plat1.btnMouse":"افتح بوضع الماوس",
     "plat2.name":"الويب · اللمس","plat2.desc":"هواتف/أجهزة لوحية، أو أضف ?touch إلى الرابط لتبديل تخطيط اللمس.","plat2.btn":"افتح وضع اللمس",
     "plat3.name":"سطح المكتب PC · Windows","plat3.desc":"نسخة تثبيت Windows / نسخة محمولة (بدون تثبيت). استرداد من الانهيار وحفظ تلقائي وغيرها.","plat3.setup":"تنزيل نسخة التثبيت","plat3.portable":"تنزيل النسخة المحمولة","plat.setupTag":"نسخة التثبيت","plat.portableTag":"المحمولة",
     "plat4.name":"إصدار Android","plat4.desc":"حزمة هاتف/جهاز لوحي Android (موقّعة بإصدار). ملء الشاشة والمشاركة والتصدير وغيرها.","plat4.btn":"تنزيل .apk",
@@ -1563,9 +1567,20 @@ function applyLang(lang){
   const dict = T[lang];
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const k = el.getAttribute('data-i18n');
-    if(dict[k]!=null) el.innerHTML = dict[k];
+    if(dict[k]!=null){
+      // 把中间点 · 包裹为 dot-sep，阿拉伯语下禁用连字，避免被连写字母吞掉/割裂
+      el.innerHTML = String(dict[k]).replace(/·/g,'<span class="dot-sep">·</span>');
+    }
   });
   document.title = (dict["hero.title"]||"Cub3D Editor") + " — " + (dict["hero.sub"]||"");
+  // 触屏设备（手机/平板）下：交换平台卡片按钮文案 —— 鼠标模式按钮置灰不可点，触屏按钮改「立即打开」
+  const coarse = window.matchMedia && matchMedia('(pointer:coarse)').matches;
+  const b1 = document.getElementById('plat1Btn');
+  const b2 = document.getElementById('plat2Btn');
+  if(coarse){
+    if(b1 && dict['plat1.btnMouse']){ b1.textContent = dict['plat1.btnMouse']; }
+    if(b2 && dict['plat1.btn']){ b2.textContent = dict['plat1.btn']; }
+  }
   // 悬浮按钮标签随语言切换
   const fabMap = [['shareBtn','fab.share'],['toTop','fab.top'],['toBottom','fab.bottom']];
   fabMap.forEach(([id,k])=>{
@@ -1795,12 +1810,13 @@ function initSite(){
     const dict = T[cur] || {};
     siteSwitch.textContent = dict[siteSwitch.dataset.i18n] || (toCn ? '境内入口' : '国际版入口');
   }
-  // ICP：仅境内且有备案号时显示，否则隐藏（不占位）
+  // ICP：仅境内显示（有备案号填文字并恢复颜色，无则空虚线框占位），境外隐藏
   const icpEl = document.querySelector('.icp-slot');
   if(icpEl){
-    if(isCnHost && SITE.cn.icp){
+    if(isCnHost){
       icpEl.textContent = SITE.cn.icp;
       icpEl.style.display='';
+      icpEl.style.color = SITE.cn.icp ? '' : 'transparent';
     } else {
       icpEl.textContent = '';
       icpEl.style.display='none';

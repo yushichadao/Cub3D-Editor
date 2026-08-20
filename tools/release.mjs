@@ -76,11 +76,13 @@ if (!setupSrc || !portableSrc || !apkSrc) {
   process.exit(1);
 }
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cub3d-release-')); // 仅用于 NOTES.md
-const artifacts = {
-  [`Cub3D-Editor-Setup-${version}-x64.exe`]: setupSrc,
-  [`Cub3D-Editor-Portable-${version}-x64.exe`]: portableSrc,
-  [`Cub3D-Editor-release-${version}-universal.apk`]: apkSrc,
-};
+const setupName = `Cub3D-Editor-Setup-${version}-x64.exe`;
+const portableName = `Cub3D-Editor-Portable-${version}-x64.exe`;
+const apkName = `Cub3D-Editor-release-${version}-universal.apk`;
+const artifacts = {};
+artifacts[setupName] = setupSrc;
+artifacts[portableName] = portableSrc;
+artifacts[apkName] = apkSrc;
 fs.mkdirSync(RELEASE_DIR, { recursive: true });
 const assetPaths = [];
 for (const [name, src] of Object.entries(artifacts)) {

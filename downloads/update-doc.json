@@ -1,0 +1,86 @@
+{
+  "schema": 2,
+  "updatedAt": "2026-08-20T00:00:00+08:00",
+  "versions": [
+    {
+      "version": "2.2.1",
+      "date": "2026-09-10",
+      "publishedAt": "2026-09-10T09:00:00+08:00",
+      "type": "optional",
+      "status": "published",
+      "targets": ["github", "cn"],
+      "notes": {
+        "all": [
+          "新增：新增「批量导出 GLB」与画布双主题",
+          "修复：修复克隆对象后撤销栈错乱",
+          "优化：优化大场景渲染帧率，整体提升约 18%"
+        ]
+      },
+      "assets": {
+        "pc": [
+          { "name": "Cub3D-Editor-Setup-2.2.1-x64.exe", "kind": "安装版 x64" },
+          { "name": "Cub3D-Editor-Portable-2.2.1-x64.exe", "kind": "免安装版 x64" }
+        ],
+        "android": [{ "name": "Cub3D-Editor-release-2.2.1-universal.apk", "kind": "APK universal" }]
+      }
+    },
+    {
+      "version": "2.2.0",
+      "date": "2026-09-01",
+      "publishedAt": "2026-09-01T09:00:00+08:00",
+      "type": "force",
+      "status": "published",
+      "targets": ["github", "cn"],
+      "notes": {
+        "all": [
+          "修复：修复中文 userData 路径下缓存创建失败导致加载卡死",
+          "优化：更新提示改为后台静默探测，不阻塞启动"
+        ]
+      },
+      "assets": {
+        "pc": [
+          { "name": "Cub3D-Editor-Setup-2.2.0-x64.exe", "kind": "安装版 x64" },
+          { "name": "Cub3D-Editor-Portable-2.2.0-x64.exe", "kind": "免安装版 x64" }
+        ],
+        "android": [{ "name": "Cub3D-Editor-release-2.2.0-universal.apk", "kind": "APK universal" }]
+      }
+    },
+    {
+      "version": "2.1.0",
+      "date": "2026-08-15",
+      "publishedAt": "2026-08-15T09:00:00+08:00",
+      "type": "optional",
+      "status": "published",
+      "targets": ["github", "cn"],
+      "notes": {
+        "pc": ["新增：Windows 专属离线模式缓存优化"],
+        "android": ["新增：Android 手势快捷键自定义"]
+      },
+      "assets": {
+        "pc": [
+          { "name": "Cub3D-Editor-Setup-2.1.0-x64.exe", "kind": "安装版 x64" },
+          { "name": "Cub3D-Editor-Portable-2.1.0-x64.exe", "kind": "免安装版 x64" }
+        ],
+        "android": [{ "name": "Cub3D-Editor-release-2.1.0-universal.apk", "kind": "APK universal" }]
+      }
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-07-01",
+      "publishedAt": "2026-07-01T09:00:00+08:00",
+      "type": "optional",
+      "status": "published",
+      "targets": ["github", "cn"],
+      "notes": {
+        "all": ["首个正式版本", "基于 Three.js 的网页端三维图形设计与编辑工具"]
+      },
+      "assets": {
+        "pc": [
+          { "name": "Cub3D-Editor-Setup-1.1.0-x64.exe", "kind": "安装版 x64" },
+          { "name": "Cub3D-Editor-Portable-1.1.0-x64.exe", "kind": "免安装版 x64" }
+        ],
+        "android": [{ "name": "Cub3D-Editor-release-1.1.0-universal.apk", "kind": "APK universal" }]
+      }
+    }
+  ]
+}

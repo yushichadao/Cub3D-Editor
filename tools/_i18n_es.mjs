@@ -16,6 +16,7 @@ const DIRS = [
 // ===== 短字符串键 -> 西班牙语 =====
 const S = {
   lang: 'Español', new: 'Nuevo', import: 'Importar', export: 'Exportar', shot: 'Captura',
+  bootLoading: 'Cargando…', bootLangLoading: 'Cargando el idioma de la interfaz {0}…', bootLangReady: 'Idioma de la interfaz listo', bootEngineReady: 'Motor principal listo, inicializando…', bootStale: 'Se ha detectado una versión antigua en caché del navegador, actualizando…', bootRetry: 'Recargar', bootFail: 'Error de carga', bootSlow: 'La carga tarda más de lo habitual, espera por favor…', bootHint: 'Ligero · Sin cuenta · Datos guardados localmente', bootFailResource: 'Error al cargar el recurso: {0}', bootFailPage: 'Error al cargar la página: {0}', bootFailUnknown: 'Error al cargar la página: error desconocido',
   undo: 'Deshacer', redo: 'Rehacer', copy: 'Copiar', paste: 'Pegar', dup: 'Clonar', clear: 'Borrar',
   axes: 'Ejes', grid: 'Cuadrícula', ground: 'Suelo', settings: 'Ajustes', settingsTitle: 'Ajustes',
   tabTheme: 'Tema', tabLang: 'Idioma', tabAbout: 'Acerca de',
@@ -199,6 +200,11 @@ const S = {
   exitCancel: 'Cancelar',
   exitNoSave: 'Salir sin guardar',
   exitSave: 'Guardar y salir',
+  toastExportCancelled: 'Exportación cancelada',
+  manImportLangMismatch: 'Esta copia de seguridad de notas es en {0}; el manual actual es {1}. Importación omitida para evitar mezclar idiomas',
+  manImportLangUnknown: 'Esta copia de seguridad no tiene etiqueta de idioma. Impórtala solo si fue exportada del manual actual ({0})',
+  manImportOldVer: 'Importadas {0} nota(s); algunas fueron creadas en una versión anterior ({1}). Revísalas si el manual cambió',
+  manImportNoVer: 'Esta copia de seguridad no tenía etiqueta de versión; las notas se marcaron como versión actual ({0})',
 };
 
 // ===== 三个 HTML 法律全文（西语，语义对应中文版）=====

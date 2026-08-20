@@ -63,6 +63,11 @@ cap_diag*.bat
 check_exe*.ps1
 _check*.ps1
 
+# ===== Demo 演示页面（管理后台/更新浮窗/启动/协议闸门演示，本地预览用，禁止上传 GitHub）=====
+demo/
+demo/**
+!demo/.gitkeep
+
 # ===== 一次性排查 / 调试产物（根目录，均非打包依赖，运行时再生）=====
 # 本地实验/试做目录（如 boot-demo.html），不入库
 experiments/
@@ -92,6 +97,17 @@ _tos_gate_demo.html
 # 语言/手册草稿与步骤 yaml（排查与生成中间产物，不入库）
 i18n-draft/
 *.yaml
+
+# PC 端运行诊断（stdout/stderr/验证脚本/临时 JSON，排查用，不入库）
+PC/_run-*.txt
+PC/_verify*.ps1
+PC/_zh-legal.json
+
+# 根目录截图与调试工具产物（不入库）
+main-load.png
+main-term.png
+tools/_tmp_*.mjs
+tools/star3d_*.png
 
 
 # ===== 临时 wiki 工作目录（生成/排查用，不入库）=====

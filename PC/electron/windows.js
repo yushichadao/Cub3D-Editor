@@ -144,7 +144,6 @@ function createMainWindow() {
     mainWindow = null;
     for (const w of stickyWindows.values()) { if (!w.isDestroyed()) w.destroy(); }
     stickyWindows.clear();
-    if (consoleWindow && !consoleWindow.isDestroyed()) consoleWindow.destroy();
   });
 
   // 外链一律走系统浏览器，绝不在应用内开新窗

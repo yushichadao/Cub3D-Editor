@@ -17,6 +17,7 @@ files:
   - vercel.json
   - three/**/*
   - language/**/*
+  - fonts/**/*
   - docs/**/*
   - shell/**/*
   - electron/**/*
