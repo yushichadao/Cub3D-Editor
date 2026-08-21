@@ -169,4 +169,10 @@ if(args.includes('--github')){
   console.log(`   国内站点：确认下载/部署后自动同步 downloads/update-doc.json 即可（见仓库 README 部署说明）`);
 }
 
+// ---- 可选：核对境外 GitHub Pages 更新源（push main 后 pages.yml 工作流自动部署；本步骤仅核对/触发） ----
+if (args.includes('--pages')) {
+  console.log('\n---- 核对境外 GitHub Pages 更新源 ----');
+  run(`node ${q(path.join(ROOT, 'tools', 'publish-pages.mjs'))}`);
+}
+
 console.log(`\n✅ 更新文档已就绪：https://github.com/${REPO}/releases/latest（GitHub）与 downloads/（国内站点镜像）`);

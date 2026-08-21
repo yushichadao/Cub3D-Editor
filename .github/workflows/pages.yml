@@ -10,6 +10,7 @@ on:
       - 'Web/**'
       - 'shared/**'
       - 'tools/**'
+      - 'downloads/**'
       - '.nojekyll'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
@@ -52,6 +53,12 @@ jobs:
           cp -r shared/fonts _site/shared/fonts
           cp legal-*.html _site/ 2>/dev/null || true
           cp .nojekyll _site/
+          # 更新元数据（境外客户端经 /Cub3D-Editor/downloads/update-doc.json 检测更新；
+          # 安装包走 GitHub Releases，不在此构建）
+          mkdir -p _site/downloads
+          cp downloads/update-doc.json _site/downloads/ 2>/dev/null || true
+          cp downloads/versions.json _site/downloads/ 2>/dev/null || true
+          cp downloads/version.txt _site/downloads/ 2>/dev/null || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
