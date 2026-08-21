@@ -149,6 +149,7 @@ Every "Chapter X …" in the table of contents is a clickable jump link that tak
 - [Chapter 49: Take Notes While Reading: Sticky Notes in the Manual](jump:Chapter 49: Jot While You Read: Sticky Notes in the Manual)
 - [Chapter 50: Make Sticky Notes "Float" on Screen](jump:Chapter 50: Let Sticky Notes "Float" on Screen)
 - [Chapter 51: Multilingual: The Manual Also "Speaks" Your Language](jump:Chapter 51: Multi-language: The Manual Also "Speaks" Your Language)
+- [Chapter 52: App Updates and Manual Updates](jump:Chapter 52: App Updates and Manual Updates)
 
 ---
 
@@ -346,8 +347,8 @@ Download from the **Releases** page of the project repository; there are two kin
 
 | Package type | Filename like | Features | Recommended for |
 | --- | --- | --- | --- |
-| **Installer** | `...-Setup-1.1.0.exe` | Double-click to install, creates Start menu and desktop shortcut, can uninstall from "Apps & Features" | Your main long-term-use computer |
-| **Portable** | `...-1.1.0-portable.exe` | **No install**, double-click to run directly, can be put on a USB drive | Public computers, no admin rights, want to carry around |
+| **Installer** | `...-Setup-1.2.0.exe` | Double-click to install, creates Start menu and desktop shortcut, can uninstall from "Apps & Features" | Your main long-term-use computer |
+| **Portable** | `...-1.2.0-portable.exe` | **No install**, double-click to run directly, can be put on a USB drive | Public computers, no admin rights, want to carry around |
 
 > 📥 Download address: [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
 
@@ -3014,6 +3015,30 @@ How to switch: choose the language in Settings, and the interface text and manua
 > ⚠️ About deletion confirmation: all deletion operations (sticky notes, scene objects) go through a **custom confirmation dialog** rather than a native system dialog, so it pops up reliably even in **fullscreen / immersive mode**, without "clicking does nothing."
 
 ---
+## Chapter 52: App Updates and Manual Updates
+
+The last chapter covered multilingual support. This one answers two "new-version era" questions: how does the app update? And when the manual is updated, what happens to my sticky notes?
+
+### 52.1 How does the app update?
+
+- **Web version**: No update needed — every time you open the browser you load the latest version. Just close and reopen.
+- **PC version**: The app **automatically checks for a new version on startup** (you can turn this off in Settings). When a new version is found, a prompt appears; click "Update Now" to download and upgrade automatically. Your local scenes, sticky notes and settings are not affected.
+- **Android version**: Same as PC — checks for updates on startup and follows the prompts to download and install. You can also manually download the latest APK from the official website and install over it (data is kept).
+
+> 📌 Updating is **optional**: you may keep using the current version. However, we recommend updating to the latest version when convenient for a better experience and security fixes.
+
+### 52.2 The manual was updated — what happens to my sticky notes?
+
+The manual is updated with each version; text may be added, changed or removed. Your existing sticky notes fall into three cases:
+
+1. **Text unchanged**: the note stays bound to the original sentence, exactly as before;
+2. **Text modified**: the note remains in the notes list, but if the sentence it binds to has changed, the note is marked with an "old-version note" hint so you can notice it;
+3. **Text removed**: the note can no longer locate the original text, so it stays in the notes list (marked "old-version note"); you may delete it manually, or select a new sentence and add it again.
+
+> 💡 In one sentence: **Notes follow the text; when the text changes, notes get a "left-behind" hint, but they never silently disappear.** For important notes, regularly back them up with the "Export" button.
+
+> ⚠️ Developer/administration content is outside the scope of this manual; for deployment, maintenance or secondary development, please refer to the project documentation.
+
 
 ✅ **The book ends here.** You have walked through: form identification → 3D basics → graphics and colors → text, brush, and images → views → undo history → detailed explanation of each graphic → shortcuts and gestures → transform controls → multi-select and clone → four practical projects → sticky notes and multi-language → troubleshooting and appendix.
 

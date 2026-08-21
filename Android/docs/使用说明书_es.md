@@ -150,6 +150,7 @@ Cada «Capítulo X …» del índice es un enlace de salto clicable que te lleva
 - [Capítulo 49 Anota mientras lees: las notas dentro del manual](jump:Capítulo 49: Anotar mientras lees: las notas del manual)
 - [Capítulo 50 Haz que las notas "floten" sobre la pantalla](jump:Capítulo 50: Hacer que las notas "floten" en la pantalla)
 - [Capítulo 51 Multilenguaje: el manual también "habla" tu idioma](jump:Capítulo 51: Multilingüe: el manual también "habla" tu idioma)
+- [Capítulo 52 Actualización de la aplicación y del manual](jump:Capítulo 52: Actualización de la aplicación y del manual)
 
 ---
 
@@ -347,8 +348,8 @@ Descarga desde la página de **Releases** del repositorio del proyecto; hay dos 
 
 | Tipo de paquete | Nombre de archivo similar a | Características | Público recomendado |
 | --- | --- | --- | --- |
-| **Versión de instalación** | `...-Setup-1.1.0.exe` | Doble clic para instalar, crea acceso en el menú Inicio y en el escritorio, se puede desinstalar desde "Aplicaciones y funciones" | El equipo principal que usas a largo plazo |
-| **Versión portátil** | `...-1.1.0-portable.exe` | **Sin instalar**, se ejecuta con doble clic, se puede guardar en un USB | Equipos públicos, sin permisos de administrador, querer llevarlo siempre |
+| **Versión de instalación** | `...-Setup-1.2.0.exe` | Doble clic para instalar, crea acceso en el menú Inicio y en el escritorio, se puede desinstalar desde "Aplicaciones y funciones" | El equipo principal que usas a largo plazo |
+| **Versión portátil** | `...-1.2.0-portable.exe` | **Sin instalar**, se ejecuta con doble clic, se puede guardar en un USB | Equipos públicos, sin permisos de administrador, querer llevarlo siempre |
 
 > 📥 Dirección de descarga: [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
 
@@ -3016,6 +3017,30 @@ Modo de cambio: en Ajustes selecciona el idioma, y los textos de la interfaz y e
 > ⚠️ Sobre la confirmación de eliminación: todas las operaciones de eliminación (notas adhesivas, objetos de escena) usan un **cuadro de confirmación personalizado** en lugar del cuadro nativo del sistema, por lo que también se muestra de forma estable en **modo pantalla completa / inmersivo**, sin que pase lo de "pulsé y no responde".
 
 ---
+## Capítulo 52. Actualización de la aplicación y del manual
+
+El capítulo anterior trataba el multilingüismo. Este responde dos preguntas de la "era de las nuevas versiones": ¿cómo se actualiza la aplicación? Y cuando el manual se actualiza, ¿qué pasa con mis notas adhesivas?
+
+### 52.1 ¿Cómo se actualiza la aplicación?
+
+- **Versión web**: no hace falta actualizar — cada vez que abres el navegador cargas la última versión; basta con cerrar y reabrir.
+- **Versión PC**: al iniciar, la aplicación **comprueba automáticamente si hay una nueva versión** (puedes desactivarlo en Ajustes). Cuando hay una nueva versión, aparece un aviso; pulsa "Actualizar ahora" para descargarla e instalarla automáticamente. Tus escenas locales, notas y ajustes no se ven afectados.
+- **Versión Android**: igual que en PC — comprobación al iniciar e instalación siguiendo los avisos. También puedes descargar el nuevo APK desde el sitio web oficial e instalarlo encima (los datos se conservan).
+
+> 📌 La actualización es **opcional**: puedes seguir usando la versión actual. No obstante, recomendamos actualizar a la última versión cuando te venga bien, para una mejor experiencia y correcciones de seguridad.
+
+### 52.2 El manual se actualizó — ¿qué pasa con mis notas?
+
+El manual se actualiza con cada versión; el texto puede añadirse, modificarse o eliminarse. Tus notas existentes se dividen en tres casos:
+
+1. **El texto no cambió**: la nota sigue vinculada a la frase original, igual que antes;
+2. **El texto se modificó**: la nota permanece en la lista, pero si la frase vinculada ha cambiado, se marca como "nota de versión anterior";
+3. **El texto se eliminó**: la nota ya no puede localizar el texto original, así que permanece en la lista (marcada como "nota de versión anterior"); puedes eliminarla manualmente o seleccionar una frase nueva y volver a añadirla.
+
+> 💡 En una frase: **las notas siguen al texto; cuando el texto cambia, las notas reciben un aviso de "rezagadas", pero nunca desaparecen en silencio.** Para notas importantes, haz copias de seguridad periódicas con el botón "Exportar".
+
+> ⚠️ El contenido de desarrollo/administración está fuera del alcance de este manual; para despliegue, mantenimiento o desarrollo secundario, consulta la documentación del proyecto.
+
 
 ✅ **El libro termina aquí.** Has recorrido: identificación de formas → bases 3D → gráficos y color → texto, pincel e imágenes → vista → historial de deshacer → explicación detallada de cada gráfico → atajos y gestos → controles de transformación → multiselección y clonado → cuatro proyectos prácticos → notas adhesivas y multilingüe → apéndice de dudas.
 

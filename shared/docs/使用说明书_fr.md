@@ -164,6 +164,7 @@ Chaque « Chapitre X … » de la table des matières est un lien de saut cliqua
 - [Chapitre 49 : Lire et noter : les notes dans le manuel](jump:Chapitre 49 : Lire et noter : les notes dans le manuel)
 - [Chapitre 50 : Faire « flotter » les notes à l'écran](jump:Chapitre 50 : Faire « flotter » les notes à l'écran)
 - [Chapitre 51 : Multilangue : le manuel « parle » aussi votre langue](jump:Chapitre 51 : Multilingue : le manuel « parle » aussi votre langue)
+- [Chapitre 52 : Mise à jour de l’application et du manuel](jump:Chapitre 52 : Mise à jour de l’application et du manuel)
 
 ---
 
@@ -361,8 +362,8 @@ Téléchargez sur la page **Releases** du dépôt du projet. Il y a deux types d
 
 | Type de paquet | Nom de fichier ressemblant à | Caractéristiques | Public recommandé |
 | --- | --- | --- | --- |
-| **Version installable** | `...-Setup-1.1.0.exe` | Double-clic pour installer, crée un menu Démarrer et un raccourci bureau, désinstallable via « Applications et fonctionnalités » | Ordinateur principal que vous utilisez sur le long terme |
-| **Version portable** | `...-1.1.0-portable.exe` | **Sans installation**, double-clic pour exécuter directement, peut être placée sur clé USB | Ordinateur public, sans droits administrateur, vouloir transporter avec soi |
+| **Version installable** | `...-Setup-1.2.0.exe` | Double-clic pour installer, crée un menu Démarrer et un raccourci bureau, désinstallable via « Applications et fonctionnalités » | Ordinateur principal que vous utilisez sur le long terme |
+| **Version portable** | `...-1.2.0-portable.exe` | **Sans installation**, double-clic pour exécuter directement, peut être placée sur clé USB | Ordinateur public, sans droits administrateur, vouloir transporter avec soi |
 
 > 📥 Adresse de téléchargement : [https://github.com/yushichadao/Cub3D-Editor/releases](https://github.com/yushichadao/Cub3D-Editor/releases)
 
@@ -3038,6 +3039,30 @@ Mode de bascule : dans les paramètres, choisissez la langue, le texte de l'inte
 > ⚠️ Concernant la confirmation de suppression : toutes les opérations de suppression (notes, objets de scène) passent par une **boîte de confirmation personnalisée** plutôt que native du système, donc elles s'affichent stablement même en **mode plein écran / immergé**, sans « clic sans réaction ».
 
 ---
+## Chapitre 52. Mise à jour de l’application et du manuel
+
+Le chapitre précédent portait sur le multilinguisme. Celui-ci répond à deux questions de « l’ère des nouvelles versions » : comment l’application se met-elle à jour ? Et lorsque le manuel est mis à jour, que deviennent mes notes épinglées ?
+
+### 52.1 Comment l’application se met-elle à jour ?
+
+- **Version web** : aucune mise à jour nécessaire — à chaque ouverture du navigateur, vous chargez la dernière version ; il suffit de fermer et rouvrir.
+- **Version PC** : au démarrage, l’application **vérifie automatiquement une nouvelle version** (désactivable dans les Paramètres). Quand une nouvelle version existe, un avis s’affiche ; cliquez sur « Mettre à jour maintenant » pour télécharger et installer automatiquement. Vos scènes locales, notes et réglages ne sont pas affectés.
+- **Version Android** : comme sur PC — vérification au démarrage et installation selon les avis. Vous pouvez aussi télécharger le nouvel APK depuis le site officiel et l’installer par-dessus (les données sont conservées).
+
+> 📌 La mise à jour est **facultative** : vous pouvez continuer à utiliser la version actuelle. Toutefois, pour une meilleure expérience et des correctifs de sécurité, nous recommandons de mettre à jour quand c’est pratique.
+
+### 52.2 Le manuel a été mis à jour — que deviennent mes notes ?
+
+Le manuel est mis à jour à chaque version ; le texte peut être ajouté, modifié ou supprimé. Vos notes existantes se répartissent en trois cas :
+
+1. **Texte inchangé** : la note reste liée à la phrase d’origine, exactement comme avant ;
+2. **Texte modifié** : la note reste dans la liste, mais si la phrase liée a changé, elle est marquée « note d’ancienne version » ;
+3. **Texte supprimé** : la note ne peut plus localiser le texte d’origine, elle reste donc dans la liste (marquée « note d’ancienne version ») ; vous pouvez la supprimer manuellement ou sélectionner une nouvelle phrase et la recréer.
+
+> 💡 En une phrase : **les notes suivent le texte ; quand le texte change, les notes reçoivent un avertissement « laissées pour compte », mais ne disparaissent jamais silencieusement.** Pour les notes importantes, faites des sauvegardes régulières avec le bouton « Exporter ».
+
+> ⚠️ Le contenu réservé aux développeurs/administrateurs sort du cadre de ce manuel ; pour le déploiement, la maintenance ou le développement secondaire, consultez la documentation du projet.
+
 
 ✅ **Fin du livre.** Vous avez parcouru : identification des formes → bases 3D → formes et couleurs → texte, pinceau, image → vues → historique d'annulation → détail de chaque forme → raccourcis et gestes → contrôles de transformation → multi-sélection et clonage → quatre projets pratiques → notes et multilingue → annexe des problèmes.
 

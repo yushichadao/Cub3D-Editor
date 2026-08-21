@@ -25,8 +25,8 @@
 
 - **主页（宣传页）**：<https://cub3d-editor.cn/>（境内，国内直连推荐）或 <https://yushichadao.github.io/Cub3D-Editor/>（境外）—— 产品介绍、九语言切换、下载入口
 - **网页版编辑器（无需安装）**：<https://cub3d-editor.cn/Web/index.html>（境内）或 <https://yushichadao.github.io/Cub3D-Editor/Web/index.html>（境外）
-- **PC 版**：下载 `Cub3D-Editor-Setup-1.1.0-x64.exe`（安装版）或 `Cub3D-Editor-Portable-1.1.0-x64.exe`（便携版，免安装）
-- **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor-release-1.1.0-universal.apk`
+- **PC 版**：下载 `Cub3D-Editor-Setup-1.2.0-x64.exe`（安装版）或 `Cub3D-Editor-Portable-1.2.0-x64.exe`（便携版，免安装）
+- **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor-release-1.2.0-universal.apk`
 
 导出为 `.json` 的工程文件在三端之间通用。
 
@@ -34,13 +34,13 @@
 
 ## 下载与发布
 
-各平台的正式版安装包（Android 包文件名携带版本与架构，仿照 exe 版），**作为 GitHub Releases 附件发布，不再随源码入库**（当前版本 `v1.1.0`）：
+各平台的正式版安装包（Android 包文件名携带版本与架构，仿照 exe 版），**作为 GitHub Releases 附件发布，不再随源码入库**（当前版本 `v1.2.0`）：
 
 | 产物 | 说明 |
 | :--- | :--- |
-| `Cub3D-Editor-Setup-1.1.0-x64.exe` | Windows 安装版 |
-| `Cub3D-Editor-Portable-1.1.0-x64.exe` | Windows 便携版（免安装） |
-| `Cub3D-Editor-release-1.1.0-universal.apk` | Android 安装包（release 签名，universal 全 ABI，包名 `com.cub3deditor.app`） |
+| `Cub3D-Editor-Setup-1.2.0-x64.exe` | Windows 安装版 |
+| `Cub3D-Editor-Portable-1.2.0-x64.exe` | Windows 便携版（免安装） |
+| `Cub3D-Editor-release-1.2.0-universal.apk` | Android 安装包（release 签名，universal 全 ABI，包名 `com.cub3deditor.app`） |
 
 下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮默认跳转到最新 Release 的对应附件；境内站点（cub3d-editor.cn）联通后，「下载」按钮自动改指 `https://cub3d-editor.cn/downloads/` 下的镜像文件。
 
@@ -48,7 +48,7 @@
 >
 > ```powershell
 > node tools/release.mjs          # 默认按 package.json 的 version 发布，如 v1.0.0
-> node tools/release.mjs 1.1.0    # 指定版本
+> node tools/release.mjs 1.2.0    # 指定版本
 > node tools/release.mjs --replace # 已存在同名 Release 时删除重建
 > ```
 
@@ -63,6 +63,7 @@
 - **视图辅助**：坐标轴、网格、地面参考面、线框模式
 - **PC 版增强**：崩溃恢复、拖放打开、自动保存/会话恢复、置顶便签窗
 - **Android 版增强**：全屏运行、返回键确认、导出 PNG 截图与 `.json` 场景
+- **应用更新**：PC 版与 Android 版启动时自动检查新版本（可在设置中关闭），支持一键更新，更新不影响本地数据
 
 ---
 
@@ -173,13 +174,13 @@ npm run dist:portable   # 仅便携版
 cd Android
 npm install
 npm run keystore        # 首次构建前生成签名密钥（CN=Cub3D Editor）
-npm run apk:release     # 构建 release 签名版（Android/dist/Cub3D-Editor-release-1.1.0-universal.apk）
+npm run apk:release     # 构建 release 签名版（Android/dist/Cub3D-Editor-release-1.2.0-universal.apk）
 npm run apk:debug       # 调试包
 ```
 
 > 注：若本机启用了文件删除防护（如部分 IDE 会拦截 `cap sync` 的批量删除），构建时请临时关闭该防护（例如设置 `CODEBUDDY_SAFE_DELETE_ENABLED=0`），否则 `cap sync` 会中断。
 
-产物位于 `Android/dist/Cub3D-Editor-release-1.1.0-universal.apk`；发布时由 `tools/release.mjs` 收集，与 PC 版一起作为 GitHub Release 附件上传（不再复制到仓库根 `dist/`）。
+产物位于 `Android/dist/Cub3D-Editor-release-1.2.0-universal.apk`；发布时由 `tools/release.mjs` 收集，与 PC 版一起作为 GitHub Release 附件上传（不再复制到仓库根 `dist/`）。
 
 ### 部署到 GitHub Pages
 

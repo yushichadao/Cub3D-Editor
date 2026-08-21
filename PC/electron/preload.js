@@ -139,7 +139,7 @@ try {
  */
 try {
   const appInfo = ipcRenderer.sendSync('app:info') || {};
-  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', String(appInfo.version || '1.1.0'));
+  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', String(appInfo.version || '1.2.0'));
 } catch (_) {
-  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', '1.1.0');
+  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', '1.2.0');
 }
