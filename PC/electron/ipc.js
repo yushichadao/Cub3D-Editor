@@ -135,6 +135,34 @@ function register() {
     if (/^https?:/i.test(url)) { shell.openExternal(url); return ok(); }
     return fail('仅允许 http/https');
   });
+
+  /* ------------------------------ 更新器：保存 / 列出 / 打开安装包 ------------------------------ */
+  const UPD_DIR = path.join(app.getPath('userData'), 'updates');
+  ipcMain.handle('updater:save', async (_e, name, data) => {
+    try {
+      const safe = path.basename(String(name || 'update'));
+      fs.mkdirSync(UPD_DIR, { recursive: true });
+      const target = path.join(UPD_DIR, safe);
+      await fs.promises.writeFile(target, Buffer.from(data));
+      return ok({ path: target });
+    } catch (e) { return fail(e.message); }
+  });
+  ipcMain.handle('updater:list', () => {
+    try {
+      if (!fs.existsSync(UPD_DIR)) return ok({ files: [] });
+      return ok({ files: fs.readdirSync(UPD_DIR).filter(f => /\.(exe|msi)$/i.test(f)) });
+    } catch (e) { return fail(e.message); }
+  });
+  ipcMain.handle('updater:open', async (_e, name) => {
+    try {
+      const safe = path.basename(String(name || 'update'));
+      const target = path.join(UPD_DIR, safe);
+      if (!fs.existsSync(target)) return fail('安装包不存在：' + safe);
+      const r = await shell.openPath(target);
+      if (r) return fail(r);
+      return ok();
+    } catch (e) { return fail(e.message); }
+  });
   ipcMain.handle('clipboard:write-text', (_e, text) => { clipboard.writeText(String(text ?? '')); return ok(); });
   ipcMain.handle('clipboard:read-text', () => ok({ text: clipboard.readText() }));
   ipcMain.handle('dialog:message', async (e, opts) => {

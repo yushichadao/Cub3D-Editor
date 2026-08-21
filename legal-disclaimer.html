@@ -1,6 +1,83 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<!-- 反篡改守护：F12/开发者工具可用；但 F12 Elements 面板删除任何元素都会被自动恢复（防走后门）。
+     程序自身通过 remove()/removeChild() 等方法删除的节点会被豁免，不弹提示、不干预。 -->
+<script>
+(function(){ 'use strict';
+  var __skip = (typeof WeakSet === 'function') ? new WeakSet() : null;
+  try{
+    var _r = Element.prototype.remove;
+    Element.prototype.remove = function(){ if(__skip) __skip.add(this); return _r.apply(this, arguments); };
+    var _rc = Node.prototype.removeChild;
+    Node.prototype.removeChild = function(c){ if(__skip && c && c.nodeType === 1) __skip.add(c); return _rc.apply(this, arguments); };
+    var _rp = Node.prototype.replaceChild;
+    Node.prototype.replaceChild = function(n, o){ if(__skip && o && o.nodeType === 1) __skip.add(o); return _rp.apply(this, arguments); };
+    function hookProp(obj, prop){
+      var d = Object.getOwnPropertyDescriptor(obj, prop);
+      if(!d || !d.set) return;
+      var g = d.get, s = d.set;
+      Object.defineProperty(obj, prop, {
+        configurable: true,
+        enumerable: d.enumerable,
+        get: function(){ return g ? g.call(this) : undefined; },
+        set: function(v){
+          if(__skip){
+            __skip.add(this);
+            if(this.children){ for(var i=0;i<this.children.length;i++) __skip.add(this.children[i]); }
+          }
+          return s.call(this, v);
+        }
+      });
+    }
+    hookProp(Element.prototype, 'innerHTML');
+    hookProp(Element.prototype, 'outerHTML');
+    hookProp(Node.prototype, 'textContent');
+  }catch(e){}
+  function showTamperTip(tag){
+    var tip=document.getElementById('tamperTip');
+    if(!tip){
+      tip=document.createElement('div');
+      tip.id='tamperTip';
+      tip.style.cssText='position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:2147483646;background:#1a1c2a;color:#f87171;border:1px solid #f87171;border-radius:8px;padding:9px 14px;font:12.5px/1.5 system-ui;box-shadow:0 6px 18px rgba(0,0,0,.35);max-width:90vw;';
+      document.body.appendChild(tip);
+    }
+    tip.textContent='⚠ 检测到删除元素'+(tag?('（'+tag+'）'):'')+'，已自动恢复（禁止删除元素）';
+    tip.style.opacity='1';
+    clearTimeout(tip._tm);
+    tip._tm=setTimeout(function(){ tip.style.opacity='0'; }, 2400);
+  }
+  var busy=false;
+  function onMuts(muts){
+    if(busy) return; busy=true;
+    var jobs=[];
+    for(var i=0;i<muts.length;i++){
+      var m=muts[i];
+      if(m.type!=='childList' || !m.removedNodes || m.removedNodes.length===0) continue;
+      if(m.removedNodes.length>=2) continue; // 批量整体重写（程序渲染），跳过
+      var n=m.removedNodes[0];
+      if(n.nodeType!==1) continue;
+      if(__skip && __skip.has(n)){ try{ __skip.delete(n); }catch(e){} continue; } // 程序自身删除，豁免
+      if(m.addedNodes && m.addedNodes.length > 0) continue; // 同批重建（程序 innerHTML 等重写），跳过
+      jobs.push({node:n, parent:m.target, before:m.nextSibling});
+    }
+    jobs.forEach(function(j){
+      var parent=j.parent;
+      if(!parent || !parent.isConnected) return;
+      try{
+        if(j.before && j.before.isConnected) parent.insertBefore(j.node, j.before);
+        else parent.appendChild(j.node);
+      }catch(e){ try{ parent.appendChild(j.node); }catch(e2){} }
+      showTamperTip(j.node.id?('#'+j.node.id):j.node.tagName.toLowerCase());
+    });
+    busy=false;
+  }
+  function init(){
+    if(window.MutationObserver) new MutationObserver(onMuts).observe(document.documentElement,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Cub3D Editor — Disclaimer</title>

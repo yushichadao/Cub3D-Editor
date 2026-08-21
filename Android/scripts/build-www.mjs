@@ -6,6 +6,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const SHARED = path.resolve(ROOT, '../shared'); // 共享源：three / language / docs（与 Web / PC 同源）
 const WWW = path.join(ROOT, 'www');
+// 应用版本号：取自 package.json，构建时注入 window.__CUB3D_VERSION__，供更新检测模块（UPD）使用
+const APP_VERSION = JSON.parse(await fs.readFile(path.join(ROOT, 'package.json'), 'utf8')).version || '1.1.0';
 
 // Android 版触屏适配已够用，纯复制进 APK 壳，不做任何移动端注入
 // three / language / docs / fonts 统一来自仓库根的 shared/ 单一源，避免各端重复维护出现版本差
@@ -40,6 +42,20 @@ async function main() {
       await fs.copyFile(src, path.join(WWW, f));
       console.log(`[make-www] 复制文件 ${f}`);
     }
+  }
+
+  // 注入应用版本号到 index.html（更新检测模块 window.__CUB3D_VERSION__ 使用）
+  const wwwIndex = path.join(WWW, 'index.html');
+  try {
+    let html = await fs.readFile(wwwIndex, 'utf8');
+    html = html.replace(
+      '<meta name="viewport"',
+      '<script>window.__CUB3D_VERSION__ = ' + JSON.stringify(APP_VERSION) + ';</script>\n<meta name="viewport"'
+    );
+    await fs.writeFile(wwwIndex, html, 'utf8');
+    console.log(`[make-www] 已注入版本号 v${APP_VERSION}`);
+  } catch (e) {
+    console.warn('[make-www] 版本注入失败:', e.message);
   }
 
   for (const d of COPY_DIRS) {

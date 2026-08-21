@@ -56,6 +56,9 @@ keystore.properties
 .userdata/
 **/.userdata/
 
+# ===== 管理器运行时私有数据（国内服务器推送口令等，绝不入库）=====
+manager/data/
+
 # ===== 临时构建目录 / 诊断脚本（排查用，不入库）=====
 dist_build/
 **/dist_build/

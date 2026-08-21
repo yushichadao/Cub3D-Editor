@@ -100,11 +100,11 @@ const notes = notesAll ? { all: parseNotes(notesAll) }
   : { pc: parseNotes(notesPc), android: parseNotes(notesAnd) };
 
 function toAssetObjs(names){
-  // 新 schema：assets 为对象数组 {name, kind}（与真实 downloads 一致：PC 安装版 + 免安装版 + Android APK）
+  // 新 schema：assets 为对象数组 {name, kind}（与真实 downloads 一致：PC 安装版 + 便携版 + Android APK）
   return names.map(n => {
     let kind;
-    if(n.endsWith('.exe')) kind = n.includes('Portable') ? '免安装版 x64' : '安装版 x64';
-    else kind = n.includes('arm64') ? 'APK arm64-v8a' : 'APK universal';
+    if(n.endsWith('.exe')) kind = n.includes('Portable') ? '便携版 x64' : '安装版 x64';
+    else kind = n.includes('arm64') ? 'APK arm64-v8a' : 'APK';
     return { name: n, kind };
   });
 }

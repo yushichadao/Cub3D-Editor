@@ -90,6 +90,12 @@ const api = {
     openExternal: url => invoke('shell:open-external', url)
   },
 
+  updater: {
+    save: (name, data) => invoke('updater:save', name, data),
+    list: () => invoke('updater:list'),
+    open: name => invoke('updater:open', name)
+  },
+
   clipboard: {
     writeText: t => invoke('clipboard:write-text', t),
     readText: () => invoke('clipboard:read-text')
@@ -125,4 +131,15 @@ try {
   contextBridge.exposeInMainWorld('__DEVICE_NAME__', os.hostname());
 } catch (_) {
   contextBridge.exposeInMainWorld('__DEVICE_NAME__', 'PC');
+}
+
+/**
+ * 应用版本注入：让更新检测模块（UPD）拿到真实的打包版本号，
+ * 与 /api/update 对比判断是否有新版本。
+ */
+try {
+  const appInfo = ipcRenderer.sendSync('app:info') || {};
+  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', String(appInfo.version || '1.1.0'));
+} catch (_) {
+  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', '1.1.0');
 }
