@@ -2139,7 +2139,12 @@ window.addEventListener('storage', ev=>{
       const item = ADMIN_URLS[i++];
       const url = item.url;
       const sameOrigin = url.indexOf(location.origin) === 0;
-      function openIt(){ try { showToast('正在打开管理后台…'); } catch(e) {} window.open(url, '_blank', 'noopener'); }
+      function openIt(){
+        try { showToast('正在打开管理后台…'); } catch(e) {}
+        // 长按 10 秒后触发 window.open 属于非用户手势，浏览器可能拦截返回 null → 回退当前标签跳转
+        const w = window.open(url, '_blank', 'noopener');
+        if (!w) window.location.href = url;
+      }
       // 境内官网的同源 /manager/：无论 404 还是探测失败都直接打开（它就是本服务器的后台）
       if (item.fallback && sameOrigin) { openIt(); return; }
       fetch(url, sameOrigin ? { cache: 'no-store' } : { cache: 'no-store', mode: 'no-cors' }).then(function(r){
