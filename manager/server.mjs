@@ -163,7 +163,10 @@ app.get(BASE + '/api/gh-releases', async (req, res) => {
         const j = await r.json();
         const releases = (Array.isArray(j) ? j : []).map(x => ({
           tag: x.tag_name,
-          assets: (x.assets || []).map(a => ({ name: a.name, size: a.size }))
+          // 仅保留安装包资产（.exe/.apk/.msi/.dmg），排除 update-doc.json 等元数据附件
+          assets: (x.assets || [])
+            .filter(a => /\.(exe|apk|msi|dmg)$/i.test(a.name))
+            .map(a => ({ name: a.name, size: a.size }))
         }));
         return res.json({ ok: true, releases: releases });
       }

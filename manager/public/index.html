@@ -662,11 +662,13 @@
       return [];
     });
   }
-  function ghFilesForVer(ver){   // 取 GitHub 上某版本 tag 的全部资产（文件名可不含版本号，归属由 tag 决定）
+  function ghFilesForVer(ver){   // 取 GitHub 上某版本 tag 的安装包资产（仅 .exe/.apk/.msi/.dmg，
+    // 排除 update-doc.json 等元数据附件；文件名可不含版本号，归属由 tag 决定）
+    const PKG_RE = /\.(exe|apk|msi|dmg)$/i;
     const files = [];
     (ghReleases || []).forEach(function(x){
       if (x.ver !== ver) return;
-      x.assets.forEach(function(a){ files.push({ ver: ver, name: a.name, size: a.size, src: 'gh' }); });
+      x.assets.forEach(function(a){ if (PKG_RE.test(a.name)) files.push({ ver: ver, name: a.name, size: a.size, src: 'gh' }); });
     });
     return files;
   }
