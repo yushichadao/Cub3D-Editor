@@ -2071,13 +2071,17 @@ window.addEventListener('storage', ev=>{
 /* ============ 隐藏管理入口：底部作者头像长按 10 秒进入管理后台（正式落地，无导航/无连点彩蛋，避免误触）
              带视觉反馈：按住即出现头像外圈圆环进度条，手指移开/松开即取消并恢复 ============ */
 (function(){
-  // 管理后台候选地址（按优先级顺序探测，打开第一个可达的）：
-  //   1) 同源子路径 —— 线上反代形态（IP/域名 + /manager/，备案过渡期自动跟随当前域名）
-  //   2) 本机 localhost:3000 —— 本地部署形态（管理器独立端口运行，如 npm start）
+  // 管理后台候选地址（按优先级探测，打开第一个可达的）：
+  //   1) 同源 /manager/ —— 境内 IP/域名直连时命中（备案过渡期自动跟随当前域名）
+  //   2) 境内主站 https —— 备案完成后生效
+  //   3) 境内备用 IP（http）—— fallback：https 页面无法探测 http，探测失败也直接打开（导航不受混合内容限制）
+  //   4) 本机 localhost:3000 —— 本地部署形态（npm start）
   const ADMIN_URLS = [
-    location.origin + '/manager/',
-    'http://localhost:3000/',
-    'http://127.0.0.1:3000/'
+    { url: location.origin + '/manager/', fallback: false },
+    { url: 'https://cub3d-editor.cn/manager/', fallback: false },
+    { url: 'http://139.196.104.56/manager/', fallback: true },
+    { url: 'http://localhost:3000/', fallback: false },
+    { url: 'http://127.0.0.1:3000/', fallback: false }
   ];
   const HOLD_MS = 10000;      // 长按时长：10 秒
   const MOVE_TOL = 14;        // 位移容差 px：超过即视为拖动/滑走，取消计时
@@ -2119,7 +2123,8 @@ window.addEventListener('storage', ev=>{
     }, 100);
   }
   // 跳转前按顺序探测候选地址，打开第一个可达的（避免直接打开 404 白屏）：
-  //   同源请求可精确判断 HTTP 状态；跨源（localhost:3000）用 no-cors 仅探测网络可达性
+  //   同源请求可精确判断 HTTP 状态；跨源 https 用 no-cors 探测网络可达性；
+  //   fallback 候选（境内 http，https 页面无法 fetch）探测失败也直接打开——window.open 导航不受混合内容限制
   function openAdmin(){
     let i = 0;
     function tryNext(){
@@ -2128,14 +2133,20 @@ window.addEventListener('storage', ev=>{
         fired = false;
         return;
       }
-      const url = ADMIN_URLS[i++];
+      const item = ADMIN_URLS[i++];
+      const url = item.url;
       const sameOrigin = url.indexOf(location.origin) === 0;
       fetch(url, sameOrigin ? { cache: 'no-store' } : { cache: 'no-store', mode: 'no-cors' }).then(function(r){
         if (sameOrigin && !r.ok) return tryNext();   // 同源 404 等 → 尝试下一候选
         try { showToast('正在打开管理后台…'); } catch(e) {}
         window.open(url, '_blank', 'noopener');
       }).catch(function(){
-        tryNext();   // 网络不可达 → 尝试下一候选
+        if (item.fallback) {                 // 境内 http 候选：探测失败也直接打开
+          try { showToast('正在打开管理后台…'); } catch(e) {}
+          window.open(url, '_blank', 'noopener');
+        } else {
+          tryNext();                         // 网络不可达 → 尝试下一候选
+        }
       });
     }
     tryNext();
