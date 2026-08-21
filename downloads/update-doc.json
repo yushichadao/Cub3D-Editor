@@ -1,5 +1,42 @@
 {
   "schema": 2,
-  "updatedAt": "2026-08-21T08:05:07.534Z",
-  "versions": []
+  "updatedAt": "2026-08-21T19:59:02+08:00",
+  "versions": [
+    {
+      "version": "1.2.0",
+      "date": "2026-08-21",
+      "publishedAt": "2026-08-21T19:59:02+08:00",
+      "type": "optional",
+      "status": "published",
+      "targets": [
+        "github",
+        "cn"
+      ],
+      "notes": {
+        "all": [
+          "新增：应用更新机制，PC/Android 启动时自动检测新版本（可在设置关闭）",
+          "新增：九语言说明书第52章「应用更新与说明书更新」",
+          "法律：服务协议/免责声明/隐私政策更新（生效日期 2026-08-21），新增软件更新与旧便签处理条款"
+        ]
+      },
+      "assets": {
+        "pc": [
+          {
+            "name": "Cub3D-Editor-Setup-1.2.0-x64.exe",
+            "kind": "安装版 x64"
+          },
+          {
+            "name": "Cub3D-Editor-Portable-1.2.0-x64.exe",
+            "kind": "便携版 x64"
+          }
+        ],
+        "android": [
+          {
+            "name": "Cub3D-Editor-release-1.2.0-universal.apk",
+            "kind": "APK"
+          }
+        ]
+      }
+    }
+  ]
 }
