@@ -2174,11 +2174,11 @@ window.addEventListener('storage', ev=>{
   //   2) 境内主站 https —— 备案完成后生效
   //   3) 境内备用 IP（http）—— fallback：https 页面无法探测 http，探测失败也直接打开（导航不受混合内容限制）
   //   4) 本机 localhost:3000 —— 本地部署形态（npm start）
-  // 当前访问站点是否为境内官网（IP 直连或备案域名）：若是，同源 /manager/ 就是真正的管理后台目标
+  // 当前访问站点是否为境内官网（IP 直连或备案域名）：若是，同源 / 就是真正的管理门户（门户为管理后台根）
   const host = (location.hostname || '').toLowerCase();
   const isCnSite = (host === '139.196.104.56' || /(^|\.)cub3d-editor\.cn$/i.test(host));
   const ADMIN_URLS = [
-    { url: location.origin + '/manager/', fallback: isCnSite },   // 境内官网 → 同源直达（404 也打开）
+    { url: location.origin + '/', fallback: isCnSite },   // 境内官网 → 同源直达门户（404 也打开）
     { url: 'https://cub3d-editor.cn/manager/', fallback: false },
     { url: 'http://139.196.104.56/manager/', fallback: true },
     { url: 'http://localhost:3000/', fallback: false },

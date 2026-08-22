@@ -209,8 +209,8 @@
     <div class="page-head">
       <h1>本地打包 · 在线分发 <span class="tag">管理站点 · 下辖</span></h1>
       <div class="btn-row" style="justify-content:center;">
-        <a class="btn" href="./" title="返回管理主页">← 管理主页</a>
-        <a class="btn" href="../" title="更新话术发布系统">📢 更新话术系统</a>
+        <a class="btn" href="./" title="返回门户">← 返回门户</a>
+        <a class="btn" href="./update/" title="更新话术发布系统">📢 串门→更新话术</a>
         <button class="btn" id="btn-pwd">🔑 修改密码</button>
         <button class="btn" id="btn-logout">退出登录</button>
       </div>
@@ -359,9 +359,9 @@
   })();
 
   /* ===== 鉴权（与更新话术系统完全一致） ===== */
-  const LS_TOKEN = 'cub3d_packer_token';
-  const SS_TOKEN = 'cub3d_packer_sess';
-  const LS_AUTO = 'cub3d_packer_auto';
+  const LS_TOKEN = 'cub3d_admin_token';
+  const SS_TOKEN = 'cub3d_admin_sess';
+  const LS_AUTO = 'cub3d_admin_auto';
   let token = '';
   function storeGet(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } }
   function storeSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
@@ -610,9 +610,10 @@
   function tryAutoLogin(){
     let saved=null;
     try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
-    if(!saved){ leaveAdmin(); return; }
+    // 业务页：未登录直接回门户（门户负责登录门）
+    if(!saved){ location.href='./'; return; }
     token=saved; enterAdmin();
-    api('api/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; leaveAdmin(); } })
+    api('api/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; location.href='./'; } })
       .catch(function(){});
   }
   // 预填默认版本号显示

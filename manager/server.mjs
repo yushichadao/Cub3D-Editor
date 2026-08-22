@@ -420,6 +420,20 @@ if (fs.existsSync(path.join(PUBLIC, 'packer.html'))) {
   });
 }
 
+// 更新话术发布系统（业务页；门户为 /，业务页需登录，未登录前端跳回门户）
+if (fs.existsSync(path.join(PUBLIC, 'update.html'))) {
+  app.get(BASE + '/update', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.sendFile(path.join(PUBLIC, 'update.html'));
+  });
+  app.get(BASE + '/update/', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.sendFile(path.join(PUBLIC, 'update.html'));
+  });
+}
+
 // 管理器前端静态托管（no-cache：确保刷新即拿到最新版，避免缓存旧逻辑）
 if (fs.existsSync(path.join(PUBLIC, 'index.html'))) {
   app.use(BASE + '/', express.static(PUBLIC, {

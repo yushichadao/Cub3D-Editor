@@ -4,9 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>管理后台 · Cub3D Editor 更新管理器</title>
+<title>管理后台 · Cub3D Editor</title>
 <style>
-  /* ============ 样式与「管理器 Demo」(demo/admin-demo.html) 完全一致 ============ */
   :root {
     --bg-deep: #0c0e16; --bg-panel: rgba(20, 22, 34, 0.82); --bg-panel-solid: #14161f;
     --accent: #6ee7ff; --accent-2: #c084fc; --accent-3: #fb7185; --warn: #fbbf24; --ok: #34d399;
@@ -22,7 +21,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     -webkit-font-smoothing: antialiased; padding: 24px 14px 40px; display: flex; flex-direction: column; align-items: center; gap: 18px;
   }
-  /* 隐藏所有滚动条（真实工程风格） */
   * { scrollbar-width: none; -ms-overflow-style: none; }
   *::-webkit-scrollbar { display: none; }
   .page-head { text-align:center; max-width: 980px; }
@@ -31,271 +29,66 @@
   .tag.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
   .tag.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
   .tag.stop { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); }
-  .tag.op-danger { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); border-color: color-mix(in srgb, var(--accent-3) 45%, transparent); font-weight:600; }
-
   .panel { width: min(980px, 100%); border:1px solid var(--border); border-radius: var(--radius); background: var(--bg-panel-solid); overflow:hidden; }
   .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
   .panel-head h2 { font-size:14px; font-weight:600; }
   .panel-head .hint { font-size:12px; color:var(--text-dim); }
   .panel-body { padding: 14px 16px; }
-
-  .field { display:flex; flex-direction:column; gap:4px; }
-  .field label { font-size:12px; color:var(--text-dim); }
-  .field input, .field select, .field textarea {
-    background: var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text);
-    padding:8px 10px; font-size:13px; font-family:inherit; outline:none; color-scheme: dark;
-  }
-  .field select, .field input[type="date"] { color: var(--text); }
-  .field select::-webkit-calendar-picker-indicator,
-  .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(1.4); cursor: pointer; }
-  .field select::-webkit-inner-spin-button { filter: invert(1); }
-  .field select option { background: var(--bg-panel-solid); color: var(--text); }
-  .field textarea { resize: vertical; min-height:96px; line-height:1.6; }
-  /* 未选中对应端安装包 → 文案框灰度禁用（禁止输入） */
-  .field textarea:disabled {
-    opacity: .45; cursor: not-allowed; color: var(--text-dim);
-    background: rgba(255,255,255,0.02); border-style: dashed;
-  }
-  .field label.is-off { color: var(--text-dim); opacity: .65; }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
-  /* 发布日期：原生 date 透明覆盖在显示层之上，日历图标改用白色 SVG */
-  .date-wrap { position: relative; }
-  .date-disp {
-    display: block; width: 100%; box-sizing: border-box;
-    padding: 8px 34px 8px 10px; border: 1px solid var(--border); border-radius: 8px;
-    background: var(--input-bg); color: var(--text);
-    font-size: 13px; line-height: 1.4; cursor: pointer; user-select: none;
-  }
-  .date-disp[data-placeholder]:empty::before,
-  .date-disp[data-placeholder].is-empty::before { content: attr(data-placeholder); color: var(--text-dim); }
-  #f-date {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    margin: 0; padding: 0; border: none; background: transparent; color: transparent;
-    color-scheme: dark; cursor: pointer; opacity: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>");
-    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px 16px;
-  }
-  #f-date:focus { outline: none; }
-  #f-date::-webkit-calendar-picker-indicator { opacity: 0; position: absolute; top: 0; right: 0; width: 100%; height: 100%; cursor: pointer; }
-  #f-date::-moz-calendar-picker-indicator { opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-  .field .mini { font-size:11px; color:var(--text-dim); opacity:.75; }
-  .form-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:10px; }
-
   .btn-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
   .btn {
     padding:8px 14px; border-radius:9px; font-size:13px; cursor:pointer; font-family:inherit;
     background: var(--control-bg); color:var(--text); border:1px solid var(--border); transition: all .18s;
   }
-  .btn:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); border-color: var(--accent); }
-  .btn:disabled { opacity:.5; cursor:not-allowed; }
-  .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; font-weight:600; border-color:transparent; }
-  .btn.danger { border-color: color-mix(in srgb, var(--accent-3) 55%, transparent); color: var(--accent-3); font-weight:600; }
-  .btn.danger:hover { background: color-mix(in srgb, var(--accent-3) 14%, transparent); border-color: var(--accent-3); }
-  /* 严重性操作（删除/停止）在操作区用醒目红色实心 */
-  .ver-ops .btn.danger { background: color-mix(in srgb, var(--accent-3) 14%, transparent); }
-  .ver-ops .btn.danger:hover { background: var(--accent-3); color: #fff; border-color: var(--accent-3); }
-  .btn.small { padding:4px 10px; font-size:12px; }
-  .btn-sep { width:1px; height:20px; background: rgba(255,255,255,.10); }
+  .btn:hover { background: var(--control-bg-hover); }
+  .btn.primary { background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); color:#fff; }
+  .btn.danger { border-color: color-mix(in srgb, var(--accent-3) 45%, transparent); color: var(--accent-3); }
 
   /* ===== 登录门 ===== */
-  #login-gate {
-    position: fixed; inset:0; z-index: 99999; display:flex; align-items:center; justify-content:center;
-    background: radial-gradient(900px 480px at 50% -10%, rgba(192,132,252,.14), transparent 60%), var(--bg-deep);
-  }
-  .login-card {
-    width: min(360px, 90vw); background: var(--bg-panel-solid); border:1px solid var(--border); border-radius: 18px;
-    padding: 30px 28px 26px; box-shadow: var(--shadow); display:flex; flex-direction:column; align-items:center; gap: 12px;
-  }
-  .login-logo { width:46px; height:46px; border-radius:12px; background: conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent)); animation: spin 9s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .login-card h2 { font-size: 16px; font-weight:700; letter-spacing:.5px; }
-  .login-card input {
-    width: 100%; background: var(--input-bg); border:1px solid var(--border); border-radius:9px; color: var(--text);
-    padding: 10px 12px; font-size: 13.5px; outline:none; font-family: inherit;
-  }
-  .login-card input:focus { border-color: var(--accent); }
-  /* 密码框：隐藏原生 reveal 眼睛，自绘白色 SVG 眼睛（睁眼/闭眼）作为切换按钮，颜色 100% 可控为白 */
-  .pwd-wrap { position: relative; width: 100%; }
-  .pwd-wrap > input[type="password"],
-  .pwd-wrap > input[type="text"].is-pwd {
-    padding-right: 38px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z'/><circle cx='12' cy='12' r='3'/></svg>");
-    background-repeat: no-repeat; background-position: right 11px center; background-size: 17px 17px;
-  }
-  .pwd-wrap > input[type="text"].is-pwd {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>");
-  }
-  input[type="password"]::-ms-reveal,
-  input[type="password"]::-ms-clear,
-  input[type="password"]::-webkit-credentials-auto-fill-button,
-  input[type="password"]::-webkit-textfield-decoration-container { display: none !important; }
-  .login-card .btn { width:100%; padding:10px; font-size:14px; }
-  .lg-remember { display:flex; align-items:center; gap:8px; width:100%; font-size:12px; color:var(--text-dim); cursor:pointer; user-select:none; }
-  .lg-remember input { width:auto; accent-color: var(--accent); cursor:pointer; }
-  .lg-remember:hover { color: var(--text); }
-  .lg-msg { font-size:12px; color:var(--accent-3); min-height:16px; text-align:center; }
+  #login-gate { position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center;
+    background: rgba(8,10,18,0.92); backdrop-filter: blur(6px); }
+  .login-card { width:min(340px,92vw); border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-panel-solid);
+    padding:30px 26px; display:flex; flex-direction:column; gap:14px; box-shadow:var(--shadow); }
+  .login-card h2 { font-size:18px; text-align:center; font-weight:700; }
+  .login-logo { width:54px; height:54px; border-radius:14px; margin:0 auto 4px;
+    background:conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent)); }
+  .login-card input[type=text], .login-card input[type=password] {
+    background:var(--input-bg); border:1px solid var(--border); border-radius:9px; color:var(--text);
+    padding:11px 12px; font-size:14px; font-family:inherit; outline:none; width:100%; color-scheme:dark; }
+  .login-card input:focus { border-color:var(--accent); }
+  .lg-remember { font-size:12px; color:var(--text-dim); display:flex; align-items:center; gap:8px; cursor:pointer; }
+  .lg-msg { font-size:12.5px; color:var(--accent-3); min-height:16px; text-align:center; }
 
-  /* ===== 卡片式发布 ===== */
-  /* 分组容器：竖排（境内组、GitHub 组一行一组，换行分隔） */
-  .pkg-cards { display:flex; flex-direction:column; gap:4px; margin-top:12px; }
-  /* 卡片行容器：组内卡片横向排列，放不下横向滚动 */
-  .pkg-cards-row { display:flex; flex-wrap:nowrap; gap:10px; overflow-x:auto; padding-bottom:2px; }
-  /* 安装包分组：境内 / GitHub 两组，组间用横线分隔 */
-  .pkg-group { display:flex; flex-direction:column; gap:2px; margin-top:8px; }
-  .pkg-group-title { font-size:11px; color:var(--text-dim); letter-spacing:.05em; padding:0 2px; }
-  .pkg-group .pkg-cards-row { margin-top:6px; }
-  .pkg-sep { height:1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin:14px 0 4px; }
-  .pkg-card {
-    border:1px solid var(--border); border-radius: 12px; padding: 10px 12px; cursor:pointer; position:relative;
-    background: var(--control-bg); transition: all .18s; user-select:none;
-    flex:0 0 240px;
-  }
-  /* 已发布包：灰显、不可点击（除非在版本列表中删除该版本记录） */
-  .pkg-card.pub { opacity:.42; cursor:not-allowed; filter:saturate(.6); }
-  .pkg-card.pub:hover { border-color: var(--border); background: var(--control-bg); }
-  .pk-tag.pub {
-    margin-left:auto; font-size:10px; padding:2px 7px; border-radius:999px; flex:0 0 auto;
-    background: color-mix(in srgb, var(--text-dim) 18%, transparent); color: var(--text-dim); border:1px solid var(--border);
-  }
-  .pkg-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
-  .pkg-card.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
-  .pkg-card.sel::after { content:'✓'; position:absolute; top:8px; right:10px; color:var(--accent); font-weight:700; }
-  .pkg-card .pk { display:flex; align-items:center; gap:6px; }
-  .pk-badge { font-size:10px; padding:2px 7px; border-radius:999px; font-weight:600; }
-  .pk-badge.pc { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
-  .pk-badge.android { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
-  /* 安装包来源标签（境内 / GitHub） */
-  .pk-src { font-size:10px; padding:2px 7px; border-radius:999px; flex:0 0 auto; }
-  .pk-src.cn { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
-  .pk-src.gh { background: color-mix(in srgb, var(--accent-2) 14%, transparent); color: var(--accent-2); border:1px solid color-mix(in srgb, var(--accent-2) 35%, transparent); }
-  .pkg-card .pk-name { font-size:12px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  a.pkg-card { text-decoration:none; display:block; }
-  a.pkg-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
-  .pkg-card .pk-file { font-size:11px; color:var(--text); word-break:break-all; line-height:1.5; margin-top:6px; font-family: ui-monospace, Menlo, Consolas, monospace; }
-  .pkg-card .pk-size { font-size:11px; color:var(--text-dim); margin-top:4px; }
+  /* ===== 项目选择卡片 ===== */
+  .pkg-cards { display:flex; flex-direction:column; gap:12px; }
+  .pkg-cards-row { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  .pkg-card { flex:1 1 260px; max-width:340px; text-decoration:none; color:var(--text);
+    border:1px solid var(--border); border-radius:12px; padding:18px 16px; background:var(--control-bg);
+    display:flex; flex-direction:column; gap:8px; transition: all .18s; }
+  .pkg-card:hover { background:var(--control-bg-hover); border-color: color-mix(in srgb, var(--accent) 45%, transparent); transform: translateY(-2px); }
+  .pk { display:flex; align-items:center; gap:8px; }
+  .pk-badge { font-size:11px; padding:2px 9px; border-radius:999px; border:1px solid var(--border); }
+  .pk-badge.cn { color:var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+  .pk-badge.android { color:var(--accent-3); border-color: color-mix(in srgb, var(--accent-3) 40%, transparent); }
+  .pk-name { font-size:15px; font-weight:700; }
+  .pk-file { font-size:12.5px; color:var(--text-dim); line-height:1.6; }
 
-  /* ===== 版本列表 ===== */
-  .ver-list { display:flex; flex-direction:column; gap:12px; margin-top:8px; }
-  .ver-item { border:1px solid var(--border); border-radius: 12px; padding: 12px 14px; background: var(--control-bg); }
-  .ver-top { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-  .ver-top .ver { font-size:15px; font-weight:700; }
-  .ver-meta { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--text-dim); }
-  .ver-meta b { color: var(--text); font-weight:600; }
-  .ver-notes { display:flex; gap:20px; flex-wrap:wrap; margin-top:8px; font-size:12px; }
-  .ver-notes .col { flex:1; min-width:200px; }
-  .ver-notes .col h4 { font-size:11px; color:var(--text-dim); margin-bottom:4px; font-weight:500; }
-  .ver-notes .col div { color:var(--text-dim); line-height:1.7; }
-  .ver-pkgs { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-  .pkg-chip { font-size:11px; padding:3px 9px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim); }
-  .pkg-chip.pc { border-color: color-mix(in srgb, var(--accent) 40%, transparent); color: var(--accent); }
-  .pkg-chip.android { border-color: color-mix(in srgb, var(--ok) 40%, transparent); color: var(--ok); }
-  /* 安装包来源标注：内联在包徽章内（国内 / GitHub / 国内+GitHub） */
-  .pkg-chip .pkg-chip-src {
-    font-size:9.5px; padding:1px 6px; border-radius:999px; margin-right:6px; font-weight:600;
-    background: color-mix(in srgb, var(--text-dim) 14%, transparent); color: var(--text-dim);
-    border:1px solid var(--border); vertical-align:1px;
-  }
-  /* 版本列表按平台分区：PC / Android 各自显示更新内容与安装包 */
-  .ver-platforms { display:flex; flex-direction:column; gap:8px; margin-top:10px; }
-  .plat-row { display:flex; gap:12px; align-items:flex-start; border:1px solid var(--border); border-radius:10px; padding:10px 12px; background: var(--bg-panel); }
-  .plat-badge { flex:0 0 auto; font-size:11px; padding:4px 10px; border-radius:999px; font-weight:700; letter-spacing:.03em; margin-top:2px; }
-  .plat-badge.cn { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
-  .plat-badge.gh { background: color-mix(in srgb, var(--accent-2) 18%, transparent); color: var(--accent-2); }
-  /* 按平台分区徽章：PC（蓝）/ Android（绿） */
-  .plat-badge.pc { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
-  .plat-badge.android { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
-  .plat-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
-  .plat-notes { font-size:12.5px; color:var(--text-dim); line-height:1.7; }
-  .plat-none { font-size:11px; color:var(--text-dim); opacity:.8; }
-  .plat-pkgs { display:flex; gap:6px; flex-wrap:wrap; }
-  .ver-ops { display:flex; gap:6px; margin-top:10px; }
-
-  /* 操作日志面板 */
-  .task-list { display:flex; flex-direction:column; gap:10px; }
-  .task-empty { font-size:13px; color:var(--text-dim); padding:16px 4px; text-align:center; }
-  .task-item { border:1px solid var(--border); border-radius:10px; padding:12px 14px; background: var(--bg-panel); }
-  .task-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-  .task-ver { font-size:14px; font-weight:700; color: var(--accent); }
-  .task-when { font-size:11.5px; color:var(--text-dim); }
-  .task-targets { margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; }
-  .task-body { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
-  .task-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; background: var(--bg-deep); }
-  .task-row .pl { font-size:12.5px; font-weight:600; width:86px; flex-shrink:0; }
-  .task-row .pl.api { color: var(--accent); }
-  .task-row .stbar { flex:1; font-size:11.5px; color: var(--text-dim); }
-  .task-row .stbar.ok { color: var(--ok); }
-  .task-row .stbar.fail { color: var(--accent-3); }
-  .task-row .stbar.info { color: var(--accent); }
-  .task-row .op-btn { font-size:11px; padding:4px 10px; border-radius:7px; border:1px solid var(--border); background: var(--control-bg); color: var(--text); cursor:pointer; }
-  .task-row .op-btn:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
-  .task-head .op-btn.del {
-    margin-left: auto; width: 22px; height: 22px; padding: 0;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 14px; line-height: 1; border-radius: 50%;
-    color: var(--text-dim); border: 1px solid var(--border);
-    background: var(--control-bg); cursor: pointer; transition: all .15s ease;
-  }
-  .task-head .op-btn.del:hover {
-    color: #fff; border-color: var(--accent-3);
-    background: color-mix(in srgb, var(--accent-3) 22%, transparent);
-    transform: rotate(90deg);
-  }
-  .task-row .op-btn:disabled { opacity:.45; cursor:not-allowed; }
-  .task-row .spin { width:12px; height:12px; border-radius:50%; border:2px solid rgba(255,255,255,.15); border-top-color: var(--accent); animation: tspin .7s linear infinite; display:inline-block; }
-  @keyframes tspin { to { transform: rotate(360deg); } }
-
-  /* 自动登录状态卡片 */
-  .auto-card {
-    display:flex; align-items:center; gap:14px; max-width:560px; width:100%; margin:4px auto;
-    padding:14px 16px; border-radius:12px;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), color-mix(in srgb, var(--accent-2) 8%, transparent));
-    border:1px solid var(--border);
-  }
-  .auto-card.off { background: color-mix(in srgb, var(--text-dim) 6%, transparent); }
-  .auto-ico {
-    width:38px; height:38px; flex:0 0 auto; border-radius:10px; display:grid; place-items:center; font-size:18px;
-    background: color-mix(in srgb, var(--accent) 18%, transparent); border:1px solid var(--border);
-  }
-  .auto-card.off .auto-ico { background: color-mix(in srgb, var(--text-dim) 14%, transparent); color: var(--text-dim); }
-  .auto-info { flex:1; min-width:0; }
-  .auto-info .t { font-size:13.5px; font-weight:700; color: var(--text); }
-  .auto-info .t .ok-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background: var(--ok); margin-right:7px; box-shadow: 0 0 6px var(--ok); vertical-align: middle; }
-  .auto-card.off .auto-info .t .ok-dot { background: var(--text-dim); box-shadow:none; }
-  .auto-info .d { font-size:11.5px; color: var(--text-dim); margin-top:3px; line-height:1.5; }
-  .auto-info .d b { color: var(--text); font-weight:600; }
-  .auto-action { flex:0 0 auto; }
-  .auto-action .btn { padding:7px 14px; font-size:12.5px; }
-
-  .st { display:inline-block; font-size:10.5px; padding:2px 7px; border-radius:999px; }
-  .st.pub { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
-  .st.stop { background: color-mix(in srgb, var(--accent-3) 16%, transparent); color: var(--accent-3); }
-  .st.force { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
-
-  /* ===== 浮窗（修改密码 / 通用） ===== */
-  .pwd-modal {
-    position: fixed; inset:0; z-index: 90000; display:none; align-items:center; justify-content:center;
-    background: rgba(6,8,16,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  }
+  /* ===== 弹窗 / toast（登录与密码修改共用） ===== */
+  .pwd-modal { position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
+    background:rgba(8,10,18,0.7); backdrop-filter:blur(4px); }
   .pwd-modal.show { display:flex; }
-  .pwd-card { width: min(360px, 90vw); background: var(--bg-panel-solid); border:1px solid var(--border); border-radius:18px; padding:24px 22px; display:flex; flex-direction:column; gap:10px; box-shadow: var(--shadow); }
-  .pwd-card h3 { font-size:15px; }
-  .pwd-card input { background: var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:9px 11px; font-size:13px; outline:none; font-family:inherit; }
-  .pwd-card input:focus { border-color: var(--accent); }
-  .pwd-msg { font-size:12px; color:var(--accent-3); min-height:16px; }
-  .pwd-row { display:flex; gap:8px; justify-content:flex-end; }
-  .pwd-row .btn { padding:8px 16px; }
-
-  pre {
-    background: var(--bg-deep); border:1px solid var(--border); border-radius:10px; padding:12px; overflow:auto;
-    font-family: ui-monospace, Menlo, Consolas, monospace; font-size:11.5px; color:var(--text-dim); line-height:1.6; max-height:260px;
-  }
-  .foot { font-size:11.5px; color:var(--text-dim); opacity:.7; }
-  .toast {
-    position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-16px); padding:9px 18px; z-index:9999;
-    background: var(--bg-panel-solid); border:1px solid var(--accent); border-radius:26px; color:var(--text); font-size:12.5px;
-    opacity:0; pointer-events:none; transition:all .28s; max-width:86vw; text-align:center;
-  }
+  .pwd-card { width:min(360px,92vw); border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-panel-solid);
+    padding:24px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow); }
+  .pwd-card h3 { font-size:16px; font-weight:700; }
+  .pwd-card input { background:var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text);
+    padding:10px 12px; font-size:13px; font-family:inherit; outline:none; color-scheme:dark; }
+  .pwd-card input:focus { border-color:var(--accent); }
+  .pwd-row { display:flex; gap:10px; justify-content:flex-end; }
+  .pwd-msg { font-size:12.5px; color:var(--accent-3); min-height:14px; }
+  .toast { position:fixed; left:50%; bottom:42px; transform:translateX(-50%) translateY(20px); z-index:80;
+    background:rgba(20,22,34,0.96); border:1px solid var(--border); color:var(--text); padding:10px 18px;
+    border-radius:10px; font-size:13px; opacity:0; transition:all .25s; pointer-events:none; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .pwd-wrap { position:relative; }
 </style>
 </head>
 <body>
@@ -318,133 +111,29 @@
   <!-- 主界面（未登录前隐藏） -->
   <div id="admin-main" style="display:none; width:100%; flex-direction:column; align-items:center; gap:18px;">
     <div class="page-head">
-      <h1>更新发布管理后台 <span class="tag">管理员</span></h1>
+      <h1>管理后台 <span class="tag">门户</span></h1>
       <div class="btn-row" style="justify-content:center;">
         <button class="btn" id="btn-pwd">🔑 修改密码</button>
         <button class="btn" id="btn-logout">退出登录</button>
       </div>
-      <div class="btn-row" id="auto-row" style="justify-content:center; gap:8px;"></div>
     </div>
 
-    <!-- 站点导航：管理站点下辖的两个系统 -->
+    <!-- 项目选择：两个下辖系统（入口） -->
     <div class="panel">
-      <div class="panel-head"><h2>🧭 站点导航</h2><span class="hint">管理站点下辖系统（共享同一登录态）</span></div>
+      <div class="panel-head"><h2>🧭 选择系统</h2><span class="hint">管理后台下辖系统（共享同一登录态）</span></div>
       <div class="panel-body">
         <div class="pkg-cards"><div class="pkg-cards-row">
-          <a class="pkg-card sel" href="./" style="flex:0 0 240px;">
+          <a class="pkg-card" href="./update/" style="flex:0 0 260px;">
             <div class="pk"><span class="pk-badge cn">境内</span><span class="pk-name">更新话术发布系统</span></div>
             <div class="pk-file">发布更新话术、管理版本与安装包、境内外分发</div>
           </a>
-          <a class="pkg-card" href="./packer/" style="flex:0 0 240px;">
+          <a class="pkg-card" href="./packer/" style="flex:0 0 260px;">
             <div class="pk"><span class="pk-badge android">打包</span><span class="pk-name">本地打包 · 在线分发</span></div>
             <div class="pk-file">统一版本号、本地构建安装包、境内外分发（打通本页）</div>
           </a>
         </div></div>
       </div>
     </div>
-
-    <!-- 卡片式新增发布 -->
-    <div class="panel">
-      <div class="panel-head">
-        <h2>＋ 新增发布（卡片式 · 可批量）</h2>
-        <span class="hint">自动检测安装包（境内 + GitHub 双源，一个包一张卡）→ 勾选 → 选发布渠道 → 批量发布</span>
-      </div>
-      <div class="panel-body">
-        <div class="form-grid">
-          <div class="field">
-            <label>版本号</label>
-            <input type="text" id="f-ver" placeholder="X.X.X" />
-            <span class="mini">点击「自动检测最新」可填充线上最高版本</span>
-          </div>
-          <div class="field">
-            <label>声称发布日期（对外展示）</label>
-            <div class="date-wrap">
-              <span class="date-disp" id="f-date-disp" data-placeholder="点击选择日期">点击选择日期</span>
-              <input type="date" id="f-date" />
-            </div>
-            <span class="mini">实际发布日期将在发布时自动记录</span>
-          </div>
-          <div class="field">
-            <label>更新类型</label>
-            <select id="f-type">
-              <option value="optional">可选更新</option>
-              <option value="force">强制更新</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>发布平台（渠道）</label>
-            <select id="f-targets">
-              <option value="both">国内 + 国际（GitHub，同时发布）</option>
-              <option value="github">仅国际（GitHub）</option>
-              <option value="cn">仅国内</option>
-            </select>
-            <span class="mini">渠道可分开或一起发</span>
-          </div>
-        </div>
-        <div class="btn-row" style="margin-top:10px;">
-          <button class="btn" id="btn-detect">🔍 自动检测线上安装包（按当前版本号）</button>
-          <button class="btn" id="btn-detect-latest">⬆ 自动检测线上最新版本</button>
-          <button class="btn" id="btn-select-all">☑ 一键全选当前显示</button>
-          <button class="btn" id="btn-reset-sel">清除所选</button>
-        </div>
-        <div id="pkg-area">
-          <div class="pkg-hint" style="font-size:12px; color:var(--text-dim); margin-top:10px;">
-            输入版本号后点击「自动检测」，或点「自动检测最新」—— 卡片按「服务器 downloads/ 目录 + GitHub Releases」双源安装包生成，一个包一张卡片，并标注来源。
-          </div>
-          <div class="pkg-cards" id="pkg-cards"></div>
-        </div>
-        <div class="form-grid" style="margin-top:14px;">
-          <div class="field">
-            <label id="lbl-notes-pc">更新内容 — PC（自然语言，每行一条）</label>
-            <textarea id="f-notes-pc" placeholder="新增：...&#10;修复：...&#10;优化：..."></textarea>
-          </div>
-          <div class="field">
-            <label id="lbl-notes-and">更新内容 — Android（自然语言，每行一条）</label>
-            <textarea id="f-notes-and" placeholder="新增：...&#10;修复：...&#10;优化：..."></textarea>
-          </div>
-        </div>
-        <div class="btn-row">
-          <button class="btn primary" id="btn-add">🚀 批量发布所选包</button>
-          <button class="btn" id="btn-copy-and">⇄ 一键「全部相同」（只填充为空的平台）</button>
-          <button class="btn" id="btn-reset-form">清空表单</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 版本列表 -->
-    <div class="panel">
-      <div class="panel-head"><h2>版本发布列表</h2><span class="hint" id="list-hint"></span></div>
-      <div class="panel-body">
-        <div class="ver-list" id="ver-list"></div>
-      </div>
-    </div>
-
-    <!-- 发布操作日志 -->
-    <div class="panel">
-      <div class="panel-head"><h2>发布任务 · 多平台推送状态</h2><span class="hint" id="task-hint">发布时逐平台推送，部分平台可能中断或延迟，可单独重新发布</span></div>
-      <div class="panel-body">
-        <div class="btn-row" style="margin-bottom:10px;">
-          <button class="btn danger" id="btn-clear-tasks">🗑 全部清除任务记录</button>
-        </div>
-        <div id="task-list" class="task-list">
-          <div class="task-empty" id="task-empty">暂无发布任务。使用上方「🚀 批量发布所选包」后，这里会显示各平台的推送进度。</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 文档预览 -->
-    <div class="panel">
-      <div class="panel-head"><h2>update-doc.json（后端当前内容）</h2><span class="hint">发布即实时写入服务器 downloads/update-doc.json 并同步 versions.json / version.txt</span></div>
-      <div class="panel-body">
-        <div class="btn-row">
-          <button class="btn primary" id="btn-refresh">🔄 刷新后端文档</button>
-          <button class="btn" id="btn-download">⬇ 下载 update-doc.json</button>
-          <button class="btn" id="btn-preview">🔍 预览 JSON</button>
-        </div>
-        <pre id="preview" style="margin-top:12px; display:none;"></pre>
-      </div>
-    </div>
-
   </div>
 
   <!-- 修改密码浮窗 -->
@@ -462,7 +151,7 @@
     </div>
   </div>
 
-  <!-- 通用确认弹窗（工程风格 UI，替换浏览器原生 confirm） -->
+  <!-- 通用确认弹窗 -->
   <div class="pwd-modal" id="cfm-modal">
     <div class="pwd-card">
       <h3 id="cfm-title">确认</h3>
@@ -482,7 +171,7 @@
   'use strict';
   const $ = id => document.getElementById(id);
 
-  // 密码框：自绘白色 SVG 眼睛（隐藏原生 reveal）。点击眼睛切换 type=password/text 并显示睁眼/闭眼。
+  // 密码框：自绘白色 SVG 眼睛（隐藏原生 reveal）
   (function initPwdEyes(){
     document.querySelectorAll('input[type="password"]').forEach(function(inp){
       if(inp.dataset.pwdEye) return;
@@ -500,37 +189,24 @@
       const fromRight = rect.right - e.clientX;
       if(fromRight <= 40){
         e.preventDefault();
-        if(inp.type === 'password'){
-          inp.type = 'text'; inp.classList.add('is-pwd');
-          inp.setAttribute('autocomplete','off');
-        } else {
-          inp.type = 'password'; inp.classList.remove('is-pwd');
-        }
+        if(inp.type === 'password'){ inp.type = 'text'; inp.classList.add('is-pwd'); }
+        else { inp.type = 'password'; inp.classList.remove('is-pwd'); }
       }
     });
   })();
 
   /* ============ 鉴权（服务端 ADMIN_TOKEN） ============ */
-  const LS_TOKEN = 'cub3d_admin_token';       // localStorage：勾选「记住我」后长期保存
-  const SS_TOKEN = 'cub3d_admin_sess';        // sessionStorage：本次会话保存（刷新/关标签页再开免重输）
-  const LS_AUTO = 'cub3d_admin_auto';         // 本设备记住我
+  const LS_TOKEN = 'cub3d_admin_token';
+  const SS_TOKEN = 'cub3d_admin_sess';
+  const LS_AUTO  = 'cub3d_admin_auto';
   let token = '';
-  function storeGet(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } }
-  function storeSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
   function remStore(k){ try { localStorage.removeItem(k); } catch(e){} }
   function autoLoginOn(){ try { return localStorage.getItem(LS_AUTO) === '1'; } catch(e){ return false; } }
-  function setLogged(v, persist){
-    try {
-      if(persist){ if(v) localStorage.setItem(LS_AUTO, '1'); else localStorage.removeItem(LS_AUTO); }
-    } catch(e){}
-  }
-
+  function setLogged(v, persist){ try { if(persist){ if(v) localStorage.setItem(LS_AUTO,'1'); else localStorage.removeItem(LS_AUTO); } } catch(e){} }
   function toast(msg){
     const t = $('toast'); t.textContent = msg; t.classList.add('show');
     clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 1900);
   }
-
-  // 统一 API：相对路径（部署子路径自适配），写操作携带令牌
   function api(path, opts){
     opts = opts || {};
     opts.headers = opts.headers || {};
@@ -540,65 +216,27 @@
       opts.body = JSON.stringify(opts.body);
     }
     return fetch(path, opts).then(r => r.json().then(j => ({ status: r.status, body: j }))).then(function(res){
-      // 鉴权失效（令牌与后端当前密码不匹配）→ 清理会话回登录门，避免“记住我”用过期令牌卡在后台
       if (res.status === 401 && res.body && res.body.error === 'unauthorized') {
         remStore(LS_TOKEN); remStore(LS_AUTO);
-        try { sessionStorage.removeItem(SS_TOKEN); } catch(e){}   // 注意：SS_TOKEN 存于 sessionStorage
-        token = '';
-        leaveAdmin();
-        try { toast('登录已失效（密码可能已修改），请重新登录'); } catch(e) {}
+        try { sessionStorage.removeItem(SS_TOKEN); } catch(e){}
+        token = ''; leaveAdmin();
+        try { toast('登录已失效（密码可能已修改），请重新登录'); } catch(e){}
       }
       return res;
     });
   }
 
   /* ============ 登录门 ============ */
-  function enterAdmin(){
-    $('login-gate').style.display = 'none';
-    $('admin-main').style.display = 'flex';
-    renderAutoState();
-    loadState();
-  }
-  function leaveAdmin(){
-    $('admin-main').style.display = 'none';
-    $('login-gate').style.display = 'flex';
-    $('lg-remember').checked = false;
-  }
+  function enterAdmin(){ $('login-gate').style.display = 'none'; $('admin-main').style.display = 'flex'; renderAutoState(); }
+  function leaveAdmin(){ $('admin-main').style.display = 'none'; $('login-gate').style.display = 'flex'; $('lg-remember').checked = false; }
   function renderAutoState(){
-    const wrap = $('auto-row');
-    if(!wrap) return;
+    const wrap = $('auto-row'); if(!wrap) return;
     if(autoLoginOn()){
-      wrap.innerHTML =
-        '<div class="auto-card">' +
-          '<div class="auto-ico">🔐</div>' +
-          '<div class="auto-info">' +
-            '<div class="t"><span class="ok-dot"></span>本设备自动登录已开启</div>' +
-            '<div class="d">此设备访问后台将自动登录，无需再次输入管理令牌。<b>仅本机本浏览器生效。</b></div>' +
-          '</div>' +
-          '<div class="auto-action"><button class="btn" id="auto-cancel">取消自动登录</button></div>' +
-        '</div>';
-      $('auto-cancel').addEventListener('click', function(){
-        remStore(LS_AUTO); remStore(LS_TOKEN);
-        try { sessionStorage.removeItem(SS_TOKEN); } catch(e){}
-        toast('已取消自动登录（本次会话仍有效，关闭浏览器后需重新登录）');
-        renderAutoState();
-      });
+      wrap.innerHTML = '<div class="auto-card"><div class="auto-ico">🔐</div><div class="auto-info"><div class="t"><span class="ok-dot"></span>本设备自动登录已开启</div><div class="d">此设备访问后台将自动登录，无需再次输入管理令牌。<b>仅本机本浏览器生效。</b></div></div><div class="auto-action"><button class="btn" id="auto-cancel">取消自动登录</button></div></div>';
+      $('auto-cancel').addEventListener('click', function(){ remStore(LS_AUTO); remStore(LS_TOKEN); try { sessionStorage.removeItem(SS_TOKEN); } catch(e){} toast('已取消自动登录'); renderAutoState(); });
     } else {
-      wrap.innerHTML =
-        '<div class="auto-card off">' +
-          '<div class="auto-ico">🔓</div>' +
-          '<div class="auto-info">' +
-            '<div class="t"><span class="ok-dot"></span>自动登录未开启</div>' +
-            '<div class="d">开启后，此设备访问后台将自动登录。<b>仅本机本浏览器生效</b>，其他设备仍需令牌。</div>' +
-          '</div>' +
-          '<div class="auto-action"><button class="btn primary" id="auto-on">开启自动登录</button></div>' +
-        '</div>';
-      $('auto-on').addEventListener('click', function(){
-        setLogged(true, true);
-        if(token) { try { localStorage.setItem(LS_TOKEN, token); } catch(e){} }
-        toast('已开启自动登录（本设备本浏览器）');
-        renderAutoState();
-      });
+      wrap.innerHTML = '<div class="auto-card off"><div class="auto-ico">🔓</div><div class="auto-info"><div class="t"><span class="ok-dot"></span>自动登录未开启</div><div class="d">开启后，此设备访问后台将自动登录。<b>仅本机本浏览器生效</b>。</div></div><div class="auto-action"><button class="btn primary" id="auto-on">开启自动登录</button></div></div>';
+      $('auto-on').addEventListener('click', function(){ setLogged(true,true); if(token){ try { localStorage.setItem(LS_TOKEN, token); } catch(e){} } toast('已开启自动登录'); renderAutoState(); });
     }
   }
   function doLogin(){
@@ -606,14 +244,11 @@
     const pass = $('lg-pass').value;
     const remember = $('lg-remember').checked;
     if(!user || !pass){ $('lg-msg').textContent = '请输入账号与密码'; return; }
-    api('api/login', { method: 'POST', body: { user: user, pass: pass } }).then(function(r){
+    api('api/login', { method:'POST', body:{ user:user, pass:pass } }).then(function(r){
       if (r.body && r.body.ok) {
-        token = pass;                              // 令牌 = 密码框内容（服务端当前密码）
-        try { sessionStorage.setItem(SS_TOKEN, token); } catch(e){}   // 本次会话：刷新/重开免重输
-        if(remember){
-          setLogged(true, true);
-          try { localStorage.setItem(LS_TOKEN, token); } catch(e){}  // 注意：令牌是字符串，勿 JSON 化（否则带引号不匹配）
-        }
+        token = pass;
+        try { sessionStorage.setItem(SS_TOKEN, token); } catch(e){}
+        if(remember){ setLogged(true,true); try { localStorage.setItem(LS_TOKEN, token); } catch(e){} }
         enterAdmin();
         $('lg-pass').value = ''; $('lg-msg').textContent = '';
         toast(remember ? '登录成功，已在本设备记住（自动登录）' : '登录成功，本次会话已记住（刷新免重输）');
@@ -621,754 +256,40 @@
         $('lg-msg').textContent = (r.body && r.body.error) || '账号或密码错误';
         $('lg-pass').value = '';
       }
-    }).catch(function(){
-      $('lg-msg').textContent = '无法连接后端服务，请检查服务是否启动';
-    });
+    }).catch(function(){ $('lg-msg').textContent = '无法连接后端服务，请检查服务是否启动'; });
   }
   $('lg-btn').addEventListener('click', doLogin);
   $('lg-pass').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
-  $('lg-remember').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); doLogin(); } });
   $('btn-logout').addEventListener('click', function(){
     setLogged(false, true); remStore(LS_TOKEN);
     try { sessionStorage.removeItem(SS_TOKEN); } catch(e){}
-    token = '';
-    leaveAdmin();
-    toast('已退出登录（已同时取消本设备自动登录）');
+    token = ''; leaveAdmin(); toast('已退出登录（已同时取消本设备自动登录）');
   });
 
-  /* ============ 数据状态（后端 /api/state） ============ */
-  let state = { doc: { versions: [] }, files: [] };
-  function loadState(){
-    return api('api/state').then(function(r){
-      if (r.body && r.body.ok) state = r.body;
-      render();
-    }).catch(function(){ render(); });
-  }
-
-  /* ============ 线上安装包（后端 downloads/ 目录） ============ */
-  let selectedPkgs = new Set(); // {platform}::{name}
-
-  function cmp(a, b){
-    const pa = String(a).split('.').map(Number), pb = String(b).split('.').map(Number);
-    for(let i=0;i<3;i++){ if((pa[i]||0) !== (pb[i]||0)) return (pa[i]||0) > (pb[i]||0) ? 1 : -1; }
-    return 0;
-  }
-  function verOf(name){
-    const m = String(name).match(/(\d+\.\d+\.\d+)/);
-    return m ? m[1] : null;
-  }
-  function platformOf(name){
-    return /\.exe$/i.test(String(name)) ? 'pc' : 'android';
-  }
-  function kindOf(name){
-    if (/setup/i.test(String(name))) return '安装版';
-    if (/portable|便携/i.test(String(name))) return '便携版';
-    if (/universal/i.test(String(name))) return 'APK';
-    return '';
-  }
-  // 安装包来源：境内服务器 downloads/ 目录（当前后端） 与 GitHub Releases 双源合并
-  let ghReleases = null;    // GitHub Releases 缓存 [{ tag, ver, assets:[{name,size}] }]
-  let lastCards = [];       // 最近一次渲染的卡片，供发布时按文件名回查 kind/size
-  function repoFiles(){    // 来源一：当前后端 downloads/ 目录（部署到境内服务器后即境内目录）
-    return (state.files || []).map(function(f){
-      return { ver: verOf(f.name), name: f.name, size: f.size, src: 'cn' };
-    }).filter(x => x.ver);
-  }
-  // 来源二：GitHub Releases —— 由服务端代理抓取（/api/gh-releases，服务端多镜像重试），
-  //   前端走同源请求，彻底规避浏览器直连 api.github.com 被墙 / 镜像 CORS 不可用的问题
-  function loadGhReleases(){
-    if (ghReleases) return Promise.resolve(ghReleases);
-    return api('api/gh-releases').then(function(res){
-      if (!res.body || !res.body.ok) throw new Error((res.body && res.body.error) || 'http ' + res.status);
-      ghReleases = (res.body.releases || []).map(function(x){
-        return { tag: x.tag, ver: verOf(x.tag),
-          assets: (x.assets || []).map(function(a){ return { name: a.name, size: a.size }; }) };
-      });
-      return ghReleases;
-    }).catch(function(e){
-      toast('GitHub Releases 获取失败：' + (e.message || '服务端代理不可达'));
-      return [];
-    });
-  }
-  function ghFilesForVer(ver){   // 取 GitHub 上某版本 tag 的安装包资产（仅 .exe/.apk/.msi/.dmg，
-    // 排除 update-doc.json 等元数据附件；文件名可不含版本号，归属由 tag 决定）
-    const PKG_RE = /\.(exe|apk|msi|dmg)$/i;
-    const files = [];
-    (ghReleases || []).forEach(function(x){
-      if (x.ver !== ver) return;
-      x.assets.forEach(function(a){ if (PKG_RE.test(a.name)) files.push({ ver: ver, name: a.name, size: a.size, src: 'gh' }); });
-    });
-    return files;
-  }
-  // 双源不合并：来源不同的相同安装包视作两个不同安装包（可能单独发布，可能合并发布）。
-  // 来源 = 检测自境内 downloads / GitHub Releases；发布平台（渠道）决定检测什么。
-  function channel(){   // 当前发布渠道：both / cn / github
-    return $('f-targets').value;
-  }
-  function allFilesForVer(ver){
-    const srcs = channel() === 'both' ? ['cn','gh'] : (channel() === 'cn' ? ['cn'] : ['gh']);
-    const list = [];
-    if (srcs.indexOf('cn') >= 0) repoFiles().filter(x => x.ver === ver).forEach(x => list.push(x));
-    if (srcs.indexOf('gh') >= 0) ghFilesForVer(ver).forEach(x => list.push(x));
-    return list;
-  }
-  function latestRepoVer(){      // 双源取最高版本
-    let max = '0';
-    repoFiles().concat(ghReleases ? ghReleases.map(x => ({ ver: x.ver })) : []).forEach(x => {
-      if (x.ver && cmp(x.ver, max) > 0) max = x.ver;
-    });
-    return max === '0' ? '' : max;
-  }
-  function detectPkgs(ver){
-    const cards = allFilesForVer(ver).slice(0, 12)
-      .map(x => ({ platform: platformOf(x.name), name: x.name, kind: kindOf(x.name), size: x.size, ver: x.ver, src: x.src }));
-    renderPkgCards(cards);
-    if(!cards.length) toast('所选渠道（' + channelLabel() + '）未找到 ' + ver + ' 的安装包');
-  }
-  function collectShown(){
-    const ver = $('f-ver').value.trim();
-    return allFilesForVer(ver).slice(0, 12)
-      .map(x => ({ platform: platformOf(x.name), name: x.name, kind: kindOf(x.name), size: x.size, ver: x.ver, src: x.src }));
-  }
-  function channelLabel(){
-    const c = channel();
-    return c === 'both' ? '国内+国际' : (c === 'cn' ? '国内' : '国际 GitHub');
-  }
-  // 已发布包判定：按「来源::平台::文件名」判定（与卡片 key 一致）。
-  // update-doc 中该版本 assets 里存在包名、且其 srcs 覆盖该来源 → 该来源的卡灰显
-  function publishedKeys(ver){
-    const map = {};
-    (state.doc && state.doc.versions || []).forEach(function(v){
-      if (v.version !== ver) return;
-      ['pc','android'].forEach(function(pl){
-        (v.assets && v.assets[pl] || []).forEach(function(a){
-          const name = (a && a.name) || a;
-          const srcs = (a && a.srcs) || [];
-          srcs.forEach(function(s){
-            map[s + '::' + pl + '::' + name] = true;
-          });
-        });
-      });
-    });
-    return map;
-  }
-  // 当前勾选涉及的平台集合（pc / android）
-  function selectedPlatforms(){
-    const pl = new Set();
-    selectedPkgs.forEach(function(k){ const p = k.split('::'); if (p[1]) pl.add(p[1]); });
-    return pl;
-  }
-  // 根据勾选的平台，启用/禁用对应端文案框；未勾选的端灰度禁用、禁止输入
-  function syncNotesEnabled(){
-    const plats = selectedPlatforms();
-    const map = {
-      pc:      { ta:'f-notes-pc',  lbl:'lbl-notes-pc',  name:'PC' },
-      android: { ta:'f-notes-and', lbl:'lbl-notes-and', name:'Android' }
-    };
-    Object.keys(map).forEach(function(pl){
-      const cfg = map[pl];
-      const ta = $(cfg.ta), lbl = $(cfg.lbl);
-      const on = plats.has(pl);
-      ta.disabled = !on;
-      ta.classList.toggle('dim', !on);
-      lbl.classList.toggle('is-off', !on);
-      const base = lbl.dataset.base || lbl.textContent;
-      lbl.dataset.base = base;
-      lbl.textContent = on ? base : base + '（未选 ' + cfg.name + ' 安装包，已禁用输入）';
-    });
-  }
-  // 从分桶结构取中文源（兼容旧式纯数组）：bucket 为数组则返回原数组，为对象则取 zh-CN/all
-  function zhOf(bucket){ if (!bucket) return []; return Array.isArray(bucket) ? bucket : (bucket.zh-CN || bucket.all || []); }
-  // 填入/自动确认版本号后，从 update-doc 搜索该版本已有文案并复现到两个文案框（供开发者修改）
-  function fillExistingNotes(ver){
-    const v = (state.doc && state.doc.versions || []).find(function(x){ return x.version === ver; });
-    if (!v || !v.notes) return false;
-    const n = v.notes;
-    const joinNotes = function(arr){ return (arr || []).join('\n'); };
-    $('f-notes-pc').value  = joinNotes(n.all ? zhOf(n.all) : zhOf(n.pc));
-    $('f-notes-and').value = joinNotes(n.all ? zhOf(n.all) : zhOf(n.android));
-    return true;
-  }
-  // 安装包卡片：一张卡 = 一个来源的安装包（key = src::平台::文件名，来源不同不合并）
-  function pkgCardHtml(c, pub){
-    const key = c.src + '::' + c.platform + '::' + c.name;
-    const isPub = !!(pub && pub[key]);
-    const div = document.createElement('div');
-    div.className = 'pkg-card' + (selectedPkgs.has(key) ? ' sel' : '') + (isPub ? ' pub' : '');
-    div.innerHTML =
-      '<div class="pk"><span class="pk-badge ' + c.platform + '">' + (c.platform==='pc'?'PC':'Android') + '</span>' +
-      '<span class="pk-src ' + c.src + '">' + (c.src==='gh' ? 'GitHub' : '境内') + '</span>' +
-      '<span class="pk-name">' + (c.kind ? c.kind + ' · ' : '') + c.ver + '</span>' +
-      (isPub ? '<span class="pk-tag pub">已发布</span>' : '') + '</div>' +
-      '<div class="pk-file">' + c.name + '</div>' +
-      '<div class="pk-size">' + fmtSize(c.size) + '</div>';
-    if (!isPub) {
-      div.addEventListener('click', () => {
-        if(selectedPkgs.has(key)) selectedPkgs.delete(key); else selectedPkgs.add(key);
-        div.classList.toggle('sel');
-        syncNotesEnabled();
-      });
-    }
-    return div;
-  }
-  function renderPkgCards(cards){
-    lastCards = cards;
-    const area = $('pkg-cards'); area.innerHTML = '';
-    if(!cards.length){
-      area.innerHTML = '<div style="font-size:12px; color:var(--text-dim); grid-column:1/-1;">所选渠道（' + channelLabel() + '）未找到安装包，请检查版本号、服务器 downloads/ 目录或 GitHub Releases。</div>';
-      syncNotesEnabled();
-      return;
-    }
-    // 已发布集合（按「来源+包名」判定）
-    const pub = publishedKeys(cards[0] ? cards[0].ver : '');
-    // 按来源分组显示：境内一组、GitHub 一组（各自横排）
-    const cnGroup = cards.filter(c => c.src === 'cn');
-    const ghGroup = cards.filter(c => c.src === 'gh');
-    if (cnGroup.length) {
-      const g = document.createElement('div');
-      g.className = 'pkg-group';
-      g.appendChild(pkgGroupTitle('境内服务器 downloads/', cnGroup.length));
-      const row = document.createElement('div');
-      row.className = 'pkg-cards-row';
-      cnGroup.forEach(c => row.appendChild(pkgCardHtml(c, pub)));
-      g.appendChild(row);
-      area.appendChild(g);
-    }
-    if (ghGroup.length) {
-      if (cnGroup.length) {
-        const sep = document.createElement('div');
-        sep.className = 'pkg-sep';
-        area.appendChild(sep);
-      }
-      const g = document.createElement('div');
-      g.className = 'pkg-group';
-      g.appendChild(pkgGroupTitle('GitHub Releases', ghGroup.length));
-      const row = document.createElement('div');
-      row.className = 'pkg-cards-row';
-      ghGroup.forEach(c => row.appendChild(pkgCardHtml(c, pub)));
-      g.appendChild(row);
-      area.appendChild(g);
-    }
-    syncNotesEnabled();
-  }
-  function pkgGroupTitle(label, n){
-    const h = document.createElement('div');
-    h.className = 'pkg-group-title';
-    h.textContent = label + ' · ' + n + ' 个包';
-    return h;
-  }
-  function fmtSize(n){
-    if (n == null) return '';
-    if (n >= 1073741824) return (n/1073741824).toFixed(2) + ' GB';
-    if (n >= 1048576) return (n/1048576).toFixed(1) + ' MB';
-    if (n >= 1024) return (n/1024).toFixed(0) + ' KB';
-    return n + ' B';
-  }
-  function nowLocal(){
-    const d = new Date();
-    const tz = -d.getTimezoneOffset();
-    const sign = tz >= 0 ? '+' : '-';
-    const tzAbs = Math.abs(tz);
-    const tzStr = sign + String(Math.floor(tzAbs/60)).padStart(2,'0') + ':' + String(tzAbs%60).padStart(2,'0');
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0')
-      + 'T' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0')
-      + tzStr;
-  }
-  function nowLocalDate(){ return nowLocal().slice(0,10); }
-
-  /* ============ 发布（写入后端） ============ */
-  $('btn-detect').addEventListener('click', function(){
-    const ver = $('f-ver').value.trim();
-    if(!ver){ toast('请先填写版本号'); return; }
-    ensureDefaultDate();
-    loadGhReleases().then(function(){
-      detectPkgs(ver);
-      if (fillExistingNotes(ver)) toast('已载入 ' + ver + ' 已有更新文案，可在此基础上修改');
-    });
-  });
-  $('btn-detect-latest').addEventListener('click', function(){
-    loadGhReleases().then(function(){
-      const lv = latestRepoVer();
-      if(!lv){ toast('两个来源（服务器 downloads/ 与 GitHub Releases）均未检测到安装包'); return; }
-      $('f-ver').value = lv;
-      ensureDefaultDate();
-      detectPkgs(lv);
-      if (fillExistingNotes(lv)) toast('已载入 ' + lv + ' 已有更新文案，可在此基础上修改');
-      else toast('已自动检测线上最新版本 ' + lv);
-    });
-  });
-  $('btn-select-all').addEventListener('click', function(){
-    const cards = collectShown();
-    const pub = publishedKeys(cards[0] ? cards[0].ver : '');
-    let n = 0;
-    cards.forEach(function(c){
-      const key = c.src + '::' + c.platform + '::' + c.name;
-      if (pub && pub[key]) return;   // 已发布不选
-      if (!selectedPkgs.has(key)) { selectedPkgs.add(key); n++; }
-    });
-    renderPkgCards(cards);
-    toast(n ? '已全选 ' + n + ' 个安装包' : '当前显示均为已发布，无需选择');
-  });
-  $('btn-reset-sel').addEventListener('click', function(){ selectedPkgs.clear(); renderPkgCards(collectShown()); });
-  // 切换发布渠道 → 重新检测当前版本号的包（渠道决定检测什么）
-  $('f-targets').addEventListener('change', function(){
-    const ver = $('f-ver').value.trim();
-    if (!ver) return;
-    loadGhReleases().then(function(){ detectPkgs(ver); });
-  });
-  $('btn-copy-and').addEventListener('click', function(){
-    const pc = $('f-notes-pc').value.trim();
-    const and = $('f-notes-and').value.trim();
-    if(pc && !and){
-      $('f-notes-and').value = $('f-notes-pc').value;
-      toast('已将 PC 更新内容填充到 Android（Android 原为空）');
-    } else if(!pc && and){
-      $('f-notes-pc').value = $('f-notes-and').value;
-      toast('已将 Android 更新内容填充到 PC（PC 原为空）');
-    } else if(!pc && !and){
-      toast('两个平台都为空，请先填写更新内容');
-    } else {
-      toast('PC 与 Android 都已填写内容，「全部相同」不适用（不会覆盖已有内容）');
-    }
-  });
-  $('btn-reset-form').addEventListener('click', function(){
-    $('f-ver').value=''; $('f-date').value=''; $('f-type').value='optional'; $('f-targets').value='both';
-    $('f-notes-pc').value=''; $('f-notes-and').value='';
-    syncDateDisp();
-    selectedPkgs.clear(); renderPkgCards([]);
-  });
-  function ensureDefaultDate(){
-    if(!$('f-date').value){
-      $('f-date').value = nowLocalDate();
-      syncDateDisp();
-      toast('声称发布日期未填写，已按今天（' + nowLocalDate() + '）自动填入');
-    }
-  }
-  function syncDateDisp(){
-    const raw = $('f-date').value;
-    const disp = $('f-date-disp');
-    if(raw){
-      const [y, m, d] = raw.split('-');
-      disp.textContent = y + ' 年 ' + Number(m) + ' 月 ' + Number(d) + ' 日';
-      disp.classList.remove('is-empty');
-    } else {
-      disp.textContent = '';
-      disp.classList.add('is-empty');
-    }
-  }
-  $('f-date').addEventListener('change', syncDateDisp);
-  syncDateDisp();
-
-  function parseNotes(text){
-    return text.split('\n').map(s => s.replace(/^[•\-*\s]+/,'').trim()).filter(Boolean);
-  }
-
-  $('btn-add').addEventListener('click', function(){
-    const ver = $('f-ver').value.trim();
-    if(!ver || !/^\d+\.\d+\.\d+$/.test(ver)){ toast('请填写合法版本号（格式 X.X.X）'); return; }
-    if(selectedPkgs.size === 0){ toast('请先勾选要发布的安装包卡片'); return; }
-    const announced = $('f-date').value || nowLocalDate();
-    // 仅采纳「已勾选对应端安装包」的文案；未选中的端（文案框灰度禁用）不写入该版本 notes
-    const selPlats = selectedPlatforms();
-    const notesPc = selPlats.has('pc') ? parseNotes($('f-notes-pc').value) : [];
-    const notesAnd = selPlats.has('android') ? parseNotes($('f-notes-and').value) : [];
-    const same = JSON.stringify(notesPc) === JSON.stringify(notesAnd) && notesPc.length > 0;
-    const notes = same ? { all: notesPc } : { pc: notesPc, android: notesAnd };
-    if (!notesPc.length && !notesAnd.length){ toast('请填写所选安装包对应的更新内容'); return; }
-    // 发布渠道 = 勾选卡片的来源（来源不同 = 不同安装包，可单独/合并发布）：
-    //   勾选境内卡 → srcs 含 cn；勾选 GitHub 卡 → srcs 含 gh；同名不同来源都勾 → srcs 并集
-    const assets = { pc: [], android: [] };
-    const seen = {};
-    selectedPkgs.forEach(key => {
-      const parts = key.split('::');
-      const src = parts[0], platform = parts[1], name = parts.slice(2).join('::');   // key = src::平台::文件名
-      const pname = platform + '::' + name;
-      const info = lastCards.find(x => x.src === src && x.name === name) || {};
-      if (seen[pname]) {   // 同名不同来源：srcs 并集，合并为一条（客户端按文件名取包）
-        const a = assets[platform].find(x => x.name === name);
-        if (a && a.srcs.indexOf(src) < 0) a.srcs.push(src);
-        return;
-      }
-      seen[pname] = true;
-      assets[platform].push({ name: name, kind: info.kind || '', size: info.size != null ? String(info.size) : '', srcs: [src] });
-    });
-    // targets（版本渠道标记）= 勾选来源的实际并集，而非下拉框值
-    const targets = [];
-    const allSrcs = {};
-    assets.pc.concat(assets.android).forEach(function(x){
-      (x.srcs || []).forEach(function(s){ allSrcs[s] = true; });
-    });
-    if (allSrcs.cn) targets.push('cn');
-    if (allSrcs.gh) targets.push('github');
-    if (!targets.length) targets.push('cn');
-    const body = {
-      version: ver,
-      date: announced,
-      type: $('f-type').value,
-      targets: targets,
-      notes: notes,
-      assets: assets
-    };
-    $('btn-add').disabled = true;
-    $('btn-add').textContent = '🌐 翻译中…';
-    api('api/publish', { method: 'POST', body: body }).then(function(r){
-      $('btn-add').disabled = false;
-      $('btn-add').textContent = '🚀 批量发布所选包';
-      if (r.body && r.body.ok) {
-        // 用户感知的包数 = 勾选的卡片数（来源不同 = 不同安装包，即使同名也各算一个）
-        const pcN = assets.pc.length, andN = assets.android.length;
-        const srcSummary = summarySrcs(assets);   // 例：国内+GitHub
-        // toast 按平台统计（PC/Android 各自包数）；任务面板按渠道统计（国内/境外各自包数）
-        toast('已发布 ' + ver + '：PC ' + pcN + ' 个 / Android ' + andN + ' 个 → ' + srcSummary);
-        addLog(ver, '发布', '', false, makePubTask(ver, targets, assets, srcSummary));
-        // 发布成功：清空勾选；state 刷新后再重渲染卡片（刚发布的包将灰显）
-        selectedPkgs.clear();
-        loadState().then(function(){ renderPkgCards(collectShown()); });
-      } else {
-        const msg = (r.body && r.body.error) || '发布失败';
-        toast('发布失败：' + msg);
-        addLog(ver, '发布', '后端返回错误：' + msg, true);
-      }
-    }).catch(function(e){
-      $('btn-add').disabled = false;
-      $('btn-add').textContent = '🚀 批量发布所选包';
-      toast('发布失败：无法连接后端');
-      addLog(ver, '发布', '无法连接后端', true);
-    });
-  });
-
-  /* ============ 版本列表 ============ */
-  function fmtNotes(notes){
-    if(!notes || !notes.length) return '<span style="color:var(--text-dim)">—</span>';
-    return notes.map(s => '<div>· ' + s + '</div>').join('');
-  }
-  function targetLabel(t){
-    if (t === 'both') return '国内+国际';
-    if (t === 'github') return '仅国际';
-    if (t === 'cn') return '仅国内';
-    if (Array.isArray(t)) return t.join('+');
-    return '国内+国际';
-  }
-  function render(){
-    const doc = state.doc || { versions: [] };
-    const list = $('ver-list'); list.innerHTML = '';
-    const sorted = (doc.versions || []).slice().sort((a,b) => cmp(b.version, a.version));
-    sorted.forEach(v => {
-      const st = (v.status === 'published');
-      const typeHtml = (v.type === 'force')
-        ? '<span class="st force">强制更新</span>'
-        : '<span class="st pub">可选更新</span>';
-      const notesAll = !!(v.notes && v.notes.all);   // PC/Android 更新内容一致（存为 all）
-      const pcNotes = zhOf(v.notes && (v.notes.all || v.notes.pc));
-      const andNotes = zhOf(v.notes && (v.notes.all || v.notes.android));
-      // 按平台（PC / Android）分区：notes 各自取 pcNotes / andNotes，
-      // 安装包按所属平台归区。渠道（境内 / GitHub）仅作为包的来源标签，不再当作分区。
-      function platBlock(title, cls, pl){
-        const pkgs = (v.assets && v.assets[pl] || []);
-        const notesHtml = fmtNotes(pl === 'pc' ? pcNotes : andNotes);
-        const pkgsHtml = pkgs.length
-          ? pkgs.map(x => {
-              const srcs = (x.srcs || []).map(s => s === 'gh' ? 'GitHub' : '境内');
-              const srcTag = srcs.length ? ' <span class="pkg-chip-src">' + srcs.join('/') + '</span>' : '';
-              return '<span class="pkg-chip ' + pl + '">' + srcTag + (x.name || x) + '</span>';
-            }).join(' ')
-          : '<span class="plat-none">未发布安装包</span>';
-        return '<div class="plat-row">' +
-          '<span class="plat-badge ' + cls + '">' + title + '</span>' +
-          '<div class="plat-body">' +
-            '<div class="plat-notes">' + notesHtml + '</div>' +
-            '<div class="plat-pkgs">' + pkgsHtml + '</div>' +
-          '</div>' +
-        '</div>';
-      }
-      const platformsHtml =
-        '<div class="ver-platforms">' +
-          platBlock('PC', 'pc', 'pc') +
-          platBlock('Android', 'android', 'android') +
-        '</div>';
-      const item = document.createElement('div');
-      item.className = 'ver-item';
-      item.innerHTML =
-        '<div class="ver-top">' +
-          '<span class="ver">' + v.version + '</span>' +
-          typeHtml +
-          '<span class="st ' + (st?'pub':'stop') + '">' + (st?'发布中':'已停止') + '</span>' +
-          '<span class="tag">' + targetLabel(v.targets || 'both') + '</span>' +
-        '</div>' +
-        '<div class="ver-meta">' +
-          '<span><b>声称发布日期</b> ' + (v.date || '—') + '</span>' +
-          '<span><b>实际发布</b> ' + (v.publishedAt ? String(v.publishedAt).replace('T',' ').slice(0,16) : '—') + '</span>' +
-        '</div>' +
-        platformsHtml +
-        '<div class="ver-ops">' +
-          (st
-            ? '<button class="btn small danger" data-op="stop" data-v="' + v.version + '">停止发布</button>'
-            : '<button class="btn small" data-op="repub" data-v="' + v.version + '">重新发布</button>') +
-          '<button class="btn small danger" data-op="del" data-v="' + v.version + '">删除</button>' +
-        '</div>';
-      list.appendChild(item);
-    });
-    const pubs = sorted.filter(x => x.status === 'published').length;
-    $('list-hint').textContent = '共 ' + sorted.length + ' 条，发布中 ' + pubs + ' 条（客户端仅检测 status:published 版本，云端保留旧包）';
-  }
-
-  $('ver-list').addEventListener('click', function(e){
-    const btn = e.target.closest('button[data-op]');
-    if(!btn) return;
-    const op = btn.dataset.op, ver = btn.dataset.v;
-    if(op === 'del'){
-      showConfirm('删除发布版本', '确认删除 ' + ver + '？删除后客户端将不再检测到该版本，且云端保留的安装包文件不会被移除。', '删除', '取消', function(){
-        doVerOp(op, ver, btn);
-      });
-      return;
-    }
-    doVerOp(op, ver, btn);
-  });
-  function doVerOp(op, ver, btn){
-    let path, body, label;
-    if(op === 'stop'){ path = 'api/status'; body = { version: ver, status: 'stopped' }; label = '停止发布'; }
-    else if(op === 'repub'){ path = 'api/status'; body = { version: ver, status: 'published' }; label = '重新发布'; }
-    else { path = 'api/delete'; body = { version: ver }; label = '删除'; }
-    if (btn) btn.disabled = true;
-    api(path, { method: 'POST', body: body }).then(function(r){
-      if (r.body && r.body.ok) {
-        toast(ver + ' 已' + label);
-        addLog(ver, label, '后端写入成功', false);
-        loadState();
-      } else {
-        toast(label + '失败：' + ((r.body && r.body.error) || '未知错误'));
-        addLog(ver, label, '后端返回错误：' + ((r.body && r.body.error) || '未知错误'), true);
-      }
-    }).catch(function(){
-      toast(label + '失败：无法连接后端');
-      addLog(ver, label, '无法连接后端', true);
-    });
-  }
-
-  /* ============ 发布任务面板（demo 样式：多平台推送状态） ============ */
-  const LS_LOGS = 'cub3d_admin_logs';
-  let opLogs = storeGet(LS_LOGS) || [];
-  // 新增发布任务：op=发布 时带 platforms 数组；op=停止/重新发布/删除 时无 platforms（保留为单条日志）
-  // 每次操作都新增一条记录，不覆盖（保留完整操作历史）
-  function addLog(ver, op, msg, isErr, platforms){
-    opLogs.unshift({
-      id: Date.now() + '_' + Math.random().toString(36).slice(2,6),
-      version: ver, op: op, msg: msg, isErr: !!isErr, at: nowLocal(),
-      platforms: platforms || null
-    });
-    if(opLogs.length > 50) opLogs = opLogs.slice(0, 50);
-    storeSet(LS_LOGS, opLogs);
-    renderTasks();
-  }
-  // 汇总发布渠道来源（按 assets 中各包的 srcs 并集）：例「国内+GitHub」/「仅国内」/「仅 GitHub」
-  function summarySrcs(assets){
-    const s = {};
-    ['pc','android'].forEach(function(pl){
-      (assets[pl] || []).forEach(function(p){
-        (p.srcs || []).forEach(function(x){ s[x] = true; });
-      });
-    });
-    const keys = Object.keys(s);
-    if (keys.indexOf('cn') >= 0 && keys.indexOf('gh') >= 0) return '国内+GitHub';
-    if (keys.indexOf('cn') >= 0) return '仅国内';
-    if (keys.indexOf('gh') >= 0) return '仅 GitHub';
-    return (targetsLabel());
-  }
-  function targetsLabel(){
-    const v = $('f-targets').value;
-    if (v === 'both') return '国内+GitHub';
-    if (v === 'github') return '仅 GitHub';
-    return '仅国内';
-  }
-  // 生成 demo 样式的多平台任务（发布成功时调用）。
-  // 每个渠道显示「该渠道实际发布的包数」：srcs 含 cn 的包数 → 国内站点；srcs 含 gh 的包数 → GitHub Release
-  function makePubTask(ver, targets, assets, srcSummary){
-    let cnN = 0, ghN = 0;
-    ['pc','android'].forEach(function(pl){
-      (assets[pl] || []).forEach(function(x){
-        const srcs = x.srcs || [];
-        if (srcs.indexOf('cn') >= 0) cnN++;
-        if (srcs.indexOf('gh') >= 0) ghN++;
-      });
-    });
-    const platforms = [];
-    if (targets.indexOf('github') >= 0) platforms.push({ key: 'github', name: 'GitHub Release', status: 'ok', msg: 'update-doc.json 已写入后端（境外 ' + ghN + ' 个包）' });
-    if (targets.indexOf('cn') >= 0) platforms.push({ key: 'cn', name: '国内站点', status: 'ok', msg: 'update-doc.json 已写入后端（国内 ' + cnN + ' 个包）' });
-    return platforms;
-  }
-  function renderTasks(){
-    const wrap = $('task-list');
-    if(!opLogs.length){
-      wrap.innerHTML = '<div class="task-empty">暂无发布任务。使用上方「🚀 批量发布所选包」后，这里会显示各平台的推送进度。</div>';
-      $('task-hint').textContent = '发布时逐平台推送，部分平台可能中断或延迟，可单独重新发布';
-      return;
-    }
-    wrap.innerHTML = '';
-    opLogs.slice(0,20).forEach(t => {
-      const item = document.createElement('div');
-      item.className = 'task-item';
-      const isMulti = t.platforms && t.platforms.length;
-      let inner;
-      if (isMulti) {
-        // demo 样式：逐平台行（GitHub Release / 国内站点）
-        const rows = t.platforms.map(function(p){
-          const stCls = p.status === 'ok' ? 'ok' : (p.status === 'fail' ? 'fail' : 'info');
-          return '<div class="task-row">' +
-            '<span class="pl ' + p.key + '">' + p.name + '</span>' +
-            '<span class="stbar ' + stCls + '">' + (p.status === 'ok' ? '✓ ' : '') + p.msg + '</span>' +
-            '</div>';
-        }).join('');
-        const allOk = t.platforms.every(p => p.status === 'ok');
-        const chips = t.platforms.map(function(p){
-          return '<span class="tag ' + (p.status === 'ok' ? 'ok' : 'warn') + '">' + p.name + '：' + (p.status === 'ok' ? '✓ 成功' : '✗ 中断') + '</span>';
-        }).join('');
-        inner =
-          '<div class="task-head">' +
-            '<span class="task-ver">' + t.version + '</span>' +
-            '<span class="task-when">' + String(t.at).replace('T',' ').slice(0,16) + '</span>' +
-            '<span class="task-targets">' + chips + '</span>' +
-            '<button class="op-btn del" data-del="' + t.id + '" title="删除此条记录">✕</button>' +
-          '</div>' +
-          '<div class="task-body">' + rows + '</div>' +
-          (allOk ? '<div style="margin-top:6px; font-size:11.5px; color:var(--ok);">✅ 全部平台推送成功，客户端可检测到 ' + t.version + '</div>' : '');
-      } else {
-        // 停止/重新发布/删除：单条日志。操作文案统一为「XX操作」，删除类严重操作用红色标签
-        const stCls = t.isErr ? 'fail' : 'ok';
-        const opTxt = t.op + '操作';
-        const opIsDanger = (t.op === '删除' || t.op === '停止发布');
-        const opTag = '<span class="tag ' + (opIsDanger ? 'op-danger' : (t.isErr ? 'warn' : 'ok')) + '">' + opTxt + '</span>';
-        inner =
-          '<div class="task-head">' +
-            '<span class="task-ver">' + t.version + '</span>' +
-            '<span class="task-when">' + String(t.at).replace('T',' ').slice(0,16) + '</span>' +
-            '<span class="task-targets">' + opTag + '</span>' +
-            '<button class="op-btn del" data-del="' + t.id + '" title="删除此条记录">✕</button>' +
-          '</div>' +
-          '<div class="task-body"><div class="task-row"><span class="pl api">后端</span><span class="stbar ' + stCls + '">' + t.msg + '</span></div></div>';
-      }
-      item.innerHTML = inner;
-      wrap.appendChild(item);
-    });
-    const okCount = opLogs.filter(t => t.platforms ? t.platforms.every(p => p.status === 'ok') : !t.isErr).length;
-    $('task-hint').textContent = '共 ' + opLogs.length + ' 个任务，全部成功 ' + okCount + ' 个（失败可能为令牌错误 / 后端未启动）';
-  }
-  /* ============ 工程风格确认弹窗（替换浏览器原生 confirm） ============ */
-  let cfmOnYes = null;
-  function showConfirm(title, msg, yesLabel, noLabel, onYes){
-    $('cfm-title').textContent = title;
-    $('cfm-msg').textContent = msg;
-    $('cfm-err').textContent = '';
-    $('cfm-yes').textContent = yesLabel || '确定';
-    $('cfm-no').textContent = noLabel || '取消';
-    cfmOnYes = onYes;
-    $('cfm-modal').classList.add('show');
-  }
-  function hideConfirm(){ $('cfm-modal').classList.remove('show'); cfmOnYes = null; }
-  $('cfm-yes').addEventListener('click', function(){
-    const cb = cfmOnYes; hideConfirm(); if (cb) cb();
-  });
-  $('cfm-no').addEventListener('click', hideConfirm);
-
-  // 任务面板：删除单个条目需确认
-  $('task-list').addEventListener('click', function(e){
-    const del = e.target.closest('[data-del]');
-    if(del){
-      const id = del.dataset.del;
-      const t = opLogs.find(x => x.id === id);
-      if (!t) return;
-      showConfirm('删除任务记录', '确定删除 ' + t.version + ' 的' + t.op + '操作记录？此操作仅移除本设备记录，不影响后端数据。', '删除', '取消', function(){
-        opLogs = opLogs.filter(x => x.id !== id);
-        storeSet(LS_LOGS, opLogs);
-        renderTasks();
-        toast('已删除该条任务记录');
-      });
-    }
-  });
-  $('btn-clear-tasks').addEventListener('click', function(){
-    if(!opLogs.length){ toast('当前没有任务记录'); return; }
-    showConfirm('清除全部任务记录', '确定清除全部 ' + opLogs.length + ' 条任务记录？此操作仅移除本设备记录，不影响后端数据。', '全部清除', '取消', function(){
-      opLogs = []; storeSet(LS_LOGS, opLogs);
-      renderTasks();
-      toast('已清除全部任务记录');
-    });
-  });
-
-  /* ============ 修改密码（写入后端 data/adminpass.json，立即生效） ============ */
-  function openPwd(){
-    $('pm-old').value=''; $('pm-new').value=''; $('pm-new2').value='';
-    $('pm-msg').textContent = '';
-    $('pwd-modal').classList.add('show');
-  }
-  function closePwd(){ $('pwd-modal').classList.remove('show'); }
-  $('btn-pwd').addEventListener('click', openPwd);
-  $('pm-cancel').addEventListener('click', closePwd);
+  /* ============ 修改密码 ============ */
+  $('btn-pwd').addEventListener('click', () => { $('pm-msg').textContent=''; $('pm-old').value=''; $('pm-new').value=''; $('pm-new2').value=''; $('pwd-modal').classList.add('show'); });
+  $('pm-cancel').addEventListener('click', () => $('pwd-modal').classList.remove('show'));
   $('pm-save').addEventListener('click', function(){
-    const old = $('pm-old').value, n1 = $('pm-new').value, n2 = $('pm-new2').value;
-    if(!old || !n1){ $('pm-msg').textContent = '请输入当前密码与新密码'; return; }
-    if(n1.length < 6){ $('pm-msg').textContent = '新密码至少 6 位'; return; }
-    if(n1 !== n2){ $('pm-msg').textContent = '两次输入的新密码不一致'; return; }
-    $('pm-save').disabled = true;
-    api('api/passwd', { method: 'POST', body: { old: old, next: n1 } }).then(function(r){
-      $('pm-save').disabled = false;
-      if (r.body && r.body.ok) {
-        token = n1;                                 // 本次会话立即用新密码
-        if(autoLoginOn()) storeSet(LS_TOKEN, token); // 记住我模式同步更新
-        closePwd();
-        toast('密码已修改，后续登录请使用新密码');
-      } else {
-        $('pm-msg').textContent = (r.body && r.body.error) || '修改失败';
-      }
-    }).catch(function(){
-      $('pm-save').disabled = false;
-      $('pm-msg').textContent = '无法连接后端服务';
-    });
+    const old = $('pm-old').value, nx = $('pm-new').value, nx2 = $('pm-new2').value;
+    if(!old || !nx || !nx2){ $('pm-msg').textContent='请填全三项'; return; }
+    if(nx.length < 6){ $('pm-msg').textContent='新密码至少 6 位'; return; }
+    if(nx !== nx2){ $('pm-msg').textContent='两次新密码不一致'; return; }
+    api('api/passwd', { method:'POST', body:{ old:old, next:nx } }).then(function(r){
+      if(r.body && r.body.ok){ $('pwd-modal').classList.remove('show'); token = nx; try{ localStorage.setItem(LS_TOKEN, nx); }catch(e){} toast('密码已修改，请牢记新密码'); }
+      else $('pm-msg').textContent = (r.body && r.body.error) || '修改失败';
+    }).catch(function(){ $('pm-msg').textContent='无法连接后端'; });
   });
 
-  /* ============ 文档预览 / 下载 ============ */
-  $('btn-refresh').addEventListener('click', function(){
-    loadState().then(function(){ toast('已刷新后端文档'); });
-  });
-  $('btn-download').addEventListener('click', function(){
-    const doc = state.doc || { versions: [] };
-    const blob = new Blob([JSON.stringify(doc, null, 2) + '\n'], { type:'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'update-doc.json'; a.click();
-    URL.revokeObjectURL(a.href);
-    toast('已下载当前后端 update-doc.json');
-  });
-  $('btn-preview').addEventListener('click', function(){
-    const pre = $('preview');
-    if(pre.style.display === 'none' || !pre.style.display){
-      pre.style.display = 'block';
-      pre.textContent = JSON.stringify(state.doc || { versions: [] }, null, 2);
-    } else {
-      pre.style.display = 'none';
-    }
-  });
-
-  /* ============ 初始化 ============ */
-  // 自动登录恢复令牌（两通道）：
-  //   ① 勾选过「记住我」→ localStorage（重启浏览器也免登录）
-  //   ② 本次会话登录过 → sessionStorage（刷新/关标签页再开免重输）
-  // 恢复后立即调一次需鉴权接口验证令牌有效性，失效（改密等）自动清理回登录门
-  function tryAutoLogin(){
+  /* ============ 初始化：自动登录 ============ */
+  (function tryAutoLogin(){
     let saved = null;
     try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
     if(!saved){ leaveAdmin(); return; }
-    token = saved;
-    enterAdmin();
+    token = saved; enterAdmin();
     api('api/auth-check').then(function(r){
-      // 接口非 401 即令牌有效，保持登录
-      if(r.status === 401){
-        try { remStore(LS_TOKEN); sessionStorage.removeItem(SS_TOKEN); } catch(e){}
-        token = '';
-        leaveAdmin();
-      }
-    }).catch(function(){ /* 后端不可达：保留会话，不打断 */ });
-  }
-  tryAutoLogin();
-  renderTasks();
-  syncNotesEnabled();
+      if(r.status === 401){ remStore(LS_TOKEN); try{ sessionStorage.removeItem(SS_TOKEN); }catch(e){} token=''; leaveAdmin(); }
+    });
+  })();
 })();
 </script>
 </body>
