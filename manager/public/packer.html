@@ -611,9 +611,9 @@
     let saved=null;
     try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
     // 业务页：未登录直接回门户（门户负责登录门）
-    if(!saved){ location.href='/'; return; }
+    if(!saved){ location.href = new URL('../', location.href).href; return; }
     token=saved; enterAdmin();
-    api('api/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; location.href='/'; } })
+    api('api/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; location.href = new URL('../', location.href).href; } })
       .catch(function(){});
   }
   // 预填默认版本号显示
