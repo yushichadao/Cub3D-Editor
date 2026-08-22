@@ -6,6 +6,7 @@ import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 
 export function createPackerRouter(deps){
@@ -37,22 +38,38 @@ export function createPackerRouter(deps){
     } catch (e) { return null; }
   }
 
-  // ---------- 统一版本号 ----------
+  // ---------- 统一版本号（两端适配） ----------
+  // 版本号权威存储：manager/data/version.json（本地与服务器都存在，始终可读写）。
+  // 同时尽量同步写入根 / PC / Android 的 package.json（本地有完整仓库时），
+  // 服务器未部署源码时跳过，不报错——保证两端都能获取/设置版本号。
+  const VERSION_STATE_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', 'version.json');
   const VERSION_FILES = [ path.join(ROOT, 'package.json'), path.join(ROOT, 'PC', 'package.json'), path.join(ROOT, 'Android', 'package.json') ];
-  function applyVersion(ver){
-    let n = 0;
-    for (const f of VERSION_FILES) {
-      if (!fs.existsSync(f)) continue;
-      const j = JSON.parse(fs.readFileSync(f, 'utf8'));
-      if (j.version !== ver) { j.version = ver; fs.writeFileSync(f, JSON.stringify(j, null, 2) + '\n', 'utf8'); n++; }
-    }
-    return n;
-  }
   function readCurrentVersion(){
+    // 1) 优先读 manager/data/version.json
+    try { const j = JSON.parse(fs.readFileSync(VERSION_STATE_FILE, 'utf8')); if (j && j.version) return j.version; } catch (e) {}
+    // 2) 回退：读根 / PC / Android 的 package.json（本地有仓库时）
     for (const f of VERSION_FILES) {
       if (fs.existsSync(f)) { try { const j = JSON.parse(fs.readFileSync(f, 'utf8')); if (j.version) return j.version; } catch (e) {} }
     }
     return '';
+  }
+  function applyVersion(ver){
+    let n = 0;
+    // 始终写入 manager/data/version.json（两端通用）
+    try {
+      fs.mkdirSync(path.dirname(VERSION_STATE_FILE), { recursive: true });
+      fs.writeFileSync(VERSION_STATE_FILE, JSON.stringify({ version: ver, updatedAt: new Date().toISOString() }, null, 2) + '\n', 'utf8');
+      n++;
+    } catch (e) {}
+    // 同步写入仓库内 package.json（仅本地有完整仓库时；不存在则跳过）
+    for (const f of VERSION_FILES) {
+      if (!fs.existsSync(f)) continue;
+      try {
+        const j = JSON.parse(fs.readFileSync(f, 'utf8'));
+        if (j.version !== ver) { j.version = ver; fs.writeFileSync(f, JSON.stringify(j, null, 2) + '\n', 'utf8'); n++; }
+      } catch (e) {}
+    }
+    return n;
   }
 
   // ---------- 打包状态 ----------
@@ -109,6 +126,13 @@ export function createPackerRouter(deps){
         const def = PKG_TYPES[step.type];
         step.status = 'running'; step.msg = '构建中…'; savePackState(state);
         try {
+          // 两端适配：服务器未部署源码（无 PC/Android 目录）→ 跳过本地构建，提示改由本地打包后上传
+          if (!fs.existsSync(def.cwd)) {
+            step.status = 'needs-local';
+            step.msg = '⚠ 服务器未部署构建环境（缺少 ' + path.basename(def.cwd) + ' 源码），请在本机打包后通过「上传安装包」汇入';
+            savePackState(state);
+            continue;
+          }
           const r = spawnSync(def.cmd[0], def.cmd[1], { cwd: def.cwd, env: { ...process.env, CUB3D_RELEASE_OUT: outDir }, stdio: 'pipe', timeout: 30 * 60 * 1000 });
           if (r.error) throw r.error;
           if (r.status !== 0) { const tail = (Buffer.isBuffer(r.stderr) ? r.stderr.toString() : '').split('\n').slice(-12).join('\n'); throw new Error('构建退出码 ' + r.status + '\n' + tail); }
@@ -178,6 +202,37 @@ export function createPackerRouter(deps){
       }
     }
     res.json({ ok: true, dist });
+  });
+
+  // ---------- 上传安装包登记（两端适配：服务器无构建环境时，本机打包后上传再登记） ----------
+  // 入参：{ version, files:[{name,size}], tag? } —— files 为 downloads/ 中已存在的文件名
+  router.post('/api/register', adminAuth, async (req, res) => {
+    const b = req.body || {};
+    const ver = String(b.version || '').trim();
+    const files = Array.isArray(b.files) ? b.files : [];
+    if (!/^\d+\.\d+\.\d+$/.test(ver)) return res.status(400).json({ ok: false, error: '版本号格式应为 X.X.X' });
+    if (!files.length) return res.status(400).json({ ok: false, error: '请至少提供一个已上传的安装包文件名' });
+    try {
+      const doc = await loadDoc();
+      let v = doc.versions.find(x => x.version === ver);
+      if (!v) { v = { version: ver, date: new Date().toISOString().slice(0,10), status: 'published', targets: ['cn', 'github'], notes: { zh: '（由打包分发系统登记）' }, assets: { pc: [], android: [] } }; doc.versions.push(v); }
+      let added = 0;
+      for (const f of files) {
+        const name = String(f.name || '').trim();
+        if (!name) continue;
+        const fp = path.join(DOWNLOADS, name);
+        if (!fs.existsSync(fp)) continue;
+        const size = (f.size != null) ? f.size : fs.statSync(fp).size;
+        const platform = /\.apk$/i.test(name) ? 'android' : 'pc';
+        const a = { name, size: size || 0, srcs: ['cn'] };
+        const arr = platform === 'android' ? v.assets.android : v.assets.pc;
+        if (!arr.find(x => x.name === name)) { arr.push(a); added++; }
+      }
+      if (!added) return res.json({ ok: true, message: '无新增（该版本安装包已登记）', registered: 0 });
+      await saveDoc(doc);
+      await syncMeta(doc);
+      res.json({ ok: true, message: `已登记 ${added} 个安装包到版本 ${ver}`, registered: added });
+    } catch (e) { res.status(500).json({ ok: false, error: String(e.message || e) }); }
   });
 
   // ---------- GitHub 辅助 ----------

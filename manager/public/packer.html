@@ -271,6 +271,16 @@
           <label>GitHub Release 标签（境外分发用）</label>
           <input type="text" id="f-tag" placeholder="例如 v1.3.0（留空自动用 v+版本号）" />
         </div>
+        <div class="upload-block" style="margin-top:14px; border-top:1px dashed var(--border); padding-top:12px;">
+          <label style="display:block; margin-bottom:6px;">📦 上传安装包并登记（两端通用）</label>
+          <div class="hint" style="font-size:12px; color:var(--text-dim); margin-bottom:8px;">服务器未部署构建环境时，可先在本机打包，再把 exe/apk 上传到 downloads/ 后在此登记版本（自动写入 update-doc.json，与更新话术系统打通）。</div>
+          <div class="btn-row">
+            <input type="file" id="up-file" multiple style="flex:1; color:var(--text); font-size:12px;" />
+            <input type="text" id="up-ver" placeholder="版本号 如 1.3.0" style="width:140px; background:var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:8px 10px; font-size:13px; color-scheme:dark;" />
+            <button class="btn primary" id="btn-upload">⬆ 上传并登记</button>
+          </div>
+          <div id="up-msg" class="hint" style="font-size:12px; min-height:14px; margin-top:6px;"></div>
+        </div>
       </div>
     </div>
 
@@ -379,7 +389,8 @@
     opts = opts || {};
     opts.headers = opts.headers || {};
     if (token) opts.headers['X-Admin-Token'] = token;
-    if (opts.body && typeof opts.body === 'object') { opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(opts.body); }
+    if (opts.raw) { /* FormData：不 JSON 化、不手动设 Content-Type，由浏览器自动加 boundary */ }
+    else if (opts.body && typeof opts.body === 'object') { opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(opts.body); }
     return fetch(path, opts).then(r => r.json().then(j => ({status:r.status, body:j})).then(function(res){
       if (res.status === 401 && res.body && res.body.error === 'unauthorized') {
         remStore(LS_TOKEN); remStore(LS_AUTO); try { sessionStorage.removeItem(SS_TOKEN); } catch(e){}
@@ -518,6 +529,26 @@
 
   $('btn-refresh-state').addEventListener('click', function(){ loadState().then(function(){ toast('已刷新状态'); }); });
 
+  /* ===== 上传安装包并登记（两端适配：服务器无构建环境时替代本地打包） ===== */
+  $('btn-upload').addEventListener('click', function(){
+    const files = $('up-file').files;
+    const ver = ($('up-ver').value || $('f-ver').value).trim();
+    $('up-msg').textContent = '';
+    if (!files.length) { $('up-msg').textContent = '请先选择要上传的 exe / apk 文件'; return; }
+    if (!/^\d+\.\d+\.\d+$/.test(ver)) { $('up-msg').textContent = '请填写合法版本号（如 1.3.0）'; return; }
+    const fd = new FormData();
+    for (let i = 0; i < files.length; i++) fd.append('files', files[i]);
+    fd.append('version', ver);
+    api('/api/upload', { method: 'POST', body: fd, raw: true }).then(function(r){
+      if (!r.body || !r.body.ok) { $('up-msg').textContent = (r.body && r.body.error) || '上传失败'; return; }
+      const names = (r.body.files || []).map(f => f.name);
+      return api('api/register', { method: 'POST', body: { version: ver, files: names.map(n => ({ name: n })) } }).then(function(rr){
+        if (rr.body && rr.body.ok) { $('up-msg').textContent = rr.body.message || '已登记'; toast('安装包已上传并登记到版本 ' + ver); $('up-file').value=''; }
+        else $('up-msg').textContent = (rr.body && rr.body.error) || '登记失败';
+      });
+    }).catch(function(e){ $('up-msg').textContent = '上传出错：' + (e.message || e); });
+  });
+
   /* ===== 轮询打包/分发包状态 ===== */
   function startPoll(){
     if(pollTimer) clearInterval(pollTimer);
@@ -547,8 +578,8 @@
     return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
   }
 
-  function statusCls(s){ return s==='ok'?'ok':(s==='fail'?'fail':(s==='running'?'run':'idle')); }
-  function statusText(s){ return s==='ok'?'✓ 成功':(s==='fail'?'✗ 失败':(s==='running'?'构建中…':'等待中')); }
+  function statusCls(s){ return s==='ok'?'ok':(s==='fail'?'fail':(s==='running'?'run':(s==='needs-local'?'warn':'idle'))); }
+  function statusText(s){ return s==='ok'?'✓ 成功':(s==='fail'?'✗ 失败':(s==='running'?'构建中…':(s==='needs-local'?'需本机打包':'等待中'))); }
 
   function renderPack(pack){
     const wrap=$('pack-area');
