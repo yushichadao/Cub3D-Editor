@@ -12975,7 +12975,7 @@ window.addEventListener('beforeunload', markClosed);
   // 更新源按优先级：国内主站 → 国内备用 IP → 境外 GitHub Pages（任一成功即可）
   var HOSTS = [
     { name: '国内主站', api: 'https://cub3d-editor.cn/api/update', dl: 'https://cub3d-editor.cn/downloads/' },
-    { name: '国内备用 IP', api: 'http://139.196.104.56/api/update', dl: 'http://139.196.104.56/downloads/' },
+    { name: '国内备用 IP', api: 'http://139.196.104.56/manager/api/update', dl: 'http://139.196.104.56/manager/downloads/' },
     { name: '境外 GitHub Pages', api: 'https://yushichadao.github.io/Cub3D-Editor/downloads/update-doc.json', dl: 'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/' }
   ];
   var LS_IGNORE = 'cub3d_update_ignore';       // { ver, ts } 忽略的版本（7 天窗口）
