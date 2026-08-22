@@ -1354,7 +1354,7 @@
     let saved = null;
     try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
     // 业务页：未登录直接回门户（门户负责登录门）
-    if(!saved){ location.href = './'; return; }
+    if(!saved){ location.href = '/'; return; }
     token = saved;
     enterAdmin();
     api('api/auth-check').then(function(r){
@@ -1362,7 +1362,7 @@
         try { remStore(LS_TOKEN); sessionStorage.removeItem(SS_TOKEN); } catch(e){}
         token = '';
         // 令牌失效 → 回门户重新登录
-        location.href = './';
+        location.href = '/';
       }
     }).catch(function(){ /* 后端不可达：保留会话，不打断 */ });
   }

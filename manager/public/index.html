@@ -89,6 +89,17 @@
     border-radius:10px; font-size:13px; opacity:0; transition:all .25s; pointer-events:none; }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
   .pwd-wrap { position:relative; }
+
+  /* ===== 自动登录状态卡片（门户主界面顶部） ===== */
+  .auto-card { width:min(560px,100%); display:flex; align-items:center; gap:12px; padding:10px 14px;
+    border:1px solid var(--border); border-radius:11px; background:var(--control-bg); margin:0 auto; }
+  .auto-card.off { opacity:.85; }
+  .auto-ico { font-size:20px; }
+  .auto-info { flex:1; line-height:1.5; }
+  .auto-info .t { font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:7px; }
+  .auto-info .d { font-size:12px; color:var(--text-dim); }
+  .ok-dot { width:8px; height:8px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok); display:inline-block; }
+  .auto-action .btn { padding:6px 12px; font-size:12.5px; }
 </style>
 </head>
 <body>
@@ -112,6 +123,7 @@
   <div id="admin-main" style="display:none; width:100%; flex-direction:column; align-items:center; gap:18px;">
     <div class="page-head">
       <h1>管理后台 <span class="tag">门户</span></h1>
+      <div id="auto-row"></div>
       <div class="btn-row" style="justify-content:center;">
         <button class="btn" id="btn-pwd">🔑 修改密码</button>
         <button class="btn" id="btn-logout">退出登录</button>
