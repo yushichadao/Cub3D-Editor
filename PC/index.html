@@ -725,10 +725,9 @@
 
   /* 加载层（缓冲页）：保留原三方块图案，扩展状态/错误/重试/版本提示 */
   /* 加载层 z-index 需高于 tos-gate(100000)/terms-modal(100020) 等所有遮罩，首访时先展示加载页，__bootDone 隐藏后才露出 TOS 门禁 */
-  html, body { background:#0c0e16; }
   .loader {
     position: fixed; inset:0; z-index: 200000; display:flex; align-items:center; justify-content:center;
-    background: #0c0e16; transition: opacity .5s, visibility 0s .5s;
+    background: var(--bg-deep); transition: opacity .5s, visibility 0s .5s;
   }
   .loader.hidden { opacity:0; pointer-events:none; visibility:hidden; }
   /* 统一内列：所有元素约束在同一宽度内，左右对齐、节奏一致 */

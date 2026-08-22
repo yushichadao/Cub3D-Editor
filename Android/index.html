@@ -13038,7 +13038,11 @@ window.addEventListener('beforeunload', markClosed);
     var pub = (doc && Array.isArray(doc.versions) ? doc.versions : []).filter(function(v){ return v.status === 'published'; });
     if (!pub.length) return null;
     var sorted = pub.slice().sort(function(a, b){ return cmp(a.version, b.version); });
-    var targets = sorted.filter(function(x){ return cmp(x.version, cur) > 0; });
+    // 只选「高于当前版本且当前平台（platform）有可用安装包」的版本；
+    // 避免全局最新版本（如 PC 专属的 1.2.0）因无本平台包而误报「包不存在」
+    var targets = sorted.filter(function(x){
+      return cmp(x.version, cur) > 0 && x.assets && x.assets[platform] && x.assets[platform].length;
+    });
     if (!targets.length) return null;
     var target = targets[targets.length - 1];
     var force = targets.some(function(x){ return x.type === 'force'; });
