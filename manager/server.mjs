@@ -10,9 +10,9 @@ import { createPackerRouter } from './packerRouter.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');          // 仓库根（含 downloads/）
-// 下载目录：服务器部署时用环境变量 CUB3D_DOWNLOADS 显式指定（例如
-// /www/wwwroot/139.196.104.56/downloads，主站 /www/wwwroot/cub3d-editor.cn/downloads 同一逻辑）；
-// 未指定则默认取仓库根下 downloads/（与本目录并列，仓库内联布局无需额外配置）。
+// 下载目录：服务器部署时必须用环境变量 CUB3D_DOWNLOADS 显式指定为
+// 服务器真实路径（例如 /www/wwwroot/139.196.104.56/downloads）；
+// 未指定则默认取仓库根下 downloads/（仅本地开发/仓库内联布局用，生产勿用此默认）。
 const DOWNLOADS = path.resolve(process.env.CUB3D_DOWNLOADS || path.join(ROOT, 'downloads'));
 const PUBLIC = path.join(__dirname, 'public');        // 管理器前端静态目录
 const DOC_FILE = path.join(DOWNLOADS, 'update-doc.json');

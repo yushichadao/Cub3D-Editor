@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updatedAt": "2026-08-22T17:30:22+08:00",
+  "updatedAt": "2026-08-22T13:27:39.518Z",
   "versions": [
     {
       "version": "1.2.1",
@@ -20,7 +20,15 @@
         ]
       },
       "assets": {
-        "pc": [],
+        "pc": [
+          {
+            "name": "Cub3D-Editor-Setup-1.2.0-x64.exe",
+            "size": 100763176,
+            "srcs": [
+              "cn"
+            ]
+          }
+        ],
         "android": [
           {
             "name": "Cub3D-Editor-release-1.2.1-universal.apk",
@@ -62,6 +70,13 @@
           {
             "name": "Cub3D-Editor-release-1.2.0-universal.apk",
             "kind": "APK"
+          },
+          {
+            "name": "Cub3D-Editor-release-1.2.1-universal.apk",
+            "size": 4302180,
+            "srcs": [
+              "cn"
+            ]
           }
         ]
       }
