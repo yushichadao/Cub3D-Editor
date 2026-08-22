@@ -13060,13 +13060,12 @@ window.addEventListener('beforeunload', markClosed);
       return function(){
         return fetchDoc(h.api + (i < 2 ? ('?current=' + encodeURIComponent(cv)) : '')).then(function(j){
           var doc = (j && j.doc) ? j.doc : j;
+          // doc 本身无效（结构异常/为空）→ 视为当前源不可用，链到下一个源
+          if (!doc || !Array.isArray(doc.versions) || !doc.versions.length) throw new Error('bad doc');
           var res = resolveDoc(doc, cv, PLATFORM);
-          if (!res && j && j.update) {
-            res = { target: j.update, force: j.update.type === 'force', pkg: null, notes: (j.update.notes && (j.update.notes.all || [])) || [], date: j.update.date || '' };
-          }
-          if (res) res.src = i; // 0=国内主站 1=备用IP 2=GitHub
-          if (!res) throw new Error('latest');
-          return res;
+          if (res) { res.src = i; return res; }   // 0=国内主站 1=备用IP 2=GitHub
+          // resolveDoc 已按平台过滤：返回 null 表示「本平台已是最新」，不再误用不分平台的 j.update
+          return { target: null, force: false, pkg: null, notes: [], date: '', latest: true, src: i };
         });
       };
     });
@@ -13078,8 +13077,8 @@ window.addEventListener('beforeunload', markClosed);
     if (!res) { UPDATE_STATE = { cur: cur, remote: cur, force: false, notes: [], online: true, latest: true, src: -1 }; }
     else {
       UPDATE_STATE = {
-        cur: cur, remote: res.target.version, force: !!res.force,
-        notes: res.notes || [], online: !!res.pkg, latest: false, src: res.src, date: res.date || ''
+        cur: cur, remote: res.latest ? cur : res.target.version, force: !!res.force,
+        notes: res.notes || [], online: !!res.pkg, latest: !!res.latest, src: res.src, date: res.date || ''
       };
     }
     return UPDATE_STATE;
