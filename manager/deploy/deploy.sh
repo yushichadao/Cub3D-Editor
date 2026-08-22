@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 # ===== Cub3D 更新管理器 · 一键部署（Ubuntu + nginx）=====
-# 用法（在服务器上，仓库已 clone 到 /var/www/cub3d）：
-#   cd /var/www/cub3d/manager/deploy
+# 用法（在服务器上，文件已上传到 /www/wwwroot/139.196.104.56）：
+#   cd /www/wwwroot/139.196.104.56/manager/deploy
 #   sudo bash deploy.sh
 #
 # 脚本做：装 Node 依赖 → 校验环境变量 → 建下载目录 → 注册 systemd → 配 nginx → 起服务
 set -euo pipefail
 
-ROOT=/var/www/cub3d
+ROOT=/www/wwwroot/139.196.104.56
 MGR=$ROOT/manager
 DEPLOY=$MGR/deploy
 ENVFILE=/etc/cub3d-manager.env
-DLDIR=/var/www/cub3d/downloads
+DLDIR=/www/wwwroot/139.196.104.56/downloads
 
 echo "==> [1/6] 安装 manager 依赖"
 cd "$MGR"
@@ -39,7 +39,7 @@ echo "==> [3/6] 准备下载目录 / 打包输出目录并迁移数据"
 mkdir -p "$DLDIR"
 # 打包分发系统的本地输出目录（release/）；优先用 .env 里的 CUB3D_RELEASE_OUT
 REL=$(grep '^CUB3D_RELEASE_OUT=' "$ENVFILE" | tail -1 | cut -d= -f2-)
-RELDIR="${REL:-/var/www/cub3d/release}"
+RELDIR="${REL:-/www/wwwroot/139.196.104.56/release}"
 mkdir -p "$RELDIR"
 # 若本地仓库 downloads/ 有安装包，迁移进生产目录（首次部署；之后以生产目录为准）
 if [ "$(ls -A "$MGR/../downloads" 2>/dev/null)" ] && [ "$MGR/../downloads" != "$DLDIR" ]; then
@@ -69,11 +69,11 @@ echo "==> [6/6] 启动服务"
 systemctl restart cub3d-manager
 sleep 2
 if systemctl is-active --quiet cub3d-manager; then
-  echo "✅ 部署完成。管理后台： http://139.196.104.56/manager/  或  http://cub3d-editor.cn/"
-  echo "   更新话术系统：    http://cub3d-editor.cn/            （或 /manager/）"
-  echo "   打包分发系统：    http://cub3d-editor.cn/packer/     （或 /manager/packer/）"
-  echo "   更新探测：        http://cub3d-editor.cn/api/update?current=1.2.1"
-  echo "   安装包下载：      http://cub3d-editor.cn/downloads/"
+  echo "✅ 部署完成。管理后台： http://139.196.104.56/"
+  echo "   更新话术系统：    http://139.196.104.56/"
+  echo "   打包分发系统：    http://139.196.104.56/packer/"
+  echo "   更新探测：        http://139.196.104.56/api/update?current=1.2.1"
+  echo "   安装包下载：      http://139.196.104.56/downloads/"
   echo ""
   echo "⚠ 打包分发系统构建环境自检："
   echo "   - Android APK：需服务器预装 JDK17 + Android SDK + Gradle，并在 Android/ 下 npm install"

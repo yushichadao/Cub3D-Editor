@@ -4,11 +4,11 @@
 # 打包分发系统是否已上线、管理令牌是否已改。
 #
 # 用法：
-#   sudo bash verify-server.sh                # 默认检查 /var/www/cub3d
-#   sudo bash verify-server.sh /srv/cub3d     # 自定义仓库根
+#   sudo bash verify-server.sh                                  # 默认检查 /www/wwwroot/139.196.104.56
+#   sudo bash verify-server.sh /www/wwwroot/139.196.104.56      # 自定义仓库根
 set -uo pipefail
 
-ROOT="${1:-/var/www/cub3d}"
+ROOT="${1:-/www/wwwroot/139.196.104.56}"
 MGR="$ROOT/manager"
 ENVFILE=/etc/cub3d-manager.env
 ok=0; bad=0
