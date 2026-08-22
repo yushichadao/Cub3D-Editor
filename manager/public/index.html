@@ -23,7 +23,7 @@
   }
   * { scrollbar-width: none; -ms-overflow-style: none; }
   *::-webkit-scrollbar { display: none; }
-  .page-head { text-align:center; max-width: 980px; }
+  .page-head { text-align:center; max-width: 980px; display:flex; flex-direction:column; align-items:center; gap:12px; }
   .page-head h1 { font-size: 19px; font-weight: 700; letter-spacing: .5px; }
   .tag { display:inline-block; font-size:11px; padding:3px 9px; border-radius:999px; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); border:1px solid var(--border); margin:0 3px; }
   .tag.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
@@ -91,8 +91,9 @@
   .pwd-wrap { position:relative; }
 
   /* ===== 自动登录状态卡片（门户主界面顶部） ===== */
-  .auto-card { width:min(560px,100%); display:flex; align-items:center; gap:12px; padding:10px 14px;
-    border:1px solid var(--border); border-radius:11px; background:var(--control-bg); margin:0 auto; }
+  #auto-row { width:min(560px,100%); }
+  .auto-card { width:100%; display:flex; align-items:center; gap:12px; padding:10px 14px;
+    border:1px solid var(--border); border-radius:11px; background:var(--control-bg); }
   .auto-card.off { opacity:.85; }
   .auto-ico { font-size:20px; }
   .auto-info { flex:1; line-height:1.5; }

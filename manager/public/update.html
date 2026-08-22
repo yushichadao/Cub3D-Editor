@@ -219,7 +219,13 @@
   .ver-ops { display:flex; gap:6px; margin-top:10px; }
 
   /* 操作日志面板 */
-  .task-list { display:flex; flex-direction:column; gap:10px; }
+  .task-list { display:flex; flex-direction:column; gap:10px; max-height:360px; overflow-y:auto; padding-right:4px; }
+  .task-pagebar { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .task-pagebar .pg { min-width:30px; padding:5px 9px; font-size:12.5px; border-radius:7px; border:1px solid var(--border);
+    background:var(--control-bg); color:var(--text); cursor:pointer; }
+  .task-pagebar .pg:hover { background:var(--control-bg-hover); }
+  .task-pagebar .pg.cur { background: color-mix(in srgb, var(--accent) 20%, transparent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); color:#fff; }
+  .task-pagebar .pg[disabled] { opacity:.35; cursor:not-allowed; }
   .task-empty { font-size:13px; color:var(--text-dim); padding:16px 4px; text-align:center; }
   .task-item { border:1px solid var(--border); border-radius:10px; padding:12px 14px; background: var(--bg-panel); }
   .task-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
@@ -636,10 +642,15 @@
   });
 
   /* ============ 数据状态（后端 /api/state） ============ */
-  let state = { doc: { versions: [] }, files: [] };
+  let state = { doc: { versions: [] }, files: [], latest: null };
   function loadState(){
     return api('api/state').then(function(r){
-      if (r.body && r.body.ok) state = r.body;
+      if (r.body && r.body.ok) {
+        state.doc = r.body.doc || { versions: [] };
+        state.files = r.body.files || [];
+        state.latest = r.body.latest || null;
+        state.update = r.body.update || null;
+      }
       render();
     }).catch(function(){ render(); });
   }
@@ -1195,6 +1206,8 @@
     if (targets.indexOf('cn') >= 0) platforms.push({ key: 'cn', name: '国内站点', status: 'ok', msg: 'update-doc.json 已写入后端（国内 ' + cnN + ' 个包）' });
     return platforms;
   }
+  const TASK_PER_PAGE = 8;
+  let taskPage = 1;
   function renderTasks(){
     const wrap = $('task-list');
     if(!opLogs.length){
@@ -1202,8 +1215,13 @@
       $('task-hint').textContent = '发布时逐平台推送，部分平台可能中断或延迟，可单独重新发布';
       return;
     }
+    const totalPages = Math.max(1, Math.ceil(opLogs.length / TASK_PER_PAGE));
+    if (taskPage > totalPages) taskPage = totalPages;
+    if (taskPage < 1) taskPage = 1;
+    const start = (taskPage - 1) * TASK_PER_PAGE;
+    const pageItems = opLogs.slice(start, start + TASK_PER_PAGE);
     wrap.innerHTML = '';
-    opLogs.slice(0,20).forEach(t => {
+    pageItems.forEach(t => {
       const item = document.createElement('div');
       item.className = 'task-item';
       const isMulti = t.platforms && t.platforms.length;
@@ -1250,6 +1268,15 @@
     });
     const okCount = opLogs.filter(t => t.platforms ? t.platforms.every(p => p.status === 'ok') : !t.isErr).length;
     $('task-hint').textContent = '共 ' + opLogs.length + ' 个任务，全部成功 ' + okCount + ' 个（失败可能为令牌错误 / 后端未启动）';
+    // 分页栏（选中/删除均跨页清空，这里只控制显示窗口）
+    let pager = '<div class="task-pagebar">';
+    pager += '<span class="pg" data-pg="prev" ' + (taskPage <= 1 ? 'disabled' : '') + '>‹ 上一页</span>';
+    for (let p = 1; p <= totalPages; p++) {
+      pager += '<span class="pg ' + (p === taskPage ? 'cur' : '') + '" data-pg="' + p + '">' + p + '</span>';
+    }
+    pager += '<span class="pg" data-pg="next" ' + (taskPage >= totalPages ? 'disabled' : '') + '>下一页 ›</span>';
+    pager += '</div>';
+    wrap.insertAdjacentHTML('beforeend', pager);
   }
   /* ============ 工程风格确认弹窗（替换浏览器原生 confirm） ============ */
   let cfmOnYes = null;
@@ -1268,8 +1295,17 @@
   });
   $('cfm-no').addEventListener('click', hideConfirm);
 
-  // 任务面板：删除单个条目需确认
+  // 任务面板：删除单个条目 / 翻页
   $('task-list').addEventListener('click', function(e){
+    const pg = e.target.closest('[data-pg]');
+    if(pg && !pg.hasAttribute('disabled')){
+      const v = pg.dataset.pg;
+      if(v === 'prev') taskPage = Math.max(1, taskPage - 1);
+      else if(v === 'next') taskPage += 1;
+      else taskPage = parseInt(v, 10) || 1;
+      renderTasks();
+      return;
+    }
     const del = e.target.closest('[data-del]');
     if(del){
       const id = del.dataset.del;
