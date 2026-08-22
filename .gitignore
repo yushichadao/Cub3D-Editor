@@ -58,6 +58,14 @@ keystore.properties
 
 # ===== 管理器运行时私有数据（国内服务器推送口令等，绝不入库）=====
 manager/data/
+packer/data/
+# 管理器运行日志（含临时验证端口日志 server.3099.log 等）
+manager/server*.log
+manager/server*.err.log
+
+# ===== 打包分发系统本地产物（release/ 为打包输出，不入库）=====
+release/
+**/release/
 
 # ===== 临时构建目录 / 诊断脚本（排查用，不入库）=====
 dist_build/

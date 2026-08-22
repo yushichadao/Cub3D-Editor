@@ -5,6 +5,8 @@ import fsp from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import os from 'os';
+import crypto from 'node:crypto';
+import { createPackerRouter } from './packerRouter.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');          // 仓库根（含 downloads/）
@@ -104,8 +106,69 @@ async function syncMeta(doc){
   return meta;
 }
 
+// ---------- 百度翻译（更新话术多语言化）----------
+// 凭证：环境变量 BAIDU_APPID / BAIDU_KEY；缺省用工程内置值。
+// 百度翻译目标码：日语 jp（非 ja）、韩语 kor、西语 spa、法语 fra、阿语 ara、繁中 cht、英 en。
+const BAIDU_APPID = process.env.BAIDU_APPID || '20260822002670936';
+const BAIDU_KEY   = process.env.BAIDU_KEY   || 'p8LWRjAJOzEDrA9NIddh';
+const BAIDU_TO = { en:'en', ja:'jp', ko:'kor', ru:'ru', es:'spa', fr:'fra', ar:'ara', 'zh-TW':'cht' };
+
+async function baiduTranslate(text, to){
+  const from = 'zh';
+  const salt = String(Math.floor(Math.random() * 1e9));
+  const sign = crypto.createHash('md5').update(BAIDU_APPID + text + salt + BAIDU_KEY, 'utf8').digest('hex');
+  const url = 'https://fanyi-api.baidu.com/api/trans/vip/translate'
+    + '?q=' + encodeURIComponent(text)
+    + '&from=' + from + '&to=' + to
+    + '&appid=' + encodeURIComponent(BAIDU_APPID)
+    + '&salt=' + salt + '&sign=' + sign;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.error_code) throw new Error('百度翻译 ' + data.error_code + ': ' + data.error_msg);
+  if (!Array.isArray(data.trans_result) || !data.trans_result.length) throw new Error('百度翻译返回空');
+  return data.trans_result.map(r => r.dst).join('');
+}
+// 把“中文源数组”翻译为多语言分桶：{ zh-CN:[...], en:[...], ja:[...], ... }
+async function langBuckets(zhItems){
+  const out = { 'zh-CN': zhItems.slice() };
+  await Promise.all(Object.entries(BAIDU_TO).map(async ([lang, to]) => {
+    const arr = [];
+    for (const it of zhItems){
+      try { arr.push(await baiduTranslate(it, to)); }
+      catch (e) { console.error('  翻译 ' + lang + ' 失败：' + e.message + '，回退中文'); arr.push(it); }
+    }
+    out[lang] = arr;
+  }));
+  return out;
+}
+// 把前端提交的自然语言 notes（{ pc:[...], android:[...] } 数组）转为多语言分桶结构；
+// 若已是分桶（某平台值是对象）则原样保留，保证向后兼容。
+async function translateNotes(raw){
+  if (!raw || typeof raw !== 'object') return { all: [] };
+  const result = {};
+  for (const [platform, val] of Object.entries(raw)){
+    if (Array.isArray(val)) {
+      result[platform] = await langBuckets(val);   // 自然语言数组 → 多语言分桶
+    } else if (val && typeof val === 'object') {
+      result[platform] = val;                       // 已是分桶，原样保留
+    }
+  }
+  return result;
+}
+
 // ---------- Express ----------
 const app = express();
+// 跨域：客户端（Electron app://、Web 同源/跨域、GitHub Pages 回退源）拉取公开接口需 CORS。
+// 公开只读接口（/api/update、/api/state、/api/gh-releases、/downloads）允许跨域；
+// 写接口仍须 X-Admin-Token 鉴权。
+const CORS_ALLOW = (process.env.CORS_ALLOW || '*');
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', CORS_ALLOW);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,X-Admin-Token');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json({ limit: '2mb' }));
 
 // 管理鉴权：非 GET 请求需带 X-Admin-Token，与当前有效令牌匹配
@@ -209,6 +272,13 @@ app.get(BASE + '/api/update', async (req, res) => {
 // 下载重定向：/downloads/<file> 直连
 app.use(BASE + '/downloads', express.static(DOWNLOADS, { dotfiles: 'deny', fallthrough: true }));
 
+// ---------- 打包分发系统（下辖子模块，与更新话术系统共享登录态与 downloads/ 数据） ----------
+const GH_REPO = process.env.GH_REPO || 'yushichadao/Cub3D-Editor';
+const GH_TOKEN = process.env.GH_TOKEN || '';
+app.use(BASE + '/packer/', createPackerRouter({
+  ROOT, DOWNLOADS, GH_REPO, GH_TOKEN, loadDoc, saveDoc, syncMeta, adminAuth, currentToken,
+}));
+
 // ---------- 管理接口（写操作，需鉴权） ----------
 // 同版本增选合并：新旧 assets 合并。key = 平台::文件名（来源不同视作不同包，但同文件名的 srcs 并集）
 function mergeAssets(oldA, newA){
@@ -244,6 +314,9 @@ app.post(BASE + '/api/publish', adminAuth, async (req, res) => {
     if (!ver) return res.status(400).json({ ok: false, error: '缺少 version' });
     const doc = await loadDoc();
     let rec = doc.versions.find(v => v.version === ver);
+    // 自然语言 notes（{ pc:[中文...], android:[中文...] }）经百度翻译转多语言分桶；
+    // 若已是分桶结构（值为对象）则原样保留。翻译失败自动回退中文。
+    const notes = await translateNotes(b.notes);
     const newRec = {
       version: ver,
       date: b.date || nowDate(),
@@ -251,7 +324,7 @@ app.post(BASE + '/api/publish', adminAuth, async (req, res) => {
       type: b.type === 'force' ? 'force' : 'optional',
       status: b.status === 'stopped' ? 'stopped' : 'published',
       targets: Array.isArray(b.targets) && b.targets.length ? b.targets : ['github', 'cn'],
-      notes: b.notes && typeof b.notes === 'object' ? b.notes : { all: [] },
+      notes,
       assets: b.assets && typeof b.assets === 'object' ? b.assets : { pc: [], android: [] }
     };
     if (rec) {
@@ -330,6 +403,22 @@ app.post(BASE + '/api/delete-file', adminAuth, async (req, res) => {
     res.json({ ok: true, name });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
+
+// 打包分发下辖页面（与更新话术系统在同一个管理站点下，共享登录态）
+// 需在静态托管之前注册，避免被 express.static 对 /packer 目录请求重定向导致循环。
+if (fs.existsSync(path.join(PUBLIC, 'packer.html'))) {
+  // 直接渲染，不再做尾斜杠重定向，避免与 app.use('/packer', router) 的目录重定向形成循环
+  app.get(BASE + '/packer', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.sendFile(path.join(PUBLIC, 'packer.html'));
+  });
+  app.get(BASE + '/packer/', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.sendFile(path.join(PUBLIC, 'packer.html'));
+  });
+}
 
 // 管理器前端静态托管（no-cache：确保刷新即拿到最新版，避免缓存旧逻辑）
 if (fs.existsSync(path.join(PUBLIC, 'index.html'))) {

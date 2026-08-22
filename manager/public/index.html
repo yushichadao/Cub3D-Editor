@@ -51,6 +51,12 @@
   .field select::-webkit-inner-spin-button { filter: invert(1); }
   .field select option { background: var(--bg-panel-solid); color: var(--text); }
   .field textarea { resize: vertical; min-height:96px; line-height:1.6; }
+  /* 未选中对应端安装包 → 文案框灰度禁用（禁止输入） */
+  .field textarea:disabled {
+    opacity: .45; cursor: not-allowed; color: var(--text-dim);
+    background: rgba(255,255,255,0.02); border-style: dashed;
+  }
+  .field label.is-off { color: var(--text-dim); opacity: .65; }
   .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
   /* 发布日期：原生 date 透明覆盖在显示层之上，日历图标改用白色 SVG */
   .date-wrap { position: relative; }
@@ -163,6 +169,8 @@
   .pk-src.cn { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
   .pk-src.gh { background: color-mix(in srgb, var(--accent-2) 14%, transparent); color: var(--accent-2); border:1px solid color-mix(in srgb, var(--accent-2) 35%, transparent); }
   .pkg-card .pk-name { font-size:12px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  a.pkg-card { text-decoration:none; display:block; }
+  a.pkg-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
   .pkg-card .pk-file { font-size:11px; color:var(--text); word-break:break-all; line-height:1.5; margin-top:6px; font-family: ui-monospace, Menlo, Consolas, monospace; }
   .pkg-card .pk-size { font-size:11px; color:var(--text-dim); margin-top:4px; }
 
@@ -193,6 +201,9 @@
   .plat-badge { flex:0 0 auto; font-size:11px; padding:4px 10px; border-radius:999px; font-weight:700; letter-spacing:.03em; margin-top:2px; }
   .plat-badge.cn { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
   .plat-badge.gh { background: color-mix(in srgb, var(--accent-2) 18%, transparent); color: var(--accent-2); }
+  /* 按平台分区徽章：PC（蓝）/ Android（绿） */
+  .plat-badge.pc { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+  .plat-badge.android { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
   .plat-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
   .plat-notes { font-size:12.5px; color:var(--text-dim); line-height:1.7; }
   .plat-none { font-size:11px; color:var(--text-dim); opacity:.8; }
@@ -315,6 +326,23 @@
       <div class="btn-row" id="auto-row" style="justify-content:center; gap:8px;"></div>
     </div>
 
+    <!-- 站点导航：管理站点下辖的两个系统 -->
+    <div class="panel">
+      <div class="panel-head"><h2>🧭 站点导航</h2><span class="hint">管理站点下辖系统（共享同一登录态）</span></div>
+      <div class="panel-body">
+        <div class="pkg-cards"><div class="pkg-cards-row">
+          <a class="pkg-card sel" href="./" style="flex:0 0 240px;">
+            <div class="pk"><span class="pk-badge cn">境内</span><span class="pk-name">更新话术发布系统</span></div>
+            <div class="pk-file">发布更新话术、管理版本与安装包、境内外分发</div>
+          </a>
+          <a class="pkg-card" href="./packer/" style="flex:0 0 240px;">
+            <div class="pk"><span class="pk-badge android">打包</span><span class="pk-name">本地打包 · 在线分发</span></div>
+            <div class="pk-file">统一版本号、本地构建安装包、境内外分发（打通本页）</div>
+          </a>
+        </div></div>
+      </div>
+    </div>
+
     <!-- 卡片式新增发布 -->
     <div class="panel">
       <div class="panel-head">
@@ -367,11 +395,11 @@
         </div>
         <div class="form-grid" style="margin-top:14px;">
           <div class="field">
-            <label>更新内容 — PC（自然语言，每行一条）</label>
+            <label id="lbl-notes-pc">更新内容 — PC（自然语言，每行一条）</label>
             <textarea id="f-notes-pc" placeholder="新增：...&#10;修复：...&#10;优化：..."></textarea>
           </div>
           <div class="field">
-            <label>更新内容 — Android（自然语言，每行一条）</label>
+            <label id="lbl-notes-and">更新内容 — Android（自然语言，每行一条）</label>
             <textarea id="f-notes-and" placeholder="新增：...&#10;修复：...&#10;优化：..."></textarea>
           </div>
         </div>
@@ -695,7 +723,7 @@
     const cards = allFilesForVer(ver).slice(0, 12)
       .map(x => ({ platform: platformOf(x.name), name: x.name, kind: kindOf(x.name), size: x.size, ver: x.ver, src: x.src }));
     renderPkgCards(cards);
-    if(!cards.length) toast('所选渠道（' + channelLabel() + '）未找到 v' + ver + ' 的安装包');
+    if(!cards.length) toast('所选渠道（' + channelLabel() + '）未找到 ' + ver + ' 的安装包');
   }
   function collectShown(){
     const ver = $('f-ver').value.trim();
@@ -724,6 +752,43 @@
     });
     return map;
   }
+  // 当前勾选涉及的平台集合（pc / android）
+  function selectedPlatforms(){
+    const pl = new Set();
+    selectedPkgs.forEach(function(k){ const p = k.split('::'); if (p[1]) pl.add(p[1]); });
+    return pl;
+  }
+  // 根据勾选的平台，启用/禁用对应端文案框；未勾选的端灰度禁用、禁止输入
+  function syncNotesEnabled(){
+    const plats = selectedPlatforms();
+    const map = {
+      pc:      { ta:'f-notes-pc',  lbl:'lbl-notes-pc',  name:'PC' },
+      android: { ta:'f-notes-and', lbl:'lbl-notes-and', name:'Android' }
+    };
+    Object.keys(map).forEach(function(pl){
+      const cfg = map[pl];
+      const ta = $(cfg.ta), lbl = $(cfg.lbl);
+      const on = plats.has(pl);
+      ta.disabled = !on;
+      ta.classList.toggle('dim', !on);
+      lbl.classList.toggle('is-off', !on);
+      const base = lbl.dataset.base || lbl.textContent;
+      lbl.dataset.base = base;
+      lbl.textContent = on ? base : base + '（未选 ' + cfg.name + ' 安装包，已禁用输入）';
+    });
+  }
+  // 从分桶结构取中文源（兼容旧式纯数组）：bucket 为数组则返回原数组，为对象则取 zh-CN/all
+  function zhOf(bucket){ if (!bucket) return []; return Array.isArray(bucket) ? bucket : (bucket.zh-CN || bucket.all || []); }
+  // 填入/自动确认版本号后，从 update-doc 搜索该版本已有文案并复现到两个文案框（供开发者修改）
+  function fillExistingNotes(ver){
+    const v = (state.doc && state.doc.versions || []).find(function(x){ return x.version === ver; });
+    if (!v || !v.notes) return false;
+    const n = v.notes;
+    const joinNotes = function(arr){ return (arr || []).join('\n'); };
+    $('f-notes-pc').value  = joinNotes(n.all ? zhOf(n.all) : zhOf(n.pc));
+    $('f-notes-and').value = joinNotes(n.all ? zhOf(n.all) : zhOf(n.android));
+    return true;
+  }
   // 安装包卡片：一张卡 = 一个来源的安装包（key = src::平台::文件名，来源不同不合并）
   function pkgCardHtml(c, pub){
     const key = c.src + '::' + c.platform + '::' + c.name;
@@ -733,7 +798,7 @@
     div.innerHTML =
       '<div class="pk"><span class="pk-badge ' + c.platform + '">' + (c.platform==='pc'?'PC':'Android') + '</span>' +
       '<span class="pk-src ' + c.src + '">' + (c.src==='gh' ? 'GitHub' : '境内') + '</span>' +
-      '<span class="pk-name">' + (c.kind ? c.kind + ' · ' : '') + 'v' + c.ver + '</span>' +
+      '<span class="pk-name">' + (c.kind ? c.kind + ' · ' : '') + c.ver + '</span>' +
       (isPub ? '<span class="pk-tag pub">已发布</span>' : '') + '</div>' +
       '<div class="pk-file">' + c.name + '</div>' +
       '<div class="pk-size">' + fmtSize(c.size) + '</div>';
@@ -741,6 +806,7 @@
       div.addEventListener('click', () => {
         if(selectedPkgs.has(key)) selectedPkgs.delete(key); else selectedPkgs.add(key);
         div.classList.toggle('sel');
+        syncNotesEnabled();
       });
     }
     return div;
@@ -750,6 +816,7 @@
     const area = $('pkg-cards'); area.innerHTML = '';
     if(!cards.length){
       area.innerHTML = '<div style="font-size:12px; color:var(--text-dim); grid-column:1/-1;">所选渠道（' + channelLabel() + '）未找到安装包，请检查版本号、服务器 downloads/ 目录或 GitHub Releases。</div>';
+      syncNotesEnabled();
       return;
     }
     // 已发布集合（按「来源+包名」判定）
@@ -782,6 +849,7 @@
       g.appendChild(row);
       area.appendChild(g);
     }
+    syncNotesEnabled();
   }
   function pkgGroupTitle(label, n){
     const h = document.createElement('div');
@@ -813,7 +881,10 @@
     const ver = $('f-ver').value.trim();
     if(!ver){ toast('请先填写版本号'); return; }
     ensureDefaultDate();
-    loadGhReleases().then(function(){ detectPkgs(ver); });
+    loadGhReleases().then(function(){
+      detectPkgs(ver);
+      if (fillExistingNotes(ver)) toast('已载入 ' + ver + ' 已有更新文案，可在此基础上修改');
+    });
   });
   $('btn-detect-latest').addEventListener('click', function(){
     loadGhReleases().then(function(){
@@ -822,7 +893,8 @@
       $('f-ver').value = lv;
       ensureDefaultDate();
       detectPkgs(lv);
-      toast('已自动检测线上最新版本 v' + lv);
+      if (fillExistingNotes(lv)) toast('已载入 ' + lv + ' 已有更新文案，可在此基础上修改');
+      else toast('已自动检测线上最新版本 ' + lv);
     });
   });
   $('btn-select-all').addEventListener('click', function(){
@@ -896,10 +968,13 @@
     if(!ver || !/^\d+\.\d+\.\d+$/.test(ver)){ toast('请填写合法版本号（格式 X.X.X）'); return; }
     if(selectedPkgs.size === 0){ toast('请先勾选要发布的安装包卡片'); return; }
     const announced = $('f-date').value || nowLocalDate();
-    const notesPc = parseNotes($('f-notes-pc').value);
-    const notesAnd = parseNotes($('f-notes-and').value);
+    // 仅采纳「已勾选对应端安装包」的文案；未选中的端（文案框灰度禁用）不写入该版本 notes
+    const selPlats = selectedPlatforms();
+    const notesPc = selPlats.has('pc') ? parseNotes($('f-notes-pc').value) : [];
+    const notesAnd = selPlats.has('android') ? parseNotes($('f-notes-and').value) : [];
     const same = JSON.stringify(notesPc) === JSON.stringify(notesAnd) && notesPc.length > 0;
     const notes = same ? { all: notesPc } : { pc: notesPc, android: notesAnd };
+    if (!notesPc.length && !notesAnd.length){ toast('请填写所选安装包对应的更新内容'); return; }
     // 发布渠道 = 勾选卡片的来源（来源不同 = 不同安装包，可单独/合并发布）：
     //   勾选境内卡 → srcs 含 cn；勾选 GitHub 卡 → srcs 含 gh；同名不同来源都勾 → srcs 并集
     const assets = { pc: [], android: [] };
@@ -935,14 +1010,16 @@
       assets: assets
     };
     $('btn-add').disabled = true;
+    $('btn-add').textContent = '🌐 翻译中…';
     api('api/publish', { method: 'POST', body: body }).then(function(r){
       $('btn-add').disabled = false;
+      $('btn-add').textContent = '🚀 批量发布所选包';
       if (r.body && r.body.ok) {
         // 用户感知的包数 = 勾选的卡片数（来源不同 = 不同安装包，即使同名也各算一个）
         const pcN = assets.pc.length, andN = assets.android.length;
         const srcSummary = summarySrcs(assets);   // 例：国内+GitHub
         // toast 按平台统计（PC/Android 各自包数）；任务面板按渠道统计（国内/境外各自包数）
-        toast('已发布 v' + ver + '：PC ' + pcN + ' 个 / Android ' + andN + ' 个 → ' + srcSummary);
+        toast('已发布 ' + ver + '：PC ' + pcN + ' 个 / Android ' + andN + ' 个 → ' + srcSummary);
         addLog(ver, '发布', '', false, makePubTask(ver, targets, assets, srcSummary));
         // 发布成功：清空勾选；state 刷新后再重渲染卡片（刚发布的包将灰显）
         selectedPkgs.clear();
@@ -954,6 +1031,7 @@
       }
     }).catch(function(e){
       $('btn-add').disabled = false;
+      $('btn-add').textContent = '🚀 批量发布所选包';
       toast('发布失败：无法连接后端');
       addLog(ver, '发布', '无法连接后端', true);
     });
@@ -981,17 +1059,19 @@
         ? '<span class="st force">强制更新</span>'
         : '<span class="st pub">可选更新</span>';
       const notesAll = !!(v.notes && v.notes.all);   // PC/Android 更新内容一致（存为 all）
-      const pcNotes = (v.notes && (v.notes.all || v.notes.pc)) || [];
-      const andNotes = (v.notes && (v.notes.all || v.notes.android)) || [];
-      // 按国内/国际分区：双源包在两个区都显示（来源已确认，不重复标注徽章）
-      function srcBlock(title, cls, filter){
-        const pkgs = [];
-        (v.assets && v.assets.pc || []).forEach(p => pkgs.push({ p: p, pl: 'pc' }));
-        (v.assets && v.assets.android || []).forEach(p => pkgs.push({ p: p, pl: 'android' }));
-        const list = pkgs.filter(filter);
-        const notesHtml = fmtNotes(cls === 'cn' ? pcNotes : andNotes);
-        const pkgsHtml = list.length
-          ? list.map(x => '<span class="pkg-chip ' + x.pl + '">' + (x.p.name || x.p) + '</span>').join(' ')
+      const pcNotes = zhOf(v.notes && (v.notes.all || v.notes.pc));
+      const andNotes = zhOf(v.notes && (v.notes.all || v.notes.android));
+      // 按平台（PC / Android）分区：notes 各自取 pcNotes / andNotes，
+      // 安装包按所属平台归区。渠道（境内 / GitHub）仅作为包的来源标签，不再当作分区。
+      function platBlock(title, cls, pl){
+        const pkgs = (v.assets && v.assets[pl] || []);
+        const notesHtml = fmtNotes(pl === 'pc' ? pcNotes : andNotes);
+        const pkgsHtml = pkgs.length
+          ? pkgs.map(x => {
+              const srcs = (x.srcs || []).map(s => s === 'gh' ? 'GitHub' : '境内');
+              const srcTag = srcs.length ? ' <span class="pkg-chip-src">' + srcs.join('/') + '</span>' : '';
+              return '<span class="pkg-chip ' + pl + '">' + srcTag + (x.name || x) + '</span>';
+            }).join(' ')
           : '<span class="plat-none">未发布安装包</span>';
         return '<div class="plat-row">' +
           '<span class="plat-badge ' + cls + '">' + title + '</span>' +
@@ -1001,23 +1081,16 @@
           '</div>' +
         '</div>';
       }
-      // srcs 兼容：旧数据无 srcs 时按 targets 推断；无 target 视为 cn
-      function hasSrc(p, s){
-        if (p.srcs && p.srcs.length) return p.srcs.indexOf(s) >= 0;
-        const t = v.targets || ['cn'];
-        if (s === 'cn') return t.indexOf('cn') >= 0;
-        return t.indexOf('github') >= 0;
-      }
       const platformsHtml =
         '<div class="ver-platforms">' +
-          srcBlock('国内站点', 'cn', x => hasSrc(x.p, 'cn')) +
-          srcBlock('国际 GitHub', 'gh', x => hasSrc(x.p, 'gh')) +
+          platBlock('PC', 'pc', 'pc') +
+          platBlock('Android', 'android', 'android') +
         '</div>';
       const item = document.createElement('div');
       item.className = 'ver-item';
       item.innerHTML =
         '<div class="ver-top">' +
-          '<span class="ver">v' + v.version + '</span>' +
+          '<span class="ver">' + v.version + '</span>' +
           typeHtml +
           '<span class="st ' + (st?'pub':'stop') + '">' + (st?'发布中':'已停止') + '</span>' +
           '<span class="tag">' + targetLabel(v.targets || 'both') + '</span>' +
@@ -1044,7 +1117,7 @@
     if(!btn) return;
     const op = btn.dataset.op, ver = btn.dataset.v;
     if(op === 'del'){
-      showConfirm('删除发布版本', '确认删除 v' + ver + '？删除后客户端将不再检测到该版本，且云端保留的安装包文件不会被移除。', '删除', '取消', function(){
+      showConfirm('删除发布版本', '确认删除 ' + ver + '？删除后客户端将不再检测到该版本，且云端保留的安装包文件不会被移除。', '删除', '取消', function(){
         doVerOp(op, ver, btn);
       });
       return;
@@ -1059,7 +1132,7 @@
     if (btn) btn.disabled = true;
     api(path, { method: 'POST', body: body }).then(function(r){
       if (r.body && r.body.ok) {
-        toast('v' + ver + ' 已' + label);
+        toast(ver + ' 已' + label);
         addLog(ver, label, '后端写入成功', false);
         loadState();
       } else {
@@ -1151,13 +1224,13 @@
         }).join('');
         inner =
           '<div class="task-head">' +
-            '<span class="task-ver">v' + t.version + '</span>' +
+            '<span class="task-ver">' + t.version + '</span>' +
             '<span class="task-when">' + String(t.at).replace('T',' ').slice(0,16) + '</span>' +
             '<span class="task-targets">' + chips + '</span>' +
             '<button class="op-btn del" data-del="' + t.id + '" title="删除此条记录">✕</button>' +
           '</div>' +
           '<div class="task-body">' + rows + '</div>' +
-          (allOk ? '<div style="margin-top:6px; font-size:11.5px; color:var(--ok);">✅ 全部平台推送成功，客户端可检测到 v' + t.version + '</div>' : '');
+          (allOk ? '<div style="margin-top:6px; font-size:11.5px; color:var(--ok);">✅ 全部平台推送成功，客户端可检测到 ' + t.version + '</div>' : '');
       } else {
         // 停止/重新发布/删除：单条日志。操作文案统一为「XX操作」，删除类严重操作用红色标签
         const stCls = t.isErr ? 'fail' : 'ok';
@@ -1166,7 +1239,7 @@
         const opTag = '<span class="tag ' + (opIsDanger ? 'op-danger' : (t.isErr ? 'warn' : 'ok')) + '">' + opTxt + '</span>';
         inner =
           '<div class="task-head">' +
-            '<span class="task-ver">v' + t.version + '</span>' +
+            '<span class="task-ver">' + t.version + '</span>' +
             '<span class="task-when">' + String(t.at).replace('T',' ').slice(0,16) + '</span>' +
             '<span class="task-targets">' + opTag + '</span>' +
             '<button class="op-btn del" data-del="' + t.id + '" title="删除此条记录">✕</button>' +
@@ -1203,7 +1276,7 @@
       const id = del.dataset.del;
       const t = opLogs.find(x => x.id === id);
       if (!t) return;
-      showConfirm('删除任务记录', '确定删除 v' + t.version + ' 的' + t.op + '操作记录？此操作仅移除本设备记录，不影响后端数据。', '删除', '取消', function(){
+      showConfirm('删除任务记录', '确定删除 ' + t.version + ' 的' + t.op + '操作记录？此操作仅移除本设备记录，不影响后端数据。', '删除', '取消', function(){
         opLogs = opLogs.filter(x => x.id !== id);
         storeSet(LS_LOGS, opLogs);
         renderTasks();
@@ -1295,6 +1368,7 @@
   }
   tryAutoLogin();
   renderTasks();
+  syncNotesEnabled();
 })();
 </script>
 </body>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>管理后台 · Cub3D Editor 打包分发</title>
+<style>
+  /* ============ 样式与「更新话术发布系统」(manager/public/index.html) 完全一致 ============ */
+  :root {
+    --bg-deep: #0c0e16; --bg-panel: rgba(20, 22, 34, 0.82); --bg-panel-solid: #14161f;
+    --accent: #6ee7ff; --accent-2: #c084fc; --accent-3: #fb7185; --warn: #fbbf24; --ok: #34d399;
+    --text: #e8e8f0; --text-dim: #8b8ba0; --border: rgba(110, 231, 255, 0.18);
+    --radius: 14px; --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+    --input-bg: rgba(255,255,255,0.05); --control-bg: rgba(255,255,255,0.05);
+    --control-bg-hover: rgba(255,255,255,0.08); --section-border: rgba(255,255,255,0.05);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    min-height: 100%; background: var(--bg-deep); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased; padding: 24px 14px 40px; display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  *::-webkit-scrollbar { display: none; }
+  .page-head { text-align:center; max-width: 980px; }
+  .page-head h1 { font-size: 19px; font-weight: 700; letter-spacing: .5px; }
+  .tag { display:inline-block; font-size:11px; padding:3px 9px; border-radius:999px; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); border:1px solid var(--border); margin:0 3px; }
+  .tag.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+  .tag.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+  .tag.stop { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); }
+  .tag.op-danger { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); border-color: color-mix(in srgb, var(--accent-3) 45%, transparent); font-weight:600; }
+
+  .panel { width: min(980px, 100%); border:1px solid var(--border); border-radius: var(--radius); background: var(--bg-panel-solid); overflow:hidden; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .panel-head h2 { font-size:14px; font-weight:600; }
+  .panel-head .hint { font-size:12px; color:var(--text-dim); }
+  .panel-body { padding: 14px 16px; }
+
+  .field { display:flex; flex-direction:column; gap:4px; }
+  .field label { font-size:12px; color:var(--text-dim); }
+  .field input, .field select, .field textarea {
+    background: var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text);
+    padding:8px 10px; font-size:13px; font-family:inherit; outline:none; color-scheme: dark;
+  }
+  .field select, .field input[type="date"] { color: var(--text); }
+  .field select::-webkit-calendar-picker-indicator,
+  .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(1.4); cursor: pointer; }
+  .field select::-webkit-inner-spin-button { filter: invert(1); }
+  .field select option { background: var(--bg-panel-solid); color: var(--text); }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+  .field .mini { font-size:11px; color:var(--text-dim); opacity:.75; }
+  .form-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:10px; }
+
+  .btn-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .btn {
+    padding:8px 14px; border-radius:9px; font-size:13px; cursor:pointer; font-family:inherit;
+    background: var(--control-bg); color:var(--text); border:1px solid var(--border); transition: all .18s;
+  }
+  .btn:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); border-color: var(--accent); }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; font-weight:600; border-color:transparent; }
+  .btn.danger { border-color: color-mix(in srgb, var(--accent-3) 55%, transparent); color: var(--accent-3); font-weight:600; }
+  .btn.danger:hover { background: color-mix(in srgb, var(--accent-3) 14%, transparent); border-color: var(--accent-3); }
+  .btn.small { padding:4px 10px; font-size:12px; }
+  .btn-sep { width:1px; height:20px; background: rgba(255,255,255,.10); }
+  a.btn { text-decoration:none; display:inline-flex; align-items:center; }
+
+  /* ===== 登录门（与更新话术系统一致） ===== */
+  #login-gate {
+    position: fixed; inset:0; z-index: 99999; display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(900px 480px at 50% -10%, rgba(192,132,252,.14), transparent 60%), var(--bg-deep);
+  }
+  .login-card {
+    width: min(360px, 90vw); background: var(--bg-panel-solid); border:1px solid var(--border); border-radius: 18px;
+    padding: 30px 28px 26px; box-shadow: var(--shadow); display:flex; flex-direction:column; align-items:center; gap: 12px;
+  }
+  .login-logo { width:46px; height:46px; border-radius:12px; background: conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent)); animation: spin 9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .login-card h2 { font-size: 16px; font-weight:700; letter-spacing:.5px; }
+  .login-card input {
+    width: 100%; background: var(--input-bg); border:1px solid var(--border); border-radius:9px; color: var(--text);
+    padding: 10px 12px; font-size: 13.5px; outline:none; font-family: inherit;
+  }
+  .login-card input:focus { border-color: var(--accent); }
+  .pwd-wrap { position: relative; width: 100%; }
+  .pwd-wrap > input[type="password"],
+  .pwd-wrap > input[type="text"].is-pwd { padding-right: 38px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z'/><circle cx='12' cy='12' r='3'/></svg>");
+    background-repeat: no-repeat; background-position: right 11px center; background-size: 17px 17px;
+  }
+  .pwd-wrap > input[type="text"].is-pwd {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>");
+  }
+  input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear,
+  input[type="password"]::-webkit-credentials-auto-fill-button, input[type="password"]::-webkit-textfield-decoration-container { display: none !important; }
+  .login-card .btn { width:100%; padding:10px; font-size:14px; }
+  .lg-remember { display:flex; align-items:center; gap:8px; width:100%; font-size:12px; color:var(--text-dim); cursor:pointer; user-select:none; }
+  .lg-remember input { width:auto; accent-color: var(--accent); cursor:pointer; }
+  .lg-remember:hover { color: var(--text); }
+  .lg-msg { font-size:12px; color:var(--accent-3); min-height:16px; text-align:center; }
+
+  /* ===== 卡片式包类型选择（仿安装包卡片） ===== */
+  .pkg-cards { display:flex; flex-direction:column; gap:4px; margin-top:12px; }
+  .pkg-cards-row { display:flex; flex-wrap:wrap; gap:10px; overflow-x:auto; padding-bottom:2px; }
+  .pkg-card {
+    border:1px solid var(--border); border-radius: 12px; padding: 10px 12px; cursor:pointer; position:relative;
+    background: var(--control-bg); transition: all .18s; user-select:none;
+    flex:0 0 220px;
+  }
+  .pkg-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  .pkg-card.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .pkg-card.sel::after { content:'✓'; position:absolute; top:8px; right:10px; color:var(--accent); font-weight:700; }
+  .pkg-card .pk { display:flex; align-items:center; gap:6px; }
+  .pk-badge { font-size:10px; padding:2px 7px; border-radius:999px; font-weight:600; }
+  .pk-badge.pc { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+  .pk-badge.android { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+  .pkg-card .pk-name { font-size:12px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pkg-card .pk-file { font-size:11px; color:var(--text); word-break:break-all; line-height:1.5; margin-top:6px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .pkg-card .pk-size { font-size:11px; color:var(--text-dim); margin-top:4px; }
+
+  /* 分发渠道卡片（境内 / 境外） */
+  .chan-cards { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+  .chan-card {
+    flex:1 1 260px; border:1px solid var(--border); border-radius:12px; padding:12px 14px; cursor:pointer;
+    background: var(--control-bg); transition:all .18s; user-select:none; position:relative;
+  }
+  .chan-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  .chan-card.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .chan-card.sel::after { content:'✓'; position:absolute; top:10px; right:12px; color:var(--accent); font-weight:700; }
+  .chan-card .ch-title { font-size:13px; font-weight:600; }
+  .chan-card .ch-sub { font-size:11px; color:var(--text-dim); margin-top:5px; line-height:1.6; word-break:break-all; }
+  .chan-card .ch-badge { font-size:10px; padding:2px 7px; border-radius:999px; margin-right:6px; }
+  .chan-card .ch-badge.cn { background: color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); }
+  .chan-card .ch-badge.gh { background: color-mix(in srgb, var(--accent-2) 14%, transparent); color:var(--accent-2); }
+  /* 未配置令牌的境外卡：灰度禁用，禁止勾选 */
+  .chan-card.disabled { opacity:.45; cursor:not-allowed; pointer-events:none; filter:grayscale(1); }
+
+  /* ===== 进度 / 任务面板（仿发布操作日志） ===== */
+  .task-list { display:flex; flex-direction:column; gap:10px; }
+  .task-empty { font-size:13px; color:var(--text-dim); padding:16px 4px; text-align:center; }
+  .task-item { border:1px solid var(--border); border-radius:10px; padding:12px 14px; background: var(--bg-panel); }
+  .task-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .task-ver { font-size:14px; font-weight:700; color: var(--accent); }
+  .task-when { font-size:11.5px; color:var(--text-dim); }
+  .task-targets { margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; }
+  .task-body { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+  .task-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; background: var(--bg-deep); }
+  .task-row .pl { font-size:12.5px; font-weight:600; width:96px; flex-shrink:0; }
+  .task-row .pl.api { color: var(--accent); }
+  .task-row .stbar { flex:1; font-size:11.5px; color: var(--text-dim); }
+  .task-row .stbar.ok { color: var(--ok); }
+  .task-row .stbar.fail { color: var(--accent-3); }
+  .task-row .stbar.info { color: var(--accent); }
+  .task-row .spin { width:12px; height:12px; border-radius:50%; border:2px solid rgba(255,255,255,.15); border-top-color: var(--accent); animation: tspin .7s linear infinite; display:inline-block; margin-right:8px; }
+  @keyframes tspin { to { transform: rotate(360deg); } }
+
+  pre { background: var(--bg-deep); border:1px solid var(--border); border-radius:10px; padding:12px; overflow:auto;
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size:11.5px; color:var(--text-dim); line-height:1.6; max-height:260px; }
+  .foot { font-size:11.5px; color:var(--text-dim); opacity:.7; }
+  .toast {
+    position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-16px); padding:9px 18px; z-index:9999;
+    background: var(--bg-panel-solid); border:1px solid var(--accent); border-radius:26px; color:var(--text); font-size:12.5px;
+    opacity:0; pointer-events:none; transition:all .28s; max-width:86vw; text-align:center;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* 浮窗（修改密码 / 通用确认，与更新话术系统一致） */
+  .pwd-modal {
+    position: fixed; inset:0; z-index: 90000; display:none; align-items:center; justify-content:center;
+    background: rgba(6,8,16,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .pwd-modal.show { display:flex; }
+  .pwd-card { width: min(360px, 90vw); background: var(--bg-panel-solid); border:1px solid var(--border); border-radius:18px; padding:24px 22px; display:flex; flex-direction:column; gap:10px; box-shadow: var(--shadow); }
+  .pwd-card h3 { font-size:15px; }
+  .pwd-card input { background: var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:9px 11px; font-size:13px; outline:none; font-family:inherit; }
+  .pwd-card input:focus { border-color: var(--accent); }
+  .pwd-msg { font-size:12px; color:var(--accent-3); min-height:16px; }
+  .pwd-row { display:flex; gap:8px; justify-content:flex-end; }
+  .pwd-row .btn { padding:8px 16px; }
+
+  .st { display:inline-block; font-size:10.5px; padding:2px 7px; border-radius:999px; }
+  .st.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+  .st.fail { background: color-mix(in srgb, var(--accent-3) 16%, transparent); color: var(--accent-3); }
+  .st.run { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+  .st.idle { background: color-mix(in srgb, var(--text-dim) 16%, transparent); color: var(--text-dim); }
+</style>
+</head>
+<body>
+  <!-- ===== 登录门 ===== -->
+  <div id="login-gate" data-protect="login-gate">
+    <div class="login-card">
+      <div class="login-logo"></div>
+      <h2>管理后台</h2>
+      <input type="text" id="lg-user" placeholder="账号" autocomplete="username" />
+      <input type="password" id="lg-pass" placeholder="密码" autocomplete="current-password" />
+      <label class="lg-remember">
+        <input type="checkbox" id="lg-remember" checked />
+        <span>本设备记住我（自动登录）</span>
+      </label>
+      <button class="btn primary" id="lg-btn">登 录</button>
+      <p class="lg-msg" id="lg-msg"></p>
+    </div>
+  </div>
+
+  <!-- 主界面 -->
+  <div id="admin-main" style="display:none; width:100%; flex-direction:column; align-items:center; gap:18px;">
+    <div class="page-head">
+      <h1>本地打包 · 在线分发 <span class="tag">管理站点 · 下辖</span></h1>
+      <div class="btn-row" style="justify-content:center;">
+        <a class="btn" href="./" title="返回管理主页">← 管理主页</a>
+        <a class="btn" href="../" title="更新话术发布系统">📢 更新话术系统</a>
+        <button class="btn" id="btn-pwd">🔑 修改密码</button>
+        <button class="btn" id="btn-logout">退出登录</button>
+      </div>
+    </div>
+
+    <!-- ① 统一版本号 -->
+    <div class="panel">
+      <div class="panel-head"><h2>① 统一版本号</h2><span class="hint">一次性写入根 / PC / Android 三个 package.json，双端一致</span></div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>统一版本号（X.X.X）</label>
+            <input type="text" id="f-ver" placeholder="例如 1.3.0" />
+            <span class="mini" id="ver-cur">当前线上版本：—</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="btn-apply-ver">💾 写入统一版本号</button>
+          <button class="btn" id="btn-pull-ver">⬇ 拉取当前版本号</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 包类型选择 -->
+    <div class="panel">
+      <div class="panel-head"><h2>② 选择包类型（自由多选）</h2><span class="hint">勾选要打的安装包类型，未勾选的类型不会构建</span></div>
+      <div class="panel-body">
+        <div class="pkg-cards">
+          <div class="pkg-cards-row" id="type-cards"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 本地存储地址 -->
+    <div class="panel">
+      <div class="panel-head"><h2>③ 本地存储地址</h2><span class="hint">打包产物存放的本地目录（默认 release/&lt;版本&gt;/）</span></div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="field" style="grid-column:1/-1;">
+            <label>本地输出目录</label>
+            <input type="text" id="f-outdir" placeholder="留空 = 仓库 release/<版本>/" />
+            <span class="mini" id="outdir-default"></span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="btn-browse">📁 选择目录…</button>
+          <input type="file" id="f-dir" webkitdirectory directory multiple style="display:none" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 境内外分发 -->
+    <div class="panel">
+      <div class="panel-head"><h2>④ 境内外分发</h2><span class="hint">打包完成后可分发：境内 downloads/ 目录 + 境外 GitHub Releases</span></div>
+      <div class="panel-body">
+        <div class="chan-cards" id="dist-cards"></div>
+        <div class="field" style="margin-top:12px;">
+          <label>GitHub Release 标签（境外分发用）</label>
+          <input type="text" id="f-tag" placeholder="例如 v1.3.0（留空自动用 v+版本号）" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 主操作 -->
+    <div class="panel">
+      <div class="panel-head"><h2>🚀 开始打包与分发</h2><span class="hint" id="main-hint">流程：统一版本号 → 本地打包 →（可选）境内外分发</span></div>
+      <div class="panel-body">
+        <div class="btn-row">
+          <button class="btn primary" id="btn-pack">① ② ③ 打包（本地构建）</button>
+          <button class="btn" id="btn-dist" disabled>④ 分发到所选渠道</button>
+          <button class="btn" id="btn-refresh-state">🔄 刷新状态</button>
+        </div>
+        <div id="pack-area" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <!-- 打包 / 分发 任务面板 -->
+    <div class="panel">
+      <div class="panel-head"><h2>任务进度 · 打包 + 分发状态</h2><span class="hint" id="task-hint">打包逐类型进行，分发逐渠道进行</span></div>
+      <div class="panel-body">
+        <div id="task-list" class="task-list">
+          <div class="task-empty" id="task-empty">暂无任务。点击「打包」后会显示各包构建进度，完成后可点「分发」。</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 修改密码浮窗 -->
+  <div class="pwd-modal" id="pwd-modal">
+    <div class="pwd-card">
+      <h3>修改密码</h3>
+      <input type="password" id="pm-old" placeholder="当前密码" autocomplete="current-password" />
+      <input type="password" id="pm-new" placeholder="新密码" autocomplete="new-password" />
+      <input type="password" id="pm-new2" placeholder="再次输入新密码" autocomplete="new-password" />
+      <p class="pwd-msg" id="pm-msg"></p>
+      <div class="pwd-row">
+        <button class="btn primary" id="pm-save">确认修改</button>
+        <button class="btn" id="pm-cancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通用确认弹窗 -->
+  <div class="pwd-modal" id="cfm-modal">
+    <div class="pwd-card">
+      <h3 id="cfm-title">确认</h3>
+      <p id="cfm-msg" style="font-size:13px; color:var(--text-dim); line-height:1.8; margin:2px 0 4px;"></p>
+      <p class="pwd-msg" id="cfm-err"></p>
+      <div class="pwd-row" style="justify-content:flex-end;">
+        <button class="btn primary" id="cfm-yes">确定</button>
+        <button class="btn" id="cfm-no">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+
+  // 密码框自绘眼睛（与更新话术系统一致）
+  (function initPwdEyes(){
+    document.querySelectorAll('input[type="password"]').forEach(function(inp){
+      if(inp.dataset.pwdEye) return;
+      inp.dataset.pwdEye = '1';
+      const wrap = document.createElement('div');
+      wrap.className = 'pwd-wrap';
+      inp.parentNode.insertBefore(wrap, inp);
+      wrap.appendChild(inp);
+    });
+    document.addEventListener('click', function(e){
+      const inp = e.target;
+      if(!(inp instanceof HTMLInputElement)) return;
+      if(inp.type !== 'password' && !(inp.type === 'text' && inp.classList.contains('is-pwd'))) return;
+      const rect = inp.getBoundingClientRect();
+      const fromRight = rect.right - e.clientX;
+      if(fromRight <= 40){
+        e.preventDefault();
+        if(inp.type === 'password'){ inp.type = 'text'; inp.classList.add('is-pwd'); inp.setAttribute('autocomplete','off'); }
+        else { inp.type = 'password'; inp.classList.remove('is-pwd'); }
+      }
+    });
+  })();
+
+  /* ===== 鉴权（与更新话术系统完全一致） ===== */
+  const LS_TOKEN = 'cub3d_packer_token';
+  const SS_TOKEN = 'cub3d_packer_sess';
+  const LS_AUTO = 'cub3d_packer_auto';
+  let token = '';
+  function storeGet(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } }
+  function storeSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  function remStore(k){ try { localStorage.removeItem(k); } catch(e){} }
+  function autoLoginOn(){ try { return localStorage.getItem(LS_AUTO) === '1'; } catch(e){ return false; } }
+  function setLogged(v){ try { if(v) localStorage.setItem(LS_AUTO,'1'); else localStorage.removeItem(LS_AUTO); } catch(e){} }
+
+  function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove('show'),1900); }
+
+  function api(path, opts){
+    // 打包分发下辖页面：打包相关接口走 /packer 前缀；登录/密码/鉴权走管理站点根，
+    // 与更新话术系统共享同一登录态（同一账号与密码）。
+    if (/^api\/(version|pack|distribute)$/.test(path)) path = '/packer/' + path;
+    else if (/^packer\//.test(path)) { /* 已是前缀写法 */ }
+    opts = opts || {};
+    opts.headers = opts.headers || {};
+    if (token) opts.headers['X-Admin-Token'] = token;
+    if (opts.body && typeof opts.body === 'object') { opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(opts.body); }
+    return fetch(path, opts).then(r => r.json().then(j => ({status:r.status, body:j})).then(function(res){
+      if (res.status === 401 && res.body && res.body.error === 'unauthorized') {
+        remStore(LS_TOKEN); remStore(LS_AUTO); try { sessionStorage.removeItem(SS_TOKEN); } catch(e){}
+        token=''; leaveAdmin(); try { toast('登录已失效，请重新登录'); } catch(e){}
+      }
+      return res;
+    }));
+  }
+
+  function enterAdmin(){ $('login-gate').style.display='none'; $('admin-main').style.display='flex'; loadState(); }
+  function leaveAdmin(){ $('admin-main').style.display='none'; $('login-gate').style.display='flex'; $('lg-remember').checked=false; }
+
+  function doLogin(){
+    const user=$('lg-user').value.trim(), pass=$('lg-pass').value, remember=$('lg-remember').checked;
+    if(!user||!pass){ $('lg-msg').textContent='请输入账号与密码'; return; }
+    api('api/login',{method:'POST',body:{user,pass}}).then(function(r){
+      if(r.body&&r.body.ok){ token=pass; try{sessionStorage.setItem(SS_TOKEN,token);}catch(e){}
+        if(remember){ setLogged(true); try{localStorage.setItem(LS_TOKEN,token);}catch(e){} }
+        enterAdmin(); $('lg-pass').value=''; $('lg-msg').textContent='';
+        toast(remember?'登录成功，已在本设备记住':'登录成功，本次会话已记住');
+      } else { $('lg-msg').textContent=(r.body&&r.body.error)||'账号或密码错误'; $('lg-pass').value=''; }
+    }).catch(function(){ $('lg-msg').textContent='无法连接后端服务'; });
+  }
+  $('lg-btn').addEventListener('click', doLogin);
+  $('lg-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  $('btn-logout').addEventListener('click', function(){ setLogged(false); remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; leaveAdmin(); toast('已退出登录'); });
+
+  /* ===== 数据状态 ===== */
+  let state = { version:'', pkgTypes:[], ghEnabled:false, downloadsDir:'', pack:null };
+  let selectedTypes = new Set();
+  let selectedTargets = new Set();   // 'cn' / 'github'
+  let pollTimer = null;
+
+  function loadState(){
+    return api('api/state').then(function(r){
+      if(r.body&&r.body.ok){ state=Object.assign(state, r.body); renderStatic(); renderPack(state.pack); }
+    }).catch(function(){ renderStatic(); });
+  }
+
+  function renderStatic(){
+    $('ver-cur').textContent = '当前一致版本号：' + (state.version || '—');
+    if(!$('f-ver').value) $('f-ver').value = state.version || '';
+    $('outdir-default').textContent = state.version ? ('默认：release/' + state.version + '/') : '默认：release/<版本>/';
+    if(!$('f-outdir').value) $('f-outdir').value='';
+
+    // 包类型卡片
+    const tc = $('type-cards'); tc.innerHTML='';
+    (state.pkgTypes||[]).forEach(function(t){
+      const div=document.createElement('div');
+      div.className='pkg-card'+(selectedTypes.has(t.key)?' sel':'');
+      div.innerHTML='<div class="pk"><span class="pk-badge '+t.platform+'">'+(t.platform==='pc'?'PC':'Android')+'</span>'+
+        '<span class="pk-name">'+t.kind+'</span></div><div class="pk-file">'+t.label+'</div>';
+      div.addEventListener('click', function(){
+        if(selectedTypes.has(t.key)) selectedTypes.delete(t.key); else selectedTypes.add(t.key);
+        div.classList.toggle('sel'); syncDistEnabled();
+      });
+      tc.appendChild(div);
+    });
+
+    // 分发渠道卡片：境内恒可选；境外未配 GH_TOKEN 时灰度禁用
+    const dc=$('dist-cards'); dc.innerHTML='';
+    const cn={key:'cn',title:'境内站点 downloads/',label:'复制到境内 downloads/ 目录',badge:'cn',sub:state.downloadsDir||'（同更新话术系统目录）'};
+    const gh={key:'github',title:'境外 GitHub Releases',label:state.ghEnabled?'上传到 GitHub Releases（'+ (state.GH_REPO||'') +'）':'未配置 GH_TOKEN，无法境外分发',badge:'gh',sub:state.ghEnabled?'配置有效':'服务端缺少 GH_TOKEN 环境变量',disabled:!state.ghEnabled};
+    [cn,gh].forEach(function(c){
+      const div=document.createElement('div');
+      div.className='chan-card'+(selectedTargets.has(c.key)?' sel':'')+(c.disabled?' disabled':'');
+      div.innerHTML='<div class="ch-title"><span class="ch-badge '+c.badge+'">'+(c.badge==='cn'?'境内':'境外')+'</span>'+c.title+'</div>'+
+        '<div class="ch-sub">'+c.label+'</div>'+
+        (c.sub?'<div class="ch-sub">'+c.sub+'</div>':'');
+      if(!c.disabled){
+        div.addEventListener('click', function(){
+          if(selectedTargets.has(c.key)) selectedTargets.delete(c.key); else selectedTargets.add(c.key);
+          div.classList.toggle('sel'); syncDistEnabled();
+        });
+      }
+      dc.appendChild(div);
+    });
+    syncDistEnabled();
+  }
+
+  // 分发按钮：只有打包成功且有勾选渠道才启用；灰度逻辑与更新话术一致
+  function syncDistEnabled(){
+    const okSteps = (state.pack && state.pack.steps || []).filter(s=>s.status==='ok');
+    const can = okSteps.length>0 && selectedTargets.size>0 && !state.pack?.running;
+    $('btn-dist').disabled = !can;
+  }
+
+  /* ===== 统一版本号 ===== */
+  $('btn-apply-ver').addEventListener('click', function(){
+    const ver=$('f-ver').value.trim();
+    if(!/^\d+\.\d+\.\d+$/.test(ver)){ toast('请填写合法版本号（格式 X.X.X）'); return; }
+    api('api/version',{method:'POST',body:{version:ver}}).then(function(r){
+      if(r.body&&r.body.ok){ toast('已写入统一版本号 '+ver+'（更新 '+r.body.filesUpdated+' 个 package.json）'); state.version=ver; renderStatic(); }
+      else toast('写版本号失败：'+(r.body&&r.body.error||'未知错误'));
+    }).catch(function(){ toast('无法连接后端'); });
+  });
+  $('btn-pull-ver').addEventListener('click', function(){ loadState().then(function(){ toast('已拉取当前版本号 '+ (state.version||'—')); }); });
+
+  /* ===== 本地存储地址（目录选择） ===== */
+  $('btn-browse').addEventListener('click', function(){ $('f-dir').click(); });
+  $('f-dir').addEventListener('change', function(e){
+    // webkitdirectory 下 files[0] 的 webkitRelativePath 给出根目录名；用 path 近似本地目录
+    const files=e.target.files;
+    if(files&&files.length){
+      // 取第一个文件的目录前缀（浏览器仅能给相对路径，本地服务可识别绝对路径）
+      const rel=files[0].webkitRelativePath||files[0].name;
+      const idx=rel.indexOf('/');
+      const rootName = idx>0?rel.slice(0,idx):rel;
+      $('f-outdir').value=rootName;
+      toast('已选择目录：'+rootName+'（若需绝对路径可直接在输入框修改）');
+    }
+  });
+
+  /* ===== 打包 ===== */
+  $('btn-pack').addEventListener('click', function(){
+    const ver=$('f-ver').value.trim();
+    if(!/^\d+\.\d+\.\d+$/.test(ver)){ toast('请先填写合法版本号'); return; }
+    if(selectedTypes.size===0){ toast('请至少勾选一种包类型'); return; }
+    $('btn-pack').disabled=true;
+    api('api/pack',{method:'POST',body:{version:ver, types:[...selectedTypes], outDir:$('f-outdir').value.trim()}}).then(function(r){
+      if(r.body&&r.body.ok){ toast('打包任务已启动 → '+r.body.outDir); startPoll(); }
+      else { $('btn-pack').disabled=false; toast('打包启动失败：'+(r.body&&r.body.error||'未知错误')); }
+    }).catch(function(){ $('btn-pack').disabled=false; toast('无法连接后端'); });
+  });
+
+  /* ===== 分发 ===== */
+  $('btn-dist').addEventListener('click', function(){
+    if(selectedTargets.size===0){ toast('请至少勾选一个分发渠道'); return; }
+    const tag=$('f-tag').value.trim();
+    $('btn-dist').disabled=true;
+    api('api/distribute',{method:'POST',body:{targets:[...selectedTargets], tag:tag}}).then(function(r){
+      if(r.body&&r.body.ok){ toast('已发起分发任务'); startPoll(); }
+      else { $('btn-dist').disabled=false; toast('分发失败：'+(r.body&&r.body.error||'未知错误')); }
+    }).catch(function(){ $('btn-dist').disabled=false; toast('无法连接后端'); });
+  });
+
+  $('btn-refresh-state').addEventListener('click', function(){ loadState().then(function(){ toast('已刷新状态'); }); });
+
+  /* ===== 轮询打包/分发包状态 ===== */
+  function startPoll(){
+    if(pollTimer) clearInterval(pollTimer);
+    pollTimer=setInterval(function(){
+      api('api/state').then(function(r){
+        if(r.body&&r.body.ok){ state.pack=r.body.pack; renderPack(r.body.pack);
+          if(!r.body.pack || !r.body.pack.running){
+            // 分发是否仍在进行
+            const dist=r.body.pack&&r.body.pack.dist;
+            const distRunning = dist && ['cn','github'].some(k=>dist[k]&&dist[k].status==='running');
+            if(!distRunning){ clearInterval(pollTimer); pollTimer=null; $('btn-pack').disabled=false; syncDistEnabled(); }
+          }
+        }
+      });
+    }, 1500);
+  }
+
+  function fmtSize(n){
+    if(n==null) return '';
+    if(n>=1073741824) return (n/1073741824).toFixed(2)+' GB';
+    if(n>=1048576) return (n/1048576).toFixed(1)+' MB';
+    if(n>=1024) return (n/1024).toFixed(0)+' KB';
+    return n+' B';
+  }
+  function nowLocal(){
+    const d=new Date(); const p=x=>String(x).padStart(2,'0');
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+  }
+
+  function statusCls(s){ return s==='ok'?'ok':(s==='fail'?'fail':(s==='running'?'run':'idle')); }
+  function statusText(s){ return s==='ok'?'✓ 成功':(s==='fail'?'✗ 失败':(s==='running'?'构建中…':'等待中')); }
+
+  function renderPack(pack){
+    const wrap=$('pack-area');
+    if(!pack){ wrap.innerHTML=''; return; }
+    let html='<div class="task-item">';
+    html+='<div class="task-head"><span class="task-ver">'+pack.version+'</span>';
+    html+='<span class="task-when">开始 '+String(pack.startedAt||'').replace('T',' ').slice(0,19)+'</span>';
+    if(pack.running) html+='<span class="tag warn">打包中</span>'; else html+='<span class="tag ok">已完成</span>';
+    html+='<span class="task-targets"><span class="tag">输出：'+pack.outDir+'</span></span></div>';
+    html+='<div class="task-body">';
+    (pack.steps||[]).forEach(function(s){
+      const spin = s.status==='running'?'<span class="spin"></span>':'';
+      const stCls = statusCls(s.status);
+      const stTxt = stCls==='idle'?'' : (' · '+statusText(s.status));
+      html+='<div class="task-row"><span class="pl '+(s.platform==='pc'?'api':'')+'">'+s.label+'</span>'+
+        '<span class="stbar '+stCls+'">'+spin+(s.msg||statusText(s.status))+'</span></div>';
+    });
+    // 分发阶段
+    if(pack.dist){
+      ['cn','github'].forEach(function(k){
+        const d=pack.dist[k]; if(!d||d.status==='idle') return;
+        const name=k==='cn'?'境内 downloads/':'境外 GitHub';
+        const spin=d.status==='running'?'<span class="spin"></span>':'';
+        html+='<div class="task-row"><span class="pl '+(k==='cn'?'api':'')+'">分发·'+name+'</span>'+
+          '<span class="stbar '+statusCls(d.status)+'">'+spin+(d.msg||statusText(d.status))+'</span></div>';
+      });
+    }
+    html+='</div></div>';
+    wrap.innerHTML=html;
+    syncDistEnabled();
+  }
+
+  /* ===== 修改密码（与更新话术系统一致） ===== */
+  function openPwd(){ $('pm-old').value=''; $('pm-new').value=''; $('pm-new2').value=''; $('pm-msg').textContent=''; $('pwd-modal').classList.add('show'); }
+  function closePwd(){ $('pwd-modal').classList.remove('show'); }
+  $('btn-pwd').addEventListener('click', openPwd);
+  $('pm-cancel').addEventListener('click', closePwd);
+  $('pm-save').addEventListener('click', function(){
+    const old=$('pm-old').value, n1=$('pm-new').value, n2=$('pm-new2').value;
+    if(!old||!n1){ $('pm-msg').textContent='请输入当前密码与新密码'; return; }
+    if(n1.length<6){ $('pm-msg').textContent='新密码至少 6 位'; return; }
+    if(n1!==n2){ $('pm-msg').textContent='两次输入的新密码不一致'; return; }
+    $('pm-save').disabled=true;
+    api('api/passwd',{method:'POST',body:{old:old,next:n1}}).then(function(r){
+      $('pm-save').disabled=false;
+      if(r.body&&r.body.ok){ token=n1; if(autoLoginOn()) storeSet(LS_TOKEN,token); closePwd(); toast('密码已修改'); }
+      else $('pm-msg').textContent=(r.body&&r.body.error)||'修改失败';
+    }).catch(function(){ $('pm-save').disabled=false; $('pm-msg').textContent='无法连接后端'; });
+  });
+
+  /* ===== 确认弹窗 ===== */
+  let cfmOnYes=null;
+  function showConfirm(title,msg,yesLabel,noLabel,onYes){ $('cfm-title').textContent=title; $('cfm-msg').textContent=msg; $('cfm-err').textContent=''; $('cfm-yes').textContent=yesLabel||'确定'; $('cfm-no').textContent=noLabel||'取消'; cfmOnYes=onYes; $('cfm-modal').classList.add('show'); }
+  function hideConfirm(){ $('cfm-modal').classList.remove('show'); cfmOnYes=null; }
+  $('cfm-yes').addEventListener('click', function(){ const cb=cfmOnYes; hideConfirm(); if(cb) cb(); });
+  $('cfm-no').addEventListener('click', hideConfirm);
+
+  /* ===== 初始化（自动登录恢复，与更新话术系统一致） ===== */
+  function tryAutoLogin(){
+    let saved=null;
+    try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
+    if(!saved){ leaveAdmin(); return; }
+    token=saved; enterAdmin();
+    api('api/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; leaveAdmin(); } })
+      .catch(function(){});
+  }
+  // 预填默认版本号显示
+  $('ver-cur').textContent='当前一致版本号：加载中…';
+  tryAutoLogin();
+  loadState();
+})();
+</script>
+</body>
+</html>

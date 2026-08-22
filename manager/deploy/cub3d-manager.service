@@ -1,0 +1,24 @@
+[Unit]
+Description=Cub3D Editor 更新管理器 (manager backend)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/cub3d/manager
+# 生产环境变量集中管理，避免硬编码进仓库
+EnvironmentFile=/etc/cub3d-manager.env
+ExecStart=/usr/bin/node /var/www/cub3d/manager/server.mjs
+Restart=on-failure
+RestartSec=3
+# 含打包分发系统：构建 APK/EXE 时内存占用较高，放宽上限（按需调大；
+# 仅做更新话术发布、不跑打包时可调回 512M）
+MemoryMax=2G
+# 构建子进程可能跑较久，放宽看门狗
+TimeoutStartSec=0
+StandardOutput=append:/var/www/cub3d/manager/server.log
+StandardError=append:/var/www/cub3d/manager/server.err.log
+
+[Install]
+WantedBy=multi-user.target
