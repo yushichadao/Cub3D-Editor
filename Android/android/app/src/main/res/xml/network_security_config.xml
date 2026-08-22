@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<network-security-config>
-    <!-- 仅放行更新检测使用的境内备用 IP 明文源，其余流量仍强制 HTTPS -->
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="false">139.196.104.56</domain>
-    </domain-config>
-</network-security-config>

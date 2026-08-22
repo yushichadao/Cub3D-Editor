@@ -4,7 +4,7 @@ import os from 'os';
 import path from 'path';
 import cp from 'child_process';
 
-const targets = ['Web/index.html', 'PC/index.html', 'Android/index.html'];
+const targets = ['web/index.html', 'pc/index.html', 'android/index.html'];
 for (const f of targets) {
   const html = fs.readFileSync(f, 'utf8');
   const re = /<script[^>]*>([\s\S]*?)<\/script>/gi;

@@ -24,7 +24,7 @@
 ## 快速开始
 
 - **主页（宣传页）**：<https://cub3d-editor.cn/>（境内，国内直连推荐）或 <https://yushichadao.github.io/Cub3D-Editor/>（境外）—— 产品介绍、九语言切换、下载入口
-- **网页版编辑器（无需安装）**：<https://cub3d-editor.cn/Web/index.html>（境内）或 <https://yushichadao.github.io/Cub3D-Editor/Web/index.html>（境外）
+- **网页版编辑器（无需安装）**：<https://cub3d-editor.cn/web/index.html>（境内）或 <https://yushichadao.github.io/Cub3D-Editor/web/index.html>（境外）
 - **PC 版**：下载 `Cub3D-Editor-Setup-1.2.0-x64.exe`（安装版）或 `Cub3D-Editor-Portable-1.2.0-x64.exe`（便携版，免安装）
 - **Android 版**：允许"未知来源"后，安装 `Cub3D-Editor-release-1.2.0-universal.apk`
 

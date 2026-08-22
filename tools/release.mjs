@@ -21,8 +21,8 @@ import { fileURLToPath } from 'node:url';
 process.env.NODE_OPTIONS = [process.env.NODE_OPTIONS, '--use-system-ca'].filter(Boolean).join(' ');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'); // 脚本置于 tools/ 下，反推仓库根
-const PC_DIR = path.join(ROOT, 'PC');
-const AND_DIR = path.join(ROOT, 'Android');
+const PC_DIR = path.join(ROOT, 'pc');
+const AND_DIR = path.join(ROOT, 'android');
 const RELEASE_DIR = path.join(ROOT, 'release'); // 产物集中目录（不入库）
 const REPO = 'yushichadao/Cub3D-Editor';
 

@@ -25,9 +25,8 @@
 //   node tools/publish-updates.mjs 2.3.0 ... --notes-all "新增：一键全部相同内容"
 //
 // 百度翻译凭证（百度翻译开放平台 fanyi-api.baidu.com）：
-//   APP ID = 20260822002670936，密钥 = p8LWRjAJOzEDrA9NIddh
-//   注："51i7_da4m7qs95p2b5h9ghlcg" 是百度云控制台 admin 的 API key，并非翻译服务凭证。
-//   可用 --baidu-appid / --baidu-key 或环境变量 BAIDU_APPID / BAIDU_KEY 覆盖。
+//   凭证集中在仓库内 secrets/.env（BAIDU_APPID / BAIDU_KEY），真实值不入库；
+//   也可用 --baidu-appid / --baidu-key 或环境变量覆盖。代码内不再硬编码真实凭证。
 
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -35,14 +34,34 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 
+// 密钥集中（与 admin/server.mjs 同款轻量 loader）：统一从仓库内 secrets/.env 读取。
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT0 = path.resolve(__dirname, '..');
+(function loadSecretsEnv() {
+  const envPath = path.join(ROOT0, 'secrets', '.env');
+  if (!fs.existsSync(envPath)) return;
+  try {
+    for (const raw of fs.readFileSync(envPath, 'utf8').split('\n')) {
+      const line = raw.trim();
+      if (!line || line.startsWith('#')) continue;
+      const eq = line.indexOf('=');
+      if (eq < 0) continue;
+      const k = line.slice(0, eq).trim();
+      let v = line.slice(eq + 1).trim();
+      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+      if (!(k in process.env)) process.env[k] = v;
+    }
+  } catch {}
+})();
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DOC_PATH = path.join(ROOT, 'downloads', 'update-doc.json');
 const REPO = 'yushichadao/Cub3D-Editor';
 
 const args = process.argv.slice(2); // 提前声明，供下方 getArg / 百度密钥解析使用
 
-const BAIDU_APPID = getArg('--baidu-appid') || process.env.BAIDU_APPID || '20260822002670936';
-const BAIDU_KEY   = getArg('--baidu-key')   || process.env.BAIDU_KEY   || 'p8LWRjAJOzEDrA9NIddh';
+const BAIDU_APPID = getArg('--baidu-appid') || process.env.BAIDU_APPID || '';
+const BAIDU_KEY   = getArg('--baidu-key')   || process.env.BAIDU_KEY   || '';
 
 // 工程统一语言键（9 种）：zh-CN 为源/内置，其余 8 种由百度翻译生成
 // 注意：百度翻译目标码日语为 'jp'（非 ISO 的 'ja'），韩语 'kor'，西语 'spa'，法语 'fra'，阿语 'ara'，繁中 'cht'
@@ -50,6 +69,9 @@ const BAIDU_TO = { en:'en', ja:'jp', ko:'kor', ru:'ru', es:'spa', fr:'fra', ar:'
 const TARGET_LANGS = Object.keys(BAIDU_TO);
 
 async function baiduTranslate(text, to){
+  if (!BAIDU_APPID || !BAIDU_KEY) {
+    throw new Error('百度翻译未配置：请在 secrets/.env 设置 BAIDU_APPID / BAIDU_KEY（或使用 --baidu-appid/--baidu-key 参数）');
+  }
   const from = 'zh';
   const salt = String(Math.floor(Math.random() * 1e9));
   const sign = crypto.createHash('md5').update(BAIDU_APPID + text + salt + BAIDU_KEY, 'utf8').digest('hex');

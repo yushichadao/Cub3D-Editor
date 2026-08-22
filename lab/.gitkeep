@@ -1,0 +1,5 @@
+# lab/ — 实验隔离区
+
+所有复杂逻辑的独立论证 demo、localhost 多页论证、实验截图归档（lab/assets/）。
+**严禁**任何实验数据进入 web/ pc/ android/ admin/ 等产品面。
+论证通过后，可合入 shared/ 单一源；临时草稿进 lab/_tmp/（不入库）。

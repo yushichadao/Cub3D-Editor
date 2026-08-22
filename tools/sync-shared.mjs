@@ -1,10 +1,10 @@
 // 跨端共享资源“单一源”同步脚本
 // ------------------------------------------------------------
 // 把应跨端一致的文件集中在 shared/ 下，运行本脚本即可同步到各端部署目录：
-//   1) docs     <- shared/docs      -> Web/docs, PC/docs, Android/www/docs, Android/.../assets/public/docs
-//   2) infra    <- shared/infra     -> Web/, PC/, Android/  （LICENSE, server.js, server.ps1, vercel.json）
-//   3) scripts  <- shared/scripts   -> Web/scripts, PC/scripts, Android/scripts
-//   4) language <- shared/language  -> Web/language, PC/language, Android/language, Android 原生 assets（Android/www 由 build-www.mjs 生成）
+//   1) docs     <- shared/docs      -> web/docs, pc/docs, android/www/docs, android/.../assets/public/docs
+//   2) infra    <- shared/infra     -> web/, pc/, android/  （LICENSE, server.js, server.ps1, vercel.json）
+//   3) scripts  <- shared/scripts   -> web/scripts, pc/scripts, android/scripts
+//   4) language <- shared/language  -> web/language, pc/language, android/language, android 原生 assets（android/www 由 build-www.mjs 生成）
 //      新增语言只需把语言包放入 shared/language 并运行本脚本，即可同步到各端。
 // 平台专属文件（lang-override.js、index.html、各端 build-*.mjs、_genicon.mjs 等）不在此同步，保持各端独立。
 //
@@ -30,47 +30,47 @@ const MANUAL_FILES = [
   '使用说明书_ar.md',
 ];
 const DOCS_DESTS = [
-  path.join(ROOT, 'Web', 'docs'),
-  path.join(ROOT, 'PC', 'docs'),
-  path.join(ROOT, 'Android', 'www', 'docs'),
-  path.join(ROOT, 'Android', 'android', 'app', 'src', 'main', 'assets', 'public', 'docs'),
+  path.join(ROOT, 'web', 'docs'),
+  path.join(ROOT, 'pc', 'docs'),
+  path.join(ROOT, 'android', 'www', 'docs'),
+  path.join(ROOT, 'android', 'android', 'app', 'src', 'main', 'assets', 'public', 'docs'),
 ];
 
 // 2) 基础设施（三端逐字节一致）
 const INFRA_SRC = path.join(ROOT, 'shared', 'infra');
 const INFRA_FILES = ['LICENSE', 'server.js', 'server.ps1', 'vercel.json'];
 const INFRA_DESTS = [
-  path.join(ROOT, 'Web'),
-  path.join(ROOT, 'PC'),
-  path.join(ROOT, 'Android'),
+  path.join(ROOT, 'web'),
+  path.join(ROOT, 'pc'),
+  path.join(ROOT, 'android'),
 ];
 
 // 3) 公共脚本（三端逐字节一致）
 const SCRIPTS_SRC = path.join(ROOT, 'shared', 'scripts');
 const SCRIPTS_DESTS = [
-  path.join(ROOT, 'Web', 'scripts'),
-  path.join(ROOT, 'PC', 'scripts'),
-  path.join(ROOT, 'Android', 'scripts'),
+  path.join(ROOT, 'web', 'scripts'),
+  path.join(ROOT, 'pc', 'scripts'),
+  path.join(ROOT, 'android', 'scripts'),
 ];
 
 // 4) 语言包（三端逐字节一致）
 const LANG_SRC = path.join(ROOT, 'shared', 'language');
 const LANG_DESTS = [
-  path.join(ROOT, 'Web', 'language'),
-  path.join(ROOT, 'PC', 'language'),
-  path.join(ROOT, 'Android', 'language'),
-  path.join(ROOT, 'Android', 'android', 'app', 'src', 'main', 'assets', 'public', 'language'),
+  path.join(ROOT, 'web', 'language'),
+  path.join(ROOT, 'pc', 'language'),
+  path.join(ROOT, 'android', 'language'),
+  path.join(ROOT, 'android', 'android', 'app', 'src', 'main', 'assets', 'public', 'language'),
 ];
 
 // 5) Three.js 引擎（三端运行必需，逐字节一致）
-// Web/PC 以各自根目录直接提供服务，Android 除了根目录（开发预览回退），
+// web/pc 以各自根目录直接提供服务，android 除了根目录（开发预览回退），
 // 还要同步到原生 assets，避免 APK 打包后引擎缺失。
 const THREE_SRC = path.join(ROOT, 'shared', 'three');
 const THREE_DESTS = [
-  path.join(ROOT, 'Web', 'three'),
-  path.join(ROOT, 'PC', 'three'),
-  path.join(ROOT, 'Android', 'three'),
-  path.join(ROOT, 'Android', 'android', 'app', 'src', 'main', 'assets', 'public', 'three'),
+  path.join(ROOT, 'web', 'three'),
+  path.join(ROOT, 'pc', 'three'),
+  path.join(ROOT, 'android', 'three'),
+  path.join(ROOT, 'android', 'android', 'app', 'src', 'main', 'assets', 'public', 'three'),
 ];
 
 async function exists(p) {
@@ -104,7 +104,7 @@ async function syncFile(srcDir, file, destDirs) {
       await fs.copyFile(src, path.join(d, file));
       console.log(`[sync-shared] ${file}  ->  ${path.relative(ROOT, d)}`);
     } catch (e) {
-      // 单一目标端（如 Android）写入失败不应中断其他端（Web/PC）的同步，
+      // 单一目标端（如 android）写入失败不应中断其他端（web/pc）的同步，
       // 否则 predev 退出非 0 会导致 npm start 的 server 无法启动。
       console.error(`[sync-shared] 同步到 ${path.relative(ROOT, d)} 失败（已跳过，不影响其他端）：${e.message}`);
     }
@@ -149,6 +149,26 @@ async function main() {
   for (const f of INFRA_FILES) await syncFile(INFRA_SRC, f, INFRA_DESTS);
   console.log('[sync-shared] 基础设施同步完成。');
 
+  // 2.1) 主题单一源：先由 themes.mjs 生成 theme-data.js，再同步到三端根目录（T7）
+  try {
+    const { execSync } = await import('node:child_process');
+    execSync('node tools/gen-theme-data.mjs', { stdio: 'inherit', cwd: ROOT });
+    await syncFile(INFRA_SRC, 'theme-data.js', INFRA_DESTS);
+    console.log('[sync-shared] 主题数据同步完成。');
+  } catch (e) {
+    console.warn('[sync-shared] 主题数据生成/同步失败（不影响其他同步）：', e.message);
+  }
+
+  // 2.2) 更新源单一化：先由 update-sources.mjs 生成 update-sources.js，再同步到三端根目录（T11/A）
+  try {
+    const { execSync } = await import('node:child_process');
+    execSync('node tools/gen-update-sources.mjs', { stdio: 'inherit', cwd: ROOT });
+    await syncFile(INFRA_SRC, 'update-sources.js', INFRA_DESTS);
+    console.log('[sync-shared] 更新源数据同步完成。');
+  } catch (e) {
+    console.warn('[sync-shared] 更新源数据生成/同步失败（不影响其他同步）：', e.message);
+  }
+
   const scripts = (await fs.readdir(SCRIPTS_SRC)).filter((f) => f.endsWith('.mjs'));
   for (const f of scripts) await syncFile(SCRIPTS_SRC, f, SCRIPTS_DESTS);
   console.log('[sync-shared] 共享脚本同步完成。');
@@ -175,6 +195,14 @@ async function main() {
   //    页面卡在加载页「界面语言已就绪」之后（engine 进度永不触发）。
   await syncDir(THREE_SRC, THREE_DESTS);
   console.log('[sync-shared] Three.js 引擎同步完成。');
+
+  // 7) 键名一致性校验（T6 / 改进 E）：缺/多键告警，不阻断 sync。
+  try {
+    const { execSync } = await import('node:child_process');
+    execSync('node tools/check-i18n-keys.mjs', { stdio: 'inherit', cwd: ROOT });
+  } catch (e) {
+    console.warn('[sync-shared] 键名校验脚本异常（不影响同步）：', e.message);
+  }
 
   console.log('[sync-shared] 完成：共享资源已统一同步到各端，并完成法律文本国际化。');
 }

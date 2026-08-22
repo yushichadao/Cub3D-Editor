@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>lab · 1080 基准布局校验</title>
+<style>
+  /* 实验隔离区：论证 1080 逻辑宽度下布局零错乱，不进产品面 */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #0c0e16; color: #e8e8f0; }
+  /* 模拟 1080 逻辑宽度的容器（Android 常以 width=1080 为基准） */
+  .stage { width: 1080px; max-width: 100%; margin: 0 auto; padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom); }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
+  .card { flex: 1 1 200px; min-width: 0; background: #14161f; border: 1px solid rgba(110,231,255,0.18); border-radius: 12px; padding: 16px; }
+  .card h3 { font-size: 16px; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: #8b8ba0; word-break: break-word; }
+  /* 进度/加载条：验证不串行 */
+  .bar { height: 8px; background: linear-gradient(90deg,#6ee7ff,#c084fc); border-radius: 4px; }
+  /* 底部安全区操作栏 */
+  .actionbar { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; justify-content: center; padding: 10px calc(10px + env(safe-area-inset-bottom)); background: #14161f; border-top: 1px solid rgba(110,231,255,0.18); }
+  .ok { color: #5eead4; } .bad { color: #fb7185; }
+  .diag { font: 12px monospace; white-space: pre-wrap; color: #8b8ba0; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <h2>1080 基准布局校验（实验隔离 · 不进产品面）</h2>
+  <div class="bar"></div>
+  <div class="row">
+    <div class="card"><h3>卡片 A</h3><p>长文本不应串行：The quick brown fox jumps over the lazy dog 一二三四五六七八九十</p></div>
+    <div class="card"><h3>卡片 B</h3><p>flex 自适应，最小宽度 0 防溢出</p></div>
+    <div class="card"><h3>卡片 C</h3><p>safe-area 已加 viewport-fit=cover</p></div>
+  </div>
+  <div id="report" class="diag">运行中…</div>
+</div>
+<div class="actionbar">
+  <button onclick="runCheck()">运行 1080 校验</button>
+</div>
+<script>
+function runCheck(){
+  const stage = document.querySelector('.stage');
+  const w = stage.getBoundingClientRect().width;
+  const cards = document.querySelectorAll('.card');
+  let overflow = false;
+  cards.forEach(c => { if (c.scrollWidth > c.clientWidth + 1) overflow = true; });
+  const r = document.getElementById('report');
+  r.textContent =
+    'stage width = ' + Math.round(w) + 'px\n' +
+    'cards = ' + cards.length + '\n' +
+    'horizontal overflow = ' + (overflow ? 'BAD (串行/溢出)' : 'OK (零错乱)') + '\n' +
+    'safe-area top = ' + getComputedStyle(document.body).getPropertyValue('padding-top');
+  document.body.classList.add(overflow ? 'bad' : 'ok');
+}
+window.addEventListener('load', runCheck);
+</script>
+</body>
+</html>

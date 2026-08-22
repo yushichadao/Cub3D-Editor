@@ -155,3 +155,36 @@ PC/dist2/
 PC/out_build/
 PC/_probe.html
 
+# ===== 治理新增：密钥集中（真实值不入库，模板入库）=====
+secrets/.env
+secrets/**/.env
+!secrets/.env.example
+# Android 签名密钥库（真实不入库，路径指向仓库内 toolchain/）
+toolchain/android/release.keystore
+toolchain/android/keystore.properties
+# Android 工具链（JDK/SDK 收敛仓库内，体积大不入库）
+toolchain/jdk*/
+toolchain/android-sdk/
+toolchain/**/*.zip
+
+# ===== 治理新增：实验隔离区（论证 demo + 截图，不进产品面）=====
+lab/_tmp/
+lab/assets/
+!lab/.gitkeep
+!lab/assets/.gitkeep
+
+# ===== 治理新增：管理中枢运行时私有数据（重命名 manager→admin）=====
+admin/data/
+admin/server*.log
+admin/server*.err.log
+
+# ===== 治理新增：PC 端运行时用户数据（收敛仓库内，不入库）=====
+pc/.runtime/
+.runtime/
+
+# ===== 治理新增：构建产物（electron-builder 输出）=====
+pc/out/
+pc/dist/
+**/out/
+**/dist/
+
