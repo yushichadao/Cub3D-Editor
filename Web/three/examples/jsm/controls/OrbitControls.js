@@ -199,6 +199,7 @@ class OrbitControls extends EventDispatcher {
 			const qH = new Quaternion();
 			const qV = new Quaternion();
 			const qTotal = new Quaternion();
+			const targetOffset = new Vector3();
 
 			return function update( deltaTime = null ) {
 
@@ -253,6 +254,11 @@ class OrbitControls extends EventDispatcher {
 					// 同时旋转偏移向量和相机四元数，保持相机始终看向目标
 					offset.applyQuaternion( qTotal );
 					scope.object.quaternion.premultiply( qTotal );
+
+					// 目标点随相机绕原点同步旋转：旋转视角时以场景原点为中心，
+					// 原点在屏幕上的位置保持不动（平移视角后旋转不再绕视野中央打转）
+					targetOffset.copy( scope.target ).applyQuaternion( qTotal );
+					scope.target.copy( targetOffset );
 
 				}
 

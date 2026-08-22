@@ -138,3 +138,20 @@ downloads/*.apk
 icon-backups/
 **/icon-backups/
 
+# ===== 临时脚本 / 语言同步测试产物（排查用，不入库）=====
+_tmp_*.mjs
+_tmp_*.txt
+_cmp_*.mjs
+_cmp_*.txt
+_add_pckeys.mjs
+_verify.mjs
+*.synctest.tmp
+.playwright/
+downloads/data/
+
+# ===== 临时构建/验证目录（PC 端排查用，不入库）=====
+PC/.asar_build/
+PC/dist2/
+PC/out_build/
+PC/_probe.html
+

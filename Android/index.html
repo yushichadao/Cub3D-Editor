@@ -615,6 +615,9 @@
   .about-card-ico { color:var(--accent); width:20px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
   .about-card-title { flex:1; font-weight:600; }
   .about-card-arrow { color:var(--text-dim); font-size:14px; }
+  /* RTL（阿拉伯语）：关于页卡片文字右对齐、入口箭头保持指向右 */
+  html[dir="rtl"] .about-card { text-align:right; }
+  html[dir="rtl"] .about-terms { text-align:right; }
   /* ---- 更新浮窗组件（开屏 / 设置页「检查更新」共用同一组件） ---- */
   .up-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .up-ico { width:42px; height:42px; flex:0 0 auto; border-radius:12px; display:grid; place-items:center; font-size:20px;
@@ -787,15 +790,12 @@
   .panel-section:first-child { padding-top: 10px; }
   .panel-section:last-child { padding-bottom: 14px; }
 
-  /* 中等屏幕：隐藏按钮文字，仅显示图标 */
-  @media (max-width: 1180px) {
-    .top-btn .lbl { display: none; }
-    .top-btn { padding: 0 8px; }
-    .top-btn-sep { margin: 0 2px; }
-  }
-  /* 窄屏：顶栏按钮水平滚动，品牌仅显示logo，面板最大宽度收窄 */
-  @media (max-width: 960px) {
-    .topbar { padding: 0 8px; }
+  /* 顶栏仅两个阶段，唯一分界 1300px：
+     宽（>1300px）完整：按钮文字+图标+品牌标题；
+     窄（≤1300px）紧凑：仅图标+logo、标题隐藏、按钮横向滚动。
+     不再叠加 1180/960 等多个断点，避免窗口缩放时反复跳变。 */
+  @media (max-width: 1300px) {
+    /* 顶栏左右留白保持与宽屏一致（14px），品牌图标位置不随宽度跳变 */
     .brand { gap: 6px; margin-inline-end: 4px; flex-shrink: 0; }
     .brand .logo { width: 24px; height: 24px; }
     .brand span { display: none; }
@@ -810,7 +810,11 @@
     }
     .top-actions::-webkit-scrollbar { display: none; }
     .top-btn { height: 30px; padding: 0 8px; font-size: 12px; flex-shrink: 0; }
+    .top-btn .lbl { display: none; }
     .top-btn-sep { width: 1px; height: 18px; background: var(--bb-sep); flex-shrink: 0; margin: 0 2px; }
+  }
+  /* 窄屏：面板折叠按钮间距与底栏收窄（顶栏阶段已在 1300px 统一，不在此重复） */
+  @media (max-width: 960px) {
     /* 面板保持固定宽度（见基础规则），窄屏不再收窄，仅调整高度与折叠按钮间距 */
     .panel { max-height: calc(100vh - 130px); }
     /* 面板折叠按钮移至顶栏下方，增加与面板的间距 */
@@ -1876,7 +1880,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
     <div class="up-head">
       <div class="up-ico">⤓</div>
       <div class="up-titles">
-        <div class="up-ver" id="bootVer">1.2.0</div>
+        <div class="up-ver" id="bootVer">1.2.1</div>
         <div class="up-sub" id="bootSub">正在获取更新信息…</div>
       </div>
       <div class="up-pill" id="bootPill">可选更新</div>
@@ -1904,7 +1908,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
     <div class="up-head">
       <div class="up-ico">⤓</div>
       <div class="up-titles">
-        <div class="up-ver" id="setVer">1.2.0</div>
+        <div class="up-ver" id="setVer">1.2.1</div>
         <div class="up-sub" id="setSub">正在获取更新信息…</div>
       </div>
       <div class="up-pill" id="setPill">可选更新</div>
@@ -1976,6 +1980,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
             <p class="about-dim" data-i18n="aboutStack">技术栈：Three.js / WebGL</p>
             <p class="about-author"><span data-i18n="aboutAuthor">作者</span>：Yushichadao</p>
             <p class="about-ai" data-i18n="aboutAI">本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成</p>
+  <p class="about-dim" id="about-version-line">版本：<span id="about-version">1.2.1</span></p>
             <a class="about-link" id="about-home" href="https://yushichadao.github.io/Cub3D-Editor/" target="_blank" rel="noopener" data-i18n="aboutHome">项目主页</a>
             <a class="about-link" id="about-repo" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="aboutRepo">GitHub 仓库</a>
             <div class="about-terms">
@@ -1997,7 +2002,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
               <button type="button" class="about-card" id="updCard">
                 <span class="about-card-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></span>
                 <span class="about-card-title" data-i18n="updCheck">检查更新</span>
-                <span class="about-card-title" id="updCardState" style="flex:0 0 auto; color:var(--text-dim); font-weight:400;">1.2.0</span>
+                <span class="about-card-title" id="updCardState" style="flex:0 0 auto; color:var(--text-dim); font-weight:400;">1.2.1</span>
                 <span class="about-card-arrow">›</span>
               </button>
             </div>
@@ -2044,11 +2049,22 @@ html[dir="rtl"] .num-field{ direction:rtl; }
 // 发版版本号（与 <head> 中 meta[name=bootv] 保持一致）
 const BOOTV = '20260818';
 
+// 加载页开始显示的时间：用于保证最低展示时长，防止加载过快时缓冲页一闪而过
+window.__bootT0 = Date.now();
+
 // 加载完成：由主模块在初始化结束后调用，淡出缓冲页
+// 最低展示时长 MIN_BOOT_MS：即便初始化极快，缓冲页也至少展示该时长后再淡出，避免「一闪而过」
 window.__bootDone = function () {
+  window.__booted = true;   // 编辑器已就绪
   if (window.__bootProgress) window.__bootProgress('done');
-  const loader = document.getElementById('loader');
-  if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+  const hideLoader = function () {
+    const loader = document.getElementById('loader');
+    if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+  };
+  const MIN_BOOT_MS = 1200; // 加载页最低展示时长（毫秒）
+  const elapsed = Date.now() - window.__bootT0;
+  if (elapsed >= MIN_BOOT_MS) hideLoader();
+  else setTimeout(hideLoader, MIN_BOOT_MS - elapsed);
 };
 
 // 加载失败：在缓冲页内显示错误信息与重试按钮（不隐藏缓冲页）
@@ -2093,7 +2109,7 @@ window.addEventListener('error', function (e) {
 // 未启动或未完成初始化，将缓冲页升级为明确错误 + 重新加载按钮，便于用户重试与定位根因。
 setTimeout(function () {
   const loader = document.getElementById('loader');
-  if (!loader || loader.classList.contains('hidden') || window.__bootDone) return;
+  if (!loader || loader.classList.contains('hidden') || window.__booted) return;
   if (!window.__bootEngineStarted) {
     bootFail('3D 引擎加载超时：Three.js 资源未能加载，或 WebView 版本过低（需 Chrome 89+ 支持 importmap）。点击「重新加载」重试。');
   } else {
@@ -2199,6 +2215,7 @@ toastNewScene:'已新建空白场景', toastImageExported:'图像已导出', toa
   updIgnoreMsgReady:'更新包已下载完成。忽略 {0} 后将 7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。',
   updStartMsgReady:'更新包已下载完成，是否启动更新程序完成安装？\n我们建议您完成更新以获取最新功能与安全修复。',
   updContinueBtn:'继续更新', updIgnoreBtn:'确定忽略', updStopBtn:'停止更新', updLaunchBtn:'启动更新程序',
+  updReadyNotePC:'更新包已就绪（上次已下载完成），点击「立即更新」启动更新程序。', updLaterBtn:'稍后再说',
 // 面板 & 工具
  sec2D:'2D 图形', secTools:'工具', secTransformMode:'变换模式', secProperties:'属性', secEraser:'橡皮擦属性', brushProperties:'画笔属性',
  toolNameSelect:'选择/变换', toolNameBrush3D:'3D 画笔', toolNameBrush2D:'2D 画笔', toolNameEraser:'橡皮擦', toolNameAddText:'添加文本', toolNameAddImage:'添加图片',
@@ -11975,7 +11992,7 @@ function openManual(){
     if(!arr.length){ noteListEl.innerHTML='<div class="manual-note-empty">'+T('manNoNote')+'</div>'; updateNoteCount(); return; }
     noteListEl.innerHTML=arr.map(n=>'<div class="manual-note-item" data-id="'+n.id+'" data-color="'+(n.color||'yellow')+'">'
       +'<input type="checkbox" class="note-check" data-id="'+n.id+'">'
-      +'<div class="note-line" data-jump="'+n.id+'">'+T('manNoteAt').replace('{0}', n.line)+(n.appVersion && n.appVersion!==__APP_VERSION__ ? ' <span class="note-ver" title="'+T('manImportOldVer').replace('{0}','').replace('{1}', n.appVersion)+'">⚠ v'+n.appVersion+'</span>' : '')+'</div>'
+      +'<div class="note-line" data-jump="'+n.id+'">'+T('manNoteAt').replace('{0}', n.line)+(n.appVersion && n.appVersion!==__APP_VERSION__ ? ' <span class="note-ver" title="'+T('manImportOldVer').replace('{0}','').replace('{1}', n.appVersion)+'">⚠ '+n.appVersion+'</span>' : '')+'</div>'
       +'<div class="note-quote">'+mdEscape(n.quote||'')+'</div>'
       +'<div class="note-text" data-open="'+n.id+'">'+mdEscape(notePreview(n.note))+'</div>'
       +'<div class="note-actions">'
@@ -13050,7 +13067,15 @@ window.addEventListener('beforeunload', markClosed);
     var pkg = null;
     if (assets.length) { pkg = (typeof assets[0] === 'string') ? assets[0] : (assets[0].name || null); }
     var notes = target.notes || {};
-    var list = notes.all || notes[platform] || notes['cn'] || notes['zh-CN'] || [];
+    // 按当前语言从分桶 notes 取更新说明：notes = { all:{ lang:[...] }, pc:{...}, android:{...} }
+    // 兼容旧格式（notes.all 直接是数组 / notes['zh-CN'] 是数组）
+    function __pickLang(bucket){
+      if (!bucket) return null;
+      if (Array.isArray(bucket)) return bucket;            // 旧格式：整段就是数组
+      var __lang = (window.localStorage && localStorage.getItem('lang')) || (typeof currentLang !== 'undefined' ? currentLang : 'zh-CN');
+      return bucket[__lang] || bucket['zh-CN'] || (bucket.all || []);
+    }
+    var list = __pickLang(notes.all) || __pickLang(notes[platform]) || __pickLang(notes['zh-CN']) || __pickLang(notes['cn']) || [];
     return { target: target, force: force, pkg: pkg, notes: list, date: target.date || '' };
   }
   // 依次尝试各更新源（国内站 /api/update 返回 {ok, doc}；GitHub 直接返回 doc）
@@ -13065,7 +13090,18 @@ window.addEventListener('beforeunload', markClosed);
           var res = resolveDoc(doc, cv, PLATFORM);
           if (res) { res.src = i; return res; }   // 0=国内主站 1=备用IP 2=GitHub
           // resolveDoc 已按平台过滤：返回 null 表示「本平台已是最新」，不再误用不分平台的 j.update
-          return { target: null, force: false, pkg: null, notes: [], date: '', latest: true, src: i };
+          // latestVer = 云端「本平台有安装包」的已发布最高版本；其他平台专用版本不混入本平台提示
+          var _pub = (doc.versions || []).filter(function(v){ return v.status === 'published'; });
+          var latestVer = cv;
+          if (_pub.length) {
+            var _sv = _pub.slice().sort(function(a, b){ return cmp(a.version, b.version); });
+            for (var j = _sv.length - 1; j >= 0; j--) {
+              var _v = _sv[j];
+              var _aa = (_v.assets && _v.assets[PLATFORM]) || [];
+              if (_aa.length) { latestVer = _v.version; break; }
+            }
+          }
+          return { target: null, force: false, pkg: null, notes: [], date: '', latest: true, src: i, latestVer: latestVer };
         });
       };
     });
@@ -13077,7 +13113,7 @@ window.addEventListener('beforeunload', markClosed);
     if (!res) { UPDATE_STATE = { cur: cur, remote: cur, force: false, notes: [], online: true, latest: true, src: -1 }; }
     else {
       UPDATE_STATE = {
-        cur: cur, remote: res.latest ? cur : res.target.version, force: !!res.force,
+        cur: cur, remote: res.latest ? (res.latestVer || cur) : res.target.version, force: !!res.force,
         notes: res.notes || [], online: !!res.pkg, latest: !!res.latest, src: res.src, date: res.date || ''
       };
     }
@@ -13168,10 +13204,10 @@ window.addEventListener('beforeunload', markClosed);
   }
   var cfmContinue = null, cfmStop = null;
   function showConfirm(opts){
-    $id('cfm-title').textContent = opts.title || '停止更新？';
+    $id('cfm-title').textContent = opts.title || _t('updStopTitle');
     $id('cfm-msg').textContent = opts.msg || '';
-    $id('cfm-yes').textContent = opts.yesLabel || '继续更新';
-    $id('cfm-no').textContent = opts.noLabel || '停止更新';
+    $id('cfm-yes').textContent = opts.yesLabel || _t('updContinueBtn');
+    $id('cfm-no').textContent = opts.noLabel || _t('updStopBtn');
     cfmContinue = opts.onContinue || null;
     cfmStop = opts.onStop || null;
     $id('upd-confirm-modal').classList.add('show');
@@ -13223,7 +13259,7 @@ window.addEventListener('beforeunload', markClosed);
     box[DL] = 'ready'; box.dataset.busy = '0';
     setBtns(box, false, false, false);
     var note = box.querySelector('.dl-note');
-    note.querySelector('span:last-child').textContent = _t('updReadyNote');
+    note.querySelector('span:last-child').textContent = _t('updReadyNotePC');
     note.classList.add('show');
     return true;
   }
@@ -13277,7 +13313,7 @@ window.addEventListener('beforeunload', markClosed);
       clearDlProgress();
       box[DL] = 'ready'; box.dataset.busy = '0';
       setBtns(box, false, false, false);
-      note.querySelector('span:last-child').textContent = _t('updReadyNote2');
+      note.querySelector('span:last-child').textContent = _t('updReadyNotePC');
       note.classList.add('show');
       // Android：保存 APK 到系统下载（a[download] 触发下载管理器）
       if (blob && blob.size) saveApk(blob, s);
@@ -13338,7 +13374,7 @@ window.addEventListener('beforeunload', markClosed);
       resolveAll(res);
       refreshBoth();
       var s = updateState();
-      if (s.latest) { hideBox($id('setBox')); toast(_t('toastLatest', s.cur)); return; }
+      if (s.latest) { hideBox($id('setBox')); toast(_t('toastLatest', s.remote)); return; }
       if (!s.online) { toast(_t('toastNoPkg', s.remote, 'Android')); return; }
       clearUpdTimers();
       setTimer = setTimeout(function(){
@@ -13359,7 +13395,7 @@ window.addEventListener('beforeunload', markClosed);
     var st = box[DL] || 'idle';
     var s = updateState();
     var isIgnore = (kind === 'ignore');
-    if (isForceActive()) { toast(_t('updForceActive', (isIgnore ? _t('updIgnore') : '稍后再说'))); return; }
+    if (isForceActive()) { toast(_t('updForceActive', (isIgnore ? _t('updIgnore') : _t('updLaterBtn')))); return; }
     var barId = (box === $id('bootBox')) ? 'bootBar' : 'setBar';
     var pctId = (box === $id('bootBox')) ? 'bootPct' : 'setPct';
     if (st === 'idle') {
@@ -13430,6 +13466,8 @@ window.addEventListener('beforeunload', markClosed);
 
   /* ============ 启动：拉取更新信息 → 渲染 → 开屏静默检测 ============ */
   function start(){
+    var av = $id('about-version');
+    if (av) av.textContent = '' + curVer();
     loadUpdate().then(function(res){
       resolveAll(res);
       refreshBoth();

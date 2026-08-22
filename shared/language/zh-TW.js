@@ -1,6 +1,9 @@
 window.__packs = window.__packs || {};
 
 window.__packs['zh-TW'] = {
+  // 更新檢測（與 Android/PC 更新浮窗共用）
+  updChangelogEmpty:'更新內容未提供', updSubLatest:'相比當前 {0} 已是最新', updNoPkgYet:'線上暫未提供 {1} 安裝包，敬請期待', updPillLatest:'已是最新', updPillForce:'強制更新', updPillOptional:'可選更新', updPillNone:'不可更新', updTitleLatest:'已是最新版本', updTitleForce:'發現強制更新', updTitleFound:'發現新版本', updTitleAvail:'有可用更新', updTitleNone:'暫無可用更新', updNowBtn:'立即更新', updUnavailBtn:'暫不可用', updIgnored:'已忽略更新', updReadyNotePC:'更新包已就緒（上次已下載完成），點擊「立即更新」啟動更新程式。', updForceActive:'強制更新進行中，無法「{0}」', updStopTitle:'停止更新？', updContinueBtn:'繼續更新', updStopBtn:'停止更新', updIgnore:'忽略此版本', updIgnoreBtn:'確定忽略', updLaterBtn:'稍後再說', updLaunchBtn:'啟動更新程式', updIgnoreTitle:'忽略此更新？', updLaterMsgIdle:'本次暫不更新，下次打開應用時將重新檢測。\n我們建議您完成更新以獲取最新功能與安全修復。', updIgnoreMsgIdle:'忽略 {0} 此更新後，7 天內將不再檢測任何更新。\n我們建議您完成更新以獲取最新功能與安全修復。', updLaterMsgPause:'下載已暫停。是否繼續下載更新？\n我們建議您完成更新以獲取最新功能與安全修復。', updIgnoreMsgPause:'下載已暫停。忽略 {0} 後將停止下載，7 天內不再檢測任何更新。\n我們建議您完成更新以獲取最新功能與安全修復。', updStartTitle:'啟動更新程式？', updStartMsgReady:'更新包已下載完成，是否啟動更新程式完成安裝？\n我們建議您完成更新以獲取最新功能與安全修復。', updIgnoreMsgReady:'更新包已下載完成。忽略 {0} 後將 7 天內不再檢測任何更新。\n我們建議您完成更新以獲取最新功能與安全修復。',
+  toastLatest:'已是最新版本（{0}）', toastNoPkg2:'線上暫未提供 {1} 安裝包', toastNoPkg:'{0} 更新暫不可用（線上暫未提供 {1} 安裝包）', toastPkgNotFound:'未找到對應平台的安裝包，請前往官網下載', toastDlFail:'下載失敗：{0}', toastApkSaved:'APK 已保存，請在系統下載管理中點擊安裝', toastCheckFail:'檢查更新失敗，請檢查網路後重試', ioTitle:'正在安裝更新', ioBadge:'安裝', ioSub:'正在準備安裝程式，請稍候…', toastNeedSelectMode:'請先切換到「選擇／變換」模式',
   // Top bar
   lang: '繁體中文', new:'新建', import:'匯入', export:'匯出', shot:'截圖',
   undo:'復原', redo:'重做', copy:'複製', paste:'貼上', dup:'複製', clear:'清除',

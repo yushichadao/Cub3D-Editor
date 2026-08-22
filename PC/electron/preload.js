@@ -90,6 +90,11 @@ const api = {
     openExternal: url => invoke('shell:open-external', url)
   },
 
+  net: {
+    /** 主进程发起网络请求（渲染层 http 明文会被 Mixed Content 拦截，走主进程可绕开） */
+    fetch: (url, opts) => invoke('net:fetch', url, opts)
+  },
+
   updater: {
     save: (name, data) => invoke('updater:save', name, data),
     list: () => invoke('updater:list'),

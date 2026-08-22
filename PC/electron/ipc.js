@@ -1,6 +1,6 @@
 'use strict';
 /** IPC 汇总：渲染进程能做的一切「原生操作」都在这里登记。 */
-const { ipcMain, app, dialog, shell, BrowserWindow, clipboard, nativeTheme } = require('electron');
+const { ipcMain, app, dialog, shell, BrowserWindow, clipboard, nativeTheme, net } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const P = require('./paths');
@@ -17,10 +17,9 @@ function winOf(evt) {
   return BrowserWindow.fromWebContents(evt.sender) || W.getMain();
 }
 
-function register() {
-  /* ------------------------------ 应用与窗口 ------------------------------ */
-
-  ipcMain.handle('app:info', () => ok({
+/** app:info 单一数据源：invoke 与 preload 的 sendSync 共用 */
+function appInfo() {
+  return {
     version: app.getVersion(),
     name: app.getName(),
     electron: process.versions.electron,
@@ -32,7 +31,30 @@ function register() {
     dev: P.isDev,
     dataRoot: P.dataRoot,
     exeDir: P.exeDir
-  }));
+  };
+}
+
+function register() {
+  /* ------------------------------ 应用与窗口 ------------------------------ */
+
+  ipcMain.handle('app:info', () => ok(appInfo()));
+  // preload 用 sendSync('app:info') 同步取版本号；ipcMain.handle 不响应 sendSync，
+  // 必须单独注册 on 并回填 returnValue，否则 preload 收不到响应（日志报 without listeners）。
+  ipcMain.on('app:info', e => { e.returnValue = appInfo(); });
+
+  /* 主进程发起 HTTP 请求：渲染层 app://（secure scheme）fetch http:// 明文会被
+     Chromium Mixed Content 拦截（备用 IP 更新源为 http），走主进程 net.fetch 绕开。 */
+  ipcMain.handle('net:fetch', async (_e, url, opts) => {
+    try {
+      const init = Object.assign({ cache: 'no-store' }, opts || {});
+      const res = await net.fetch(String(url), init);
+      const buf = await res.arrayBuffer();
+      const text = Buffer.from(buf).toString('utf8');
+      return { ok: true, status: res.status, okStatus: res.ok, text: text };
+    } catch (err) {
+      return { ok: false, message: String((err && err.message) || err) };
+    }
+  });
 
   ipcMain.on('window:minimize', e => { const w = winOf(e); if (w) w.minimize(); });
   ipcMain.on('window:toggle-maximize', e => {

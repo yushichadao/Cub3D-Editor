@@ -6,10 +6,6 @@ const P = require('./paths');
 const store = require('./store');
 const { INDEX_URL, SCHEME } = require('./protocol');
 
-/** 本地 HTTP 服务器端口（由 main.js 启动 server 后写入） */
-let _localPort = null;
-function setLocalPort(p) { _localPort = p; }
-
 /** @type {BrowserWindow|null} */
 let mainWindow = null;
 /** @type {Map<string, BrowserWindow>} */
@@ -33,8 +29,25 @@ function baseWebPreferences(extra) {
 /** 还原上次窗口位置，并校验是否仍在可见屏幕范围内（拔掉外接屏后不会跑到屏幕外） */
 function restoreBounds() {
   const saved = store.get('window', {});
-  const def = { width: 1440, height: 900 };
   const area = screen.getPrimaryDisplay().workAreaSize;
+  // 默认窗口与主屏工作区同比例、占 94%：比旧固定 1440x900(16:10) 更大且贴合屏幕长宽比
+  const def = {
+    width: Math.max(Math.round(area.width * 0.94), 960),
+    height: Math.max(Math.round(area.height * 0.94), 620)
+  };
+  // 迁移：旧版本保存的窗口比例与屏幕工作区明显不一致时（如固定 16:10 默认），一次性改用屏幕比例并居中；
+  // 仅首次生效，之后用户手动调整的比例会被保留。
+  if (saved.width && saved.height && !store.get('window.ratioSynced', false)) {
+    const savedRatio = saved.width / saved.height;
+    const areaRatio = area.width / area.height;
+    if (Math.abs(savedRatio - areaRatio) > 0.04) {
+      saved.width = def.width;
+      saved.height = def.height;
+      delete saved.x;
+      delete saved.y;
+      store.set('window.ratioSynced', true);
+    }
+  }
   const width = Math.min(saved.width || def.width, area.width);
   const height = Math.min(saved.height || def.height, area.height);
   const bounds = { width, height };
@@ -61,12 +74,13 @@ function persistBounds(win) {
 function createMainWindow() {
   const bounds = restoreBounds();
   const frameless = store.get('ui.frameless', true);
+  const t0 = Date.now();
 
   const opts = {
     ...bounds,
     minWidth: 960,
     minHeight: 620,
-    show: true,
+    show: false,
     frame: !frameless,
     title: '立方·3D设计工坊',
     backgroundColor: '#0c0e16',
@@ -75,9 +89,8 @@ function createMainWindow() {
     webPreferences: baseWebPreferences()
   };
 
-  // Win11 云母材质：需要透明背景配合。但透明背景在页面渲染前会透出白色，
-  // 表现为「白屏闪现」。为保证「打开即见加载页、无白屏」，默认关闭云母，
-  // 使用深色 backgroundColor（与 loader 背景一致）。如需云母可在设置里开启。
+  // Win11 云母需要透明背景；页面出来前会透出白色，启动看起来像卡住。
+  // 默认关闭，用与 loader 一致的深色底；设置里仍可打开云母。
   if (process.platform === 'win32' && store.get('ui.mica', false)) {
     opts.backgroundMaterial = 'mica';
     opts.backgroundColor = '#00000000';
@@ -86,31 +99,31 @@ function createMainWindow() {
   const win = new BrowserWindow(opts);
   mainWindow = win;
 
-  // [DIAG] 临时诊断：把渲染进程 console / 崩溃 / 加载失败落盘，定位白屏
-  try {
-    const os = require('os');
-    const rlog = (m) => { try { fs.appendFileSync(require('path').join(os.tmpdir(), 'cub3d-render.log'), `[${new Date().toISOString()}] ${m}\n`); } catch (_) {} };
-    win.webContents.on('console-message', (_e, level, message, sourceId, line) => rlog(`CONSOLE[${level}] ${message} @ ${sourceId || ''}:${line}`));
-    win.webContents.on('crashed', (_e, killed) => rlog(`CRASHED killed=${killed}`));
-    win.webContents.on('did-fail-load', (_e, code, desc, url) => rlog(`FAILLOAD ${code} ${desc} ${url}`));
-    win.webContents.on('did-finish-load', () => rlog(`did-finish-load ${win.webContents.getURL()}`));
-  } catch (_) {}
-
-  // 主界面通过本地 HTTP 服务器加载（http://127.0.0.1），规避 app:// 协议对大文件
-  // 的传输延迟（约 30 秒白屏）。server 未就绪时回退到 app://。
-  win.loadURL(_localPort ? `http://127.0.0.1:${_localPort}/index.html` : INDEX_URL);
+  win.loadURL(INDEX_URL);
 
   // 诊断：页面加载失败/完成都打印，便于定位「无窗体」问题
   win.webContents.on('did-fail-load', (_e, errorCode, errorDescription, validatedURL) => {
     console.error('[load] did-fail-load', errorCode, errorDescription, validatedURL);
   });
   win.webContents.on('did-finish-load', () => {
-    console.log('[load] did-finish-load', win.webContents.getURL());
+    console.log('[load] did-finish-load', win.webContents.getURL(), (Date.now() - t0) + 'ms');
   });
 
-  // 窗口已 show:true 立即显示（深色 backgroundColor 兜底），不再等待 ready-to-show
+  // 兜底：若 8 秒内仍没触发 ready-to-show（页面卡住），强制显示窗口，避免「永远看不到窗体」
+  const showFallback = setTimeout(() => {
+    if (!win.isDestroyed() && !win.isVisible()) {
+      console.warn('[load] ready-to-show 超时，强制显示窗口', (Date.now() - t0) + 'ms');
+      win.show();
+      win.maximize();
+    }
+  }, 8000);
+
   win.once('ready-to-show', () => {
-    if (store.get('window.maximized', false)) win.maximize();
+    clearTimeout(showFallback);
+    console.log('[load] ready-to-show', (Date.now() - t0) + 'ms');
+    // 开屏最大化：先 show 再 maximize，确保启动即全屏加载页（show 前调用 maximize 部分平台不生效）
+    win.show();
+    win.maximize();
     if (P.isDev) win.webContents.openDevTools({ mode: 'detach' });
   });
 
@@ -192,7 +205,7 @@ function createStickyWindow(note) {
     webPreferences: baseWebPreferences()
   });
 
-  win.loadURL(_localPort ? `http://127.0.0.1:${_localPort}/shell/sticky.html?id=${encodeURIComponent(id)}` : `${SCHEME}://local/shell/sticky.html?id=${encodeURIComponent(id)}`);
+  win.loadURL(`${SCHEME}://local/shell/sticky.html?id=${encodeURIComponent(id)}`);
   win.setAlwaysOnTop(true, 'floating');
   stickyWindows.set(id, win);
   win.on('closed', () => stickyWindows.delete(id));
@@ -213,5 +226,5 @@ function broadcast(channel, payload) {
 
 module.exports = {
   createMainWindow, createStickyWindow, closeStickyWindow,
-  getMain, broadcast, persistBounds, stickyWindows, setLocalPort
+  getMain, broadcast, persistBounds, stickyWindows
 };

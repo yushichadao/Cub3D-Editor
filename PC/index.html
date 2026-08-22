@@ -603,6 +603,9 @@
   .about-card-ico { color:var(--accent); width:20px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
   .about-card-title { flex:1; font-weight:600; }
   .about-card-arrow { color:var(--text-dim); font-size:14px; }
+  /* RTL（阿拉伯语）：关于页卡片文字右对齐、入口箭头保持指向右 */
+  html[dir="rtl"] .about-card { text-align:right; }
+  html[dir="rtl"] .about-terms { text-align:right; }
   /* ---- 更新浮窗组件（开屏 / 设置页「检查更新」共用同一组件） ---- */
   .up-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .up-ico { width:42px; height:42px; flex:0 0 auto; border-radius:12px; display:grid; place-items:center; font-size:20px;
@@ -775,15 +778,12 @@
   .panel-section:first-child { padding-top: 10px; }
   .panel-section:last-child { padding-bottom: 14px; }
 
-  /* 中等屏幕：隐藏按钮文字，仅显示图标 */
+  /* 顶栏仅两个阶段，唯一分界 1300px：
+     宽（>1300px）完整：按钮文字+图标+品牌标题；
+     窄（≤1300px）紧凑：仅图标+logo、标题隐藏、按钮横向滚动。
+     不再叠加 1180/960 等多个断点，避免窗口缩放时反复跳变。 */
   @media (max-width: 1300px) {
-    .top-btn .lbl { display: none; }
-    .top-btn { padding: 0 8px; }
-    .top-btn-sep { margin: 0 2px; }
-  }
-  /* 窄屏：顶栏按钮水平滚动，品牌仅显示logo，面板最大宽度收窄 */
-  @media (max-width: 960px) {
-    .topbar { padding: 0 8px; }
+    /* 顶栏左右留白保持与宽屏一致（14px），品牌图标位置不随宽度跳变 */
     .brand { gap: 6px; margin-inline-end: 4px; flex-shrink: 0; }
     .brand .logo { width: 24px; height: 24px; }
     .brand span { display: none; }
@@ -798,7 +798,11 @@
     }
     .top-actions::-webkit-scrollbar { display: none; }
     .top-btn { height: 30px; padding: 0 8px; font-size: 12px; flex-shrink: 0; }
+    .top-btn .lbl { display: none; }
     .top-btn-sep { width: 1px; height: 18px; background: var(--bb-sep); flex-shrink: 0; margin: 0 2px; }
+  }
+  /* 窄屏：面板折叠按钮间距与底栏收窄（顶栏阶段已在 1300px 统一，不在此重复） */
+  @media (max-width: 960px) {
     /* 面板保持固定宽度（见基础规则），窄屏不再收窄，仅调整高度与折叠按钮间距 */
     .panel { max-height: calc(100vh - 130px); }
     /* 面板折叠按钮移至顶栏下方，增加与面板的间距 */
@@ -2002,7 +2006,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
     <div class="up-head">
       <div class="up-ico">⤓</div>
       <div class="up-titles">
-        <div class="up-ver" id="bootVer">v1.2.0</div>
+        <div class="up-ver" id="bootVer">1.2.0</div>
         <div class="up-sub" id="bootSub">正在获取更新信息…</div>
       </div>
       <div class="up-pill" id="bootPill">可选更新</div>
@@ -2030,7 +2034,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
     <div class="up-head">
       <div class="up-ico">⤓</div>
       <div class="up-titles">
-        <div class="up-ver" id="setVer">v1.2.0</div>
+        <div class="up-ver" id="setVer">1.2.0</div>
         <div class="up-sub" id="setSub">正在获取更新信息…</div>
       </div>
       <div class="up-pill" id="setPill">可选更新</div>
@@ -2102,7 +2106,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
             <p class="about-dim" data-i18n="aboutStack">技术栈：Three.js / WebGL</p>
             <p class="about-author"><span data-i18n="aboutAuthor">作者</span>：Yushichadao</p>
             <p class="about-ai" data-i18n="aboutAI">本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成</p>
-            <p class="about-dim" id="about-version-line">版本：<span id="about-version">v1.2.0</span></p>
+            <p class="about-dim" id="about-version-line">版本：<span id="about-version">2.2.0</span></p>
             <a class="about-link" id="about-home" href="https://yushichadao.github.io/Cub3D-Editor/" target="_blank" rel="noopener" data-i18n="aboutHome">项目主页</a>
             <a class="about-link" id="about-repo" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="aboutRepo">GitHub 仓库</a>
             <div class="about-terms">
@@ -2123,8 +2127,8 @@ html[dir="rtl"] .num-field{ direction:rtl; }
               </button>
               <button type="button" class="about-card" id="updCard">
                 <span class="about-card-ico">⟳</span>
-                <span class="about-card-title">检查更新</span>
-                <span class="about-card-title" id="updCardState" style="flex:0 0 auto; color:var(--text-dim); font-weight:400;">v1.2.0</span>
+                <span class="about-card-title" data-i18n="updCheck">检查更新</span>
+                <span class="about-card-title" id="updCardState" style="flex:0 0 auto; color:var(--text-dim); font-weight:400;">1.2.0</span>
                 <span class="about-card-arrow">›</span>
               </button>
             </div>
@@ -2171,11 +2175,22 @@ html[dir="rtl"] .num-field{ direction:rtl; }
 // 发版版本号（与 <head> 中 meta[name=bootv] 保持一致）
 const BOOTV = '20260818';
 
+// 加载页开始显示的时间：用于保证最低展示时长，防止加载过快时缓冲页一闪而过
+window.__bootT0 = Date.now();
+
 // 加载完成：由主模块在初始化结束后调用，淡出缓冲页
+// 最低展示时长 MIN_BOOT_MS：即便初始化极快，缓冲页也至少展示该时长后再淡出，避免「一闪而过」
 window.__bootDone = function () {
+  window.__booted = true;   // 编辑器已就绪
   if (window.__bootProgress) window.__bootProgress('done');
-  const loader = document.getElementById('loader');
-  if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+  const hideLoader = function () {
+    const loader = document.getElementById('loader');
+    if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+  };
+  const MIN_BOOT_MS = 1200; // 加载页最低展示时长（毫秒）
+  const elapsed = Date.now() - window.__bootT0;
+  if (elapsed >= MIN_BOOT_MS) hideLoader();
+  else setTimeout(hideLoader, MIN_BOOT_MS - elapsed);
 };
 
 // 加载失败：在缓冲页内显示错误信息与重试按钮（不隐藏缓冲页）
@@ -2216,14 +2231,17 @@ window.addEventListener('error', function (e) {
   }
 });
 
-// 加载超时提示：只提示、不隐藏缓冲页（绝不暴露半成品界面）
+// 启动超时诊断：避免「静默无限转圈」。若主模块（Three.js 引擎）在限定时间内
+// 未启动或未完成初始化，将缓冲页升级为明确错误 + 重新加载按钮，便于用户重试与定位根因。
 setTimeout(function () {
   const loader = document.getElementById('loader');
-  if (loader && !loader.classList.contains('hidden')) {
-    const st = document.getElementById('loader-state');
-    if (st && st.textContent.indexOf(window._tBoot('bootFail')) < 0) st.textContent = window._tBoot('bootSlow');
+  if (!loader || loader.classList.contains('hidden') || window.__booted) return;
+  if (!window.__bootEngineStarted) {
+    bootFail('3D 引擎加载超时：Three.js 资源未能加载，或浏览器/WebView 版本过低（需 Chrome 89+ 支持 importmap）。点击「重新加载」重试。');
+  } else {
+    bootFail('应用初始化超时：核心模块未能完成启动。点击「重新加载」重试。');
   }
-}, 15000);
+}, 12000);
 
 // 版本记录 + 远端版本探测：
 // 1) 记录本次版本号，供后续版本变化检测；
@@ -2674,6 +2692,16 @@ setTimeout(function () {
 
   /* ============ 拉取并解析更新信息 ============ */
   function fetchDoc(url){
+    // 桌面版：走主进程 net.fetch，避免 app:// secure scheme 拦截 http 明文备用源
+    var dn = window.desktop && window.desktop.net && window.desktop.net.fetch;
+    if (typeof dn === 'function') {
+      return dn(url).then(function(r){
+        if (!r || !r.ok) throw new Error(r && r.message ? ('net ' + r.message) : 'net fetch failed');
+        if (r.status < 200 || r.status >= 300) throw new Error('http ' + r.status);
+        return JSON.parse(r.text);
+      });
+    }
+    // 网页版：直接 fetch
     return fetch(url, { cache: 'no-store' }).then(function(r){
       if (!r.ok) throw new Error('http ' + r.status);
       return r.json();
@@ -2687,13 +2715,28 @@ setTimeout(function () {
     var sorted = pub.slice().sort(function(a, b){ return cmp(a.version, b.version); });
     var targets = sorted.filter(function(x){ return cmp(x.version, cur) > 0; });
     if (!targets.length) return null;
-    var target = targets[targets.length - 1];
     var force = targets.some(function(x){ return x.type === 'force'; });
-    var assets = (target.assets && target.assets[platform]) || [];
-    var pkg = null;
-    if (assets.length) { pkg = (typeof assets[0] === 'string') ? assets[0] : (assets[0].name || null); }
+    // 从高到低找「本平台有安装包」的最高版本；纯其他平台的新版本（如 Android 专用）
+    // 对本平台不算可更新目标，避免 PC 端提示「1.2.1 更新暂不可用」。
+    var target = null, pkg = null;
+    for (var i = targets.length - 1; i >= 0; i--) {
+      var t = targets[i];
+      var assets = (t.assets && t.assets[platform]) || [];
+      var p = null;
+      if (assets.length) { p = (typeof assets[0] === 'string') ? assets[0] : (assets[0].name || null); }
+      if (p) { target = t; pkg = p; break; }
+    }
+    if (!target) return null; // 本平台无可下载的更新包 → 已是最新
     var notes = target.notes || {};
-    var list = notes.all || notes[platform] || notes['cn'] || notes['zh-CN'] || [];
+    // 按当前语言从分桶 notes 取更新说明：notes = { all:{ lang:[...] }, pc:{...}, android:{...} }
+    // 兼容旧格式（notes.all 直接是数组 / notes['zh-CN'] 是数组）
+    function __pickLang(bucket){
+      if (!bucket) return null;
+      if (Array.isArray(bucket)) return bucket;            // 旧格式：整段就是数组
+      var __lang = (window.localStorage && localStorage.getItem('lang')) || (typeof currentLang !== 'undefined' ? currentLang : 'zh-CN');
+      return bucket[__lang] || bucket['zh-CN'] || (bucket.all || []);
+    }
+    var list = __pickLang(notes.all) || __pickLang(notes[platform]) || __pickLang(notes['zh-CN']) || __pickLang(notes['cn']) || [];
     return { target: target, force: force, pkg: pkg, notes: list, date: target.date || '' };
   }
   // 依次尝试各更新源（国内站 /api/update 返回 {ok, doc}；GitHub 直接返回 doc）
@@ -2708,7 +2751,19 @@ setTimeout(function () {
           var res = resolveDoc(doc, cv, PLATFORM);
           if (res) { res.src = i; return res; }   // 0=国内主站 1=备用IP 2=GitHub
           // resolveDoc 已按平台过滤：返回 null 表示「本平台已是最新」，不再误用不分平台的 j.update
-          return { target: null, force: false, pkg: null, notes: [], date: '', latest: true, src: i };
+          // latestVer = 云端「本平台有安装包」的已发布最高版本；其他平台专用版本（如 Android 1.2.1）
+          // 不混入本平台提示，避免 PC 端误显示「云端 1.2.1」。
+          var _pub = (doc.versions || []).filter(function(v){ return v.status === 'published'; });
+          var latestVer = cv;
+          if (_pub.length) {
+            var _sv = _pub.slice().sort(function(a, b){ return cmp(a.version, b.version); });
+            for (var j = _sv.length - 1; j >= 0; j--) {
+              var _v = _sv[j];
+              var _aa = (_v.assets && _v.assets[PLATFORM]) || [];
+              if (_aa.length) { latestVer = _v.version; break; }
+            }
+          }
+          return { target: null, force: false, pkg: null, notes: [], date: '', latest: true, src: i, latestVer: latestVer };
         });
       };
     });
@@ -2720,7 +2775,7 @@ setTimeout(function () {
     if (!res) { UPDATE_STATE = { cur: cur, remote: cur, force: false, notes: [], online: true, latest: true, src: -1 }; }
     else {
       UPDATE_STATE = {
-        cur: cur, remote: res.latest ? cur : res.target.version, force: !!res.force,
+        cur: cur, remote: res.latest ? (res.latestVer || cur) : res.target.version, force: !!res.force,
         notes: res.notes || [], online: !!res.pkg, latest: !!res.latest, src: res.src, date: res.date || ''
       };
     }
@@ -2747,21 +2802,22 @@ setTimeout(function () {
       });
       logBox.appendChild(ul);
     } else {
-      logBox.innerHTML = '<div style="color:var(--text-dim);font-size:12.5px">更新内容未提供</div>';
+      logBox.innerHTML = '<div style="color:var(--text-dim);font-size:12.5px">' + _t('updChangelogEmpty') + '</div>';
     }
-    box.querySelector('.up-ver').textContent = 'v' + s.remote;
+    box.querySelector('.up-ver').textContent = s.remote;
     box.querySelector('.up-sub').textContent = latest
-      ? ('相比当前 v' + s.cur + ' 已是最新')
-      : (online ? ('相比当前 v' + s.cur + (force ? ' 必须更新后使用' : ' 有更新'))
-                : ('线上暂未提供 Windows 安装包，敬请期待'));
+      ? _t('updSubLatest').replace('{0}', s.cur)
+      : (online ? (force ? _t('updSubForce').replace('{0}', s.cur)
+                         : _t('updSubHas').replace('{0}', s.cur))
+                : _t('updNoPkgYet').replace('{1}', 'Windows'));
     var pill = box.querySelector('.up-pill');
-    pill.textContent = latest ? '已最新' : (online ? (force ? '强制更新' : '可选更新') : '暂不可用');
+    pill.textContent = latest ? _t('updPillLatest') : (online ? (force ? _t('updPillForce') : _t('updPillOptional')) : _t('updPillNone'));
     pill.classList.toggle('latest', latest);
     pill.classList.toggle('force', force);
     pill.classList.toggle('nopkg', !online && !latest);
     box.querySelector('.modal-title').textContent = latest
-      ? '已是最新版本'
-      : (online ? (force ? '需要更新' : (box.id === 'bootBox' ? '发现新版本' : '更新可用')) : '更新暂不可用');
+      ? _t('updTitleLatest')
+      : (online ? (force ? _t('updTitleForce') : (box.id === 'bootBox' ? _t('updTitleFound') : _t('updTitleAvail'))) : _t('updTitleNone'));
     var date = box.querySelector('.up-meta span:first-child'); if (date) date.textContent = s.date ? (s.date + ' 发布') : '';
     if ((box[DL] || 'idle') !== 'idle') return; // 下载流程中不重置按钮/进度
     var laterBtn = box.querySelector('[data-btn=later]');
@@ -2774,8 +2830,8 @@ setTimeout(function () {
     var note = box.querySelector('.dl-note'); if (note) note.classList.remove('show');
     var ne = box.querySelector('.net-note'); if (ne) ne.classList.remove('show');
     var nowBtn = box.querySelector('.modal-actions .primary');
-    if (nowBtn) { nowBtn.disabled = false; nowBtn.textContent = '立即更新'; box.dataset.busy = '0'; }
-    if (!online && !latest && nowBtn) { nowBtn.disabled = true; nowBtn.textContent = '暂不可用'; }
+    if (nowBtn) { nowBtn.disabled = false; nowBtn.textContent = _t('updNowBtn'); box.dataset.busy = '0'; }
+    if (!online && !latest && nowBtn) { nowBtn.disabled = true; nowBtn.textContent = _t('updUnavailBtn'); }
     if (!online && !latest && laterBtn) laterBtn.disabled = true;
     if (!online && !latest && ignoreBtn) ignoreBtn.disabled = true;
   }
@@ -2783,7 +2839,7 @@ setTimeout(function () {
     var s = updateState();
     var ig = ignoreInfo();
     var st = $id('updCardState');
-    if (st) st.textContent = ig ? '已忽略更新' : ('v' + s.cur);
+    if (st) st.textContent = ig ? _t('updIgnored') : ('' + s.cur);
     var bb = $id('bootBox'), sb = $id('setBox');
     if (bb) fillBox(bb, s);
     if (sb) fillBox(sb, s);
@@ -2811,10 +2867,10 @@ setTimeout(function () {
   }
   var cfmContinue = null, cfmStop = null;
   function showConfirm(opts){
-    $id('cfm-title').textContent = opts.title || '停止更新？';
+    $id('cfm-title').textContent = opts.title || _t('updStopTitle');
     $id('cfm-msg').textContent = opts.msg || '';
-    $id('cfm-yes').textContent = opts.yesLabel || '继续更新';
-    $id('cfm-no').textContent = opts.noLabel || '停止更新';
+    $id('cfm-yes').textContent = opts.yesLabel || _t('updContinueBtn');
+    $id('cfm-no').textContent = opts.noLabel || _t('updStopBtn');
     cfmContinue = opts.onContinue || null;
     cfmStop = opts.onStop || null;
     $id('upd-confirm-modal').classList.add('show');
@@ -2870,7 +2926,7 @@ setTimeout(function () {
         box[DL] = 'localready'; box.dataset.busy = '0';
         box.querySelector('.up-progress').classList.add('hidden');
         var note = box.querySelector('.dl-note');
-        note.querySelector('span:last-child').textContent = '已检测到本地安装包（v' + s.remote + '），可直接进入更新程序。';
+        note.querySelector('span:last-child').textContent = _t('updLocalPkg').replace('{0}', s.remote);
         note.classList.add('show');
         setBtns(box, false, false, false);
       }
@@ -2889,16 +2945,16 @@ setTimeout(function () {
     box[DL] = 'ready'; box.dataset.busy = '0';
     setBtns(box, false, false, false);
     var note = box.querySelector('.dl-note');
-    note.querySelector('span:last-child').textContent = '更新包已就绪（上次已下载完成），点击「立即更新」启动更新程序。';
+    note.querySelector('span:last-child').textContent = _t('updReadyNotePC');
     note.classList.add('show');
     return true;
   }
   function runProgress(box, barId, pctId, label, resumeFrom){
     var s = updateState();
-    if (s.latest) { toast('当前已是最新版本'); return; }
-    if (!s.online) { toast('线上暂未提供 Windows 安装包'); return; }
+    if (s.latest) { toast(_t('toastLatest').replace('{0}', s.cur)); return; }
+    if (!s.online) { toast(_t('toastNoPkg2').replace('{1}', 'Windows')); return; }
     var url = pkgUrl(s);
-    if (!url) { toast('未找到对应平台的安装包，请前往官网下载'); return; }
+    if (!url) { toast(_t('toastPkgNotFound')); return; }
     // 版本一致性：已下载完成 / 断点记录版本与当前远端不符 → 作废
     var dr = dlReadyInfo(); if (dr && dr.ver !== s.remote) clearDlReady();
     var dp = dlProgressInfo(); if (dp && dp.ver !== s.remote) clearDlProgress();
@@ -2934,7 +2990,7 @@ setTimeout(function () {
       if (e && e.name === 'AbortError') return;
       box[DL] = 'idle'; box.dataset.busy = '0';
       prog.classList.add('hidden');
-      toast('下载失败：' + (e && e.message ? e.message : '网络错误'));
+      toast(_t('toastDlFail').replace('{0}', (e && e.message ? e.message : '网络错误')));
     });
     function finish(blob){
       box.__dlP = 100;
@@ -2943,7 +2999,7 @@ setTimeout(function () {
       clearDlProgress();
       box[DL] = 'ready'; box.dataset.busy = '0';
       setBtns(box, false, false, false);
-      note.querySelector('span:last-child').textContent = '更新包已就绪，点击「立即更新」启动更新程序。';
+      note.querySelector('span:last-child').textContent = _t('updReadyNotePC');
       note.classList.add('show');
       // PC：把安装包保存到桌面端 updates 目录（供启动安装 / 下次复用）
       if (blob && blob.size && window.desktop && window.desktop.updater && window.desktop.updater.save) {
@@ -2966,15 +3022,15 @@ setTimeout(function () {
       d.updater.open(s.pkg).then(function(r){
         if (r && r.ok === false) {
           ov.classList.remove('show'); box[DL] = 'idle';
-          toast('未能启动安装程序：' + (r.message || ''));
+          toast((r && r.message) ? _t('toastLaunchFail').replace('{0}', r.message) : _t('toastLaunchFail2'));
         }
         // 打开成功：安装程序在外部运行，应用随即被关闭
       }).catch(function(){
         ov.classList.remove('show'); box[DL] = 'idle';
-        toast('未能启动安装程序');
+        toast(_t('toastLaunchFail2'));
       });
     } else {
-      toast('暂不支持直接启动安装程序，请前往官网下载安装包');
+      toast(_t('toastLaunchUnsupported'));
     }
   }
 
@@ -3009,8 +3065,8 @@ setTimeout(function () {
       resolveAll(res);
       refreshBoth();
       var s = updateState();
-      if (s.latest) { hideBox($id('setBox')); toast('已是最新版本（v' + s.cur + '）'); return; }
-      if (!s.online) { toast('v' + s.remote + ' 更新暂不可用（线上暂未提供 Windows 安装包）'); return; }
+      if (s.latest) { hideBox($id('setBox')); toast(_t('toastLatest').replace('{0}', s.cur)); return; }
+      if (!s.online) { toast(_t('toastNoPkg').replace('{0}', s.remote).replace('{1}', 'Windows')); return; }
       clearUpdTimers();
       setTimer = setTimeout(function(){
         setTimer = null;
@@ -3020,8 +3076,9 @@ setTimeout(function () {
           showBox($id('setBox')); refreshBoth();
         });
       }, 300);
-    }).catch(function(){
-      toast('检查更新失败，请检查网络后重试');
+    }).catch(function(err){
+      console.error('[upd] 检查更新失败', err);
+      toast(_t('toastCheckFail'));
     });
   }
 
@@ -3030,17 +3087,17 @@ setTimeout(function () {
     var st = box[DL] || 'idle';
     var s = updateState();
     var isIgnore = (kind === 'ignore');
-    if (isForceActive()) { toast('强制更新进行中，无法「' + (isIgnore ? '忽略此更新' : '稍后再说') + '」'); return; }
+    if (isForceActive()) { toast(_t('updForceActive').replace('{0}', isIgnore ? _t('updIgnore') : _t('updLaterBtn'))); return; }
     var barId = (box === $id('bootBox')) ? 'bootBar' : 'setBar';
     var pctId = (box === $id('bootBox')) ? 'bootPct' : 'setPct';
     if (st === 'idle') {
       showConfirm({
-        title: isIgnore ? '忽略此更新？' : '停止更新？',
+        title: isIgnore ? _t('updIgnoreTitle') : _t('updStopTitle'),
         msg: isIgnore
-          ? '忽略 v' + s.remote + ' 此更新后，7 天内将不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。'
-          : '本次暂不更新，下次打开应用时将重新检测。\n我们建议您完成更新以获取最新功能与安全修复。',
-        yesLabel: '继续更新',
-        noLabel: isIgnore ? '确定忽略' : '停止更新',
+          ? _t('updIgnoreMsgIdle').replace('{0}', s.remote)
+          : _t('updLaterMsgIdle'),
+        yesLabel: _t('updContinueBtn'),
+        noLabel: isIgnore ? _t('updIgnoreBtn') : _t('updStopBtn'),
         onContinue: function(){},
         onStop: function(){ if (isIgnore) { setIgnore(s.remote); refreshBoth(); } hideBox(box); }
       });
@@ -3049,12 +3106,12 @@ setTimeout(function () {
     if (st === 'downloading' || st === 'paused') {
       pauseDownload(box);
       showConfirm({
-        title: isIgnore ? '忽略此更新？' : '停止更新？',
+        title: isIgnore ? _t('updIgnoreTitle') : _t('updStopTitle'),
         msg: isIgnore
-          ? '下载已暂停。忽略 v' + s.remote + ' 后将停止下载，7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。'
-          : '下载已暂停。是否继续下载更新？\n我们建议您完成更新以获取最新功能与安全修复。',
-        yesLabel: '继续更新',
-        noLabel: isIgnore ? '确定忽略' : '停止更新',
+          ? _t('updIgnoreMsgPause').replace('{0}', s.remote)
+          : _t('updLaterMsgPause'),
+        yesLabel: _t('updContinueBtn'),
+        noLabel: isIgnore ? _t('updIgnoreBtn') : _t('updStopBtn'),
         onContinue: function(){ resumeDownload(box, barId, pctId, label); },
         onStop: function(){
           stopDownload(box, true);
@@ -3065,12 +3122,12 @@ setTimeout(function () {
     }
     if (st === 'ready' || st === 'localready') {
       showConfirm({
-        title: isIgnore ? '忽略此更新？' : '启动更新程序？',
+        title: isIgnore ? _t('updIgnoreTitle') : _t('updStartTitle'),
         msg: isIgnore
-          ? '更新包已下载完成。忽略 v' + s.remote + ' 后将 7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。'
-          : '更新包已下载完成，是否启动更新程序完成安装？\n我们建议您完成更新以获取最新功能与安全修复。',
-        yesLabel: isIgnore ? '继续更新' : '启动更新程序',
-        noLabel: isIgnore ? '确定忽略' : '停止更新',
+          ? _t('updIgnoreMsgReady').replace('{0}', s.remote)
+          : _t('updStartMsgReady'),
+        yesLabel: isIgnore ? _t('updContinueBtn') : _t('updLaunchBtn'),
+        noLabel: isIgnore ? _t('updIgnoreBtn') : _t('updStopBtn'),
         onContinue: function(){ launchInstaller(box, label); },
         onStop: function(){
           stopDownload(box, true);
@@ -3099,8 +3156,29 @@ setTimeout(function () {
   $id('cfm-yes').addEventListener('click', function(){ var cb = cfmContinue; hideConfirm(); if (cb) cb(); });
   $id('cfm-no').addEventListener('click', function(){ var cb = cfmStop; hideConfirm(); if (cb) cb(); });
 
+  /* ============ 更新浮窗静态文案国际化（覆盖 HTML 初始硬编码中文） ============ */
+  function applyUpdateStaticText(){
+    var setTxt = function(id, k){ var el = $id(id); if (el) el.textContent = _t(k); };
+    // 次要按钮：稍后再说 / 忽略此版本
+    setTxt('bootLater', 'updLaterBtn'); setTxt('bootIgnore', 'updIgnore'); setTxt('setLater', 'updLaterBtn');
+    // 断网提示条
+    ['bootNet', 'setNet'].forEach(function(nid){
+      var el = $id(nid); if (el){ var sp = el.querySelector('span:last-child'); if (sp) sp.textContent = _t('updNetNote'); }
+    });
+    // 安装器外部运行覆盖层
+    var ov = $id('bootInstaller');
+    if (ov){
+      var io = ov.querySelector('.io-title'); if (io) io.textContent = _t('updIoTitle');
+      var ib = ov.querySelector('.io-badge'); if (ib) ib.textContent = _t('updIoBadge');
+      var is = ov.querySelector('.io-sub'); if (is) is.textContent = _t('updIoSub');
+    }
+  }
+  applyUpdateStaticText();
+
   /* ============ 启动：拉取更新信息 → 渲染 → 开屏静默检测 ============ */
   function start(){
+    var av = $id('about-version');
+    if (av) av.textContent = '' + curVer();
     loadUpdate().then(function(res){
       resolveAll(res);
       refreshBoth();

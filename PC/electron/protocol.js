@@ -70,52 +70,101 @@ function notFound(msg) {
   return new Response(msg || 'Not Found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
 }
 
+function asciiHeaders(ext, extra) {
+  const headers = new Headers();
+  headers.set('content-type', MIME[ext] || 'application/octet-stream');
+  headers.set('cache-control', 'no-cache');
+  if (extra) {
+    for (const k of Object.keys(extra)) headers.set(k, extra[k]);
+  }
+  return headers;
+}
+
 /**
- * app ready 之后调用，挂载实际的文件处理器。
- *
- * 注意：这里用 net.fetch(file://...) 直接转发浏览器原生 Response。
- * 这是 PC 1.0.0 验证可用的稳定方案——net.fetch 返回的 Response 自带正确的
- * Content-Length 与流式结束信号，Chromium 收完后立即开始解析子资源，不会卡白屏。
- * 不要改成 fs.readFileSync + 手写 new Response(body)，否则大 index.html（约 5MB）
- * 在 Electron 43 下会出现约 30 秒白屏（Chromium 收不到响应结束信号）。
+ * 把 Node Buffer 交给 Chromium 自定义协议。
+ * 直接 `new Response(Buffer)` 在 Electron 43 下常收不到结束信号，
+ * 导航会卡约 30 秒。Uint8Array + Content-Length 才能立刻结束。
  */
+function bufferResponse(buf, ext) {
+  // 拷到独立 ArrayBuffer：Node Buffer 底层存储 Chromium 认不全，会等到超时才结束。
+  const copy = Uint8Array.from(buf);
+  return new Response(copy, {
+    status: 200,
+    headers: asciiHeaders(ext, { 'content-length': String(copy.byteLength) })
+  });
+}
+
+/**
+ * 优先用 net.fetch(file://) 的原生流（带结束信号，不会卡 30 秒）。
+ * 不拷贝上游 headers：非 ASCII 文件名会触发 ByteString 异常。
+ * asar / 中文路径失败时再读盘回退。
+ */
+async function serveFile(file, ext) {
+  try {
+    const res = await net.fetch(pathToFileURL(file).toString(), {
+      bypassCustomProtocolHandlers: true
+    });
+    if (res && res.body) {
+      return new Response(res.body, { status: 200, headers: asciiHeaders(ext) });
+    }
+  } catch (_) {}
+  try {
+    return bufferResponse(fs.readFileSync(file), ext);
+  } catch (err) {
+    console.error('[app://] 读取失败:', file, err && err.message);
+    return new Response('Failed to load resource\n' + (err && err.message || ''), {
+      status: 500,
+      headers: { 'content-type': 'text/plain; charset=utf-8' }
+    });
+  }
+}
+
+/** app ready 之后调用，挂载实际的文件处理器 */
 function handle() {
   const R = roots();
 
   protocol.handle(SCHEME, async (request) => {
-    let url;
-    try { url = new URL(request.url); } catch (_) { return notFound('Bad URL'); }
-
-    const host = url.hostname || 'local';
-    const root = R[host];
-    if (!root) return notFound('Unknown host: ' + host);
-
-    // 去掉查询串与锚点，解码中文路径（docs 下全是中文文件名）
-    let rel = decodeURIComponent(url.pathname || '/');
-    if (rel === '/' || rel === '') rel = '/index.html';
-    // 归一化，杜绝 ../ 穿越
-    const target = path.join(root, path.normalize(rel).replace(/^([/\\])+/, ''));
-    const resolvedRoot = path.resolve(root);
-    if (path.resolve(target) !== resolvedRoot && !path.resolve(target).startsWith(resolvedRoot + path.sep)) {
-      return new Response('Forbidden', { status: 403 });
+    try {
+      return await handleOne(request, R);
+    } catch (err) {
+      console.error('[app://] handler', request.url, err && err.stack || err);
+      return new Response('Internal error', { status: 500 });
     }
-
-    let stat;
-    try { stat = fs.statSync(target); } catch (_) { return notFound('Not Found: ' + rel); }
-
-    let file = target;
-    if (stat.isDirectory()) {
-      file = path.join(target, 'index.html');
-      if (!fs.existsSync(file)) return notFound('Directory listing disabled');
-    }
-
-    const ext = path.extname(file).toLowerCase();
-    const res = await net.fetch(pathToFileURL(file).toString());
-    const headers = new Headers(res.headers);
-    headers.set('content-type', MIME[ext] || 'application/octet-stream');
-    headers.set('cache-control', 'no-cache');
-    return new Response(res.body, { status: 200, headers });
   });
+}
+
+async function handleOne(request, R) {
+  const t0 = Date.now();
+  let url;
+  try { url = new URL(request.url); } catch (_) { return notFound('Bad URL'); }
+
+  const host = url.hostname || 'local';
+  const root = R[host];
+  if (!root) return notFound('Unknown host: ' + host);
+
+  // 去掉查询串与锚点，解码中文路径（docs 下全是中文文件名）
+  let rel = decodeURIComponent(url.pathname || '/');
+  if (rel === '/' || rel === '') rel = '/index.html';
+  // 归一化，杜绝 ../ 穿越
+  const target = path.join(root, path.normalize(rel).replace(/^([/\\])+/, ''));
+  const resolvedRoot = path.resolve(root);
+  if (path.resolve(target) !== resolvedRoot && !path.resolve(target).startsWith(resolvedRoot + path.sep)) {
+    return new Response('Forbidden', { status: 403 });
+  }
+
+  let stat;
+  try { stat = fs.statSync(target); } catch (_) { return notFound('Not Found: ' + rel); }
+
+  let file = target;
+  if (stat.isDirectory()) {
+    file = path.join(target, 'index.html');
+    if (!fs.existsSync(file)) return notFound('Directory listing disabled');
+  }
+
+  const res = await serveFile(file, path.extname(file).toLowerCase());
+  const cost = Date.now() - t0;
+  if (cost > 500) console.warn('[app://] slow request', cost + 'ms', rel);
+  return res;
 }
 
 const INDEX_URL = SCHEME + '://local/index.html';
