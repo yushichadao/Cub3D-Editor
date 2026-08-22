@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-const KEYS = ['tosLink','tosBody','disclaimerLink','disclaimerBody','privacyLink','privacyBody'];
+const KEYS = ['tosLink','tosBody','disclaimerLink','disclaimerBody','privacyLink','privacyBody','backHome','homeLink'];
 const LANG_FILES = { 'zh-TW':'zh-TW.js','en':'en.js','ja':'ja.js','ko':'ko.js','ru':'ru.js','es':'es.js','fr':'fr.js','ar':'ar.js' };
 
 const out = {};

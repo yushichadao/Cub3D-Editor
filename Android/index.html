@@ -1876,7 +1876,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
     <div class="up-head">
       <div class="up-ico">⤓</div>
       <div class="up-titles">
-        <div class="up-ver" id="bootVer">v1.2.0</div>
+        <div class="up-ver" id="bootVer">1.2.0</div>
         <div class="up-sub" id="bootSub">正在获取更新信息…</div>
       </div>
       <div class="up-pill" id="bootPill">可选更新</div>
@@ -1904,7 +1904,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
     <div class="up-head">
       <div class="up-ico">⤓</div>
       <div class="up-titles">
-        <div class="up-ver" id="setVer">v1.2.0</div>
+        <div class="up-ver" id="setVer">1.2.0</div>
         <div class="up-sub" id="setSub">正在获取更新信息…</div>
       </div>
       <div class="up-pill" id="setPill">可选更新</div>
@@ -1995,9 +1995,9 @@ html[dir="rtl"] .num-field{ direction:rtl; }
                 <span class="about-card-arrow">›</span>
               </button>
               <button type="button" class="about-card" id="updCard">
-                <span class="about-card-ico">⟳</span>
-                <span class="about-card-title">检查更新</span>
-                <span class="about-card-title" id="updCardState" style="flex:0 0 auto; color:var(--text-dim); font-weight:400;">v1.2.0</span>
+                <span class="about-card-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></span>
+                <span class="about-card-title" data-i18n="updCheck">检查更新</span>
+                <span class="about-card-title" id="updCardState" style="flex:0 0 auto; color:var(--text-dim); font-weight:400;">1.2.0</span>
                 <span class="about-card-arrow">›</span>
               </button>
             </div>
@@ -2162,7 +2162,7 @@ document.addEventListener('dragstart', e => e.preventDefault(), true);
   dragEvents.forEach(ev => window.addEventListener(ev, noDrag, { capture: true, passive: false }));
 })();
 // 简体中文作为内置默认与回退；其余语言存放在 language/ 目录下独立文件中（见 <head> 的 <script src> 引用）
-const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', fs:'全屏', fsExit:'退出全屏', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', ground:'地面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·3D设计工坊', aboutDesc:'基于 Three.js 的 Android 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', aboutHome:'项目主页', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·3D设计工坊（以下简称"本软件"）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按"现状"提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按"现状"提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件"关于"页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p><h4>第十四条 软件更新与说明书变更</h4><p>（一）为持续改进产品与功能，本软件可能不定期发布新版本，并通过应用内更新检测、官方网站或应用商店等渠道向您推送更新。更新内容可能包括功能新增、界面调整、问题修复与文档更新等。</p><p>（二）您理解并同意，更新通常不会删除您保存在本地的创作数据；但随版本更新，使用说明书等文档内容可能发生变化，您此前基于旧版说明书正文创建的便签，若其绑定正文已被修改或删除，将无法再跳转到原位置，此类便签会保留在便签列表中，您可自行删除或重新创建。</p><p>（三）您可自由选择是否更新。若您选择不更新并继续使用旧版本，旧版本可能无法获得后续修复与优化，相关风险由您自行承担。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按"现状"提供</h4><p>本软件及其功能按"现状"与"可用"基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 软件更新与说明书变更</h4><p>（一）本软件可能不定期更新，更新后功能、界面与文档可能与旧版本存在差异，我们不对新旧版本之间的完全一致性作出保证。</p><p>（二）随版本更新，说明书正文可能被修订，您基于旧版正文创建的便签在正文变化后可能无法保持原绑定关系，请以最新版本说明书为准。</p>', privacyBody:'<h4>隐私政策</h4><p>立方·3D设计工坊（以下简称“本软件”或“我们”）是由 <strong>Yushichadao</strong> 作为个人开发者向您提供的一款<strong>轻量化</strong>的跨平台 3D/2D 场景编辑器。我们<strong>不会收集您的个人信息</strong>，您的创作内容与本地设置默认仅保存在您自己的设备本地，不存在我们将您的个人信息传输、存储或用于其他用途的情况。使用本软件即表示您同意本政策。</p><h4>1. 我们是否收集您的账号信息</h4><p><strong>本软件没有账号系统，您无需注册或登录即可使用。我们不会收集、存储或把您的用户名、密码、电子邮箱、电话号码或其他账号类个人信息与您的身份绑定。</strong></p><h4>2. 保存在本地的创作数据</h4><p>(1) <strong>您所创作的 3D 模型、场景、便利贴、注释、文字与图片，默认保存在您的本机设备（浏览器存储空间、应用沙箱或您导出的文件），不会上传到任何服务器。</strong></p><p>(2) 除提供本地功能所必需的本机技术处理外，我们不会主动读取、上传或传输您的创作内容。</p><h4>3. 我们不会上线任何需要共享个人信息的第三方 SDK</h4><p><strong>本软件不会接入任何需要收集或共享您个人信息的第三方 SDK（包括统计、崩溃上报、广告、云同步、社交分享等）。本软件仅使用必要的开源图形库（如 Three.js 及 WebGL 组件）在本机运行，这些组件不会向外部传输您的个人信息。</strong></p><h4>4. 委托处理、共享、转让与公开披露</h4><p><strong>我们不会向任何第三方出售您的个人信息。除以下情形外，我们不会共享、转让或公开披露您的个人信息：</strong>(1) 为遵守适用法律法规、司法或监管要求；(2) 为保护本软件、您或公众的合法权益；(3) 经您事先明确同意。由于本软件不收集您的个人信息，上述情形在一般情况下均不会发生。</p><h4>5. 数据安全与您的责任</h4><p>(1) 您的核心创作数据主要保存在您自己的本机设备，请妥善保管您的设备并设置锁屏，避免他人未经授权访问。</p><p>(2) <strong>请定期导出并备份重要作品；因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的数据丢失，我们无法保证恢复，相关风险由您自行承担。</strong></p><p>(3) 如您通过邮箱与我们联系，您提供的邮箱地址仅用于回复您的问题，不会被用于其他用途。</p><h4>6. 您的权利与退出</h4><p><strong>您始终掌控自己的数据：您可以随时清除缓存、删除作品、卸载应用或停止使用本软件。</strong></p><h4>7. 政策更新</h4><p><strong>本政策可能随软件更新而调整，更新版本将在本软件内公告。您继续使用即视为接受；若您不同意，请停止使用本软件。</strong></p><h4>8. 联系我们</h4><p>开发者：<strong>Yushichadao</strong><br>联系邮箱：<strong>yushichadao@qq.com</strong></p><h4>9. 文本效力</h4><p>本政策以简体中文版本为准；如其他语言版本与本简体中文版本不一致，以简体中文版本为准。</p><h4>10. 更新检测与说明</h4><p>（一）为向您提供版本更新与安全修复，本软件可能自动检测是否有新版本可用。该检测仅请求必要的版本信息（如当前版本号），不涉及、不收集、不上传您的创作内容、便签或任何个人信息。</p><p>（二）您可以在设置中关闭自动更新检测，或选择暂不更新，继续使用当前版本。</p>', effectiveDate:'本文件生效日期：2026年8月21日', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
+const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', fs:'全屏', fsExit:'退出全屏', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', ground:'地面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·3D设计工坊', aboutDesc:'基于 Three.js 的 Android 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', aboutHome:'项目主页', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·3D设计工坊（以下简称\"本软件\"）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按\"现状\"提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按\"现状\"提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件\"关于\"页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p><h4>第十四条 软件更新与说明书变更</h4><p>（一）为持续改进产品与功能，本软件可能不定期发布新版本，并通过应用内更新检测、官方网站或应用商店等渠道向您推送更新。更新内容可能包括功能新增、界面调整、问题修复与文档更新等。</p><p>（二）您理解并同意，更新通常不会删除您保存在本地的创作数据；但随版本更新，使用说明书等文档内容可能发生变化，您此前基于旧版说明书正文创建的便签，若其绑定正文已被修改或删除，将无法再跳转到原位置，此类便签会保留在便签列表中，您可自行删除或重新创建。</p><p>（三）您可自由选择是否更新。若您选择不更新并继续使用旧版本，旧版本可能无法获得后续修复与优化，相关风险由您自行承担。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按\"现状\"提供</h4><p>本软件及其功能按\"现状\"与\"可用\"基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 软件更新与说明书变更</h4><p>（一）本软件可能不定期更新，更新后功能、界面与文档可能与旧版本存在差异，我们不对新旧版本之间的完全一致性作出保证。</p><p>（二）随版本更新，说明书正文可能被修订，您基于旧版正文创建的便签在正文变化后可能无法保持原绑定关系，请以最新版本说明书为准。</p>', privacyBody:'<h4>隐私政策</h4><p>立方·3D设计工坊（以下简称“本软件”或“我们”）是由 <strong>Yushichadao</strong> 作为个人开发者向您提供的一款<strong>轻量化</strong>的跨平台 3D/2D 场景编辑器。我们<strong>不会收集您的个人信息</strong>，您的创作内容与本地设置默认仅保存在您自己的设备本地，不存在我们将您的个人信息传输、存储或用于其他用途的情况。使用本软件即表示您同意本政策。</p><h4>1. 我们是否收集您的账号信息</h4><p><strong>本软件没有账号系统，您无需注册或登录即可使用。我们不会收集、存储或把您的用户名、密码、电子邮箱、电话号码或其他账号类个人信息与您的身份绑定。</strong></p><h4>2. 保存在本地的创作数据</h4><p>(1) <strong>您所创作的 3D 模型、场景、便利贴、注释、文字与图片，默认保存在您的本机设备（浏览器存储空间、应用沙箱或您导出的文件），不会上传到任何服务器。</strong></p><p>(2) 除提供本地功能所必需的本机技术处理外，我们不会主动读取、上传或传输您的创作内容。</p><h4>3. 我们不会上线任何需要共享个人信息的第三方 SDK</h4><p><strong>本软件不会接入任何需要收集或共享您个人信息的第三方 SDK（包括统计、崩溃上报、广告、云同步、社交分享等）。本软件仅使用必要的开源图形库（如 Three.js 及 WebGL 组件）在本机运行，这些组件不会向外部传输您的个人信息。</strong></p><h4>4. 委托处理、共享、转让与公开披露</h4><p><strong>我们不会向任何第三方出售您的个人信息。除以下情形外，我们不会共享、转让或公开披露您的个人信息：</strong>(1) 为遵守适用法律法规、司法或监管要求；(2) 为保护本软件、您或公众的合法权益；(3) 经您事先明确同意。由于本软件不收集您的个人信息，上述情形在一般情况下均不会发生。</p><h4>5. 数据安全与您的责任</h4><p>(1) 您的核心创作数据主要保存在您自己的本机设备，请妥善保管您的设备并设置锁屏，避免他人未经授权访问。</p><p>(2) <strong>请定期导出并备份重要作品；因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的数据丢失，我们无法保证恢复，相关风险由您自行承担。</strong></p><p>(3) 如您通过邮箱与我们联系，您提供的邮箱地址仅用于回复您的问题，不会被用于其他用途。</p><h4>6. 您的权利与退出</h4><p><strong>您始终掌控自己的数据：您可以随时清除缓存、删除作品、卸载应用或停止使用本软件。</strong></p><h4>7. 政策更新</h4><p><strong>本政策可能随软件更新而调整，更新版本将在本软件内公告。您继续使用即视为接受；若您不同意，请停止使用本软件。</strong></p><h4>8. 联系我们</h4><p>开发者：<strong>Yushichadao</strong><br>联系邮箱：<strong>yushichadao@qq.com</strong></p><h4>9. 文本效力</h4><p>本政策以简体中文版本为准；如其他语言版本与本简体中文版本不一致，以简体中文版本为准。</p><h4>10. 更新检测与说明</h4><p>（一）为向您提供版本更新与安全修复，本软件可能自动检测是否有新版本可用。该检测仅请求必要的版本信息（如当前版本号），不涉及、不收集、不上传您的创作内容、便签或任何个人信息。</p><p>（二）您可以在设置中关闭自动更新检测，或选择暂不更新，继续使用当前版本。</p>', effectiveDate:'本文件生效日期：2026年8月21日', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
  // 面板标题
  sec3D:'3D 图形', sec2D:'2D 图形', secTransform:'变换', secMaterial:'材质', secColor:'颜色', secPattern:'花纹 / 贴图', secTextBox:'文本框', secEraser:'橡皮擦属性', secTouch:'手势操作', 
  // Tab 按钮
@@ -2181,6 +2181,24 @@ const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', f
  boxSelect:'框选', selectAll:'全选', viewPersp:'透视', viewTop:'顶视', viewBottom:'底视', viewFront:'正视', viewBack:'后视', viewLeft:'左视', viewRight:'右视',
 // Toast 消息
 toastNewScene:'已新建空白场景', toastImageExported:'图像已导出', toastSceneExported:'场景已导出 JSON', toastSceneImported:'场景已导入', toastImportFailed:'导入失败', toastExportCancelled:'未选择保存位置，已取消保存',
+  // 更新检测
+  updCheck:'检查更新', updLatestState:'已是最新版本', updIgnored:'已忽略更新', updNoPkgYet:'线上暂未提供 {1} 安装包，敬请期待', updSubLatest:'相比当前 {0} 已是最新', updSubHas:'相比当前 {0} 有更新', updSubForce:'相比当前 {0} 必须更新后使用',
+  updPillLatest:'已是最新', updPillForce:'强制更新', updPillOptional:'可选更新', updPillNone:'不可更新',
+  updTitleLatest:'已是最新版本', updTitleForce:'发现强制更新', updTitleFound:'发现新版本', updTitleAvail:'有可用更新', updTitleNone:'暂无可用更新',
+  updChangelogEmpty:'更新内容未提供', updNowBtn:'立即更新', updUnavailBtn:'暂不可用', updDownloading:'正在下载 {0}…',
+  toastLatest:'已是最新版本（{0}）', toastNoPkg:'{0} 更新暂不可用（线上暂未提供 {1} 安装包）', toastCheckFail:'检查更新失败，请检查网络后重试', toastNoPkg2:'线上暂未提供 {1} 安装包', toastPkgNotFound:'未找到对应平台的安装包，请前往官网下载', toastDlFail:'下载失败：{0}', toastApkSaved:'APK 已保存，请在系统下载管理中点击安装', toastIgnored:'已忽略 {0} 版本更新',
+  updReadyNote:'更新包已就绪，即将进入安装流程', updReadyNote2:'将跳转应用商店/浏览器完成更新',
+  ioTitle:'正在安装更新', ioBadge:'安装', ioSub:'正在准备安装程序，请稍候…',
+  updStopConfirm:'是否停止 {0} 更新并退出？', updContinue:'继续更新', updIgnore:'忽略此版本',
+  updForceActive:'强制更新进行中，无法「{0}」',
+  updStopTitle:'停止更新？', updIgnoreTitle:'忽略此更新？', updStartTitle:'启动更新程序？',
+  updIgnoreMsgIdle:'忽略 {0} 此更新后，7 天内将不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。',
+  updLaterMsgIdle:'本次暂不更新，下次打开应用时将重新检测。\n我们建议您完成更新以获取最新功能与安全修复。',
+  updIgnoreMsgPause:'下载已暂停。忽略 {0} 后将停止下载，7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。',
+  updLaterMsgPause:'下载已暂停。是否继续下载更新？\n我们建议您完成更新以获取最新功能与安全修复。',
+  updIgnoreMsgReady:'更新包已下载完成。忽略 {0} 后将 7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。',
+  updStartMsgReady:'更新包已下载完成，是否启动更新程序完成安装？\n我们建议您完成更新以获取最新功能与安全修复。',
+  updContinueBtn:'继续更新', updIgnoreBtn:'确定忽略', updStopBtn:'停止更新', updLaunchBtn:'启动更新程序',
 // 面板 & 工具
  sec2D:'2D 图形', secTools:'工具', secTransformMode:'变换模式', secProperties:'属性', secEraser:'橡皮擦属性', brushProperties:'画笔属性',
  toolNameSelect:'选择/变换', toolNameBrush3D:'3D 画笔', toolNameBrush2D:'2D 画笔', toolNameEraser:'橡皮擦', toolNameAddText:'添加文本', toolNameAddImage:'添加图片',
@@ -2296,7 +2314,7 @@ toastGroundShown:'地面已显示', toastGroundHidden:'地面已隐藏',
   tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manPrevCh:'上一章', manNextCh:'下一章', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
   manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manImportFailPart:'其中 {0} 条因说明书已更新、无法在当前位置匹配到引用原文，已跳过导入', manImportMoved:'其中 {0} 条引用位置已随说明书更新自动校准', manImportLangMismatch:'该便签备份为 {0} 语言，当前说明书为 {1} 语言，已跳过导入以避免混合不同语言', manImportLangUnknown:'该备份未携带语言标识，仅当你确认它导出自当前（{0}）说明书时才可导入', manImportOldVer:'已导入 {0} 条便签，其中部分创建于旧版本（{1}），若说明书已更新请复核', manImportNoVer:'该备份无版本标识，便签已标记为当前版本（{0}）', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文',   manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', manExportFail:'导出失败', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存',
   // 退出确认框
-  exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', tosReadDone:'我已读至文末', tosReadProgress:'已阅读 <b id="tos-progress-num">{0}</b> / 3 份文件', tosReadHint:'尚未阅读到文末', tosReadDoneHint:'已完整阅读，可关闭',
+  exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', recoveryTime:'恢复时间', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', tosReadDone:'我已读至文末', tosReadProgress:'已阅读 <b id="tos-progress-num">{0}</b> / 3 份文件', tosReadHint:'尚未阅读到文末', tosReadDoneHint:'已完整阅读，可关闭',
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
@@ -7289,7 +7307,7 @@ function saveImageViaSystem(dataUrl, filename) {
 
 function defaultJsonName(prefix){ const d=new Date(), p=x=>String(x).padStart(2,'0'); return prefix+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'; }
 // 软件版本号（可由构建脚本注入 window.__CUB3D_VERSION__ 覆盖）
-const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.2.0';
+const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.2.1';
 // 说明书语言名（用于导入提示中填充 {0}/{1}）
 const MANUAL_LANG_NAME = { 'zh-CN':'简体中文', 'zh-TW':'繁體中文', 'en':'English', 'ja':'日本語', 'ko':'한국어', 'ar':'العربية', 'ru':'Русский', 'es':'Español', 'fr':'Français' };
 function manualLangName(code){ return MANUAL_LANG_NAME[code] || code || ''; }
@@ -12358,6 +12376,8 @@ async function offerRestore(){
   try { scene = await readLastSession(); } catch(e){ scene = null; }
   if (!scene) return;
   const objCount = (scene.objects && scene.objects.length) || 0;
+  // 没有可恢复的对象时，不显示恢复弹窗
+  if (objCount === 0) { clearLastSession(); return; }
   const msg = (T('recoveryMsg') || '上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。').replace('{0}', objCount);
   const ok = await showConfirm(msg, T('recoveryTitle') || '检测到未保存的会话');
   if (ok) {
@@ -12739,9 +12759,9 @@ window.addEventListener('beforeunload', markClosed);
       var tt = _t(m.title);
       title.textContent = tt;
       title.style.display = tt ? '' : 'none';
-      body.innerHTML = _t(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
+      body.innerHTML = _t(m.body).replace(/^\s*<h4>[\s\S]*?<\/h4>/, '');
       // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
-      const _effTxt = _t('effectiveDate') || '本文件生效日期：2026年8月20日';
+      const _effTxt = _t('effectiveDate') || '本文件生效日期：2026年8月21日';
       body.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
       body.setAttribute('data-term', key);
       modal.classList.add('show');
@@ -12776,9 +12796,9 @@ window.addEventListener('beforeunload', markClosed);
       var tt = _t(m.title);
       title.textContent = tt;
       title.style.display = tt ? '' : 'none';
-      body.innerHTML = _t(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
+      body.innerHTML = _t(m.body).replace(/^\s*<h4>[\s\S]*?<\/h4>/, '');
       // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
-      const _effTxt = _t('effectiveDate') || '本文件生效日期：2026年8月20日';
+      const _effTxt = _t('effectiveDate') || '本文件生效日期：2026年8月21日';
       body.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
       body.setAttribute('data-term', key);
       var foot = document.getElementById('terms-foot'); if(foot) foot.style.display = 'none';
@@ -12969,7 +12989,7 @@ window.addEventListener('beforeunload', markClosed);
   var bootUpdatePending = false;
   var DL_ABORT = null;       // 当前下载 AbortController
 
-  function curVer(){ return String((window.__CUB3D_VERSION__) || '1.2.0').replace(/^v/i, ''); }
+  function curVer(){ return String((window.__CUB3D_VERSION__) || '1.2.1').replace(/^v/i, ''); }
   function $id(id){ return document.getElementById(id); }
   function toast(msg){ if (typeof window.toast === 'function') window.toast(msg); }
   function storeGet(k){ try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -13081,21 +13101,21 @@ window.addEventListener('beforeunload', markClosed);
       });
       logBox.appendChild(ul);
     } else {
-      logBox.innerHTML = '<div style="color:var(--text-dim);font-size:12.5px">更新内容未提供</div>';
+      logBox.innerHTML = '<div style="color:var(--text-dim);font-size:12.5px">' + _t('updChangelogEmpty') + '</div>';
     }
-    box.querySelector('.up-ver').textContent = 'v' + s.remote;
+    box.querySelector('.up-ver').textContent = '' + s.remote;
     box.querySelector('.up-sub').textContent = latest
-      ? ('相比当前 v' + s.cur + ' 已是最新')
-      : (online ? ('相比当前 v' + s.cur + (force ? ' 必须更新后使用' : ' 有更新'))
-                : ('线上暂未提供 Android 安装包，敬请期待'));
+      ? _t('updSubLatest', s.cur)
+      : (online ? _t(force ? 'updSubForce' : 'updSubHas', s.cur)
+                : _t('updNoPkgYet', '', 'Android'));
     var pill = box.querySelector('.up-pill');
-    pill.textContent = latest ? '已最新' : (online ? (force ? '强制更新' : '可选更新') : '暂不可用');
+    pill.textContent = latest ? _t('updPillLatest') : (online ? _t(force ? 'updPillForce' : 'updPillOptional') : _t('updPillNone'));
     pill.classList.toggle('latest', latest);
     pill.classList.toggle('force', force);
     pill.classList.toggle('nopkg', !online && !latest);
     box.querySelector('.modal-title').textContent = latest
-      ? '已是最新版本'
-      : (online ? (force ? '需要更新' : (box.id === 'bootBox' ? '发现新版本' : '更新可用')) : '更新暂不可用');
+      ? _t('updTitleLatest')
+      : (online ? _t(force ? 'updTitleForce' : (box.id === 'bootBox' ? 'updTitleFound' : 'updTitleAvail')) : _t('updTitleNone'));
     var date = box.querySelector('.up-meta span:first-child'); if (date) date.textContent = s.date ? (s.date + ' 发布') : '';
     if ((box[DL] || 'idle') !== 'idle') return; // 下载流程中不重置按钮/进度
     var laterBtn = box.querySelector('[data-btn=later]');
@@ -13108,8 +13128,8 @@ window.addEventListener('beforeunload', markClosed);
     var note = box.querySelector('.dl-note'); if (note) note.classList.remove('show');
     var ne = box.querySelector('.net-note'); if (ne) ne.classList.remove('show');
     var nowBtn = box.querySelector('.modal-actions .primary');
-    if (nowBtn) { nowBtn.disabled = false; nowBtn.textContent = '立即更新'; box.dataset.busy = '0'; }
-    if (!online && !latest && nowBtn) { nowBtn.disabled = true; nowBtn.textContent = '暂不可用'; }
+    if (nowBtn) { nowBtn.disabled = false; nowBtn.textContent = _t('updNowBtn'); box.dataset.busy = '0'; }
+    if (!online && !latest && nowBtn) { nowBtn.disabled = true; nowBtn.textContent = _t('updUnavailBtn'); }
     if (!online && !latest && laterBtn) laterBtn.disabled = true;
     if (!online && !latest && ignoreBtn) ignoreBtn.disabled = true;
   }
@@ -13117,7 +13137,7 @@ window.addEventListener('beforeunload', markClosed);
     var s = updateState();
     var ig = ignoreInfo();
     var st = $id('updCardState');
-    if (st) st.textContent = ig ? '已忽略更新' : ('v' + s.cur);
+    if (st) st.textContent = ig ? _t('updIgnored') : ('' + s.cur);
     var bb = $id('bootBox'), sb = $id('setBox');
     if (bb) fillBox(bb, s);
     if (sb) fillBox(sb, s);
@@ -13200,16 +13220,16 @@ window.addEventListener('beforeunload', markClosed);
     box[DL] = 'ready'; box.dataset.busy = '0';
     setBtns(box, false, false, false);
     var note = box.querySelector('.dl-note');
-    note.querySelector('span:last-child').textContent = '更新包已就绪（上次已下载完成），点击「立即更新」启动更新程序。';
+    note.querySelector('span:last-child').textContent = _t('updReadyNote');
     note.classList.add('show');
     return true;
   }
   function runProgress(box, barId, pctId, label, resumeFrom){
     var s = updateState();
-    if (s.latest) { toast('当前已是最新版本'); return; }
-    if (!s.online) { toast('线上暂未提供 Android 安装包'); return; }
+    if (s.latest) { toast(_t('toastLatest', s.cur)); return; }
+    if (!s.online) { toast(_t('toastNoPkg2', '', 'Android')); return; }
     var url = pkgUrl(s);
-    if (!url) { toast('未找到对应平台的安装包，请前往官网下载'); return; }
+    if (!url) { toast(_t('toastPkgNotFound')); return; }
     // 版本一致性：已下载完成 / 断点记录版本与当前远端不符 → 作废
     var dr = dlReadyInfo(); if (dr && dr.ver !== s.remote) clearDlReady();
     var dp = dlProgressInfo(); if (dp && dp.ver !== s.remote) clearDlProgress();
@@ -13245,7 +13265,7 @@ window.addEventListener('beforeunload', markClosed);
       if (e && e.name === 'AbortError') return;
       box[DL] = 'idle'; box.dataset.busy = '0';
       prog.classList.add('hidden');
-      toast('下载失败：' + (e && e.message ? e.message : '网络错误'));
+      toast(_t('toastDlFail', (e && e.message ? e.message : '网络错误')));
     });
     function finish(blob){
       box.__dlP = 100;
@@ -13254,7 +13274,7 @@ window.addEventListener('beforeunload', markClosed);
       clearDlProgress();
       box[DL] = 'ready'; box.dataset.busy = '0';
       setBtns(box, false, false, false);
-      note.querySelector('span:last-child').textContent = '更新包已就绪，点击「立即更新」启动更新程序。';
+      note.querySelector('span:last-child').textContent = _t('updReadyNote2');
       note.classList.add('show');
       // Android：保存 APK 到系统下载（a[download] 触发下载管理器）
       if (blob && blob.size) saveApk(blob, s);
@@ -13276,12 +13296,12 @@ window.addEventListener('beforeunload', markClosed);
     box[DL] = 'installing'; box.dataset.busy = '1';
     stopDownload(box, true);
     var ov = $id('bootInstaller');
-    ov.querySelector('.io-title').textContent = '安装包已就绪';
-    ov.querySelector('.io-badge').textContent = 'APK 已保存到系统下载管理';
-    ov.querySelector('.io-sub').innerHTML = '请在系统下载管理中点击 APK 完成安装。';
+    ov.querySelector('.io-title').textContent = _t('ioTitle');
+    ov.querySelector('.io-badge').textContent = _t('ioBadge');
+    ov.querySelector('.io-sub').innerHTML = _t('ioSub');
     ov.classList.add('show');
     setTimeout(function(){ ov.classList.remove('show'); box[DL] = 'idle'; }, 4000);
-    toast('APK 已保存，请在系统下载管理中点击安装');
+    toast(_t('toastApkSaved'));
   }
 
   /* ============ 开屏检测（加载完成进入编辑器后弹出） ============ */
@@ -13315,8 +13335,8 @@ window.addEventListener('beforeunload', markClosed);
       resolveAll(res);
       refreshBoth();
       var s = updateState();
-      if (s.latest) { hideBox($id('setBox')); toast('已是最新版本（v' + s.cur + '）'); return; }
-      if (!s.online) { toast('v' + s.remote + ' 更新暂不可用（线上暂未提供 Android 安装包）'); return; }
+      if (s.latest) { hideBox($id('setBox')); toast(_t('toastLatest', s.cur)); return; }
+      if (!s.online) { toast(_t('toastNoPkg', s.remote, 'Android')); return; }
       clearUpdTimers();
       setTimer = setTimeout(function(){
         setTimer = null;
@@ -13327,7 +13347,7 @@ window.addEventListener('beforeunload', markClosed);
         });
       }, 300);
     }).catch(function(){
-      toast('检查更新失败，请检查网络后重试');
+      toast(_t('toastCheckFail'));
     });
   }
 
@@ -13336,17 +13356,17 @@ window.addEventListener('beforeunload', markClosed);
     var st = box[DL] || 'idle';
     var s = updateState();
     var isIgnore = (kind === 'ignore');
-    if (isForceActive()) { toast('强制更新进行中，无法「' + (isIgnore ? '忽略此更新' : '稍后再说') + '」'); return; }
+    if (isForceActive()) { toast(_t('updForceActive', (isIgnore ? _t('updIgnore') : '稍后再说'))); return; }
     var barId = (box === $id('bootBox')) ? 'bootBar' : 'setBar';
     var pctId = (box === $id('bootBox')) ? 'bootPct' : 'setPct';
     if (st === 'idle') {
       showConfirm({
-        title: isIgnore ? '忽略此更新？' : '停止更新？',
+        title: isIgnore ? _t('updIgnoreTitle') : _t('updStopTitle'),
         msg: isIgnore
-          ? '忽略 v' + s.remote + ' 此更新后，7 天内将不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。'
-          : '本次暂不更新，下次打开应用时将重新检测。\n我们建议您完成更新以获取最新功能与安全修复。',
-        yesLabel: '继续更新',
-        noLabel: isIgnore ? '确定忽略' : '停止更新',
+          ? _t('updIgnoreMsgIdle', s.remote)
+          : _t('updLaterMsgIdle'),
+        yesLabel: _t('updContinueBtn'),
+        noLabel: isIgnore ? _t('updIgnoreBtn') : _t('updStopBtn'),
         onContinue: function(){},
         onStop: function(){ if (isIgnore) { setIgnore(s.remote); refreshBoth(); } hideBox(box); }
       });
@@ -13355,12 +13375,12 @@ window.addEventListener('beforeunload', markClosed);
     if (st === 'downloading' || st === 'paused') {
       pauseDownload(box);
       showConfirm({
-        title: isIgnore ? '忽略此更新？' : '停止更新？',
+        title: isIgnore ? _t('updIgnoreTitle') : _t('updStopTitle'),
         msg: isIgnore
-          ? '下载已暂停。忽略 v' + s.remote + ' 后将停止下载，7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。'
-          : '下载已暂停。是否继续下载更新？\n我们建议您完成更新以获取最新功能与安全修复。',
-        yesLabel: '继续更新',
-        noLabel: isIgnore ? '确定忽略' : '停止更新',
+          ? _t('updIgnoreMsgPause', s.remote)
+          : _t('updLaterMsgPause'),
+        yesLabel: _t('updContinueBtn'),
+        noLabel: isIgnore ? _t('updIgnoreBtn') : _t('updStopBtn'),
         onContinue: function(){ resumeDownload(box, barId, pctId, label); },
         onStop: function(){
           stopDownload(box, true);
@@ -13371,12 +13391,12 @@ window.addEventListener('beforeunload', markClosed);
     }
     if (st === 'ready' || st === 'localready') {
       showConfirm({
-        title: isIgnore ? '忽略此更新？' : '启动更新程序？',
+        title: isIgnore ? _t('updIgnoreTitle') : _t('updStartTitle'),
         msg: isIgnore
-          ? '更新包已下载完成。忽略 v' + s.remote + ' 后将 7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。'
-          : '更新包已下载完成，是否启动更新程序完成安装？\n我们建议您完成更新以获取最新功能与安全修复。',
-        yesLabel: isIgnore ? '继续更新' : '启动更新程序',
-        noLabel: isIgnore ? '确定忽略' : '停止更新',
+          ? _t('updIgnoreMsgReady', s.remote)
+          : _t('updStartMsgReady'),
+        yesLabel: isIgnore ? _t('updContinueBtn') : _t('updLaunchBtn'),
+        noLabel: isIgnore ? _t('updIgnoreBtn') : _t('updStopBtn'),
         onContinue: function(){ launchInstaller(box, label); },
         onStop: function(){
           stopDownload(box, true);

@@ -1,7 +1,34 @@
 {
   "schema": 2,
-  "updatedAt": "2026-08-21T19:59:02+08:00",
+  "updatedAt": "2026-08-22T20:00:00+08:00",
   "versions": [
+    {
+      "version": "1.2.1",
+      "date": "2026-08-22",
+      "publishedAt": "2026-08-22T20:00:00+08:00",
+      "type": "optional",
+      "status": "published",
+      "targets": [
+        "github",
+        "cn"
+      ],
+      "notes": {
+        "all": [
+          "修复：APK 接入境内备用 IP 更新源（139.196.104.56），新增 network-security-config 放行该 IP 的明文更新探测与下载，确保国内用户可经 IP 远程更新",
+          "优化：应用启动更新检测逻辑，GitHub 源不可达时自动回退至国内主站 / 备用 IP 源",
+          "同步：更新法律条款、九语言说明书与多语言界面文案（与 Web/PC 端保持一致）"
+        ]
+      },
+      "assets": {
+        "pc": [],
+        "android": [
+          {
+            "name": "Cub3D-Editor-release-1.2.1-universal.apk",
+            "kind": "APK"
+          }
+        ]
+      }
+    },
     {
       "version": "1.2.0",
       "date": "2026-08-21",

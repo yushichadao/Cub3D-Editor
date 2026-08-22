@@ -80,7 +80,37 @@ function migrateLegacyData() {
     }
   } catch (_) {}
 }
-migrateLegacyData();
+
+/**
+ * 关键修复：首次启动白屏
+ * 旧版把 migrateLegacyData() 放在模块加载时同步执行。若旧中文目录（立方·3D设计工坊）
+ * 含大量 projects/autosave 数据，fs.cpSync 递归复制会同步阻塞主进程事件循环数十秒，
+ * 期间渲染进程的 app:// 请求（含 index.html 响应）无法被 protocol handler 处理，
+ * 页面要等很久才出现 → 表现为“第一次打开白屏，第二次正常”。
+ * 改为在事件循环的下一个 tick 异步执行，使其不阻塞首个 app:// 请求；
+ * 且用异步 API 分块复制，避免在复制期间再次卡住事件循环。
+ */
+function migrateLegacyDataAsync() {
+  setImmediate(function () {
+    try {
+      if (path.resolve(legacyUserData) === path.resolve(asciiUserData)) return;
+      if (!fs.existsSync(legacyUserData)) return;
+      if (fs.existsSync(path.join(asciiUserData, 'config.json'))) return;
+      fs.mkdirSync(asciiUserData, { recursive: true });
+      for (const d of ['projects', 'autosave', 'langpacks', 'logs']) {
+        const src = path.join(legacyUserData, d);
+        if (fs.existsSync(src)) {
+          try { fs.cp(src, path.join(asciiUserData, d), { recursive: true, force: true }, function () {}); } catch (_) {}
+        }
+      }
+      const cfg = path.join(legacyUserData, 'config.json');
+      if (fs.existsSync(cfg)) {
+        try { fs.copyFile(cfg, path.join(asciiUserData, 'config.json'), function () {}); } catch (_) {}
+      }
+    } catch (_) {}
+  });
+}
+migrateLegacyDataAsync();
 
 /** 用户数据根目录（可写） */
 function resolveDataRoot() {

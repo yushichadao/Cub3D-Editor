@@ -1,6 +1,6 @@
 {
   "name": "3d-editor",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "立方 · 三维设计工坊 — 3D/2D 场景编辑器（Web + Android APK）",
   "scripts": {

@@ -30,8 +30,9 @@
 
   function isDirty() { return K ? K.state.hIndex !== savedMark : false; }
 
-  /* 网页风格确认弹窗，替代 Windows 原生 dialog；返回 { ok, response }
-     样式全部引用主题 CSS 变量（与界面其他控件同一套机制），自动跟随当时主题 */
+  /* 网页风格确认弹窗，替代 Windows 原生 dialog。
+     直接复用界面统一的 .modal-* / .top-btn 主题样式（与 Web/Android 及 PC 端其他弹窗同一套机制），
+     不再内联覆盖样式，确保各端视觉一致。返回 { ok, response }（response 为按钮下标） */
   function webConfirm(opts) {
     opts = opts || {};
     var buttons = opts.buttons || ['确定'];
@@ -39,39 +40,33 @@
     var resolved = false;
     var mask = document.createElement('div');
     mask.className = 'modal-mask';
-    mask.style.cssText = 'position:fixed;inset:0;z-index:6000;display:flex;align-items:center;justify-content:center;background:var(--modal-mask,rgba(8,10,18,0.72));font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;';
     var box = document.createElement('div');
     box.className = 'modal-box';
-    box.style.cssText = 'background:var(--bg-panel-solid,#fff);border-radius:14px;padding:24px 26px;min-width:340px;max-width:90vw;box-shadow:none;color:var(--text,#1b2440);';
     if (opts.title) {
       var title = document.createElement('div');
       title.className = 'modal-title';
       title.textContent = opts.title;
-      title.style.cssText = 'font-size:18px;font-weight:700;margin-bottom:10px;';
       box.appendChild(title);
     }
     if (opts.message) {
       var msg = document.createElement('div');
       msg.className = 'modal-msg';
       msg.textContent = opts.message;
-      msg.style.cssText = 'font-size:16px;font-weight:600;margin-bottom:6px;';
       box.appendChild(msg);
     } else if (!opts.title) {
       var msg = document.createElement('div');
       msg.className = 'modal-msg';
       msg.textContent = '确认';
-      msg.style.cssText = 'font-size:18px;font-weight:700;margin-bottom:10px;';
       box.appendChild(msg);
     }
     if (opts.detail) {
       var detail = document.createElement('div');
-      detail.style.cssText = 'font-size:14px;color:var(--text-dim,#4b5675);line-height:1.6;margin:4px 0;white-space:pre-line;';
+      detail.className = 'modal-detail';
       detail.textContent = opts.detail;
       box.appendChild(detail);
     }
     var actions = document.createElement('div');
     actions.className = 'modal-actions';
-    actions.style.cssText = 'margin-top:20px;display:flex;gap:10px;justify-content:flex-end;';
     box.appendChild(actions);
     mask.appendChild(box);
     var promise = new Promise(function (resolve) {
@@ -86,17 +81,18 @@
       function onKey(e) {
         if (e.key === 'Escape') { e.preventDefault(); finish({ ok: false, response: cancelIndex < 0 ? 0 : cancelIndex }); }
       }
+      var primaryBtn = null;
       buttons.forEach(function (label, i) {
         var btn = document.createElement('button');
-        btn.className = (i === opts.defaultId ? 'primary' : '');
-        btn.textContent = label;
         var primary = (i === opts.defaultId);
-        btn.style.cssText = primary
-          ? 'padding:9px 20px;border:none;border-radius:9px;cursor:pointer;font-size:14px;background:var(--accent,#2e6bff);color:var(--primary-btn-text,#fff);'
-          : 'padding:9px 20px;border:1px solid var(--border,rgba(110,231,255,0.18));border-radius:9px;cursor:pointer;font-size:14px;background:var(--control-bg,rgba(255,255,255,0.05));color:var(--text,#1b2440);';
+        btn.className = primary ? 'top-btn primary' : 'top-btn';
+        btn.textContent = label;
         btn.onclick = function () { finish({ ok: true, response: i }); };
+        if (primary) primaryBtn = btn;
         actions.appendChild(btn);
       });
+      // 积极（默认/主操作）按钮置左，与界面其他确认弹窗保持一致（response 下标仍按原按钮顺序，调用方逻辑不变）
+      if (primaryBtn) actions.insertBefore(primaryBtn, actions.firstChild);
       mask.addEventListener('click', function (e) {
         if (e.target === mask) finish({ ok: false, response: cancelIndex < 0 ? 0 : cancelIndex });
       });
@@ -326,25 +322,46 @@
       if (!s || !s.data) return;
       // 只在非正常退出（存在残留会话）且当前场景为空时询问
       if (K.state.objects.length > 0) return;
+      var objCount = (s.data.objects && s.data.objects.length) || 0;
+      // 没有可恢复的对象时，不显示恢复弹窗
+      if (objCount === 0) { D.file.clearLastSession(); return; }
       var when = new Date(s.time).toLocaleString();
-      webConfirm({
-        title: '场景恢复',
-        message: '检测到上次未正常关闭的场景',
-        detail: '时间：' + when + '\n是否恢复该场景？',
-        buttons: ['放弃', '恢复'],
-        defaultId: 1, cancelId: 0
-      }).then(function (res) {
-        if (res && res.ok && res.response === 1) {
-          if (applyDoc(s.data)) {
-            currentPath = s.file || null;
-            updateTitle();
-            if (typeof K.refreshUI === 'function') K.refreshUI();
-            say('已恢复上次会话');
+      var msg = (_t('recoveryMsg') || '上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。').replace('{0}', objCount);
+      // 复用工程统一确认弹窗（与 Web/Android 一致的「确定/取消」按钮），时间作为补充说明
+      if (typeof showConfirm === 'function') {
+        showConfirm(msg + '\n' + (_t('recoveryTime') || '时间') + '：' + when, _t('recoveryTitle') || '检测到未保存的会话').then(function (ok) {
+          if (ok) {
+            if (applyDoc(s.data)) {
+              currentPath = s.file || null;
+              updateTitle();
+              if (typeof K.refreshUI === 'function') K.refreshUI();
+              say('已恢复上次会话');
+            }
+          } else {
+            D.file.clearLastSession();
           }
-        } else {
-          D.file.clearLastSession();
-        }
-      });
+        });
+      } else {
+        // 兜底：无 showConfirm 时用自绘弹窗，按钮文案与三端一致（确定/取消）
+        webConfirm({
+          title: _t('recoveryTitle') || '检测到未保存的会话',
+          message: msg,
+          detail: _t('recoveryTime') ? (_t('recoveryTime') + '：' + when) : ('时间：' + when),
+          buttons: [_t('ok') || '确定', _t('cancel') || '取消'],
+          defaultId: 0, cancelId: 1
+        }).then(function (res) {
+          if (res && res.ok && res.response === 0) {
+            if (applyDoc(s.data)) {
+              currentPath = s.file || null;
+              updateTitle();
+              if (typeof K.refreshUI === 'function') K.refreshUI();
+              say('已恢复上次会话');
+            }
+          } else {
+            D.file.clearLastSession();
+          }
+        });
+      }
     });
   }
 

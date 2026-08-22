@@ -217,7 +217,7 @@ function render(){
   const raw = dict[K.b] || '';
   document.getElementById('docBody').innerHTML = raw.replace(/^\s*<h4>[\s\S]*?<\/h4>/, '');
   // 追加生效日期脚注（各语言字典 effectiveDate 字段，缺省用简体）
-  const eff = dict.effectiveDate || '本文件生效日期：2026年8月20日';
+  const eff = dict.effectiveDate || '本文件生效日期：2026年8月21日';
   document.getElementById('docBody').insertAdjacentHTML('beforeend', '<p class="eff-date">'+eff+'</p>');
   document.getElementById('backLink').href = 'index.html?lang=' + encodeURIComponent(cur);
   const bl = document.getElementById('backLink');

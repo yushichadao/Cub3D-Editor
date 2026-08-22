@@ -3,12 +3,13 @@ productName: 立方·3D设计工坊
 copyright: Copyright © 2026 Yushichadao. All Rights Reserved.
 
 directories:
-  output: dist
+  output: dist2
   buildResources: build
 
 # 打进 asar 的应用本体
 files:
   - index.html
+  - app.js
   - lang-override.js
   - server.js
   - package.json
