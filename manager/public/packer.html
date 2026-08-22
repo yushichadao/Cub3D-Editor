@@ -374,7 +374,7 @@
   function api(path, opts){
     // 打包分发下辖页面：打包相关接口走 /packer 前缀；登录/密码/鉴权走管理站点根，
     // 与更新话术系统共享同一登录态（同一账号与密码）。
-    if (/^api\/(version|pack|distribute)$/.test(path)) path = '/packer/' + path;
+    if (/^api\/(state|version|pack|distribute)$/.test(path)) path = '/packer/' + path;
     else if (/^packer\//.test(path)) { /* 已是前缀写法 */ }
     opts = opts || {};
     opts.headers = opts.headers || {};
