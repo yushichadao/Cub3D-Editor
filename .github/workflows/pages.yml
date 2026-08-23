@@ -7,7 +7,7 @@ on:
       - 'index.html'
       - 'legal-*.html'
       - 'assets/**'
-      - 'Web/**'
+      - 'web/**'
       - 'shared/**'
       - 'tools/**'
       - 'downloads/**'
@@ -42,15 +42,14 @@ jobs:
       - name: Sync shared resources
         run: node tools/sync-shared.mjs
 
-      - name: Build site (landing page + Web app)
+      - name: Build site (landing page + web app)
         run: |
           rm -rf _site
           mkdir -p _site
           cp index.html _site/
-          cp -r Web _site/Web
+          cp -r web _site/web
           cp -r assets _site/assets
-          mkdir -p _site/shared
-          cp -r shared/fonts _site/shared/fonts
+          cp -r shared _site/shared
           cp legal-*.html _site/ 2>/dev/null || true
           cp .nojekyll _site/
           # 更新元数据（境外客户端经 /Cub3D-Editor/downloads/update-doc.json 检测更新；

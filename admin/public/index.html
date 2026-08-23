@@ -257,7 +257,7 @@
     const pass = $('lg-pass').value;
     const remember = $('lg-remember').checked;
     if(!user || !pass){ $('lg-msg').textContent = '请输入账号与密码'; return; }
-    api('api/login', { method:'POST', body:{ user:user, pass:pass } }).then(function(r){
+    api('api/portal/login', { method:'POST', body:{ user:user, pass:pass } }).then(function(r){
       if (r.body && r.body.ok) {
         token = pass;
         try { sessionStorage.setItem(SS_TOKEN, token); } catch(e){}
@@ -287,7 +287,7 @@
     if(!old || !nx || !nx2){ $('pm-msg').textContent='请填全三项'; return; }
     if(nx.length < 6){ $('pm-msg').textContent='新密码至少 6 位'; return; }
     if(nx !== nx2){ $('pm-msg').textContent='两次新密码不一致'; return; }
-    api('api/passwd', { method:'POST', body:{ old:old, next:nx } }).then(function(r){
+    api('api/portal/passwd', { method:'POST', body:{ old:old, next:nx } }).then(function(r){
       if(r.body && r.body.ok){ $('pwd-modal').classList.remove('show'); token = nx; try{ localStorage.setItem(LS_TOKEN, nx); }catch(e){} toast('密码已修改，请牢记新密码'); }
       else $('pm-msg').textContent = (r.body && r.body.error) || '修改失败';
     }).catch(function(){ $('pm-msg').textContent='无法连接后端'; });
@@ -299,7 +299,7 @@
     try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
     if(!saved){ leaveAdmin(); return; }
     token = saved; enterAdmin();
-    api('api/auth-check').then(function(r){
+    api('api/portal/auth-check').then(function(r){
       if(r.status === 401){ remStore(LS_TOKEN); try{ sessionStorage.removeItem(SS_TOKEN); }catch(e){} token=''; leaveAdmin(); }
     });
   })();

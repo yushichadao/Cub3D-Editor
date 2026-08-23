@@ -133,6 +133,17 @@ function handle() {
   });
 }
 
+// ASCII 校验：资源请求路径若含非 ASCII 字符，Chromium 的 ByteString 会静默失败并卡加载页。
+// 工程已统一 ASCII 路径（见 paths.js 的 Cub3DEditor / .runtime），此处显式拦截并给出可读错误。
+function assertAscii(rel) {
+  // 允许 % 编码（后续 decodeURIComponent 已解开）；仅检测解码后的非 ASCII 字符
+  for (let i = 0; i < rel.length; i++) {
+    const c = rel.charCodeAt(i);
+    if (c > 127) return rel[i];
+  }
+  return null;
+}
+
 async function handleOne(request, R) {
   const t0 = Date.now();
   let url;
@@ -143,7 +154,20 @@ async function handleOne(request, R) {
   if (!root) return notFound('Unknown host: ' + host);
 
   // 去掉查询串与锚点，解码中文路径（docs 下全是中文文件名）
-  let rel = decodeURIComponent(url.pathname || '/');
+  let rel;
+  try {
+    rel = decodeURIComponent(url.pathname || '/');
+  } catch (_) {
+    return new Response('Bad path encoding: ' + url.pathname, { status: 400, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  }
+  // ASCII 校验中间件（F）：非 ASCII 资源路径显式报错，不静默卡加载页
+  const bad = assertAscii(rel);
+  if (bad) {
+    const msg = '[app://] 非 ASCII 资源路径被拦截: ' + rel + ' (非法字符: ' + bad + ')\n' +
+      '工程资源路径必须全 ASCII（见 docs/STANDARDS.md）。请检查资源命名或路径拼接。';
+    console.error(msg);
+    return new Response(msg, { status: 400, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  }
   if (rel === '/' || rel === '') rel = '/index.html';
   // 归一化，杜绝 ../ 穿越
   const target = path.join(root, path.normalize(rel).replace(/^([/\\])+/, ''));

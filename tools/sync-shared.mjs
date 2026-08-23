@@ -173,22 +173,16 @@ async function main() {
   for (const f of scripts) await syncFile(SCRIPTS_SRC, f, SCRIPTS_DESTS);
   console.log('[sync-shared] 共享脚本同步完成。');
 
-  // 4) 国际化：将弹窗文案与扩展后的法律全文写入各平台语言包（en / ja / zh-TW / ko / ru / es / fr / ar）
-  //    复用独立脚本 _i18n_en.mjs / _i18n_ja.mjs / _i18n_zh-TW.mjs / _i18n_ko.mjs / _i18n_ru.mjs / _i18n_es.mjs / _i18n_fr.mjs / _i18n_ar.mjs（亦可单独运行）
-  for (const lang of ['_i18n_en', '_i18n_ja', '_i18n_zh-TW', '_i18n_ko', '_i18n_ru', '_i18n_es', '_i18n_fr', '_i18n_ar']) {
-    try {
-      await import('./' + lang + '.mjs');
-      console.log(`[sync-shared] 国际化（${lang}）执行完成。`);
-    } catch (e) {
-      console.error(`[sync-shared] 国际化（${lang}）失败：`, e.message);
-    }
+  // 4) 国际化与语言包：以 shared/i18n 单一映射表（data.js + index.js）为源，
+  //    由 gen-langs.mjs 生成三端各自语言包（端覆盖：web=base；pc=base+pc；android=base 剔除键盘键+android），
+  //    含法律全文，不再逐键注入，也不复制整段。新增语言只需改 shared/i18n 后重跑本脚本。
+  try {
+    const { execSync } = await import('node:child_process');
+    execSync('node tools/gen-langs.mjs', { stdio: 'inherit', cwd: ROOT });
+    console.log('[sync-shared] 语言包生成并同步完成（端覆盖）。');
+  } catch (e) {
+    console.error('[sync-shared] 语言包生成失败：', e.message);
   }
-
-  // 5) 语言包同步：以 shared/language 为单一源，覆盖到各端（含新增语言，如 ko.js）。
-  //    必须先于语言包同步执行上面的国际化，确保各端拿到的是最新法律全文。
-  const langFiles = (await fs.readdir(LANG_SRC)).filter((f) => f.endsWith('.js'));
-  for (const f of langFiles) await syncFile(LANG_SRC, f, LANG_DESTS);
-  console.log('[sync-shared] 语言包同步完成。');
 
   // 6) Three.js 引擎同步：以 shared/three 为单一源，覆盖到各端。
   //    缺失会导致 index.html 的 importmap 找不到 three.module.js，

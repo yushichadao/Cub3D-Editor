@@ -14,7 +14,7 @@
  *  - 各端只检测本端最新版本（latestOf，端间可不同步）。
  */
 
-import { UPDATE_SOURCES, DOC_FETCH_ORDER, PLATFORM, latestOf, cmpVer, detectRegion, pickSourceKey } from '../infra/update-sources.mjs';
+import { UPDATE_SOURCES, buildFetchOrder, PLATFORM, latestOf, cmpVer, detectRegion } from '../infra/update-sources.mjs';
 
 const TIMEOUT_MS = 8000;
 const MIN_LOADING_MS = 1500; // 加载页最短展示
@@ -79,29 +79,28 @@ export async function checkUpdate(adapter) {
   } catch {
     region = 'unknown';
   }
-  const sourceKey = pickSourceKey(region);
 
-  // 候选源依次尝试，失败降级
+  // IP 切换原则：先连所在地网站 → 所在地备用 → 非所在地 → 代理；某源解析/连接失败即降级下一个
+  const order = buildFetchOrder(region);
   let doc = null;
-  for (const key of DOC_FETCH_ORDER) {
+  for (const key of order) {
     const src = UPDATE_SOURCES[key];
     if (!src) continue;
     if (key === 'cnDomain' && !src.enabled) continue;
-    const url = src.base.replace(/\/$/, '') + src.docPath;
+    // githubProxy 为服务端代理（相对路径），不拼 docPath；相对路径补全到同源（站点/cn 源）
+    let url;
+    if (key === 'githubProxy') {
+      url = src.base.startsWith('http')
+        ? src.base.replace(/\/$/, '')
+        : (UPDATE_SOURCES.cn.base.replace(/\/$/, '') + src.base);
+    } else {
+      url = src.base.replace(/\/$/, '') + src.docPath;
+    }
     doc = await fetchWithTimeout(url, TIMEOUT_MS);
     if (doc) break;
   }
-  // GitHub 代理兜底
-  if (!doc) {
-    const gp = UPDATE_SOURCES.githubProxy;
-    const url = gp.base.replace(/^\//, '') ;
-    doc = await fetchWithTimeout(
-      (gp.base.startsWith('http') ? gp.base : (UPDATE_SOURCES.cn.base + gp.base)),
-      TIMEOUT_MS
-    );
-  }
 
-  // 保证加载页至少展示 MIN_LOADING_MS
+  // 保证加载 页至少展示 MIN_LOADING_MS
   const elapsed = Date.now() - startedAt;
   if (elapsed < MIN_LOADING_MS) {
     await new Promise((r) => setTimeout(r, MIN_LOADING_MS - elapsed));
@@ -135,4 +134,4 @@ export async function performUpdate(adapter, update) {
   }
 }
 
-export { UPDATE_SOURCES, DOC_FETCH_ORDER, PLATFORM, latestOf, cmpVer, detectRegion, pickSourceKey };
+export { UPDATE_SOURCES, buildFetchOrder, PLATFORM, latestOf, cmpVer, detectRegion };

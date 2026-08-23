@@ -9,7 +9,7 @@
 set -uo pipefail
 
 ROOT="${1:-/www/wwwroot/139.196.104.56}"
-MGR="$ROOT/manager"
+MGR="$ROOT/admin"
 ENVFILE=/etc/cub3d-manager.env
 ok=0; bad=0
 
@@ -27,13 +27,17 @@ check(){ # $1=描述 $2=通过条件(0/非0) ; 用字符串判断
 # 1) 后端存在
 [ -f "$MGR/server.mjs" ] && check "admin/server.mjs 存在" 0 || check "admin/server.mjs 存在" 1
 
-# 2) 打包分发系统是否已挂载（本地基线 7e9253a 的特征）
-grep -q "createPackerRouter" "$MGR/server.mjs" 2>/dev/null && check "server.mjs 已挂载打包分发(packerRouter)" 0 || check "server.mjs 已挂载打包分发(packerRouter)" 1
+# 2) 三系统接口是否已挂载（后台门户/发布更新信息/打包分发）
+grep -q "registerPackerRouter" "$MGR/server.mjs" 2>/dev/null && check "server.mjs 已挂载三系统路由(portal/release/packer)" 0 || check "server.mjs 已挂载三系统路由(portal/release/packer)" 1
+grep -q "registerReleaseRouter" "$MGR/server.mjs" 2>/dev/null && check "server.mjs 已挂载发布更新信息路由(releaseRouter)" 0 || check "server.mjs 已挂载发布更新信息路由(releaseRouter)" 1
+grep -q "registerPortalRouter" "$MGR/server.mjs" 2>/dev/null && check "server.mjs 已挂载后台门户路由(portalRouter)" 0 || check "server.mjs 已挂载后台门户路由(portalRouter)" 1
 [ -f "$MGR/packerRouter.mjs" ] && check "packerRouter.mjs 存在" 0 || check "packerRouter.mjs 存在" 1
+[ -f "$MGR/releaseRouter.mjs" ] && check "releaseRouter.mjs 存在" 0 || check "releaseRouter.mjs 存在" 1
+[ -f "$MGR/portalRouter.mjs" ] && check "portalRouter.mjs 存在" 0 || check "portalRouter.mjs 存在" 1
 [ -f "$MGR/public/packer.html" ] && check "public/packer.html 存在(打包分发页面)" 0 || check "public/packer.html 存在(打包分发页面)" 1
 
-# 3) 主站导航是否含打包分发入口
-grep -q "packer" "$MGR/public/index.html" 2>/dev/null && check "index.html 含 /packer 导航入口" 0 || check "index.html 含 /packer 导航入口" 1
+# 3) 主站导航是否含三系统入口（/admin 统一前缀）
+grep -q "/admin/packer" "$MGR/public/index.html" 2>/dev/null && check "index.html 含 /admin/packer 导航入口" 0 || check "index.html 含 /admin/packer 导航入口" 1
 
 # 4) 服务是否在跑
 systemctl is-active --quiet cub3d-manager 2>/dev/null && check "systemd 服务 cub3d-manager 运行中" 0 || check "systemd 服务 cub3d-manager 运行中" 1

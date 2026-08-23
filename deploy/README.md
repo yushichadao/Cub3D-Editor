@@ -6,7 +6,7 @@
 
 内容：
 - `deploy.sh` — 一键上传脚本（rsync/ssh）
-- `nginx-manager.conf` — nginx 模板（含 `/manager` 透传、`CUB3D_DOWNLOADS` 指向云端 downloads）
+- `nginx-manager.conf` — nginx 模板（含 `/admin` 透传、`CUB3D_DOWNLOADS` 指向云端 downloads）
 - `verify-server.sh` — 服务器状态校验
 
 首次部署由 deploy 脚本生成 `downloads/` 元数据云端权威副本。

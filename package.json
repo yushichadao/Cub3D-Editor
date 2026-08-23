@@ -14,5 +14,8 @@
   "bugs": {
     "url": "https://github.com/yushichadao/Cub3D-Editor/issues"
   },
-  "homepage": "https://github.com/yushichadao/Cub3D-Editor#readme"
+  "homepage": "https://github.com/yushichadao/Cub3D-Editor#readme",
+  "dependencies": {
+    "opencc-js": "^1.4.2"
+  }
 }

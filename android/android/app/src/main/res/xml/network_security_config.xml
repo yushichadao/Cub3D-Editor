@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 更新源已统一走 https（shared/infra/update-sources.mjs：cn=https://139.196.104.56），
-     故不再需要明文放行。保留默认安全策略（强制 HTTPS），消除高版本 Android 明文禁用风险。 -->
+<!-- 更新源：境内 IP 139.196.104.56 当前仅开放 HTTP(80)，HTTPS 未启用，
+     故对「仅此主机」精确放行明文（不开全局），消除高版本 Android 明文禁用导致的更新不可达。
+     全局仍强制 HTTPS；后续该主机启用 HTTPS 后可移除此 domain-config。 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
     </base-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">139.196.104.56</domain>
+    </domain-config>
 </network-security-config>

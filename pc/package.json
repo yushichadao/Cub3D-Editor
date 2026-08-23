@@ -19,10 +19,10 @@
     "dev": "electron . --dev",
     "web": "node server.js",
     "icon": "node scripts/_genicon.mjs",
-    "pack": "electron-builder --dir",
-    "dist": "npm run icon && electron-builder",
-    "dist:setup": "npm run icon && electron-builder --win nsis",
-    "dist:portable": "npm run icon && electron-builder --win portable"
+    "pack": "electron-builder --dir && node ../tools/inject-version.mjs --platform pc",
+    "dist": "npm run icon && electron-builder && node ../tools/inject-version.mjs --platform pc",
+    "dist:setup": "npm run icon && electron-builder --win nsis && node ../tools/inject-version.mjs --platform pc",
+    "dist:portable": "npm run icon && electron-builder --win portable && node ../tools/inject-version.mjs --platform pc"
   },
   "devDependencies": {
     "electron": "^43.3.0",

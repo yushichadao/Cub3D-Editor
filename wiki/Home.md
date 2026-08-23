@@ -85,7 +85,7 @@ Cub3D Editor 配套了九语言使用说明书，源文件位于仓库 `shared/d
 node tools/sync-shared.mjs
 
 # 2. 进入对应平台目录构建
-cd Web   && npm start          # 本地预览 Web 版
+cd web   && npm start          # 本地预览 Web 版
 cd PC    && npm run dist       # 构建 Windows 安装版 + 便携版
 cd Android && npm run apk:release # 构建 Android release APK
 ```

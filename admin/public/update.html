@@ -52,7 +52,10 @@
   .field input, .field select, .field textarea {
     background: var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text);
     padding:8px 10px; font-size:13px; font-family:inherit; outline:none; color-scheme: dark;
+    /* 适配多语言字符：百度翻译会自动翻译人工输入的简体中文文档，框需正确显示各国语言（CJK / 阿拉伯文等） */
+    font-family: "Noto Sans CJK SC", "Noto Sans SC", "Noto Sans Arabic", "Noto Sans JP", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
   }
+  .field textarea { white-space: pre-wrap; word-break: break-word; }
   .field select, .field input[type="date"] { color: var(--text); }
   .field select::-webkit-calendar-picker-indicator,
   .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(1.4); cursor: pointer; }
@@ -197,6 +200,7 @@
   .pkg-chip { font-size:11px; padding:3px 9px; border-radius:999px; border:1px solid var(--border); color:var(--text-dim); }
   .pkg-chip.pc { border-color: color-mix(in srgb, var(--accent) 40%, transparent); color: var(--accent); }
   .pkg-chip.android { border-color: color-mix(in srgb, var(--ok) 40%, transparent); color: var(--ok); }
+  .pkg-chip.web { border-color: color-mix(in srgb, var(--accent-3) 40%, transparent); color: var(--accent-3); }
   /* 安装包来源标注：内联在包徽章内（国内 / GitHub / 国内+GitHub） */
   .pkg-chip .pkg-chip-src {
     font-size:9.5px; padding:1px 6px; border-radius:999px; margin-right:6px; font-weight:600;
@@ -209,9 +213,10 @@
   .plat-badge { flex:0 0 auto; font-size:11px; padding:4px 10px; border-radius:999px; font-weight:700; letter-spacing:.03em; margin-top:2px; }
   .plat-badge.cn { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
   .plat-badge.gh { background: color-mix(in srgb, var(--accent-2) 18%, transparent); color: var(--accent-2); }
-  /* 按平台分区徽章：PC（蓝）/ Android（绿） */
+  /* 按平台分区徽章：PC（蓝）/ Android（绿）/ Web（紫） */
   .plat-badge.pc { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
   .plat-badge.android { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+  .plat-badge.web { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); }
   .plat-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
   .plat-notes { font-size:12.5px; color:var(--text-dim); line-height:1.7; }
   .plat-none { font-size:11px; color:var(--text-dim); opacity:.8; }
@@ -406,6 +411,10 @@
           <div class="field">
             <label id="lbl-notes-and">更新内容 — Android（自然语言，每行一条）</label>
             <textarea id="f-notes-and" placeholder="新增：...&#10;修复：...&#10;优化：..."></textarea>
+          </div>
+          <div class="field">
+            <label id="lbl-notes-web">更新内容 — Web（自然语言，每行一条）</label>
+            <textarea id="f-notes-web" placeholder="新增：...&#10;修复：...&#10;优化：..."></textarea>
           </div>
         </div>
         <div class="btn-row">
@@ -611,7 +620,7 @@
     const pass = $('lg-pass').value;
     const remember = $('lg-remember').checked;
     if(!user || !pass){ $('lg-msg').textContent = '请输入账号与密码'; return; }
-    api('api/login', { method: 'POST', body: { user: user, pass: pass } }).then(function(r){
+    api('api/portal/login', { method: 'POST', body: { user: user, pass: pass } }).then(function(r){
       if (r.body && r.body.ok) {
         token = pass;                              // 令牌 = 密码框内容（服务端当前密码）
         try { sessionStorage.setItem(SS_TOKEN, token); } catch(e){}   // 本次会话：刷新/重开免重输
@@ -644,7 +653,7 @@
   /* ============ 数据状态（后端 /api/state） ============ */
   let state = { doc: { versions: [] }, files: [], latest: null };
   function loadState(){
-    return api('api/state').then(function(r){
+    return api('api/release/state').then(function(r){
       if (r.body && r.body.ok) {
         state.doc = r.body.doc || { versions: [] };
         state.files = r.body.files || [];
@@ -688,7 +697,7 @@
   //   前端走同源请求，彻底规避浏览器直连 api.github.com 被墙 / 镜像 CORS 不可用的问题
   function loadGhReleases(){
     if (ghReleases) return Promise.resolve(ghReleases);
-    return api('api/gh-releases').then(function(res){
+    return api('api/release/gh-releases').then(function(res){
       if (!res.body || !res.body.ok) throw new Error((res.body && res.body.error) || 'http ' + res.status);
       ghReleases = (res.body.releases || []).map(function(x){
         return { tag: x.tag, ver: verOf(x.tag),
@@ -773,12 +782,14 @@
     const plats = selectedPlatforms();
     const map = {
       pc:      { ta:'f-notes-pc',  lbl:'lbl-notes-pc',  name:'PC' },
-      android: { ta:'f-notes-and', lbl:'lbl-notes-and', name:'Android' }
+      android: { ta:'f-notes-and', lbl:'lbl-notes-and', name:'Android' },
+      // Web 端不依赖安装包卡片勾选（由分发流程自动发布），文案框始终可编辑
+      web:     { ta:'f-notes-web', lbl:'lbl-notes-web', name:'Web', alwaysOn:true }
     };
     Object.keys(map).forEach(function(pl){
       const cfg = map[pl];
       const ta = $(cfg.ta), lbl = $(cfg.lbl);
-      const on = plats.has(pl);
+      const on = cfg.alwaysOn || plats.has(pl);
       ta.disabled = !on;
       ta.classList.toggle('dim', !on);
       lbl.classList.toggle('is-off', !on);
@@ -797,6 +808,7 @@
     const joinNotes = function(arr){ return (arr || []).join('\n'); };
     $('f-notes-pc').value  = joinNotes(n.all ? zhOf(n.all) : zhOf(n.pc));
     $('f-notes-and').value = joinNotes(n.all ? zhOf(n.all) : zhOf(n.android));
+    $('f-notes-web').value = joinNotes(n.all ? zhOf(n.all) : zhOf(n.web));
     return true;
   }
   // 安装包卡片：一张卡 = 一个来源的安装包（key = src::平台::文件名，来源不同不合并）
@@ -939,21 +951,18 @@
   $('btn-copy-and').addEventListener('click', function(){
     const pc = $('f-notes-pc').value.trim();
     const and = $('f-notes-and').value.trim();
-    if(pc && !and){
-      $('f-notes-and').value = $('f-notes-pc').value;
-      toast('已将 PC 更新内容填充到 Android（Android 原为空）');
-    } else if(!pc && and){
-      $('f-notes-pc').value = $('f-notes-and').value;
-      toast('已将 Android 更新内容填充到 PC（PC 原为空）');
-    } else if(!pc && !and){
-      toast('两个平台都为空，请先填写更新内容');
-    } else {
-      toast('PC 与 Android 都已填写内容，「全部相同」不适用（不会覆盖已有内容）');
-    }
+    const web = $('f-notes-web').value.trim();
+    const filled = [['PC',pc],['Android',and],['Web',web]].filter(x => x[1]);
+    if(!filled.length){ toast('三个平台都为空，请先填写更新内容'); return; }
+    const src = filled.reduce((a,b) => a[1].length <= b[1].length ? a : b)[1];
+    if(!pc) $('f-notes-pc').value = src;
+    if(!and) $('f-notes-and').value = src;
+    if(!web) $('f-notes-web').value = src;
+    toast('已将更新内容填充到所有为空的平台（PC / Android / Web）');
   });
   $('btn-reset-form').addEventListener('click', function(){
     $('f-ver').value=''; $('f-date').value=''; $('f-type').value='optional'; $('f-targets').value='both';
-    $('f-notes-pc').value=''; $('f-notes-and').value='';
+    $('f-notes-pc').value=''; $('f-notes-and').value=''; $('f-notes-web').value='';
     syncDateDisp();
     selectedPkgs.clear(); renderPkgCards([]);
   });
@@ -989,12 +998,22 @@
     if(selectedPkgs.size === 0){ toast('请先勾选要发布的安装包卡片'); return; }
     const announced = $('f-date').value || nowLocalDate();
     // 仅采纳「已勾选对应端安装包」的文案；未选中的端（文案框灰度禁用）不写入该版本 notes
+    // Web 端文案始终采纳（web 由分发流程自动发布，不依赖安装包卡片）
     const selPlats = selectedPlatforms();
     const notesPc = selPlats.has('pc') ? parseNotes($('f-notes-pc').value) : [];
     const notesAnd = selPlats.has('android') ? parseNotes($('f-notes-and').value) : [];
-    const same = JSON.stringify(notesPc) === JSON.stringify(notesAnd) && notesPc.length > 0;
-    const notes = same ? { all: notesPc } : { pc: notesPc, android: notesAnd };
-    if (!notesPc.length && !notesAnd.length){ toast('请填写所选安装包对应的更新内容'); return; }
+    const notesWeb = parseNotes($('f-notes-web').value);
+    const triple = [notesPc, notesAnd, notesWeb];
+    const allSame = triple.every(a => a.length > 0) && triple.every(a => JSON.stringify(a) === JSON.stringify(triple[0]));
+    let notes;
+    if (allSame) notes = { all: notesPc };
+    else {
+      notes = {};
+      if (notesPc.length) notes.pc = notesPc;
+      if (notesAnd.length) notes.android = notesAnd;
+      if (notesWeb.length) notes.web = notesWeb;
+    }
+    if (!notesPc.length && !notesAnd.length && !notesWeb.length){ toast('请填写更新内容（PC / Android / Web 至少其一）'); return; }
     // 发布渠道 = 勾选卡片的来源（来源不同 = 不同安装包，可单独/合并发布）：
     //   勾选境内卡 → srcs 含 cn；勾选 GitHub 卡 → srcs 含 gh；同名不同来源都勾 → srcs 并集
     const assets = { pc: [], android: [] };
@@ -1031,7 +1050,7 @@
     };
     $('btn-add').disabled = true;
     $('btn-add').textContent = '🌐 翻译中…';
-    api('api/publish', { method: 'POST', body: body }).then(function(r){
+    api('api/release/publish', { method: 'POST', body: body }).then(function(r){
       $('btn-add').disabled = false;
       $('btn-add').textContent = '🚀 批量发布所选包';
       if (r.body && r.body.ok) {
@@ -1060,7 +1079,9 @@
   /* ============ 版本列表 ============ */
   function fmtNotes(notes){
     if(!notes || !notes.length) return '<span style="color:var(--text-dim)">—</span>';
-    return notes.map(s => '<div>· ' + s + '</div>').join('');
+    // 转义文本防注入（百度翻译后的多语言内容可能含 < > & 等字符）
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    return notes.map(s => '<div>· ' + esc(s) + '</div>').join('');
   }
   function targetLabel(t){
     if (t === 'both') return '国内+国际';
@@ -1078,25 +1099,26 @@
       const typeHtml = (v.type === 'force')
         ? '<span class="st force">强制更新</span>'
         : '<span class="st pub">可选更新</span>';
-      const notesAll = !!(v.notes && v.notes.all);   // PC/Android 更新内容一致（存为 all）
+      const notesAll = !!(v.notes && v.notes.all);   // PC/Android/Web 更新内容一致（存为 all）
       const pcNotes = zhOf(v.notes && (v.notes.all || v.notes.pc));
       const andNotes = zhOf(v.notes && (v.notes.all || v.notes.android));
-      // 按平台（PC / Android）分区：notes 各自取 pcNotes / andNotes，
+      const webNotes = zhOf(v.notes && (v.notes.all || v.notes.web));
+      // 按平台（PC / Android / Web）分区：notes 各自取对应分桶，
       // 安装包按所属平台归区。渠道（境内 / GitHub）仅作为包的来源标签，不再当作分区。
       function platBlock(title, cls, pl){
         const pkgs = (v.assets && v.assets[pl] || []);
-        const notesHtml = fmtNotes(pl === 'pc' ? pcNotes : andNotes);
+        const notesHtml = fmtNotes(pl === 'pc' ? pcNotes : pl === 'android' ? andNotes : webNotes);
         const pkgsHtml = pkgs.length
           ? pkgs.map(x => {
               const srcs = (x.srcs || []).map(s => s === 'gh' ? 'GitHub' : '境内');
               const srcTag = srcs.length ? ' <span class="pkg-chip-src">' + srcs.join('/') + '</span>' : '';
               return '<span class="pkg-chip ' + pl + '">' + srcTag + (x.name || x) + '</span>';
             }).join(' ')
-          : '<span class="plat-none">未发布安装包</span>';
+          : '<span class="plat-none">未发布</span>';
         return '<div class="plat-row">' +
           '<span class="plat-badge ' + cls + '">' + title + '</span>' +
           '<div class="plat-body">' +
-            '<div class="plat-notes">' + notesHtml + '</div>' +
+            '<div class="plat-notes" dir="auto">' + notesHtml + '</div>' +
             '<div class="plat-pkgs">' + pkgsHtml + '</div>' +
           '</div>' +
         '</div>';
@@ -1105,6 +1127,7 @@
         '<div class="ver-platforms">' +
           platBlock('PC', 'pc', 'pc') +
           platBlock('Android', 'android', 'android') +
+          platBlock('Web', 'web', 'web') +
         '</div>';
       const item = document.createElement('div');
       item.className = 'ver-item';
@@ -1353,7 +1376,7 @@
     if(n1.length < 6){ $('pm-msg').textContent = '新密码至少 6 位'; return; }
     if(n1 !== n2){ $('pm-msg').textContent = '两次输入的新密码不一致'; return; }
     $('pm-save').disabled = true;
-    api('api/passwd', { method: 'POST', body: { old: old, next: n1 } }).then(function(r){
+    api('api/portal/passwd', { method: 'POST', body: { old: old, next: n1 } }).then(function(r){
       $('pm-save').disabled = false;
       if (r.body && r.body.ok) {
         token = n1;                                 // 本次会话立即用新密码
@@ -1403,7 +1426,7 @@
     if(!saved){ location.href = new URL('../', location.href).href; return; }
     token = saved;
     enterAdmin();
-    api('api/auth-check').then(function(r){
+    api('api/portal/auth-check').then(function(r){
       if(r.status === 401){
         try { remStore(LS_TOKEN); sessionStorage.removeItem(SS_TOKEN); } catch(e){}
         token = '';

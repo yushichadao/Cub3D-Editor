@@ -148,6 +148,19 @@ _verify.mjs
 *.synctest.tmp
 .playwright/
 downloads/data/
+admin/pack-state/
+
+# ===== 临时诊断/调试产物（不入库）=====
+_check.err
+_check.out
+_sync.err
+_migrate.err
+_ref.err
+_ref2.err
+*.tmp.err
+tools/_*.mjs
+tools/_*.err
+tools/_*.out
 
 # ===== 临时构建/验证目录（PC 端排查用，不入库）=====
 PC/.asar_build/

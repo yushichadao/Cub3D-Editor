@@ -1,12 +1,6 @@
 {
-  "version": "v1.2.1",
-  "assets": {
-    "Cub3D-Editor-Setup-1.2.0-x64.exe": 100763176,
-    "Cub3D-Editor-release-1.2.1-universal.apk": 4302180,
-    "Cub3D-Editor-Portable-1.2.0-x64.exe": 100521133,
-    "Cub3D-Editor-release-1.2.0-universal.apk": 4299832,
-    "Cub3D-Editor-Portable-1.1.0-x64.exe": 100430321,
-    "Cub3D-Editor-release-1.1.0-universal.apk": 4274840,
-    "Cub3D-Editor-Setup-1.1.0-x64.exe": 100672359
-  }
+  "version": "20260824",
+  "date": "2026-08-24",
+  "notes": {},
+  "assets": []
 }

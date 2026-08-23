@@ -2,17 +2,18 @@
 # Usage (PowerShell, from anywhere):
 #   .\scripts\run-debug.ps1
 #
-# Prereq: dev-tools contains jdk17 + android-sdk (see scripts/env-android.mjs),
+# Prereq: toolchain/ contains jdk17 + android-sdk (see scripts/env-android.mjs),
 #         and a phone with "USB debugging" enabled is connected (or an emulator is running).
+#         工具链统一收敛到仓库内 toolchain/（可用环境变量 CUB3D_TOOLCHAIN 覆盖）。
 $ErrorActionPreference = "Stop"
 
-$Root     = Resolve-Path (Join-Path $PSScriptRoot "..")
-$DevTools = Join-Path $env:USERPROFILE "dev-tools"
+$Root = Resolve-Path (Join-Path $PSScriptRoot "..")
+if ($env:CUB3D_TOOLCHAIN) { $Tools = $env:CUB3D_TOOLCHAIN } else { $Tools = Join-Path $Root ".." "toolchain" }
 
 # Auto-fill JDK / SDK env (same as env-android.mjs)
-if (Test-Path (Join-Path $DevTools "jdk17"))       { $env:JAVA_HOME        = Join-Path $DevTools "jdk17" }
-if (Test-Path (Join-Path $DevTools "android-sdk")) {
-    $env:ANDROID_HOME     = Join-Path $DevTools "android-sdk"
+if (Test-Path (Join-Path $Tools "jdk17"))       { $env:JAVA_HOME        = Join-Path $Tools "jdk17" }
+if (Test-Path (Join-Path $Tools "android-sdk")) {
+    $env:ANDROID_HOME     = Join-Path $Tools "android-sdk"
     $env:ANDROID_SDK_ROOT = $env:ANDROID_HOME
 }
 # Allow capacitor `sync` bulk delete under safe-delete sandbox

@@ -1222,7 +1222,7 @@
 .md-block code { background:var(--control-bg); border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:0.83em; font-family:ui-monospace,Menlo,Consolas,monospace; }
 .md-block hr { border:none; border-top:1px solid var(--border); margin:14px 0; }
 </style>
-  <meta name="bootv" content="20260818">
+  <meta name="bootv" content="20260824">
   <script>
     // —— 加载页（缓冲页）轻量翻译：在主应用 I18N/_t 就绪前即可使用 ——
     // 简体中文作为默认与回退；其余语言来自 window.__packs（language/ 目录，已在 <head> 注入）。
@@ -2106,7 +2106,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
             <p class="about-dim" data-i18n="aboutStack">技术栈：Three.js / WebGL</p>
             <p class="about-author"><span data-i18n="aboutAuthor">作者</span>：Yushichadao</p>
             <p class="about-ai" data-i18n="aboutAI">本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成</p>
-            <p class="about-dim" id="about-version-line">版本：<span id="about-version">2.2.0</span></p>
+            <p class="about-dim" id="about-version-line"><span data-i18n="aboutVersion">版本：</span><span id="about-version">2.2.0</span></p>
             <a class="about-link" id="about-home" href="https://yushichadao.github.io/Cub3D-Editor/" target="_blank" rel="noopener" data-i18n="aboutHome">项目主页</a>
             <a class="about-link" id="about-repo" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="aboutRepo">GitHub 仓库</a>
             <div class="about-terms">
@@ -2173,7 +2173,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
 // 原则：加载未完成前绝不隐藏 loader，避免暴露半成品/错乱界面。
 
 // 发版版本号（与 <head> 中 meta[name=bootv] 保持一致）
-const BOOTV = '20260818';
+const BOOTV = '20260824';
 
 // 加载页开始显示的时间：用于保证最低展示时长，防止加载过快时缓冲页一闪而过
 window.__bootT0 = Date.now();
@@ -2641,12 +2641,34 @@ setTimeout(function () {
   // 更新源单一化：域名/IP 仅在 shared/infra/update-sources.mjs 一处维护（备案后无缝切 cub3d-editor.cn）。
   // 客户端只读取 window.CUB3D_UPDATE_SOURCES，杜绝三端 HOST 数组分叉与 http 明文假回退。
   // 优先级：境内 IP(/manager) → 境内域名(/manager，备案后启用) → 境外 GitHub Pages → 服务端 GitHub 代理。
+  // 单一源：顺序由 shared/infra/update-sources.mjs 的 buildFetchOrder 决定（含 IP 切换原则），
+  // 不再在客户端重复维护 HOST 顺序，杜绝三端分叉。默认按境内优先（境外源在前面的源超时后自动降级）。
   function buildHosts(){
-    var S = window.CUB3D_UPDATE_SOURCES; var list = []; if (!S) return list;
-    if (S.cn && S.cn.base) list.push({ name: '境内源', api: S.cn.base + '/api/update', dl: S.cn.base + '/downloads/' });
-    if (S.cnDomain && S.cnDomain.enabled !== false && S.cnDomain.base) list.push({ name: '境内域名', api: S.cnDomain.base + '/api/update', dl: S.cnDomain.base + '/downloads/' });
-    if (S.intl && S.intl.base) list.push({ name: '境外站', api: S.intl.base + '/downloads/update-doc.json', dl: 'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/' });
-    if (S.githubProxy && S.githubProxy.base) list.push({ name: 'GitHub代理', api: S.githubProxy.base, dl: S.githubProxy.base + '/download/' });
+    var S = window.CUB3D_UPDATE_SOURCES;
+    if (!S) return [];
+    var order = (window.CUB3D_BUILD_FETCH_ORDER
+      ? window.CUB3D_BUILD_FETCH_ORDER('cn')
+      : ['cn', 'cnDomain', 'intl', 'githubProxy']);
+    var list = [];
+    order.forEach(function(key){
+      var src = S[key];
+      if (!src) return;
+      if (key === 'cnDomain' && src.enabled === false) return;
+      var base = src.base;
+      var api, dl;
+      if (key === 'intl') {
+        api = base + '/downloads/update-doc.json';
+        dl = 'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/';
+      } else if (key === 'githubProxy') {
+        // 相对路径兜底：补全到境内源 base（仅在前面源全失败时才触发）
+        api = (base.indexOf('http') === 0) ? base : (S.cn.base + base);
+        dl = api + '/download/';
+      } else {
+        api = base + '/api/update';
+        dl = base + '/downloads/';
+      }
+      list.push({ name: src.label || key, api: api, dl: dl });
+    });
     return list;
   }
   var HOSTS = buildHosts();
@@ -2811,7 +2833,8 @@ setTimeout(function () {
     } else {
       logBox.innerHTML = '<div style="color:var(--text-dim);font-size:12.5px">' + _t('updChangelogEmpty') + '</div>';
     }
-    box.querySelector('.up-ver').textContent = s.remote;
+    // 版本号：仅当有可用更新（云端有本平台包且非最新）时显示云端最新版本；云无包则不显示版本号
+    box.querySelector('.up-ver').textContent = (!s.latest && s.online) ? ('' + s.remote) : '';
     box.querySelector('.up-sub').textContent = latest
       ? _t('updSubLatest').replace('{0}', s.cur)
       : (online ? (force ? _t('updSubForce').replace('{0}', s.cur)
@@ -2846,7 +2869,8 @@ setTimeout(function () {
     var s = updateState();
     var ig = ignoreInfo();
     var st = $id('updCardState');
-    if (st) st.textContent = ig ? _t('updIgnored') : ('' + s.cur);
+    // 设置页卡片：仅当有可用更新时显示云端最新版本号；云无包/无更新则不显示版本号
+    if (st) st.textContent = ig ? _t('updIgnored') : ((!s.latest && s.online) ? ('' + s.remote) : '');
     var bb = $id('bootBox'), sb = $id('setBox');
     if (bb) fillBox(bb, s);
     if (sb) fillBox(sb, s);
@@ -3166,6 +3190,9 @@ setTimeout(function () {
   /* ============ 更新浮窗静态文案国际化（覆盖 HTML 初始硬编码中文） ============ */
   function applyUpdateStaticText(){
     var setTxt = function(id, k){ var el = $id(id); if (el) el.textContent = _t(k); };
+    // 通用 data-i18n 扫描：与安卓/web 对齐，翻译所有静态文案（关于页等）
+    document.querySelectorAll('[data-i18n]').forEach(function(el){ var k = el.getAttribute('data-i18n'); if (k) el.textContent = _t(k); });
+    document.querySelectorAll('[data-i18n-title]').forEach(function(el){ var k = el.getAttribute('data-i18n-title'); if (k) el.title = _t(k); });
     // 次要按钮：稍后再说 / 忽略此版本
     setTxt('bootLater', 'updLaterBtn'); setTxt('bootIgnore', 'updIgnore'); setTxt('setLater', 'updLaterBtn');
     // 断网提示条
@@ -3180,12 +3207,15 @@ setTimeout(function () {
       var is = ov.querySelector('.io-sub'); if (is) is.textContent = _t('updIoSub');
     }
   }
-  applyUpdateStaticText();
+  // app.js(定义 _t)是 type=module，会延迟到解析完成后才执行；此处同步调用会 _t is not defined。
+  // 推迟到 load 事件（模块已执行、_t 已就绪）后再应用静态文案。
+  window.addEventListener('load', applyUpdateStaticText);
 
   /* ============ 启动：拉取更新信息 → 渲染 → 开屏静默检测 ============ */
   function start(){
     var av = $id('about-version');
-    if (av) av.textContent = '' + curVer();
+    // 预览态(IDE/localhost/未打包)关于页版本号统一显示 X.X.X
+    if (av) av.textContent = (window.__CUB3D_PACKAGED__ ? ('' + curVer()) : 'X.X.X');
     loadUpdate().then(function(res){
       resolveAll(res);
       refreshBoth();

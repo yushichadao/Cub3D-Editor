@@ -60,8 +60,8 @@ const REPO = 'yushichadao/Cub3D-Editor';
 
 const args = process.argv.slice(2); // 提前声明，供下方 getArg / 百度密钥解析使用
 
-const BAIDU_APPID = getArg('--baidu-appid') || process.env.BAIDU_APPID || '';
-const BAIDU_KEY   = getArg('--baidu-key')   || process.env.BAIDU_KEY   || '';
+const BAIDU_APPID = getArg('--baidu-appid') || process.env.BAIDU_TRANSLATE_APP_ID || '';
+const BAIDU_KEY   = getArg('--baidu-key')   || process.env.BAIDU_TRANSLATE_KEY    || '';
 
 // 工程统一语言键（9 种）：zh-CN 为源/内置，其余 8 种由百度翻译生成
 // 注意：百度翻译目标码日语为 'jp'（非 ISO 的 'ja'），韩语 'kor'，西语 'spa'，法语 'fra'，阿语 'ara'，繁中 'cht'
