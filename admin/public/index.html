@@ -224,6 +224,17 @@
     const t = $('toast'); t.textContent = msg; t.classList.add('show');
     clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 1900);
   }
+  // 后端错误码 → 中文提示
+  const ERR_ZH = {
+    'unauthorized': '登录已失效，请重新登录',
+    'invalid_credentials': '账号或密码错误',
+    'bad_request': '请求格式有误，请重试',
+    'old_mismatch': '当前密码不正确',
+    'not_found': '资源不存在',
+    'locked': '账户已锁定，请稍后再试'
+  };
+  function zhErr(code, fb){ return (code && ERR_ZH[code]) || fb; }
+
   function api(path, opts){
     opts = opts || {};
     opts.headers = opts.headers || {};
@@ -270,7 +281,7 @@
         $('lg-pass').value = ''; $('lg-msg').textContent = '';
         toast(remember ? '登录成功，已在本设备记住（自动登录）' : '登录成功，本次会话已记住（刷新免重输）');
       } else {
-        $('lg-msg').textContent = (r.body && r.body.error) || '账号或密码错误';
+        $('lg-msg').textContent = zhErr(r.body && r.body.error, '账号或密码错误');
         $('lg-pass').value = '';
       }
     }).catch(function(){ $('lg-msg').textContent = '无法连接后端服务，请检查服务是否启动'; });
@@ -293,7 +304,7 @@
     if(nx !== nx2){ $('pm-msg').textContent='两次新密码不一致'; return; }
     api('api/portal/passwd', { method:'POST', body:{ old:old, next:nx } }).then(function(r){
       if(r.body && r.body.ok){ $('pwd-modal').classList.remove('show'); token = nx; try{ localStorage.setItem(LS_TOKEN, nx); }catch(e){} toast('密码已修改，请牢记新密码'); }
-      else $('pm-msg').textContent = (r.body && r.body.error) || '修改失败';
+      else $('pm-msg').textContent = zhErr(r.body && r.body.error, '修改失败');
     }).catch(function(){ $('pm-msg').textContent='无法连接后端'; });
   });
 
