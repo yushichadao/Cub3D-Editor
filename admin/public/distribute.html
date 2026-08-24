@@ -448,9 +448,9 @@
   function tryAutoLogin(){
     let saved=null;
     try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
-    if(!saved){ location.href = new URL('../', location.href).href; return; }
+    if(!saved){ location.href = '/admin/'; return; }
     token=saved; enterAdmin();
-    api('api/portal/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; location.href = new URL('../', location.href).href; } })
+    api('api/portal/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; location.href = '/admin/'; } })
       .catch(function(){});
   }
   tryAutoLogin();
