@@ -327,18 +327,8 @@
   .avatar{width:96px;height:96px;border-radius:14px;object-fit:cover;display:block;
     border:1px solid var(--line);background:var(--bg-soft);
     -webkit-user-drag:none;user-select:none;-webkit-touch-callout:none;cursor:default}
-  /* 全站图片禁止拖拽（防止误触发浏览器拖放图片行为，干扰隐藏长按入口） */
+  /* 全站图片禁止拖拽（防止误触发浏览器拖放图片行为） */
   img{-webkit-user-drag:none;user-select:none}
-  /* 长按头像进入管理后台：视觉反馈（头像外圈圆环进度条，配色跟随主题 --accent / --line） */
-  .avatar-hold{position:relative;width:96px;height:96px;border-radius:14px}
-  .avatar-hold .av-ring{
-    position:absolute;top:50%;left:50%;width:112px;height:112px;margin:-56px 0 0 -56px;
-    z-index:1;opacity:0;transition:opacity .15s;pointer-events:none}
-  .avatar-hold .av-ring path{fill:none;stroke-width:4;stroke-linecap:round}
-  .avatar-hold .av-ring .av-track{stroke:var(--line)}
-  .avatar-hold .av-ring .av-progress{
-    stroke:var(--accent);stroke-dasharray:397.66;
-    stroke-dashoffset:calc(397.66 - (var(--p,0) * 397.66 / 100))}
   /* 下载/主 CTA 按钮禁用态（无可用下载源或设备不适用）：
      统一灰显：降透明度 + 灰度化 + not-allowed 指针。
      注意不用 pointer-events:none（会使 cursor:not-allowed 失效），禁用按钮移除 href 且点击由 JS 委托兜底阻止 */
@@ -940,9 +930,7 @@
 <script>
 /* ============ 境内外双站配置（唯一入口：备案号取得后填 SITE.cn.icp） ============ */
 const SITE = {
-  cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/',
-         downloadBase:'https://cub3d-editor.cn/downloads/',
-         versionsUrl:'downloads/versions.json', icp:'' },
+  cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/', icp:'' },
   ovs: { host:'yushichadao.github.io', home:'https://yushichadao.github.io/Cub3D-Editor/',
          releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
          apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }
@@ -955,7 +943,7 @@ const CN_ENTRY = 'https://139.196.104.56/';
 /* 境内站当前基址：IP/域名访问均以当前 origin 为准，域名解析后自动生效，无需改码 */
 const cnBase = isCnHost ? location.origin + '/' : CN_ENTRY;
 const curSite = isCnHost ? SITE.cn : SITE.ovs;
-const dl = f => (isCnHost ? (cnBase + 'downloads/') : SITE.ovs.releaseBase) + f;
+const dl = f => SITE.ovs.releaseBase + f;
 
 /* ============ 下载文件名兜底与“当前站”动态解析结果（key：setup/portable/apk） ============ */
 /* 兜底：动态解析完成前/失败时使用（与 HTML 内 data-dl 一致） */
@@ -967,11 +955,10 @@ const FALLBACK_DL = {
 /* 解析结果：{ key: {file, tag} }，由下方动态拉取按“当前站源”填充（tag 供境外缺失 key 回退历史 Release 用） */
 const LATEST_DL = { setup:null, portable:null, apk:null };
 const GITHUB_RELEASE = 'https://github.com/yushichadao/Cub3D-Editor/releases/';
-/* 当前站下载直链：境内走 downloads/ 镜像；境外走 GitHub（回退到历史 tag 时用 releases/download/<tag>/<file>） */
+/* 当前站下载直链：统一走 GitHub Releases（回退到历史 tag 时用 releases/download/<tag>/<file>） */
 const dlHref = key => {
   const hit = LATEST_DL[key];
   const f = (hit && hit.file) || FALLBACK_DL[key];
-  if(isCnHost) return dl(f);
   return (hit && hit.tag) ? (GITHUB_RELEASE + 'download/' + hit.tag + '/' + f) : (SITE.ovs.releaseBase + f);
 };
 
@@ -1917,7 +1904,7 @@ buildLangBars();
   document.querySelector('meta[name="twitter:image"]').setAttribute('content', imgUrl);
 })();
 
-/* ============ 下载体积/版本动态拉取：境内读同源 versions.json，境外读 GitHub Release；下载链接按“当前站”源解析到最新文件 ============ */
+/* ============ 下载体积/版本动态拉取：统一从 GitHub Release 解析；下载链接按当前站解析到最新文件 ============ */
 (function(){
   const DL_KEY_RE = {
     setup:    /^Cub3D-Editor-Setup-\d+\.\d+\.\d+-x64\.exe$/i,
@@ -1929,18 +1916,6 @@ buildLangBars();
   const cmpVer = (a,b) => { for(let i=0;i<3;i++){ if((a[i]||0)!==(b[i]||0)) return (a[i]||0)-(b[i]||0); } return 0; };
   const fmt = b => (b/1048576).toFixed(1)+' MB';
 
-  /* 停止发布版本集合：读 update-doc.json（与客户端更新源同一文件），status='stopped' 的版本不对外提供下载 */
-  const stopped = new Set();
-  const parseStopped = doc => {
-    if(!doc || !Array.isArray(doc.versions)) return;
-    doc.versions.forEach(v=>{ if(v && v.status === 'stopped' && v.version) stopped.add(String(v.version).replace(/^v/i,'')); });
-  };
-  const fetchStopped = () =>
-    fetch(isCnHost ? 'downloads/update-doc.json' : SITE.ovs.home + 'downloads/update-doc.json', { cache:'no-store' })
-      .then(r=>r.ok?r.json():Promise.reject())
-      .then(parseStopped)
-      .catch(()=>{});
-
   /* 从资产列表解析每个 key 版本最高的文件，写入全局 LATEST_DL（tag 为空表示就在当前源基址下） */
   function pickLatest(list, tag){
     const byName = {}, found = {};
@@ -1948,7 +1923,6 @@ buildLangBars();
       byName[a.name] = a.size;
       const k = keyOf(a.name); if(!k) return;
       const v = verOf(a.name);
-      if(stopped.has(v.join('.'))) return;   // 跳过停止发布版本
       if(!found[k] || cmpVer(v, found[k].v) > 0) found[k] = { name:a.name, v };
     });
     Object.keys(found).forEach(k=>{ LATEST_DL[k] = { file:found[k].name, tag:tag||null }; });
@@ -2016,7 +1990,6 @@ buildLangBars();
         list.forEach(rel=>(rel.assets||[]).forEach(a=>{
           const k = keyOf(a.name); if(!k || !missing.includes(k) || want[k]) return;
           const v = verOf(a.name);
-          if(stopped.has(v.join('.'))) return;   // 跳过停止发布版本
           if(!LATEST_DL[k] && (!want[k] || cmpVer(v, want[k].v) > 0)) want[k] = { file:a.name, tag:rel.tag_name, v };
         }));
         if(!Object.keys(want).length) return;
@@ -2037,18 +2010,8 @@ buildLangBars();
       .catch(renderFail);
   }
 
-  if(isCnHost){
-    /* 境内：versions.json 与 update-doc.json（stopped 标记）并行拉取后统一解析 */
-    Promise.all([
-      fetchStopped(),
-      fetch(SITE.cn.versionsUrl, { cache:'no-store' })
-        .then(r=>r.ok?r.json():Promise.reject(new Error('versions.json missing')))
-    ]).then(([,v])=>render(v.version, v.assets||{}))
-      .catch(fromGitHub);   // 境内镜像缺失时回退境外 GitHub API（境外可直达）
-  } else {
-    /* 境外：先加载 update-doc.json 的 stopped 标记，再解析 latest Release */
-    fetchStopped().then(fromGitHub);
-  }
+  /* 统一从 GitHub Release 拉取最新版本（撤除 downloads/ 镜像与 update-doc 后所有站点共用此源） */
+  fromGitHub();
 })();
 
 /* ============ 境内外双站：链接/ICP 自适应（备案号取得后填 SITE.cn.icp 即自动生效） ============ */
@@ -2233,118 +2196,6 @@ window.addEventListener('storage', ev=>{
   if(v && T[v]) applyLang(v);
 });
 
-/* ============ 隐藏管理入口：底部作者头像长按 10 秒进入管理后台（正式落地，无导航/无连点彩蛋，避免误触）
-             带视觉反馈：按住即出现头像外圈圆环进度条，手指移开/松开即取消并恢复 ============ */
-(function(){
-  // 管理后台候选地址（按优先级探测，打开第一个可达的）：
-  //   1) 同源 /admin/ —— 与 nginx location /admin/ 一致（境内 IP/域名直连时命中，备案过渡期自动跟随当前域名）
-  //   2) 境内主站 https —— 备案完成后生效
-  //   3) 境内备用 IP（https）—— fallback：https 页面探测 https，探测失败也直接打开（导航不受混合内容限制）
-  //   4) 本机 localhost:3000 —— 本地部署形态（npm start）
-  // 当前访问站点是否为境内官网（IP 直连或备案域名）：若是，同源 /admin/ 即为真正的管理门户（404 也打开）
-  const host = (location.hostname || '').toLowerCase();
-  const isCnSite = (host === '139.196.104.56' || /(^|\.)cub3d-editor\.cn$/i.test(host));
-  const ADMIN_URLS = [
-    { url: location.origin + '/admin/', fallback: isCnSite },   // 境内官网 → 同源管理后台（404 也打开）
-    { url: 'https://cub3d-editor.cn/admin/', fallback: false },
-    { url: 'https://139.196.104.56/admin/', fallback: true },
-    { url: 'http://localhost:3000/', fallback: false },
-    { url: 'http://127.0.0.1:3000/', fallback: false }
-  ];
-  const HOLD_MS = 10000;      // 长按时长：10 秒
-  const MOVE_TOL = 14;        // 位移容差 px：超过即视为拖动/滑走，取消计时
-  const avatar = document.querySelector('#author .avatar');
-  if (!avatar) return;
-  // 包一层相对定位容器，用于叠加进度环（不改变原有网格布局）
-  const hold = document.createElement('div');
-  hold.className = 'avatar-hold';
-  avatar.parentNode.insertBefore(hold, avatar);
-  hold.appendChild(avatar);
-  const NS = 'http://www.w3.org/2000/svg';
-  const ring = document.createElementNS(NS, 'svg');
-  ring.setAttribute('class', 'av-ring');
-  ring.setAttribute('viewBox', '0 0 112 112');
-  // 圆角方环：用 path 表示，路径起点在「顶部中心」(56,2)，进度从 12 点方向顺时针增长，
-  // 形状/圆角位置固定不旋转（区别于整块 rotate 的“方块旋转”效果）
-  const ROUND_RECT_D = 'M56 2 H88 A20 20 0 0 1 110 22 V88 A20 20 0 0 1 88 110 H22 A20 20 0 0 1 2 88 V22 A20 20 0 0 1 22 2 H56 Z';
-  const track = document.createElementNS(NS, 'path');
-  track.setAttribute('class', 'av-track');
-  track.setAttribute('d', ROUND_RECT_D);
-  const prog = document.createElementNS(NS, 'path');
-  prog.setAttribute('class', 'av-progress');
-  prog.setAttribute('d', ROUND_RECT_D);
-  ring.appendChild(track); ring.appendChild(prog);
-  hold.appendChild(ring);
-  let timer = null, tick = null, sx = 0, sy = 0, fired = false;
-  function setP(p){ prog.style.setProperty('--p', Math.round(p)); }
-  function hideFb(){ ring.style.opacity = '0'; setP(0); }
-  function cancel(){
-    if (timer) { clearTimeout(timer); timer = null; }
-    if (tick) { clearInterval(tick); tick = null; }
-    hideFb();
-  }
-  function startFb(){
-    setP(0); ring.style.opacity = '1';
-    const t0 = Date.now();
-    tick = setInterval(() => {
-      setP(Math.min(100, (Date.now() - t0) / HOLD_MS * 100));
-    }, 100);
-  }
-  // 跳转前按顺序探测候选地址，打开第一个可达的（避免直接打开 404 白屏）：
-  //   同源请求可精确判断 HTTP 状态；跨源 https 用 no-cors 探测网络可达性；
-  //   fallback 候选（境内 http，https 页面无法 fetch）探测失败也直接打开——window.open 导航不受混合内容限制
-  function openAdmin(){
-    let i = 0;
-    function tryNext(){
-      if (i >= ADMIN_URLS.length) {
-        try { showToast('管理后台尚未部署，请确认服务已启动'); } catch(e) {}
-        fired = false;
-        return;
-      }
-      const item = ADMIN_URLS[i++];
-      const url = item.url;
-      const sameOrigin = url.indexOf(location.origin) === 0;
-      function openIt(){
-        try { showToast('正在打开管理后台…'); } catch(e) {}
-        // 长按 10 秒后触发 window.open 属于非用户手势，浏览器可能拦截返回 null → 回退当前标签跳转
-        const w = window.open(url, '_blank', 'noopener');
-        if (!w) window.location.href = url;
-      }
-      // 境内官网的同源 /admin/：无论 404 还是探测失败都直接打开（它就是本服务器的后台）
-      if (item.fallback && sameOrigin) { openIt(); return; }
-      fetch(url, sameOrigin ? { cache: 'no-store' } : { cache: 'no-store', mode: 'no-cors' }).then(function(r){
-        if (sameOrigin && !r.ok) return tryNext();   // 同源 404 等（非境内官网）→ 尝试下一候选
-        openIt();
-      }).catch(function(){
-        if (item.fallback) {                 // 境内 http 候选：https 页面无法探测，直接打开
-          openIt();
-        } else {
-          tryNext();                         // 网络不可达 → 尝试下一候选
-        }
-      });
-    }
-    tryNext();
-  }
-  function done(){
-    if (fired) return;
-    fired = true; cancel();
-    openAdmin();
-  }
-  hold.addEventListener('pointerdown', ev => {
-    if (fired) return;
-    sx = ev.clientX; sy = ev.clientY;
-    cancel();
-    startFb();
-    timer = setTimeout(done, HOLD_MS);
-  });
-  hold.addEventListener('pointermove', ev => {
-    if (!timer) return;
-    if (Math.abs(ev.clientX - sx) > MOVE_TOL || Math.abs(ev.clientY - sy) > MOVE_TOL) cancel();
-  });
-  ['pointerup','pointercancel','pointerleave'].forEach(name => hold.addEventListener(name, cancel));
-  // 移动端长按不弹系统菜单；桌面端右键不弹菜单
-  hold.addEventListener('contextmenu', ev => ev.preventDefault());
-})();
 </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>管理后台 · Cub3D Editor 本地打包</title>
+<title>管理后台 · Cub3D Editor 分发至服务器</title>
 <style>
   :root {
     --bg-deep: #0c0e16; --bg-panel: rgba(20, 22, 34, 0.82); --bg-panel-solid: #14161f;
@@ -42,11 +42,6 @@
     background: var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text);
     padding:8px 10px; font-size:13px; font-family:inherit; outline:none; color-scheme: dark;
   }
-  .field select, .field input[type="date"] { color: var(--text); }
-  .field select::-webkit-calendar-picker-indicator,
-  .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(1.4); cursor: pointer; }
-  .field select::-webkit-inner-spin-button { filter: invert(1); }
-  .field select option { background: var(--bg-panel-solid); color: var(--text); }
   .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
   .field .mini { font-size:11px; color:var(--text-dim); opacity:.75; }
   .form-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:10px; }
@@ -60,8 +55,6 @@
   .btn:disabled { opacity:.5; cursor:not-allowed; }
   .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; font-weight:600; border-color:transparent; }
   .btn.danger { border-color: color-mix(in srgb, var(--accent-3) 55%, transparent); color: var(--accent-3); font-weight:600; }
-  .btn.small { padding:4px 10px; font-size:12px; }
-  .btn-sep { width:1px; height:20px; background: rgba(255,255,255,.10); }
   a.btn { text-decoration:none; display:inline-flex; align-items:center; }
 
   /* ===== 登录门 ===== */
@@ -98,24 +91,21 @@
   .lg-remember:hover { color: var(--text); }
   .lg-msg { font-size:12px; color:var(--accent-3); min-height:16px; text-align:center; }
 
-  /* ===== 卡片式包类型选择 ===== */
-  .pkg-cards { display:flex; flex-direction:column; gap:4px; margin-top:12px; }
-  .pkg-cards-row { display:flex; flex-wrap:wrap; gap:10px; overflow-x:auto; padding-bottom:2px; }
-  .pkg-card {
-    border:1px solid var(--border); border-radius: 12px; padding: 10px 12px; cursor:pointer; position:relative;
-    background: var(--control-bg); transition: all .18s; user-select:none;
-    flex:0 0 220px;
+  /* 分发渠道卡片（境内 / 境外） */
+  .chan-cards { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+  .chan-card {
+    flex:1 1 260px; border:1px solid var(--border); border-radius:12px; padding:12px 14px; cursor:pointer;
+    background: var(--control-bg); transition:all .18s; user-select:none; position:relative;
   }
-  .pkg-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
-  .pkg-card.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
-  .pkg-card.sel::after { content:'✓'; position:absolute; top:8px; right:10px; color:var(--accent); font-weight:700; }
-  .pkg-card .pk { display:flex; align-items:center; gap:6px; }
-  .pk-badge { font-size:10px; padding:2px 7px; border-radius:999px; font-weight:600; }
-  .pk-badge.pc { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
-  .pk-badge.android { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
-  .pkg-card .pk-name { font-size:12px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .pkg-card .pk-file { font-size:11px; color:var(--text); word-break:break-all; line-height:1.5; margin-top:6px; font-family: ui-monospace, Menlo, Consolas, monospace; }
-  .pkg-card .pk-size { font-size:11px; color:var(--text-dim); margin-top:4px; }
+  .chan-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  .chan-card.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .chan-card.sel::after { content:'✓'; position:absolute; top:10px; right:12px; color:var(--accent); font-weight:700; }
+  .chan-card .ch-title { font-size:13px; font-weight:600; }
+  .chan-card .ch-sub { font-size:11px; color:var(--text-dim); margin-top:5px; line-height:1.6; word-break:break-all; }
+  .chan-card .ch-badge { font-size:10px; padding:2px 7px; border-radius:999px; margin-right:6px; }
+  .chan-card .ch-badge.cn { background: color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); }
+  .chan-card .ch-badge.gh { background: color-mix(in srgb, var(--accent-2) 14%, transparent); color:var(--accent-2); }
+  .chan-card.disabled { opacity:.45; cursor:not-allowed; pointer-events:none; filter:grayscale(1); }
 
   /* ===== 进度 / 任务面板 ===== */
   .task-list { display:flex; flex-direction:column; gap:10px; }
@@ -127,8 +117,7 @@
   .task-targets { margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; }
   .task-body { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
   .task-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; background: var(--bg-deep); }
-  .task-row .pl { font-size:12.5px; font-weight:600; width:96px; flex-shrink:0; }
-  .task-row .pl.api { color: var(--accent); }
+  .task-row .pl { font-size:12.5px; font-weight:600; width:120px; flex-shrink:0; }
   .task-row .stbar { flex:1; font-size:11.5px; color:var(--text-dim); }
   .task-row .stbar.ok { color: var(--ok); }
   .task-row .stbar.fail { color: var(--accent-3); }
@@ -136,11 +125,16 @@
   .task-row .spin { width:12px; height:12px; border-radius:50%; border:2px solid rgba(255,255,255,.15); border-top-color: var(--accent); animation: tspin .7s linear infinite; display:inline-block; margin-right:8px; }
   @keyframes tspin { to { transform: rotate(360deg); } }
 
-  pre { background: var(--bg-deep); border:1px solid var(--border); border-radius:10px; padding:12px; overflow:auto;
-    font-family: ui-monospace, Menlo, Consolas, monospace; font-size:11.5px; color:var(--text-dim); line-height:1.6; max-height:260px; }
-  .foot { font-size:11.5px; color:var(--text-dim); opacity:.7; }
+  .hint-box { font-size:12px; line-height:1.8; background:color-mix(in srgb,var(--accent) 8%,transparent); border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); border-radius:8px; padding:10px 12px; color:var(--text-dim); }
+  .hint-box b { color: var(--accent); }
+  .toast {
+    position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-16px); padding:9px 18px; z-index:9999;
+    background: var(--bg-panel-solid); border:1px solid var(--accent); border-radius:26px; color:var(--text); font-size:12.5px;
+    opacity:0; pointer-events:none; transition:all .28s; max-width:86vw; text-align:center;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-  /* 浮窗（修改密码 / 通用确认） */
+  /* 浮窗（修改密码） */
   .pwd-modal {
     position: fixed; inset:0; z-index: 90000; display:none; align-items:center; justify-content:center;
     background: rgba(6,8,16,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
@@ -153,22 +147,8 @@
   .pwd-msg { font-size:12px; color:var(--accent-3); min-height:16px; }
   .pwd-row { display:flex; gap:8px; justify-content:flex-end; }
   .pwd-row .btn { padding:8px 16px; }
-
-  .st { display:inline-block; font-size:10.5px; padding:2px 7px; border-radius:999px; }
-  .st.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
-  .st.fail { background: color-mix(in srgb, var(--accent-3) 16%, transparent); color: var(--accent-3); }
-  .st.run { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
-  .st.idle { background: color-mix(in srgb, var(--text-dim) 16%, transparent); color: var(--text-dim); }
-
-  .hint-box { font-size:12px; line-height:1.8; background:color-mix(in srgb,var(--accent) 8%,transparent); border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); border-radius:8px; padding:10px 12px; color:var(--text-dim); }
-  .hint-box b { color: var(--accent); }
-  .toast {
-    position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-16px); padding:9px 18px; z-index:9999;
-    background: var(--bg-panel-solid); border:1px solid var(--accent); border-radius:26px; color:var(--text); font-size:12.5px;
-    opacity:0; pointer-events:none; transition:all .28s; max-width:86vw; text-align:center;
-  }
-  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
+<script src="/admin/assets/guard.js" defer></script>
 </head>
 <body>
   <!-- ===== 登录门 ===== -->
@@ -187,69 +167,59 @@
     </div>
   </div>
 
-  <!-- 主界面：本地打包 -->
+  <!-- 主界面：分发至服务器 -->
   <div id="admin-main" style="display:none; width:100%; flex-direction:column; align-items:center; gap:18px;">
     <div class="page-head">
-      <h1>本地打包 <span class="tag">管理站点 · 下辖</span></h1>
+      <h1>分发至服务器 <span class="tag">管理站点 · 下辖</span></h1>
       <div class="btn-row" style="justify-content:center;">
         <a class="btn" href="/admin/" title="返回门户">← 返回门户</a>
-        <a class="btn" href="/admin/distribute/" title="分发至服务器">📦 串门→分发</a>
+        <a class="btn" href="/admin/build/" title="本地打包">🛠 串门→本地打包</a>
         <a class="btn" href="/admin/update/" title="更新推送">📢 串门→更新推送</a>
+        <a class="btn" href="/admin/files/" title="文件系统">📁 串门→文件</a>
         <button class="btn" id="btn-pwd">🔑 修改密码</button>
         <button class="btn" id="btn-logout">退出登录</button>
       </div>
     </div>
 
-    <!-- ① 统一版本号（短号人工输入） -->
+    <!-- ① 待分发产物状态 -->
     <div class="panel">
-      <div class="panel-head"><h2>① 统一短版本号（X.X.X）</h2><span class="hint">写入根 / PC / Android 三个 package.json，双端一致；长版本号（打包时间 YYYYMMDD）由打包自动注入</span></div>
+      <div class="panel-head"><h2>① 本地打包产物</h2><span class="hint">来自「本地打包」页的构建结果，分发前需确认已成功构建</span></div>
       <div class="panel-body">
-        <div class="form-grid">
-          <div class="field">
-            <label>短版本号（X.X.X，人工输入）</label>
-            <input type="text" id="f-ver" placeholder="例如 1.3.0" />
-            <span class="mini" id="ver-cur">当前线上版本：—</span>
-          </div>
-          <div class="field">
-            <label>长版本号（自动，打包时间 YYYYMMDD）</label>
-            <input type="text" id="f-longver" readonly placeholder="打包时自动注入，预览态 00000000" style="background:var(--bg-deep); color:var(--text-dim); cursor:not-allowed;" />
-            <span class="mini">PC/安卓打包时注入「长+短」；测试未打包态长号=00000000</span>
-          </div>
-          <div class="field">
-            <label>本机打包代理（遥控本地打包）</label>
-            <span class="mini" id="agent-status">本机代理状态：检测中…</span>
-          </div>
-        </div>
-        <div class="btn-row">
-          <button class="btn primary" id="btn-apply-ver">💾 写入统一版本号</button>
-          <button class="btn" id="btn-pull-ver">⬇ 拉取当前版本号</button>
-        </div>
+        <div id="pack-area" style="margin-bottom:4px;"></div>
       </div>
     </div>
 
-    <!-- ② 包类型选择 -->
+    <!-- ② 境内外分发 -->
     <div class="panel">
-      <div class="panel-head"><h2>② 选择包类型（自由多选）</h2><span class="hint">勾选要打的安装包类型，未勾选的类型不会构建</span></div>
+      <div class="panel-head"><h2>② 选择分发渠道</h2><span class="hint">将构建产物分发到境内 downloads/ 与境外 GitHub（Web 端默认一并发布并注入长版本号）</span></div>
       <div class="panel-body">
-        <div class="pkg-cards">
-          <div class="pkg-cards-row" id="type-cards"></div>
+        <div class="chan-cards" id="dist-cards"></div>
+        <div class="field" style="margin-top:12px;">
+          <label>GitHub Release 标签（境外分发用，自动派生）</label>
+          <input type="text" id="f-tag" readonly placeholder="由打包短版本号自动生成，如 v1.3.0" style="background:var(--bg-deep); color:var(--text-dim); cursor:not-allowed;" />
+          <span class="mini">无需手动填写：标签 = <b style="color:var(--accent-2)">v</b> + 打包短版本号。只勾选「境外 GitHub」才会使用。</span>
+        </div>
+        <div id="gh-guide" class="hint-box" style="display:none; margin-top:10px;">
+          🚧 <b>境外分发尚未启用</b>：服务端缺少 <code>GH_TOKEN</code> 环境变量，无法上传到 GitHub Releases。<br>
+          启用步骤（在部署服务器上）：<br>
+          1. 申请 GitHub Personal Access Token（<code>repo</code> 权限）→ <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--accent-2);">github.com/settings/tokens</a><br>
+          2. 在 <code>/etc/cub3d-manager.env</code> 中设置：<code>GH_REPO=yushichadao/Cub3D-Editor</code> 与 <code>GH_TOKEN=你的token</code><br>
+          3. 重启管理器服务：<code>sudo systemctl restart cub3d-manager</code><br>
+          配置后刷新本页，境外卡片即可勾选。
         </div>
       </div>
     </div>
 
     <!-- 主操作 -->
     <div class="panel">
-      <div class="panel-head"><h2>🚀 开始打包</h2><span class="hint" id="main-hint">流程：统一版本号 → 勾选包类型 → 本地构建（自动注入长+短版本号）</span></div>
+      <div class="panel-head"><h2>🚀 开始分发</h2><span class="hint" id="main-hint">流程：确认产物 → 勾选渠道 → 分发并写入长版本号</span></div>
       <div class="panel-body">
         <div class="btn-row">
-          <button class="btn primary" id="btn-pack">①② 打包（本地构建）</button>
+          <button class="btn primary" id="btn-dist" disabled>② 分发到所选渠道</button>
+          <button class="btn danger" id="btn-cancel-dist" style="display:none;">🛑 强制取消</button>
           <button class="btn" id="btn-refresh-state">🔄 刷新状态</button>
         </div>
-        <div id="pack-area" style="margin-top:14px;"></div>
-        <div class="hint-box" style="margin-top:12px;">
-          📌 打包完成后请到 <b>「分发至服务器」</b> 页面将产物分发到境内 downloads / 境外 GitHub。<br>
-          长版本号（打包日 YYYYMMDD）与短版本号（上方 X.X.X）会在构建时一并注入安装包；Web 端无短号，仅注入长版本号（在分发时写入）。
-        </div>
+        <div id="dist-area" style="margin-top:14px;"></div>
       </div>
     </div>
 
@@ -304,8 +274,6 @@
   const SS_TOKEN = 'cub3d_admin_sess';
   const LS_AUTO = 'cub3d_admin_auto';
   let token = '';
-  function storeGet(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } }
-  function storeSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
   function remStore(k){ try { localStorage.removeItem(k); } catch(e){} }
   function autoLoginOn(){ try { return localStorage.getItem(LS_AUTO) === '1'; } catch(e){ return false; } }
   function setLogged(v){ try { if(v) localStorage.setItem(LS_AUTO,'1'); else localStorage.removeItem(LS_AUTO); } catch(e){} }
@@ -314,7 +282,7 @@
 
   function api(path, opts){
     if (/^api\/(state|version|pack|distribute)$/.test(path)) path = '/packer/' + path;
-    if (path.indexOf('api/') === 0) path = '/admin/' + path; // 子页面（/admin/build/）相对路径归一化为绝对路径，避免 404
+    if (path.indexOf('api/') === 0) path = '/admin/' + path; // 子页面（/admin/distribute/）相对路径归一化为绝对路径，避免 404
     opts = opts || {};
     opts.headers = opts.headers || {};
     if (token) opts.headers['X-Admin-Token'] = token;
@@ -335,7 +303,7 @@
     const user=$('lg-user').value.trim(), pass=$('lg-pass').value, remember=$('lg-remember').checked;
     if(!user||!pass){ $('lg-msg').textContent='请输入账号与密码'; return; }
     api('api/portal/login',{method:'POST',body:{user,pass}}).then(function(r){
-      if(r.body&&r.body.ok){ token=pass; try{sessionStorage.setItem(SS_TOKEN,token);}catch(e){}
+      if(r.body&&r.body.ok){ token=r.body.token; try{sessionStorage.setItem(SS_TOKEN,token);}catch(e){}
         if(remember){ setLogged(true); try{localStorage.setItem(LS_TOKEN,token);}catch(e){} }
         enterAdmin(); $('lg-pass').value=''; $('lg-msg').textContent='';
         toast(remember?'登录成功，已在本设备记住':'登录成功，本次会话已记住');
@@ -348,7 +316,7 @@
 
   /* ===== 数据状态 ===== */
   let state = { version:'', pkgTypes:[], ghEnabled:false, downloadsDir:'', pack:null };
-  let selectedTypes = new Set();
+  let selectedTargets = new Set();   // 'cn' / 'github'
   let pollTimer = null;
 
   function loadState(){
@@ -358,102 +326,123 @@
   }
 
   function renderStatic(){
-    $('ver-cur').textContent = '当前一致短版本号：' + (state.version || '—');
-    if(!$('f-ver').value) $('f-ver').value = state.version || '';
-    const ag = state.agent || {};
-    const agEl = $('agent-status');
-    if(agEl) agEl.innerHTML = ag.online
-      ? '本机代理：<b style="color:var(--ok,#16a34a)">● 在线</b>（' + (ag.name||'本机打包代理') + (ag.os? ' · '+ag.os : '') + '）— 点「开始打包」将派发给本机执行'
-      : '本机代理：<b style="color:var(--warn,#d97706)">○ 离线</b> — 在本机运行 <code>node admin/local-packer.mjs --pass &lt;密码&gt;</code> 后可遥控本机打包';
-
-    selectedTypes = new Set((state.pkgTypes||[]).map(t => t.key));
-    const tc = $('type-cards'); tc.innerHTML='';
-    (state.pkgTypes||[]).forEach(function(t){
+    // 分发渠道卡片：境内恒可选；境外未配 GH_TOKEN 时灰度禁用
+    const dc=$('dist-cards'); dc.innerHTML='';
+    const cn={key:'cn',title:'境内站点 downloads/',label:'复制到境内 downloads/ 目录',badge:'cn',sub:state.downloadsDir||'（同更新话术系统目录）'};
+    const gh={key:'github',title:'境外 GitHub Releases',label:state.ghEnabled?'上传到 GitHub Releases（'+ (state.GH_REPO||'') +'）':'未配置 GH_TOKEN，无法境外分发',badge:'gh',sub:state.ghEnabled?'配置有效':'服务端缺少 GH_TOKEN 环境变量',disabled:!state.ghEnabled};
+    [cn,gh].forEach(function(c){
       const div=document.createElement('div');
-      div.className='pkg-card'+(selectedTypes.has(t.key)?' sel':'');
-      div.innerHTML='<div class="pk"><span class="pk-badge '+t.platform+'">'+(t.platform==='pc'?'PC':'Android')+'</span>'+
-        '<span class="pk-name">'+t.kind+'</span></div><div class="pk-file">'+t.label+'</div>';
-      div.addEventListener('click', function(){
-        if(selectedTypes.has(t.key)) selectedTypes.delete(t.key); else selectedTypes.add(t.key);
-        div.classList.toggle('sel');
-      });
-      tc.appendChild(div);
+      div.className='chan-card'+(selectedTargets.has(c.key)?' sel':'')+(c.disabled?' disabled':'');
+      div.innerHTML='<div class="ch-title"><span class="ch-badge '+c.badge+'">'+(c.badge==='cn'?'境内':'境外')+'</span>'+c.title+'</div>'+
+        '<div class="ch-sub">'+c.label+'</div>'+
+        (c.sub?'<div class="ch-sub">'+c.sub+'</div>':'');
+      if(!c.disabled){
+        div.addEventListener('click', function(){
+          if(selectedTargets.has(c.key)) selectedTargets.delete(c.key); else selectedTargets.add(c.key);
+          div.classList.toggle('sel'); syncDistEnabled();
+        });
+      }
+      dc.appendChild(div);
     });
+    $('gh-guide').style.display = state.ghEnabled ? 'none' : 'block';
+    const baseVer = (state.version || '').trim();
+    $('f-tag').value = baseVer ? ('v' + baseVer) : '';
+    syncDistEnabled();
   }
 
-  /* ===== 统一版本号（短号） ===== */
-  $('btn-apply-ver').addEventListener('click', function(){
-    const ver=$('f-ver').value.trim();
-    if(!ver){ toast('请填写版本号，格式 X.X.X（如 1.3.0，不要带 v 前缀）'); return; }
-    if(!/^\d+\.\d+\.\d+$/.test(ver)){ toast('版本号格式错误：必须是 X.X.X（三位数字，如 1.3.0），不要带 v 前缀'); return; }
-    api('api/packer/version',{method:'POST',body:{version:ver}}).then(function(r){
-      if(r.body&&r.body.ok){ toast('已写入统一短版本号 '+ver+'（更新 '+r.body.filesUpdated+' 个 package.json）'); state.version=ver; renderStatic(); }
-      else toast('写版本号失败：'+(r.body&&r.body.error||'未知错误'));
-    }).catch(function(){ toast('无法连接后端'); });
-  });
-  $('btn-pull-ver').addEventListener('click', function(){ loadState().then(function(){ toast('已拉取当前短版本号 '+ (state.version||'—')); }); });
+  function isOffline(){ return (typeof navigator !== 'undefined' && navigator.onLine === false); }
+  window.addEventListener('offline', function(){ syncDistEnabled(); toast('已离线：分发到云端已禁用'); });
+  window.addEventListener('online', function(){ syncDistEnabled(); });
 
-  $('f-ver').addEventListener('input', function(){
-    let v = $('f-ver').value.replace(/^v+/i,'').replace(/[^0-9.]/g,'');
-    if(v !== $('f-ver').value){ $('f-ver').value = v; }
-  });
+  function syncDistEnabled(){
+    const okSteps = (state.pack && state.pack.steps || []).filter(s=>s.status==='ok');
+    const distRunning = state.pack && state.pack.dist && ['cn','github','web','deploy'].some(function(k){ return state.pack.dist[k] && state.pack.dist[k].status==='running'; });
+    const can = okSteps.length>0 && selectedTargets.size>0 && !state.pack?.running && !distRunning;
+    const offline = isOffline();
+    $('btn-dist').disabled = !can || offline;
+    if (offline && can) $('btn-dist').title = '离线时无法推送到云端，联网后可分发';
+  }
 
-  /* ===== 打包（注入长+短版本号） ===== */
-  $('btn-pack').addEventListener('click', function(){
-    const ver=$('f-ver').value.trim();
-    if(!/^\d+\.\d+\.\d+$/.test(ver)){ toast('请先填写合法短版本号'); return; }
-    if(selectedTypes.size===0){ toast('请至少勾选一种包类型'); return; }
-    $('btn-pack').disabled=true;
-    api('api/packer/pack',{method:'POST',body:{version:ver, types:[...selectedTypes]}}).then(function(r){
-      if(r.body&&r.body.ok){ toast('打包任务已启动 → '+r.body.outDir+'（构建时注入长+短版本号）'); startPoll(); }
-      else { $('btn-pack').disabled=false; toast('打包启动失败：'+(r.body&&r.body.error||'未知错误')); }
-    }).catch(function(){ $('btn-pack').disabled=false; toast('无法连接后端'); });
+  /* ===== 分发（写入长版本号由后端处理） ===== */
+  $('btn-dist').addEventListener('click', function(){
+    if(selectedTargets.size===0){ toast('请至少勾选一个分发渠道'); return; }
+    if(!(state.pack && state.pack.steps && state.pack.steps.some(s=>s.status==='ok'))){ toast('暂无成功构建的产物，请先到「本地打包」页打包'); return; }
+    const tag=$('f-tag').value.trim();
+    $('btn-dist').disabled=true;
+    api('api/packer/distribute',{method:'POST',body:{targets:[...selectedTargets], tag:tag, web:true}}).then(function(r){
+      if(r.body&&r.body.ok){ toast('已发起分发任务（Web 分发时注入长版本号）'); startPoll(); }
+      else { $('btn-dist').disabled=false; toast('分发失败：'+(r.body&&r.body.error||'未知错误')); }
+    }).catch(function(){ $('btn-dist').disabled=false; toast('无法连接后端'); });
   });
 
   $('btn-refresh-state').addEventListener('click', function(){ loadState().then(function(){ toast('已刷新状态'); }); });
 
-  /* ===== 轮询打包状态 ===== */
+  /* ===== 强制取消分发 ===== */
+  $('btn-cancel-dist').addEventListener('click', function(){
+    if(!confirm('确定强制取消当前分发任务？未完成的渠道将中止。')) return;
+    $('btn-cancel-dist').disabled=true;
+    api('api/packer/cancel',{method:'POST',body:{}}).then(function(r){
+      $('btn-cancel-dist').disabled=false;
+      if(r.body&&r.body.ok){ toast(r.body.cancelled?'已发送取消信号，分发将中止…':'当前无进行中的任务'); }
+      else toast('取消失败：'+((r.body&&r.body.error)||'未知错误'));
+    }).catch(function(){ $('btn-cancel-dist').disabled=false; toast('无法连接后端'); });
+  });
+
+  /* ===== 轮询分发状态 ===== */
   function startPoll(){
     if(pollTimer) clearInterval(pollTimer);
     pollTimer=setInterval(function(){
       api('api/packer/state').then(function(r){
         if(r.body&&r.body.ok){ state.pack=r.body.pack; renderPack(r.body.pack);
+          const dist=r.body.pack&&r.body.pack.dist;
+          const distRunning = dist && ['cn','github'].some(k=>dist[k]&&dist[k].status==='running');
           if(!r.body.pack || !r.body.pack.running){
-            clearInterval(pollTimer); pollTimer=null; $('btn-pack').disabled=false;
+            if(!distRunning){ clearInterval(pollTimer); pollTimer=null; syncDistEnabled(); }
           }
         }
       });
     }, 1500);
   }
 
-  function fmtSize(n){
-    if(n==null) return '';
-    if(n>=1073741824) return (n/1073741824).toFixed(2)+' GB';
-    if(n>=1048576) return (n/1048576).toFixed(1)+' MB';
-    if(n>=1024) return (n/1024).toFixed(0)+' KB';
-    return n+' B';
-  }
   function statusCls(s){ return s==='ok'?'ok':(s==='fail'?'fail':(s==='running'?'run':(s==='needs-local'?'warn':'idle'))); }
-  function statusText(s){ return s==='ok'?'✓ 成功':(s==='fail'?'✗ 失败':(s==='running'?'构建中…':(s==='needs-local'?'需本机打包':'等待中'))); }
+  function statusText(s){ return s==='ok'?'✓ 成功':(s==='fail'?'✗ 失败':(s==='running'?'分发中…':(s==='needs-local'?'需本机打包':'等待中'))); }
 
+  // 展示打包产物 + 分发进度
   function renderPack(pack){
-    const wrap=$('pack-area');
-    if(!pack){ wrap.innerHTML=''; return; }
-    let html='<div class="task-item">';
-    html+='<div class="task-head"><span class="task-ver">'+pack.version+'</span>';
-    html+='<span class="task-when">开始 '+String(pack.startedAt||'').replace('T',' ').slice(0,19)+'</span>';
-    if(pack.running) html+='<span class="tag warn">打包中</span>'; else html+='<span class="tag ok">已完成</span>';
-    html+='<span class="task-targets"><span class="tag">输出：'+pack.outDir+'</span></span></div>';
-    html+='<div class="task-body">';
-    (pack.steps||[]).forEach(function(s){
-      const spin = s.status==='running'?'<span class="spin"></span>':'';
-      const stCls = statusCls(s.status);
-      const stTxt = stCls==='idle'?'' : (' · '+statusText(s.status));
-      html+='<div class="task-row"><span class="pl '+(s.platform==='pc'?'api':'')+'">'+s.label+'</span>'+
-        '<span class="stbar '+stCls+'">'+spin+(s.msg||statusText(s.status))+'</span></div>';
-    });
-    html+='</div></div>';
-    wrap.innerHTML=html;
+    const pa=$('pack-area');
+    if(pack && pack.steps && pack.steps.length){
+      let html='<div class="task-item"><div class="task-head"><span class="task-ver">'+pack.version+'</span>';
+      html+='<span class="task-when">构建于 '+String(pack.startedAt||'').replace('T',' ').slice(0,19)+'</span>';
+      html+= pack.running?'<span class="tag warn">打包中</span>':'<span class="tag ok">可分发</span>';
+      html+='</div><div class="task-body">';
+      pack.steps.forEach(function(s){
+        const stCls=statusCls(s.status);
+        html+='<div class="task-row"><span class="pl">'+s.label+'</span><span class="stbar '+stCls+'">'+(s.msg||statusText(s.status))+'</span></div>';
+      });
+      html+='</div></div>';
+      pa.innerHTML=html;
+    } else {
+      pa.innerHTML='<div class="task-empty">暂无本地打包产物。请先到「本地打包」页构建安装包。</div>';
+    }
+    // 分发进度
+    const da=$('dist-area');
+    if(pack && pack.dist){
+      const distRunning = ['cn','github','web','deploy'].some(function(k){ return pack.dist[k] && (pack.dist[k].status==='running'); });
+      let html='<div class="task-list">';
+      ['cn','github'].forEach(function(k){
+        const d=pack.dist[k]; if(!d||d.status==='idle') return;
+        const name=k==='cn'?'境内 downloads/':'境外 GitHub';
+        const spin=d.status==='running'?'<span class="spin"></span>':'';
+        html+='<div class="task-row"><span class="pl">分发·'+name+'</span><span class="stbar '+statusCls(d.status)+'">'+spin+(d.msg||statusText(d.status))+'</span></div>';
+      });
+      html+='</div>';
+      da.innerHTML=html;
+      $('btn-cancel-dist').style.display = distRunning ? '' : 'none';
+    } else {
+      da.innerHTML='';
+      $('btn-cancel-dist').style.display='none';
+    }
+    syncDistEnabled();
   }
 
   /* ===== 修改密码 ===== */
@@ -469,7 +458,7 @@
     $('pm-save').disabled=true;
     api('api/portal/passwd',{method:'POST',body:{old:old,next:n1}}).then(function(r){
       $('pm-save').disabled=false;
-      if(r.body&&r.body.ok){ token=n1; if(autoLoginOn()) storeSet(LS_TOKEN,token); closePwd(); toast('密码已修改'); }
+      if(r.body&&r.body.ok){ token=r.body.token; if(autoLoginOn()) try{localStorage.setItem(LS_TOKEN,token);}catch(e){} closePwd(); toast('密码已修改'); }
       else $('pm-msg').textContent=(r.body&&r.body.error)||'修改失败';
     }).catch(function(){ $('pm-save').disabled=false; $('pm-msg').textContent='无法连接后端'; });
   });
@@ -483,7 +472,6 @@
     api('api/portal/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; location.href = '/admin/'; } })
       .catch(function(){});
   }
-  $('ver-cur').textContent='当前一致短版本号：加载中…';
   tryAutoLogin();
   loadState();
 })();

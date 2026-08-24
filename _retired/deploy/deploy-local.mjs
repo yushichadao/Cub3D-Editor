@@ -34,8 +34,9 @@ const opt = (k, def) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1]
 const has = (k) => args.includes(k);
 
 const SERVER = (opt('--server') || 'http://139.196.104.56/admin').replace(/\/$/, '');
-const USER = opt('--user', 'yushichadao');
-const PASS = opt('--pass', 'zich963yu');
+const USER = opt('--user') || process.env.CUB3D_ADMIN_USER || 'yushichadao';
+const PASS = opt('--pass') || process.env.CUB3D_ADMIN_PASS || '';
+if (!PASS) { console.error('✗ 缺少管理密码：用 --pass <密码> 或环境变量 CUB3D_ADMIN_PASS 传入（不再内置明文默认值）'); process.exit(1); }
 const VER = opt('--ver') || '';
 const TYPES = (opt('--types') || 'pc-setup,pc-portable,android-apk').split(',').map(s => s.trim()).filter(Boolean);
 const OUT = opt('--out');

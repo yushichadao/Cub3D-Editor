@@ -1,8 +1,6 @@
 'use strict';
 /** IPC 汇总：渲染进程能做的一切「原生操作」都在这里登记。 */
-const { ipcMain, app, dialog, shell, BrowserWindow, clipboard, nativeTheme, net } = require('electron');
-const path = require('path');
-const fs = require('fs');
+const { ipcMain, app, dialog, shell, BrowserWindow, clipboard, nativeTheme } = require('electron');
 const P = require('./paths');
 const store = require('./store');
 const W = require('./windows');
@@ -20,7 +18,6 @@ function winOf(evt) {
 /** app:info 单一数据源：invoke 与 preload 的 sendSync 共用 */
 function appInfo() {
   return {
-    version: app.getVersion(),
     name: app.getName(),
     electron: process.versions.electron,
     chrome: process.versions.chrome,
@@ -41,20 +38,6 @@ function register() {
   // preload 用 sendSync('app:info') 同步取版本号；ipcMain.handle 不响应 sendSync，
   // 必须单独注册 on 并回填 returnValue，否则 preload 收不到响应（日志报 without listeners）。
   ipcMain.on('app:info', e => { e.returnValue = appInfo(); });
-
-  /* 主进程发起 HTTP 请求：渲染层 app://（secure scheme）fetch http:// 明文会被
-     Chromium Mixed Content 拦截（备用 IP 更新源为 http），走主进程 net.fetch 绕开。 */
-  ipcMain.handle('net:fetch', async (_e, url, opts) => {
-    try {
-      const init = Object.assign({ cache: 'no-store' }, opts || {});
-      const res = await net.fetch(String(url), init);
-      const buf = await res.arrayBuffer();
-      const text = Buffer.from(buf).toString('utf8');
-      return { ok: true, status: res.status, okStatus: res.ok, text: text };
-    } catch (err) {
-      return { ok: false, message: String((err && err.message) || err) };
-    }
-  });
 
   ipcMain.on('window:minimize', e => { const w = winOf(e); if (w) w.minimize(); });
   ipcMain.on('window:toggle-maximize', e => {
@@ -150,33 +133,6 @@ function register() {
     return fail('仅允许 http/https');
   });
 
-  /* ------------------------------ 更新器：保存 / 列出 / 打开安装包 ------------------------------ */
-  const UPD_DIR = path.join(app.getPath('userData'), 'updates');
-  ipcMain.handle('updater:save', async (_e, name, data) => {
-    try {
-      const safe = path.basename(String(name || 'update'));
-      fs.mkdirSync(UPD_DIR, { recursive: true });
-      const target = path.join(UPD_DIR, safe);
-      await fs.promises.writeFile(target, Buffer.from(data));
-      return ok({ path: target });
-    } catch (e) { return fail(e.message); }
-  });
-  ipcMain.handle('updater:list', () => {
-    try {
-      if (!fs.existsSync(UPD_DIR)) return ok({ files: [] });
-      return ok({ files: fs.readdirSync(UPD_DIR).filter(f => /\.(exe|msi)$/i.test(f)) });
-    } catch (e) { return fail(e.message); }
-  });
-  ipcMain.handle('updater:open', async (_e, name) => {
-    try {
-      const safe = path.basename(String(name || 'update'));
-      const target = path.join(UPD_DIR, safe);
-      if (!fs.existsSync(target)) return fail('安装包不存在：' + safe);
-      const r = await shell.openPath(target);
-      if (r) return fail(r);
-      return ok();
-    } catch (e) { return fail(e.message); }
-  });
   ipcMain.handle('clipboard:write-text', (_e, text) => { clipboard.writeText(String(text ?? '')); return ok(); });
   ipcMain.handle('clipboard:read-text', () => ok({ text: clipboard.readText() }));
   ipcMain.handle('dialog:message', async (e, opts) => {

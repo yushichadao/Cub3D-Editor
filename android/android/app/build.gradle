@@ -16,7 +16,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         // versionCode 由 build-apk.mjs 注入为长版本号（当天日期 YYYYMMDD）；versionName 注入为 package.json 短版本 X.X.X
         versionCode 20260824
-        versionName "1.2.1"
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

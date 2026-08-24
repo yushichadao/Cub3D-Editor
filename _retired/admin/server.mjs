@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import { registerPortalRouter } from './portalRouter.mjs';
 import { registerReleaseRouter } from './releaseRouter.mjs';
 import { registerPackerRouter } from './packerRouter.mjs';
+import { registerFsRouter } from './fsRouter.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -177,6 +178,9 @@ const server = http.createServer((req, res) => {
   if (pathname === '/admin/distribute' || pathname === '/admin/distribute/') {
     return sendFile(req, res, path.join(PUBLIC_DIR, 'distribute.html'), MIME['.html']);
   }
+  if (pathname === '/admin/files' || pathname === '/admin/files/') {
+    return sendFile(req, res, path.join(PUBLIC_DIR, 'files.html'), MIME['.html']);
+  }
   if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/api/')) {
     const rel = pathname.slice('/admin/'.length);
     const fp = path.join(PUBLIC_DIR, rel);
@@ -208,6 +212,7 @@ const app = { _routes: {}, get(p, h) { (this._routes[p] = this._routes[p] || [])
 registerPortalRouter(app);
 registerReleaseRouter(app);
 registerPackerRouter(app);
+registerFsRouter(app);
 
 server.on('api', (req, res, parsed) => {
   const key = req.url.split('?')[0];
@@ -219,4 +224,4 @@ server.on('api', (req, res, parsed) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`[admin] listening on :${PORT}  (prefix /admin, systems: portal/release/packer)`));
+server.listen(PORT, () => console.log(`[admin] listening on :${PORT}  (prefix /admin, systems: portal/release/packer/fs)`));

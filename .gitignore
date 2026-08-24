@@ -56,13 +56,6 @@ keystore.properties
 .userdata/
 **/.userdata/
 
-# ===== 管理器运行时私有数据（国内服务器推送口令等，绝不入库）=====
-manager/data/
-packer/data/
-# 管理器运行日志（含临时验证端口日志 server.3099.log 等）
-manager/server*.log
-manager/server*.err.log
-
 # ===== 打包分发系统本地产物（release/ 为打包输出，不入库）=====
 release/
 **/release/
@@ -126,14 +119,9 @@ tools/star3d_*.png
 # ===== 临时 wiki 工作目录（生成/排查用，不入库）=====
 wiki-tmp/
 
-# ===== 发布安装包产物（由 release.mjs 生成，经 GitHub Releases 分发，不入库）=====
+# ===== 发布安装包产物（经 GitHub Releases 分发，不入库）=====
 Release/
 **/Release/
-
-# 境内站点 downloads/ 镜像安装包（大文件，走站内/Releases，不入库）；
-# 仅 versions.json（版本与体积元数据）入库。
-downloads/*.exe
-downloads/*.apk
 
 # ===== 图标替换/产物整理产生的旧文件备份与检查图（安全网，不入库）=====
 *.bak
@@ -149,8 +137,6 @@ _add_pckeys.mjs
 _verify.mjs
 *.synctest.tmp
 .playwright/
-downloads/data/
-admin/pack-state/
 
 # ===== 临时诊断/调试产物（不入库）=====
 _check.err
@@ -188,11 +174,6 @@ lab/_tmp/
 lab/assets/
 !lab/.gitkeep
 !lab/assets/.gitkeep
-
-# ===== 治理新增：管理中枢运行时私有数据（重命名 manager→admin）=====
-admin/data/
-admin/server*.log
-admin/server*.err.log
 
 # ===== 治理新增：PC 端运行时用户数据（收敛仓库内，不入库）=====
 pc/.runtime/

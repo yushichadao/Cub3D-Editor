@@ -10,26 +10,6 @@ document.addEventListener('contextmenu', e => e.preventDefault(), true);
 document.addEventListener('dragstart', e => e.preventDefault(), true);
 // 简体中文作为内置默认与回退；其余语言存放在 language/ 目录下独立文件中（见 <head> 的 <script src> 引用）
 const ZH_CN = { new:'新建', import:'导入', export:'导出', shot:'截图', undo:'撤销', redo:'重做', copy:'复制', paste:'粘贴', dup:'克隆', clear:'清空', axes:'坐标轴', grid:'网格面', ground:'地面', settings:'设置', settingsTitle:'设置', tabTheme:'主题风格', tabLang:'语言切换', tabAbout:'关于', themeTitle:'主题风格', langTitle:'语言切换', aboutName:'立方·3D设计工坊', aboutDesc:'基于 Three.js 的 PC 版三维图形设计与编辑工具。', aboutStack:'技术栈：Three.js / WebGL', aboutRepo:'GitHub 仓库', aboutHome:'项目主页', manualLink:'使用说明书', aboutCopyright:'Copyright © 2026-Present Yushichadao. All Rights Reserved.', aboutAuthor:'作者', aboutAI:'本应用由 TRAE 与 CodeBuddy 工具 AI 辅助生成', aboutVersion:'版本：', tosLink:'服务协议', disclaimerLink:'免责声明', privacyLink:'隐私政策', tosBody:'<h4>服务协议</h4><p>欢迎使用立方·3D设计工坊（以下简称"本软件"）。本软件是一款基于浏览器与本地设备运行的三维图形设计与编辑工具，<strong>您无需注册账号、无需登录，即可直接在本机打开并使用全部基础功能。</strong>请您在下载、安装或使用本软件前，务必仔细阅读并充分理解本协议的全部条款，特别是以加粗形式标注的免责与限制责任条款。一旦您开始使用本软件，即视为您已阅读、理解并同意接受本协议约束。</p><h4>第一条 协议的接受与效力</h4><p>（一）本协议是您与本软件开发运营方之间关于使用本软件所订立的协议，并连同《免责声明》《隐私政策》及相关补充说明共同构成完整约定。<strong>如您不同意任一文件的任何条款，请勿使用本软件。</strong></p><p>（二）您在使用本软件过程中点击确认、勾选同意或实际使用本软件的行为，均构成对本协议的接受，本协议自您开始使用之日起对您生效。</p><p>（三）<strong>若您为未成年人，请在监护人陪同并征得其同意后使用本软件，监护人应承担相应的监护与引导责任。</strong></p><h4>第二条 软件与服务说明</h4><p>（一）本软件提供三维图形创建、编辑、标注、便签、导出与导入等功能，主要运行于您的本地设备（浏览器、桌面端或移动端），<strong>其核心创作数据默认保存在您本机，并不依赖任何网络账号即可使用。</strong></p><p>（二）我们可能根据产品规划，在不同平台（Web、PC、Android 等）提供功能略有差异的版本，具体功能以您所使用版本为准。</p><p>（三）本软件可能包含或调用第三方开源库（如 Three.js、WebGL 相关组件），相关权利归属原权利人，并受其各自开源协议约束。</p><h4>第三条 使用授权</h4><p>（一）<strong>我们授予您一项非独占、不可转让、可撤销的有限许可，允许您为个人或非商业用途在本机安装、访问和使用本软件。</strong></p><p>（二）未经我们书面许可，您不得对本软件进行反向工程、反编译、破解、出租、出售、再许可或用于任何商业性提供服务的用途。</p><p>（三）您理解并同意，本软件按"现状"提供，我们保留随时修改、暂停或终止部分或全部功能的权利，且不就此向您承担额外责任。</p><h4>第四条 使用费用</h4><p>（一）在现行版本下，本软件的基础功能免费向您提供。<strong>如未来我们就特定高级功能收取费用，会提前以显著方式告知，并在您明确确认后生效，不会对已免费功能追溯收费。</strong></p><p>（二）您因使用本软件所产生的网络、设备、流量、存储等成本，由您自行承担。</p><h4>第五条 用户内容与知识产权</h4><p>（一）<strong>您在本软件中创建、绘制、导入、标注、导出的全部内容（包括但不限于三维模型、场景、便签、文字与图片），其知识产权与相关权益归您所有，或由您依法取得相应授权。</strong></p><p>（二）您应对您所创作与上传内容的合法性、真实性负责，确保不侵犯他人著作权、商标权、肖像权、隐私权等合法权益。</p><p>（三）您授予我们一项非独占、免费、全球范围内的许可，仅为向您提供、维护与改进本软件之目的，在您本机及必要的技术处理范围内使用您的上述内容；我们不会将您的创作内容用于与上述目的无关的对外公开或商业利用。</p><h4>第六条 使用规范与禁止行为</h4><p>（一）您承诺在使用本软件时遵守所在国家与地区的法律法规，不得利用本软件制作、复制、发布、传播任何违法、侵权或违背公序良俗的内容。</p><p>（二）<strong>您不得利用本软件从事下列行为，否则我们保留在不事先通知的情况下限制、暂停或终止您使用本软件的权利：</strong>（1）制作或传播危害国家安全、煽动暴力、恐怖主义或仇恨言论的内容；（2）制作或传播色情、赌博、诈骗或侵犯他人权益的内容；（3）干扰、攻击、逆向破解本软件或第三方服务；（4）以任何方式规避本软件的技术限制或安全机制。</p><h4>第七条 数据与本地存储</h4><p>（一）<strong>本软件以本地存储为主，您创作的数据通常保存在您的设备本地（如浏览器本地存储、应用沙盒或您指定的导出文件）。本软件不依赖云端账号同步您的核心创作数据。</strong></p><p>（二）您应自行对重要创作内容进行备份与导出。<strong>因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的本地数据丢失，我们无法保证恢复，相关风险与损失由您自行承担。</strong></p><p>（三）您主动导出的文件由您自行保管，导出的完整性与后续可用性取决于您的设备与文件管理。</p><h4>第八条 第三方服务与开源组件</h4><p>（一）本软件可能包含或链接至第三方网站、服务、资源或开源组件。<strong>我们对第三方的可用性、内容、隐私政策及服务质量不作任何保证，您与第三方的交互风险由您自行承担。</strong></p><p>（二）第三方开源组件按其各自许可协议提供，您使用相关功能即视为接受相应开源协议的约束。</p><h4>第九条 免责与责任限制</h4><p>（一）在适用法律允许的最大范围内，本软件按"现状"提供，我们对因使用或无法使用本软件而产生的任何间接、附带、特殊或惩罚性损失不承担责任，亦不保证本软件不间断、无错误或完全满足您的特定需求。</p><p>（二）<strong>三维渲染效果受设备性能、显卡、驱动、系统环境与浏览器差异影响，我们不对渲染结果的一致性、精度或适用性作出明示或默示担保。</strong></p><h4>第十条 协议变更</h4><p><strong>我们可能根据法律法规或业务调整适时修订本协议。修订后的协议将在本软件内公示，若您继续使用，即视为接受修订内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 终止</h4><p>（一）您可随时停止使用并卸载本软件，您在本机的数据可依据《隐私政策》与本地设置进行处理。</p><p>（二）<strong>如您违反本协议，我们可依据情节终止或限制您对本软件的使用，由此产生的不便或损失由您自行承担。</strong></p><h4>第十二条 争议解决与适用法律</h4><p>（一）本协议的订立、效力、解释及争议解决，适用您所在国家与地区的相关法律法规。</p><p>（二）因本协议产生的争议，双方应友好协商解决；协商不成的，您同意提交有管辖权的人民法院诉讼解决。</p><h4>第十三条 联系与其他</h4><p>（一）如您对本协议有任何疑问，可通过本软件"关于"页面提供的联系方式与我们沟通。</p><p>（二）<strong>本协议任一条款被认定为无效或不可执行的，不影响其余条款的效力。</strong></p><p>（三）本协议以简体中文版本为准；如提供其他语言版本，仅供参考，以中文版本为准。</p><h4>第十四条 软件更新与说明书变更</h4><p>（一）为持续改进产品与功能，本软件可能不定期发布新版本，并通过应用内更新检测、官方网站或应用商店等渠道向您推送更新。更新内容可能包括功能新增、界面调整、问题修复与文档更新等。</p><p>（二）您理解并同意，更新通常不会删除您保存在本地的创作数据；但随版本更新，使用说明书等文档内容可能发生变化，您此前基于旧版说明书正文创建的便签，若其绑定正文已被修改或删除，将无法再跳转到原位置，此类便签会保留在便签列表中，您可自行删除或重新创建。</p><p>（三）您可自由选择是否更新。若您选择不更新并继续使用旧版本，旧版本可能无法获得后续修复与优化，相关风险由您自行承担。</p>', disclaimerBody:'<h4>免责声明</h4><p>本《免责声明》为《服务协议》不可分割的组成部分。<strong>您使用本软件即表示已知悉并同意以下全部免责内容。本软件无需注册账号，所有创作数据默认保存在您本地设备。</strong></p><h4>第一条 服务按"现状"提供</h4><p>本软件及其功能按"现状"与"可用"基础提供。<strong>我们已尽力确保其准确与稳定，但不对其正确性、时效性、适用性、无中断性或无错误性作出任何明示或默示担保。</strong>您应独立判断并自行承担据此作出决策与创作的风险。</p><h4>第二条 渲染与结果不保证</h4><p>本软件涉及三维建模、图形渲染与动画预览等操作，<strong>因设备性能、显卡型号、驱动版本、系统环境、浏览器差异或第三方图形接口不同，实际显示与导出效果可能与预览存在差异。我们不保证渲染结果的一致性、精度或满足特定用途。</strong></p><h4>第三条 本地数据丢失风险</h4><p><strong>您创作的内容默认保存在本地设备。因设备故障、系统崩溃、浏览器清理缓存、应用卸载、系统重置、存储损坏或您的误操作导致的数据丢失、损坏或无法读取，我们不承担责任，亦不保证可恢复。</strong>请您务必定期导出与备份重要作品。</p><h4>第四条 用户内容责任</h4><p>您在本软件中创建、导入、上传或分享的全部内容，其合法性、真实性由您负责。<strong>因您的内容侵犯他人权利、违反法律法规或造成任何第三方损害而引发的纠纷与责任，均由您自行承担，我们不承担任何连带责任。</strong></p><h4>第五条 第三方组件与链接</h4><p>本软件可能包含、调用或链接至第三方开源库、网站、服务或资源（如 Three.js 及相关 WebGL 组件）。<strong>我们对第三方的内容、隐私政策、许可条款及服务可用性不作任何保证，亦不承担任何责任，您与第三方的交互风险自行承担。</strong></p><h4>第六条 导出文件与兼容性</h4><p><strong>您导出的工程文件、图片或模型，其后续在其他设备、其他软件或更高版本中的打开与兼容情况，我们无法保证。请保留原始文件并自行验证可用性。</strong></p><h4>第七条 不可抗力</h4><p>对于因自然灾害、战争、政府行为、网络攻击、电力或通信中断、平台政策变更等不可抗力或不可归责于我们的原因导致的服务中断、功能受限或数据损失，我们不承担违约责任。</p><h4>第八条 未成年人</h4><p><strong>若您为未成年人，请在监护人陪同下阅读本声明并在其同意下使用本软件。监护人应引导未成年人健康、合法地使用本软件，并承担相应监护责任。</strong></p><h4>第九条 责任限制</h4><p>在适用法律允许的最大范围内，<strong>我们对因使用或无法使用本软件所产生的任何直接、间接、附带、特殊、惩罚性或后果性损失（包括数据丢失、利润损失、设备损害）不承担责任，</strong>即使我们已被告知此类损害的可能性。</p><h4>第十条 声明变更</h4><p><strong>本声明可能随软件更新而调整，更新后将通过本软件公示。您继续使用即视为接受更新后的内容；若您不同意，请停止使用本软件。</strong></p><h4>第十一条 软件更新与说明书变更</h4><p>（一）本软件可能不定期更新，更新后功能、界面与文档可能与旧版本存在差异，我们不对新旧版本之间的完全一致性作出保证。</p><p>（二）随版本更新，说明书正文可能被修订，您基于旧版正文创建的便签在正文变化后可能无法保持原绑定关系，请以最新版本说明书为准。</p>', privacyBody:'<h4>隐私政策</h4><p>立方·3D设计工坊（以下简称“本软件”或“我们”）是由 <strong>Yushichadao</strong> 作为个人开发者向您提供的一款<strong>轻量化</strong>的跨平台 3D/2D 场景编辑器。我们<strong>不会收集您的个人信息</strong>，您的创作内容与本地设置默认仅保存在您自己的设备本地，不存在我们将您的个人信息传输、存储或用于其他用途的情况。使用本软件即表示您同意本政策。</p><h4>1. 我们是否收集您的账号信息</h4><p><strong>本软件没有账号系统，您无需注册或登录即可使用。我们不会收集、存储或把您的用户名、密码、电子邮箱、电话号码或其他账号类个人信息与您的身份绑定。</strong></p><h4>2. 保存在本地的创作数据</h4><p>(1) <strong>您所创作的 3D 模型、场景、便利贴、注释、文字与图片，默认保存在您的本机设备（浏览器存储空间、应用沙箱或您导出的文件），不会上传到任何服务器。</strong></p><p>(2) 除提供本地功能所必需的本机技术处理外，我们不会主动读取、上传或传输您的创作内容。</p><h4>3. 我们不会上线任何需要共享个人信息的第三方 SDK</h4><p><strong>本软件不会接入任何需要收集或共享您个人信息的第三方 SDK（包括统计、崩溃上报、广告、云同步、社交分享等）。本软件仅使用必要的开源图形库（如 Three.js 及 WebGL 组件）在本机运行，这些组件不会向外部传输您的个人信息。</strong></p><h4>4. 委托处理、共享、转让与公开披露</h4><p><strong>我们不会向任何第三方出售您的个人信息。除以下情形外，我们不会共享、转让或公开披露您的个人信息：</strong>(1) 为遵守适用法律法规、司法或监管要求；(2) 为保护本软件、您或公众的合法权益；(3) 经您事先明确同意。由于本软件不收集您的个人信息，上述情形在一般情况下均不会发生。</p><h4>5. 数据安全与您的责任</h4><p>(1) 您的核心创作数据主要保存在您自己的本机设备，请妥善保管您的设备并设置锁屏，避免他人未经授权访问。</p><p>(2) <strong>请定期导出并备份重要作品；因设备损坏、浏览器清理、应用卸载、系统重置或操作失误导致的数据丢失，我们无法保证恢复，相关风险由您自行承担。</strong></p><p>(3) 如您通过邮箱与我们联系，您提供的邮箱地址仅用于回复您的问题，不会被用于其他用途。</p><h4>6. 您的权利与退出</h4><p><strong>您始终掌控自己的数据：您可以随时清除缓存、删除作品、卸载应用或停止使用本软件。</strong></p><h4>7. 政策更新</h4><p><strong>本政策可能随软件更新而调整，更新版本将在本软件内公告。您继续使用即视为接受；若您不同意，请停止使用本软件。</strong></p><h4>8. 联系我们</h4><p>开发者：<strong>Yushichadao</strong><br>联系邮箱：<strong>yushichadao@qq.com</strong></p><h4>9. 文本效力</h4><p>本政策以简体中文版本为准；如其他语言版本与本简体中文版本不一致，以简体中文版本为准。</p><h4>10. 更新检测与说明</h4><p>（一）为向您提供版本更新与安全修复，本软件可能自动检测是否有新版本可用。该检测仅请求必要的版本信息（如当前版本号），不涉及、不收集、不上传您的创作内容、便签或任何个人信息。</p><p>（二）您可以在设置中关闭自动更新检测，或选择暂不更新，继续使用当前版本。</p>', effectiveDate:'本文件生效日期：2026年8月21日', cancel:'取消', confirm:'确认', ok:'确定', close:'关闭', apply:'应用颜色', fs:'全屏', fsExit:'退出全屏',
-  // 更新检测
-  updCheck:'检查更新', updLatestState:'已是最新版本', updIgnored:'已忽略更新', updNoPkgYet:'线上暂未提供 {1} 安装包，敬请期待', updSubLatest:'相比当前 {0} 已是最新', updSubHas:'相比当前 {0} 有更新', updSubForce:'相比当前 {0} 必须更新后使用',
-  envPreviewNoUpdate:'预览态不支持检查更新，请打包后使用', envNoUpdateInPreview:'当前为预览环境，不允许执行更新',
-  updPillLatest:'已是最新', updPillForce:'强制更新', updPillOptional:'可选更新', updPillNone:'不可更新',
-  updTitleLatest:'已是最新版本', updTitleForce:'发现强制更新', updTitleFound:'发现新版本', updTitleAvail:'有可用更新', updTitleNone:'暂无可用更新',
-  updChangelogEmpty:'更新内容未提供', updNowBtn:'立即更新', updUnavailBtn:'暂不可用', updDownloading:'正在下载 {0}…',
-  toastLatest:'已是最新版本（{0}）', toastNoPkg:'{0} 更新暂不可用（线上暂未提供 {1} 安装包）', toastCheckFail:'检查更新失败，请检查网络后重试', toastNoPkg2:'线上暂未提供 {1} 安装包', toastPkgNotFound:'未找到对应平台的安装包，请前往官网下载', toastDlFail:'下载失败：{0}', toastApkSaved:'APK 已保存，请在系统下载管理中点击安装', toastIgnored:'已忽略 {0} 版本更新',
-  updReadyNote:'更新包已就绪，即将进入安装流程', updReadyNote2:'将跳转应用商店/浏览器完成更新',
-  ioTitle:'正在安装更新', ioBadge:'安装', ioSub:'正在准备安装程序，请稍候…',
-  updStopConfirm:'是否停止 {0} 更新并退出？', updContinue:'继续更新', updIgnore:'忽略此版本',
-  updForceActive:'强制更新进行中，无法「{0}」',
-  updStopTitle:'停止更新？', updIgnoreTitle:'忽略此更新？', updStartTitle:'启动更新程序？',
-  updIgnoreMsgIdle:'忽略 {0} 此更新后，7 天内将不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。',
-  updLaterMsgIdle:'本次暂不更新，下次打开应用时将重新检测。\n我们建议您完成更新以获取最新功能与安全修复。',
-  updIgnoreMsgPause:'下载已暂停。忽略 {0} 后将停止下载，7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。',
-  updLaterMsgPause:'下载已暂停。是否继续下载更新？\n我们建议您完成更新以获取最新功能与安全修复。',
-  updIgnoreMsgReady:'更新包已下载完成。忽略 {0} 后将 7 天内不再检测任何更新。\n我们建议您完成更新以获取最新功能与安全修复。',
-  updStartMsgReady:'更新包已下载完成，是否启动更新程序完成安装？\n我们建议您完成更新以获取最新功能与安全修复。',
-  updContinueBtn:'继续更新', updIgnoreBtn:'确定忽略', updStopBtn:'停止更新', updLaunchBtn:'启动更新程序', updLocalPkg:'已检测到本地安装包（{0}），可直接进入更新程序。', updReadyNotePC:'更新包已就绪（上次已下载完成），点击「立即更新」启动更新程序。',
-  updLaterBtn:'稍后再说', toastLaunchFail:'未能启动安装程序：{0}', toastLaunchFail2:'未能启动安装程序', toastLaunchUnsupported:'暂不支持直接启动安装程序，请前往官网下载安装包',
   // 面板标题
  sec3D:'3D 图形', sec2D:'2D 图形', secTransform:'变换', secMaterial:'材质', secColor:'颜色', secPattern:'花纹 / 贴图', secTextBox:'文本框', secEraser:'橡皮擦属性', secMouse:'鼠标操作', secKeyboard:'键盘快捷键',
  // Tab 按钮
@@ -4980,8 +4960,6 @@ refreshTheme(); updateThemeActive();
 applyLang(); updateLangActive();
 // 导出场景 JSON
 function defaultJsonName(prefix){ const d=new Date(), p=x=>String(x).padStart(2,'0'); return prefix+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'; }
-// 软件版本号（可由构建脚本注入 window.__CUB3D_VERSION__ 覆盖）
-const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.2.0';
 // 说明书语言名（用于导入提示中填充 {0}/{1}）
 const MANUAL_LANG_NAME = { 'zh-CN':'简体中文', 'zh-TW':'繁體中文', 'en':'English', 'ja':'日本語', 'ko':'한국어', 'ar':'العربية', 'ru':'Русский', 'es':'Español', 'fr':'Français' };
 function manualLangName(code){ return MANUAL_LANG_NAME[code] || code || ''; }
@@ -5041,8 +5019,7 @@ function exportScene() {
   const now = new Date().toISOString();
   const data = JSON.stringify({
     format: 'cube3d-scene',
-    longVersion: (window.__CUB3D_LONG__ || __APP_VERSION__),
-    shortVersion: (window.__CUB3D_VERSION__ || __APP_VERSION__),
+    longVersion: (window.__CUB3D_LONG__ || BOOTV),
     meta: {
       createdAt: (state.meta && state.meta.createdAt) || now,
       updatedAt: now,
@@ -9720,7 +9697,7 @@ function openManual(){
   function updateNoteCount(){ const total=notes().length; const sel=noteListEl.querySelectorAll('.note-check:checked').length; const c=document.getElementById('manual-note-count'); if(c) c.textContent = sel? T('manSelCount').replace('{0}', sel).replace('{1}', total) : T('manNoteCount').replace('{0}', total); }
   function recalibrateOldNotes(){
     const arr=notes(); let recal=0;
-    arr.forEach(n=>{ if(n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||__APP_VERSION__; recal++; } } });
+    arr.forEach(n=>{ if(n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||BOOTV; recal++; } } });
     if(recal){ saveStore('notes', arr); renderNotes(); toast(T('manRecalibrated').replace('{0}', recal)); }
   }
 
@@ -9729,7 +9706,7 @@ function openManual(){
     if(!arr.length){ noteListEl.innerHTML='<div class="manual-note-empty">'+T('manNoNote')+'</div>'; updateNoteCount(); return; }
     noteListEl.innerHTML=arr.map(n=>'<div class="manual-note-item'+(n.lost?' lost':'')+'" data-id="'+n.id+'" data-color="'+(n.color||'yellow')+'">'
       +'<input type="checkbox" class="note-check" data-id="'+n.id+'">'
-      +'<div class="note-line"'+(n.lost?'':' data-jump="'+n.id+'"')+'>'+(n.lost ? T('manNoteLostTitle') : T('manNoteAt').replace('{0}', n.line)+(n.longVersion && n.longVersion!==(window.__CUB3D_LONG__||__APP_VERSION__) ? ' <span class="note-ver" title="'+T('manImportOldVer').replace('{0}','').replace('{1}', n.longVersion)+'">⚠ '+n.longVersion+'</span>' : ''))+'</div>'
+      +'<div class="note-line"'+(n.lost?'':' data-jump="'+n.id+'"')+'>'+(n.lost ? T('manNoteLostTitle') : T('manNoteAt').replace('{0}', n.line)+(n.longVersion && n.longVersion!==(window.__CUB3D_LONG__||BOOTV) ? ' <span class="note-ver" title="'+T('manImportOldVer').replace('{0}','').replace('{1}', n.longVersion)+'">⚠ '+n.longVersion+'</span>' : ''))+'</div>'
       +'<div class="note-quote">'+mdEscape(n.quote||'')+'</div>'
       +'<div class="note-text'+(n.lost?' lost-text':'')+'"'+(n.lost?'':' data-open="'+n.id+'"')+'>'+mdEscape(notePreview(n.note))+'</div>'
       +(n.lost
@@ -9813,10 +9790,9 @@ function openManual(){
   function flushSticky(el){ if(!el || !el.classList.contains('sticky-dirty')) return; const area=el.querySelector('.sticky-area'); if(!area) return; updateNote(el.dataset.id, {note: area.value}); el.classList.remove('sticky-dirty'); renderNotes(); }
   function syncStickyVisibility(){ const open=modal.classList.contains('show'); stickyLayer().querySelectorAll('.sticky-note').forEach(el=>{ el.style.display=(open||el.classList.contains('pinned'))?'flex':'none'; }); }
   function applyStickyMode(el){ const area=el.querySelector('.sticky-area'); const ro=el.dataset.mode!=='edit'; if(area) area.readOnly=ro; el.classList.toggle('sticky-readonly', ro); const saveBtn=el.querySelector('[data-act="save"]'); const editBtn=el.querySelector('[data-act="edit"]'); if(saveBtn) saveBtn.style.display=ro?'none':''; if(editBtn) editBtn.style.display=ro?'':'none'; }
-  function exportNotes(){ console.log('[exportNotes] called'); const arr=notes(); console.log('[exportNotes] notes() returned:', arr.length, 'items'); if(!arr.length){ console.log('[exportNotes] BLOCKED: empty notes array'); toast(T('manNoNote')); return; } const payload={ type:'cub3d-notes', lang: currentLang, longVersion: (window.__CUB3D_LONG__||__APP_VERSION__), shortVersion: (window.__CUB3D_VERSION__||__APP_VERSION__), notes: arr }; const data=JSON.stringify(payload, null, 2); const name=defaultJsonName('notes'); const fd=window.desktop&&window.desktop.file; console.log('[exportNotes] window.desktop:', !!window.desktop, '| file:', !!fd, '| saveJson:', !!(fd&&fd.saveJson)); if(fd&&fd.saveJson){ console.log('[exportNotes] calling fd.saveJson with suggestName:', name); fd.saveJson({ data:data, suggestName:name, title:T('manExport') }).then(function(res){ console.log('[exportNotes] saveJson resolved:', res); if(res&&res.ok) toast(T('manExported')+' · '+(res.path||name)); else if(res&&res.canceled){} else toast(T('manExportFail')); }).catch(function(e){ console.error('[exportNotes] saveJson rejected:', e); toast(T('manExportFail')); }); return; } console.log('[exportNotes] FALLBACK to <a> download (no native save API)'); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')+' · '+name); }
+  function exportNotes(){ console.log('[exportNotes] called'); const arr=notes(); console.log('[exportNotes] notes() returned:', arr.length, 'items'); if(!arr.length){ console.log('[exportNotes] BLOCKED: empty notes array'); toast(T('manNoNote')); return; } const payload={ type:'cub3d-notes', lang: currentLang, longVersion: (window.__CUB3D_LONG__||BOOTV), notes: arr }; const data=JSON.stringify(payload, null, 2); const name=defaultJsonName('notes'); const fd=window.desktop&&window.desktop.file; console.log('[exportNotes] window.desktop:', !!window.desktop, '| file:', !!fd, '| saveJson:', !!(fd&&fd.saveJson)); if(fd&&fd.saveJson){ console.log('[exportNotes] calling fd.saveJson with suggestName:', name); fd.saveJson({ data:data, suggestName:name, title:T('manExport') }).then(function(res){ console.log('[exportNotes] saveJson resolved:', res); if(res&&res.ok) toast(T('manExported')+' · '+(res.path||name)); else if(res&&res.canceled){} else toast(T('manExportFail')); }).catch(function(e){ console.error('[exportNotes] saveJson rejected:', e); toast(T('manExportFail')); }); return; } console.log('[exportNotes] FALLBACK to <a> download (no native save API)'); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')+' · '+name); }
   function importNotes(file){ const reader=new FileReader(); reader.onload=()=>{ try{
-    const LONG = window.__CUB3D_LONG__ || __APP_VERSION__;
-    const SHORT = window.__CUB3D_VERSION__ || __APP_VERSION__;
+    const LONG = window.__CUB3D_LONG__ || BOOTV;
     const raw=JSON.parse(reader.result);
     let payloadLang, noteArr;
     if(Array.isArray(raw)){ payloadLang=null; noteArr=raw; }
@@ -9833,11 +9809,11 @@ function openManual(){
     const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0, moved=0, failed=0, oldVer=0, lostSkip=0, oldVerSample=null;
     // 停止对连版本号都无法比较的旧格式的支持：整批都没有 longVersion 则拒绝导入
     if(noteArr.length && noteArr.every(n=>!n || typeof n!=='object' || !n.longVersion)){
-      toast(T('manImportNoVer').replace('{0}', SHORT));
+      toast(T('manImportNoVer'));
       return;
     }
     noteArr.forEach(n=>{ if(!n||typeof n!=='object') return;
-      const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now(), longVersion: LONG, shortVersion: SHORT}, n);
+      const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now(), longVersion: LONG}, n);
       item.id=String(item.id||newNoteId()); if(ids.has(item.id)) item.id=newNoteId(); ids.add(String(item.id));
       // 版本识别仅认 longVersion（长号 YYYYMMDD）；单体无 longVersion 视为无法比较，跳过
       if(!item.longVersion){ failed++; return; }
@@ -9852,9 +9828,9 @@ function openManual(){
       if(item.longVersion!==LONG){ oldVer++; if(!oldVerSample) oldVerSample=item.longVersion; }
       if(!off[2]){
         item.start=off[0]; item.end=off[1]; item.line=offsetToLine(off[0]);
-        item.longVersion=LONG; item.shortVersion=SHORT; moved++;
+        item.longVersion=LONG; moved++;
       } else {
-        item.longVersion=LONG; item.shortVersion=SHORT; added++;
+        item.longVersion=LONG; added++;
       }
       cur.push(item);
     });
@@ -9969,7 +9945,7 @@ function openManual(){
       if(act==='close'){ closeSticky(el); }
       else if(act==='save'){ flushSticky(el); el.classList.remove('sticky-unsaved'); el.dataset.mode='ro'; applyStickyMode(el); toast(T('manNoteSaved')); }
       else if(act==='del'){ if(!await showConfirm(T('manDelConfirm'))) return; flushSticky(el); el.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
-      else if(act==='recal'){ const n=noteById(id); if(n&&n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||__APP_VERSION__; saveStore('notes', notes()); renderNotes(); closeSticky(el); openSticky(id,true); toast(T('manRecalibrated').replace('{0}',1)); } else { toast(T('manNoteLostTitle')); } } }
+      else if(act==='recal'){ const n=noteById(id); if(n&&n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||BOOTV; saveStore('notes', notes()); renderNotes(); closeSticky(el); openSticky(id,true); toast(T('manRecalibrated').replace('{0}',1)); } else { toast(T('manNoteLostTitle')); } } }
       else if(act==='delQ'){ if(!await showConfirm(T('manDelConfirm'))) return; const n=noteById(id); const q=n?n.quote:''; const arr=notes().filter(x=>!(x.lost && x.quote===q)); saveStore('notes', arr); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
       else if(act==='delAll'){ const cnt=notes().filter(x=>x.lost).length; if(!cnt) return; if(!await showConfirm(T('manBatchDelConfirm').replace('{0}', cnt))) return; const arr=notes().filter(x=>!x.lost); saveStore('notes', arr); closeSticky(el); renderNotes(); toast(T('manBatchDeleted').replace('{0}', arr.length)); }
       else if(act==='edit'){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(),0); }
@@ -9985,7 +9961,7 @@ function openManual(){
       }
     }));
   }
-  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now(), longVersion: (window.__CUB3D_LONG__||__APP_VERSION__), shortVersion: (window.__CUB3D_VERSION__||__APP_VERSION__)}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
+  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now(), longVersion: (window.__CUB3D_LONG__||BOOTV)}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
   function hilites(){ return loadStore('hilites', []); }
   function applyHighlights(){ unwrapHighlights(docEl); let arr=hilites(); let maxId=0; arr.forEach(h=>{ const n=parseInt(h.id,10); if(!isNaN(n)&&n>maxId) maxId=n; }); openManual._hlSeq=maxId; let changed=false; arr=arr.filter(h=>{ if(h.start==null){ const off=findTextOffsets(docEl, h.text); if(off){ h.start=off[0]; h.end=off[1]; changed=true; return true; } changed=true; return false; } return true; });
     // 合并互相重叠/相邻的高亮区间，避免同一文本被多次高亮导致颜色嵌套叠加
@@ -10119,3 +10095,4 @@ window.__cube3d = {
   openManual: typeof openManual === 'function' ? openManual : null
 };
 window.dispatchEvent(new CustomEvent('cube3d:ready'));
+

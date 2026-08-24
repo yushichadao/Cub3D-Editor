@@ -17,6 +17,8 @@ async function baiduTranslate(text, to) {
   return null; // 回退中文
 }
 
+import { requireAuth } from './auth.mjs';
+
 // 与 server.mjs / portalRouter.mjs 共享的全局句柄
 function fs() { return global.__fs; }
 function DOWNLOADS_DIR() { return global.__DOWNLOADS_DIR; }
@@ -24,7 +26,6 @@ function GITHUB_DIR() { return global.__GITHUB_DIR; }
 function UPDATE_DOC() { return global.__UPDATE_DOC; }
 function VERSIONS_JSON() { return global.__VERSIONS_JSON; }
 function VERSION_TXT() { return global.__VERSION_TXT; }
-function ADMIN_JSON() { return global.__ADMIN_JSON; }
 function TMP_DIR() { return global.__TMP_DIR; }
 
 // 简单 in-memory 上传速率限制
@@ -35,17 +36,6 @@ function checkUploadLimit(ip) {
   if (now - w.ts > 60000) { w.count = 0; w.ts = now; }
   if (w.count >= 40) return false;
   w.count++; uploadCounts[ip] = w; return true;
-}
-
-function requireAuth(req, res) {
-  let admin = { user: 'yushichadao', pass: 'admin123' };
-  try { admin = JSON.parse(fs().readFileSync(ADMIN_JSON(), 'utf8')); } catch {}
-  if ((req.headers['x-admin-token'] || '') !== admin.pass) {
-    res.writeHead(401, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: false, error: 'unauthorized' }));
-    return false;
-  }
-  return true;
 }
 
 // ===== 版本比较 / 解析工具 =====

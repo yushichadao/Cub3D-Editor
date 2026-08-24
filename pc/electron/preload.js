@@ -82,17 +82,6 @@ const api = {
     openExternal: url => invoke('shell:open-external', url)
   },
 
-  net: {
-    /** 主进程发起网络请求（渲染层 http 明文会被 Mixed Content 拦截，走主进程可绕开） */
-    fetch: (url, opts) => invoke('net:fetch', url, opts)
-  },
-
-  updater: {
-    save: (name, data) => invoke('updater:save', name, data),
-    list: () => invoke('updater:list'),
-    open: name => invoke('updater:open', name)
-  },
-
   clipboard: {
     writeText: t => invoke('clipboard:write-text', t),
     readText: () => invoke('clipboard:read-text')
@@ -130,13 +119,4 @@ try {
   contextBridge.exposeInMainWorld('__DEVICE_NAME__', 'PC');
 }
 
-/**
- * 应用版本注入：让更新检测模块（UPD）拿到真实的打包版本号，
- * 与 /api/update 对比判断是否有新版本。
- */
-try {
-  const appInfo = ipcRenderer.sendSync('app:info') || {};
-  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', String(appInfo.version || '1.2.0'));
-} catch (_) {
-  contextBridge.exposeInMainWorld('__CUB3D_VERSION__', '1.2.0');
-}
+

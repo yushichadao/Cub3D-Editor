@@ -52,7 +52,14 @@ function extractPackKeys(src, code) {
   let depth = 0, j = open;
   for (; j < src.length; j++) {
     const c = src[j];
-    if (c === '"') { j++; while (j < src.length && src[j] !== '"') { if (src[j] === '\\') j++; } continue; }
+    if (c === '"') {
+      j++;
+      while (j < src.length && src[j] !== '"') {
+        if (src[j] === '\\') j++; // 跳过转义字符，避免把 \" 的引号当成字符串结束
+        j++;
+      }
+      continue;
+    }
     if (c === '{') depth++;
     else if (c === '}') { depth--; if (depth === 0) { j++; break; } }
   }

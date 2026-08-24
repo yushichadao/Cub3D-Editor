@@ -5,8 +5,8 @@
  *  - data.js 为单一映射表（DOMAINS = { base, pc, android, promo }），所有键的九语言译文集中于此。
  *  - “端覆盖”通过 buildLang(endpoint) 表达，不复制整段：
  *      web    = base + promo（web 与 PC 统一，含键盘/鼠标/触摸交互帮助键 + 宣传页键）
- *      pc     = base + pc 覆盖（检查更新/安装器系列 upd*）+ promo
- *      android= base 剔除键盘键（kbd 前缀与 secKeyboard，安卓无键盘）+ android 覆盖（upd*）+ promo
+ *      pc     = base + pc 覆盖（桌面端专属键）+ promo
+ *      android= base 剔除键盘键（kbd 前缀与 secKeyboard，安卓无键盘）+ android 覆盖（移动端专属键）+ promo
  *  - promo 域来自根 index.html 宣传页（const T + const CMPLABEL），9 语言齐全。
  *  - 新增语言：在 LANGS 加项 + data.js 每键补该语言值列，运行 gen-langs.mjs 即生效。
  *  - sync 期由 check-i18n-keys.mjs 强制校验缺/多键（基准 = ALL_KEYS / ENDPOINT_KEYS）。

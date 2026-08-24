@@ -1,26 +1,15 @@
 // 打包分发系统接口（本地打包 / 在线分发 / 统一版本号 / 登记）
 // 挂载前缀：/admin/api/packer
 // 与发布更新信息系统（release）共用 update-doc.json / downloads/，实现「打包 → 分发 → 更新话术发布」闭环。
-// 登录态与后台门户（portal）共享同一账号密码（令牌即当前密码）。
+// 登录态与后台门户（portal）共享（鉴权统一走 auth.mjs：scrypt 哈希密码 + tokenHash 摘要令牌）。
 import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawnSync, spawn } from 'child_process';
+import { requireAuth } from './auth.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// 令牌鉴权（与 portal 同源）
-function requireAuth(req, res) {
-  let admin = { user: 'yushichadao', pass: 'admin123' };
-  try { admin = JSON.parse(global.__fs.readFileSync(global.__ADMIN_JSON, 'utf8')); } catch {}
-  if ((req.headers['x-admin-token'] || '') !== admin.pass) {
-    res.writeHead(401, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: false, error: 'unauthorized' }));
-    return false;
-  }
-  return true;
-}
 
 export function registerPackerRouter(app) {
   const ROOT = global.__ROOT;
@@ -33,6 +22,7 @@ export function registerPackerRouter(app) {
   const VERSION_FILES = [path.join(ROOT, 'package.json'), path.join(ROOT, 'PC', 'package.json'), path.join(ROOT, 'Android', 'package.json')];
   const AGENT_FILE = path.join(__dirname, 'data', 'agent.json');
   const TASK_FILE = path.join(__dirname, 'data', 'agent-task.json');
+  const LOCAL_FILES_FILE = path.join(__dirname, 'data', 'local-files.json');
   const AGENT_TIMEOUT = 60 * 1000;          // 心跳间隔内视为在线
   const TASK_CLAIM_TIMEOUT = 15 * 60 * 1000; // 代理认领任务后 15 分钟未完成视为失联，任务作废
 
@@ -131,6 +121,36 @@ export function registerPackerRouter(app) {
   });
 
   let running = false;
+  // 强制取消当前打包任务 / 分发任务：写取消信号，正在运行的本机代理会 SIGKILL 当前构建；服务器分发循环会中止后续渠道
+  app.post('/api/packer/cancel', (req, res) => {
+    const ok = requireAuth(req, res); if (!ok) return;
+    const st = loadPackState();
+    const distRunning = st && st.dist && ['cn', 'github', 'web', 'deploy'].some(k => st.dist[k] && st.dist[k].status === 'running');
+    if ((!st || !st.running) && !distRunning) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: true, cancelled: false, message: '当前无进行中的任务' })); }
+    try { fs.writeFileSync(path.join(__dirname, 'data', 'cancel.json'), JSON.stringify({ taskId: st.agentTask || null, dist: distRunning, at: new Date().toISOString() }) + '\n', 'utf8'); } catch (e) {}
+    removeTask(); // 让本机代理不再认领后续（若任务尚未被认领）
+    let msg = '已发送取消信号';
+    if (st.running) {
+      // 即时把界面状态标记为「取消中」，避免前端一直转圈
+      st.running = false; st.cancelling = true; st.finishedAt = new Date().toISOString();
+      (st.steps || []).forEach(s => { if (s.status === 'running' || s.status === 'pending') { s.status = 'fail'; s.msg = '🛑 已强制取消'; } });
+      msg += '，本机代理将立即终止构建';
+      running = false; // 释放全局锁，允许重新发起
+    }
+    if (distRunning) {
+      // 分发中：把未完成的渠道标记为已取消，后端分发循环检测到信号后会中止
+      ['web', 'cn', 'github', 'deploy'].forEach(k => { if (st.dist[k] && (st.dist[k].status === 'running')) { st.dist[k].status = 'cancelled'; st.dist[k].msg = '🛑 已强制取消'; } });
+      msg += '，分发将中止未完成渠道';
+      running = false;
+    }
+    savePackState(st);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, cancelled: true, message: msg }));
+  });
+
+  // 分发取消信号检查：cancel.json 存在即视为取消（分发任务无 taskId）
+  function isDistCancelled() { try { return fs.existsSync(path.join(__dirname, 'data', 'cancel.json')); } catch { return false; } }
+
   app.post('/api/packer/pack', (req, res) => {
     const ok = requireAuth(req, res); if (!ok) return;
     let body = ''; req.on('data', c => body += c);
@@ -283,8 +303,11 @@ export function registerPackerRouter(app) {
           dist.gh.status = 'running'; dist.gh.msg = `上传到 GitHub Releases ${tag} …`; savePackState(st);
           try {
             const created = await ghEnsureRelease(tag);
-            for (const s of okSteps) await ghUploadAsset(created, s.path, s.artifact);
-            dist.gh.status = 'ok'; dist.gh.msg = `✓ 已上传 ${okSteps.length} 个包到 GitHub ${tag}`;
+            for (const s of okSteps) {
+              if (isDistCancelled()) { dist.gh.status = 'cancelled'; dist.gh.msg = '🛑 已强制取消'; break; }
+              await ghUploadAsset(created, s.path, s.artifact);
+            }
+            if (dist.gh.status !== 'cancelled') { dist.gh.status = 'ok'; dist.gh.msg = `✓ 已上传 ${okSteps.length} 个包到 GitHub ${tag}`; }
           } catch (e) { dist.gh.status = 'fail'; dist.gh.msg = 'GitHub 分发失败：' + String(e.message || e).slice(0, 300); }
           savePackState(st);
         }
@@ -309,6 +332,8 @@ export function registerPackerRouter(app) {
         }
       }
 
+      // 分发结束清理取消信号，避免影响后续打包任务
+      try { if (isDistCancelled()) fs.rmSync(path.join(__dirname, 'data', 'cancel.json'), { force: true }); } catch (e) {}
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, dist }));
     });
@@ -373,6 +398,24 @@ export function registerPackerRouter(app) {
     res.end(JSON.stringify({ ok: true, at: a.lastSeen }));
   });
 
+  // 本机代理上报本地 release/ 文件快照（供「文件」页浏览本地文件系统）
+  app.post('/api/packer/agent/snapshot', (req, res) => {
+    const ok = requireAuth(req, res); if (!ok) return;
+    let body = ''; req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const b = JSON.parse(body || '{}');
+        const files = Array.isArray(b.files) ? b.files : [];
+        const clean = files.filter(f => f && typeof f.name === 'string' && /^[\w.\-]+$/.test(f.name) && isFinite(f.size))
+          .map(f => ({ name: f.name, path: String(f.path || f.name).replace(/\\/g, '/'), size: f.size, mtime: f.mtime || null }));
+        fs.mkdirSync(path.dirname(LOCAL_FILES_FILE), { recursive: true });
+        fs.writeFileSync(LOCAL_FILES_FILE, JSON.stringify({ files: clean, at: new Date().toISOString() }, null, 2) + '\n', 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, count: clean.length }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }
+    });
+  });
+
   app.get('/api/packer/agent/poll', (req, res) => {
     const ok = requireAuth(req, res); if (!ok) return;
     const a = loadAgent() || { online: true, name: '本机打包代理' };
@@ -382,7 +425,7 @@ export function registerPackerRouter(app) {
     if (t && t.claimedAt && (Date.now() - new Date(t.claimedAt).getTime() > TASK_CLAIM_TIMEOUT)) { removeTask(); }
     const task = loadTask();
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, task: task ? { id: task.id, version: task.version, types: task.types } : null }));
+    res.end(JSON.stringify({ ok: true, task: task ? { id: task.id, version: task.version, types: task.types, kind: task.kind || 'pack', files: task.files || undefined } : null }));
   });
 
   app.post('/api/packer/agent/report', (req, res) => {
@@ -402,13 +445,14 @@ export function registerPackerRouter(app) {
             step.artifact = s.name; step.size = s.size || 0; step.path = path.join(DOWNLOADS, s.name);
           }
         }
-        if (b.taskId) { const t = loadTask(); if (t && t.id === b.taskId) removeTask(); }
-        if (b.finished) {
+        let isUploadTask = false;
+        if (b.taskId) { const t = loadTask(); if (t && t.id === b.taskId) { isUploadTask = t.kind === 'upload'; removeTask(); } }
+        if (b.finished && !isUploadTask) {
           st.running = false; st.finishedAt = new Date().toISOString();
           if (!st.dist) st.dist = { pending: true, cn: { status: 'idle', msg: '' }, gh: { status: 'idle', msg: '' } };
+          running = false; // 仅任务真正结束时释放全局锁，避免单 step 上报误清空导致可并发重复派发
         }
         savePackState(st);
-        running = false;
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ ok: true }));
       } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }

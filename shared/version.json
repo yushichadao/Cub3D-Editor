@@ -1,13 +1,23 @@
 {
-  "version": "1.2.1",
-  "note": "单一版本源。三端与构建脚本统一读取此处，根除版本号分叉。各端发布节奏可不同步，但本文件为“仓库当前目标版本”基准（取各端已发布最高版本的最大值 1.2.1）。",
+  "version": "1.0.0",
+  "note": "历史版本元数据（更新系统撤除后仅作记录，构建链不再读取短版本号；对外展示统一使用长版本号 __CUB3D_LONG__ / BOOTV YYYYMMDD）。",
   "platforms": {
-    "web": { "version": "1.1.0", "note": "Web 端当前已发布版本（与 PC/Android 不同步属正常）" },
-    "pc": { "version": "1.2.0", "note": "PC 端当前已发布版本" },
-    "android": { "version": "1.2.1", "note": "Android 端当前已发布版本（当前仅能通过境内 IP 获取更新）" }
+    "web": {
+      "version": "1.0.0",
+      "note": "Web 端历史发布版本记录"
+    },
+    "pc": {
+      "version": "1.0.0",
+      "note": "PC 端历史发布版本记录"
+    },
+    "android": {
+      "version": "1.0.0",
+      "note": "Android 端历史发布版本记录"
+    }
   },
   "buildMeta": {
     "isPackagedPlaceholder": false,
-    "previewVersionDisplay": "X.X.X"
-  }
+    "previewVersionDisplay": "YYYYMMDD"
+  },
+  "updatedAt": "2026-08-24T19:54:15.560Z"
 }

@@ -159,16 +159,6 @@ async function main() {
     console.warn('[sync-shared] 主题数据生成/同步失败（不影响其他同步）：', e.message);
   }
 
-  // 2.2) 更新源单一化：先由 update-sources.mjs 生成 update-sources.js，再同步到三端根目录（T11/A）
-  try {
-    const { execSync } = await import('node:child_process');
-    execSync('node tools/gen-update-sources.mjs', { stdio: 'inherit', cwd: ROOT });
-    await syncFile(INFRA_SRC, 'update-sources.js', INFRA_DESTS);
-    console.log('[sync-shared] 更新源数据同步完成。');
-  } catch (e) {
-    console.warn('[sync-shared] 更新源数据生成/同步失败（不影响其他同步）：', e.message);
-  }
-
   const scripts = (await fs.readdir(SCRIPTS_SRC)).filter((f) => f.endsWith('.mjs'));
   for (const f of scripts) await syncFile(SCRIPTS_SRC, f, SCRIPTS_DESTS);
   console.log('[sync-shared] 共享脚本同步完成。');

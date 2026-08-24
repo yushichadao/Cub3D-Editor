@@ -45,7 +45,7 @@ rsync -az --exclude 'node_modules' "$ROOT/shared/" "$USER@$SERVER:$REMOTE_ROOT/s
 
 # 3) 上传 admin/ 管理端（含 server.mjs / public / package.json / 依赖）
 echo "==> 上传 admin/ 管理端"
-rsync -az --exclude 'data' "$ROOT/admin/" "$USER@$SERVER:$REMOTE_ROOT/admin/"
+rsync -az --exclude 'data' --exclude 'admin.json' "$ROOT/admin/" "$USER@$SERVER:$REMOTE_ROOT/admin/"
 
 # 4) 上传 downloads/（更新包 + 元数据）— 云端权威副本
 echo "==> 上传 downloads/（更新元数据云端副本）"
@@ -57,6 +57,10 @@ scp "$ROOT/deploy/nginx-manager.conf" "$USER@$SERVER:/etc/nginx/conf.d/cub3d.con
 ssh "$USER@$SERVER" "sed -i 's#__DEPLOY_ROOT__#$REMOTE_ROOT#g' /etc/nginx/conf.d/cub3d.conf && nginx -t && systemctl reload nginx"
 scp "$ROOT/deploy/cub3d-manager.service" "$USER@$SERVER:/etc/systemd/system/cub3d-manager.service"
 ssh "$USER@$SERVER" "sed -i 's#__DEPLOY_ROOT__#$REMOTE_ROOT#g' /etc/systemd/system/cub3d-manager.service && systemctl daemon-reload"
+
+# 5.5) 修复上传后权限（SFTP/rsync 以 root 上传，运行用户为 www-data，需可读可执行，否则静态资源 403/404、白屏）
+echo "==> 修正云端文件权限（www-data 可读）"
+ssh "$USER@$SERVER" "chown -R www-data:www-data '$REMOTE_ROOT' && find '$REMOTE_ROOT' -type d -exec chmod 755 {} + && find '$REMOTE_ROOT' -type f -exec chmod 644 {} + && chmod 644 '$REMOTE_ROOT/admin/admin.json' && echo '权限已修正'"
 
 # 6) 重启管理端服务（systemd 或 pm2；按服务器现状）
 echo "==> 重启管理端服务"

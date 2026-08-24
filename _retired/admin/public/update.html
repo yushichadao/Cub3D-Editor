@@ -316,6 +316,7 @@
   }
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
+<script src="/admin/assets/guard.js" defer></script>
 </head>
 <body>
   <!-- ===== 登录门 ===== -->
@@ -351,6 +352,7 @@
       <a class="biz-nav-back" href="/admin/">← 返回门户</a>
       <span class="biz-nav-here"><span class="pk-badge cn">境内</span> 当前：更新话术发布系统</span>
       <a class="biz-nav-jump" href="/admin/distribute/">串门 → 分发至服务器</a>
+      <a class="biz-nav-jump" href="/admin/files/">串门 → 文件系统</a>
     </div>
 
     <!-- 卡片式新增发布 -->
@@ -636,7 +638,7 @@
     if(!user || !pass){ $('lg-msg').textContent = '请输入账号与密码'; return; }
     api('api/portal/login', { method: 'POST', body: { user: user, pass: pass } }).then(function(r){
       if (r.body && r.body.ok) {
-        token = pass;                              // 令牌 = 密码框内容（服务端当前密码）
+        token = r.body.token;                      // 服务端签发的随机会话令牌（与 tokenHash 匹配）
         try { sessionStorage.setItem(SS_TOKEN, token); } catch(e){}   // 本次会话：刷新/重开免重输
         if(remember){
           setLogged(true, true);
@@ -1432,7 +1434,7 @@
     api('api/portal/passwd', { method: 'POST', body: { old: old, next: n1 } }).then(function(r){
       $('pm-save').disabled = false;
       if (r.body && r.body.ok) {
-        token = n1;                                 // 本次会话立即用新密码
+        token = r.body.token;                       // 服务端签发的新令牌（旧令牌已失效）
         if(autoLoginOn()) storeSet(LS_TOKEN, token); // 记住我模式同步更新
         closePwd();
         toast('密码已修改，后续登录请使用新密码');

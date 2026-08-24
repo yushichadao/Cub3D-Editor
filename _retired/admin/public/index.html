@@ -102,6 +102,7 @@
   .ok-dot { width:8px; height:8px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok); display:inline-block; }
   .auto-action .btn { padding:6px 12px; font-size:12.5px; }
 </style>
+<script src="/admin/assets/guard.js" defer></script>
 </head>
 <body>
   <!-- ===== 登录门 ===== -->
@@ -133,7 +134,7 @@
 
     <!-- 项目选择：两个下辖系统（入口） -->
     <div class="panel">
-      <div class="panel-head"><h2>🧭 选择功能</h2><span class="hint">管理后台下辖三大功能（共享同一登录态）</span></div>
+      <div class="panel-head"><h2>🧭 选择功能</h2><span class="hint">管理后台下辖四大功能（共享同一登录态）</span></div>
       <div class="panel-body">
         <div class="pkg-cards"><div class="pkg-cards-row">
           <a class="pkg-card" href="/admin/build/" style="flex:0 0 260px;">
@@ -147,6 +148,10 @@
           <a class="pkg-card" href="/admin/update/" style="flex:0 0 260px;">
             <div class="pk"><span class="pk-badge cn">③ 推送</span><span class="pk-name">更新推送</span></div>
             <div class="pk-file">发布更新话术、按平台区分展示长短版本号、境内外推送（Web 仅显示长版本号）</div>
+          </a>
+          <a class="pkg-card" href="/admin/files/" style="flex:0 0 260px;">
+            <div class="pk"><span class="pk-badge cn">④ 文件</span><span class="pk-name">文件系统</span></div>
+            <div class="pk-file">以本服务器为中枢联通本地电脑 / 国内 downloads / 国际 GitHub，安装包一键流转</div>
           </a>
         </div></div>
       </div>
@@ -275,9 +280,11 @@
     if(!user || !pass){ $('lg-msg').textContent = '请输入账号与密码'; return; }
     api('api/portal/login', { method:'POST', body:{ user:user, pass:pass } }).then(function(r){
       if (r.body && r.body.ok) {
-        token = pass;
+        token = r.body.token;
         try { sessionStorage.setItem(SS_TOKEN, token); } catch(e){}
-        if(remember){ setLogged(true,true); try { localStorage.setItem(LS_TOKEN, token); } catch(e){} }
+        // 始终写入 localStorage，保证跨子页面（/admin/ → /admin/build/ 等）共享登录态
+        try { localStorage.setItem(LS_TOKEN, token); } catch(e){}
+        if(remember){ setLogged(true,true); }
         enterAdmin();
         $('lg-pass').value = ''; $('lg-msg').textContent = '';
         toast(remember ? '登录成功，已在本设备记住（自动登录）' : '登录成功，本次会话已记住（刷新免重输）');
@@ -304,7 +311,7 @@
     if(nx.length < 6){ $('pm-msg').textContent='新密码至少 6 位'; return; }
     if(nx !== nx2){ $('pm-msg').textContent='两次新密码不一致'; return; }
     api('api/portal/passwd', { method:'POST', body:{ old:old, next:nx } }).then(function(r){
-      if(r.body && r.body.ok){ $('pwd-modal').classList.remove('show'); token = nx; try{ localStorage.setItem(LS_TOKEN, nx); }catch(e){} toast('密码已修改，请牢记新密码'); }
+      if(r.body && r.body.ok){ $('pwd-modal').classList.remove('show'); token = r.body.token; if(token){ try{ localStorage.setItem(LS_TOKEN, token); }catch(e){} try{ sessionStorage.setItem(SS_TOKEN, token); }catch(e){} } toast('密码已修改，请牢记新密码'); }
       else $('pm-msg').textContent = zhErr(r.body && r.body.error, '修改失败');
     }).catch(function(){ $('pm-msg').textContent='无法连接后端'; });
   });

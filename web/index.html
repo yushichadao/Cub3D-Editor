@@ -713,24 +713,6 @@
   .loader-stale { display:none; box-sizing:border-box; width:100%; font-size: 13.5px; color: var(--warn); line-height: 1.7; text-align:center;
     background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.35); border-radius: 8px; padding: 10px 16px; margin: 0 0 14px; }
   .loader-error { display:none; width:100%; font-size: 14px; color: var(--accent-3); line-height: 1.7; text-align:center; padding: 0 4px; margin: 0 0 14px; }
-  /* 更新提示弹窗（我已知晓）：覆盖在加载页/编辑器之上，RTL 自适应 */
-  .update-notice { display:none; position:fixed; inset:0; z-index:9999; }
-  .update-notice.show { display:block; }
-  .update-notice-mask { position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(2px); }
-  .update-notice-card {
-    position:absolute; left:50%; top:42%; transform:translate(-50%,-50%);
-    width:min(420px, 88vw); box-sizing:border-box; padding:24px 24px 20px;
-    background:var(--bg-panel, #1b1d23); border:1px solid var(--border, #333); border-radius:14px;
-    box-shadow:0 20px 60px rgba(0,0,0,.5); text-align:center; font-family:inherit;
-  }
-  .update-notice-title { margin:0 0 10px; font-size:17px; font-weight:700; color:var(--text, #eee); }
-  .update-notice-body { margin:0 0 18px; font-size:13.5px; line-height:1.7; color:var(--text-dim, #aaa); white-space:pre-wrap; }
-  .update-notice-ok {
-    display:inline-block; min-width:120px; padding:9px 22px; border:none; border-radius:10px; cursor:pointer;
-    font-size:14px; font-weight:600; font-family:inherit; color:#fff; background:var(--accent, #4f8cff);
-  }
-  .update-notice-ok:hover { filter:brightness(1.08); }
-  html[dir="rtl"] .update-notice-card { text-align:center; }
   .loader-retry { display:none; padding: 10px 32px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
     background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: var(--primary-btn-text); border: none; border-radius: 8px; margin-top: 4px; }
   .loader-retry:hover { filter: brightness(1.12); }
@@ -1255,10 +1237,7 @@
         bootHint: '轻量化 · 无需账号 · 数据本地保存',
         bootFailResource: '资源加载失败：{0}',
         bootFailPage: '页面加载出错：{0}',
-        bootFailUnknown: '页面加载出错：未知错误',
-        updateNoticeTitle: '有新的 Web 版本',
-        updateNoticeBody: '网页版已更新到新版本，建议刷新以体验最新功能与修复。点击「我已知晓」即可继续使用当前页面（不会自动刷新）。',
-        updateKnown: '我已知晓'
+        bootFailUnknown: '页面加载出错：未知错误'
       };
       function _bootDetectLang() {
         // 官网联动：URL ?lang= 优先，并写入缓存记忆
@@ -2230,61 +2209,6 @@ setTimeout(function () {
   }
 }, 20000);
 
-// 版本记录 + 同源更新检测：
-// 1) 记录本次 BOOTV（长序号），供后续版本变化检测；
-// 2) 同源 fetch downloads/update-doc.json，取 web 平台最新已发布版本；
-// 3) 若远端版本更新且用户尚未「我已知晓」过该版本 → 弹窗提示（不强制刷新，本地确认后记忆）。
-(function () {
-  try { localStorage.setItem('cub3d_bootv', BOOTV); } catch (e) {}
-  if (location.protocol !== 'http:' && location.protocol !== 'https:') return; // file://（PC/本地）跳过
-  // 语义化版本比较（支持长序号 YYYYMMDD 与 X.X.X）
-  function cmpVer(a, b) {
-    const pa = String(a).split(/[.\-]/), pb = String(b).split(/[.\-]/);
-    const n = Math.max(pa.length, pb.length);
-    for (let i = 0; i < n; i++) {
-      const x = parseInt(pa[i] || '0', 10) || 0, y = parseInt(pb[i] || '0', 10) || 0;
-      if (x !== y) return x < y ? -1 : 1;
-    }
-    return 0;
-  }
-  function latestOf(doc, platform) {
-    const vs = (doc && doc.versions) || [];
-    let best = null;
-    for (const v of vs) {
-      if (platform && v.platform && v.platform !== platform) continue;
-      if (v.status && v.status !== 'published') continue;
-      if (!best || cmpVer(v.version, best.version) > 0) best = v;
-    }
-    return best;
-  }
-  function showUpdateNotice(latestVer) {
-    const box = document.getElementById('update-notice');
-    if (!box) return;
-    const t = box.querySelector('[data-notice-title]'), b = box.querySelector('[data-notice-body]'), btn = box.querySelector('[data-notice-ok]');
-    if (t) t.textContent = _tBoot('updateNoticeTitle');
-    if (b) b.textContent = _tBoot('updateNoticeBody');
-    if (btn) btn.textContent = _tBoot('updateKnown');
-    box.classList.add('show');
-    if (btn) btn.onclick = function () {
-      try { localStorage.setItem('cub3d_seen_bootv', String(latestVer)); } catch (e) {}
-      box.classList.remove('show');
-    };
-  }
-  // web 在 /web/，update-doc 与 web 平级（境内 /downloads/、境外 /Cub3D-Editor/downloads/），用 ../ 上溯到根
-  fetch('../downloads/update-doc.json?v=' + Date.now(), { cache: 'no-store' })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (doc) {
-      if (!doc) return;
-      const latest = latestOf(doc, 'web');
-      if (!latest) return;
-      let seen = '';
-      try { seen = localStorage.getItem('cub3d_seen_bootv') || ''; } catch (e) {}
-      if (cmpVer(latest.version, BOOTV) > 0 && cmpVer(latest.version, seen) > 0) {
-        showUpdateNotice(latest.version);
-      }
-    })
-    .catch(function () {}); // 探测失败静默（如纯静态托管无 update-doc.json）
-})();
 </script>
 
 <script type="module">
@@ -7407,8 +7331,6 @@ refreshTheme(); updateThemeActive();
 applyLang(); updateLangActive();
 // 导出场景 JSON
 function defaultJsonName(prefix){ const d=new Date(), p=x=>String(x).padStart(2,'0'); return prefix+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'; }
-// 软件版本号（可由构建脚本注入 window.__CUB3D_VERSION__ 覆盖）
-const __APP_VERSION__ = (window.__CUB3D_VERSION__) || '1.2.0';
 // 说明书语言名（用于导入提示中填充 {0}/{1}）
 const MANUAL_LANG_NAME = { 'zh-CN':'简体中文', 'zh-TW':'繁體中文', 'en':'English', 'ja':'日本語', 'ko':'한국어', 'ar':'العربية', 'ru':'Русский', 'es':'Español', 'fr':'Français' };
 function manualLangName(code){ return MANUAL_LANG_NAME[code] || code || ''; }
@@ -7469,7 +7391,6 @@ async function exportScene() {
   const data = JSON.stringify({
     format: 'cube3d-scene',
     longVersion: (window.__CUB3D_LONG__ || BOOTV),
-    shortVersion: (window.__CUB3D_VERSION__ || __APP_VERSION__),
     meta: {
       createdAt: (state.meta && state.meta.createdAt) || now,
       updatedAt: now,
@@ -12539,7 +12460,7 @@ function openManual(){
   function updateNoteCount(){ const total=notes().length; const sel=noteListEl.querySelectorAll('.note-check:checked').length; const c=document.getElementById('manual-note-count'); if(c) c.textContent = sel? T('manSelCount').replace('{0}', sel).replace('{1}', total) : T('manNoteCount').replace('{0}', total); }
   function recalibrateOldNotes(){
     const arr=notes(); let recal=0;
-    arr.forEach(n=>{ if(n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||__APP_VERSION__; recal++; } } });
+    arr.forEach(n=>{ if(n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||BOOTV; recal++; } } });
     if(recal){ saveStore('notes', arr); renderNotes(); toast(T('manRecalibrated').replace('{0}', recal)); }
   }
 
@@ -12637,10 +12558,9 @@ function openManual(){
   function flushSticky(el){ if(!el || !el.classList.contains('sticky-dirty')) return; const area=el.querySelector('.sticky-area'); if(!area) return; updateNote(el.dataset.id, {note: area.value}); el.classList.remove('sticky-dirty'); renderNotes(); }
   function syncStickyVisibility(){ const open=modal.classList.contains('show'); stickyLayer().querySelectorAll('.sticky-note').forEach(el=>{ el.style.display=(open||el.classList.contains('pinned'))?'flex':'none'; }); }
   function applyStickyMode(el){ const area=el.querySelector('.sticky-area'); const ro=el.dataset.mode!=='edit'; if(area) area.readOnly=ro; el.classList.toggle('sticky-readonly', ro); const saveBtn=el.querySelector('[data-act="save"]'); const editBtn=el.querySelector('[data-act="edit"]'); if(saveBtn) saveBtn.style.display=ro?'none':''; if(editBtn) editBtn.style.display=ro?'':'none'; }
-  async function exportNotes(){ console.log('[exportNotes] called'); const arr=notes(); console.log('[exportNotes] notes() returned:', arr.length, 'items'); if(!arr.length){ console.log('[exportNotes] BLOCKED: empty notes array'); toast(T('manNoNote')); return; } const payload={ type:'cub3d-notes', lang: currentLang, longVersion: (window.__CUB3D_LONG__||BOOTV), shortVersion: (window.__CUB3D_VERSION__||__APP_VERSION__), notes: arr }; const data=JSON.stringify(payload, null, 2); const name=defaultJsonName('notes'); console.log('[exportNotes] showSaveFilePicker exists:', !!window.showSaveFilePicker); if(window.showSaveFilePicker){ try{ console.log('[exportNotes] calling showSaveFilePicker with suggestName:', name); const handle=await window.showSaveFilePicker({ suggestedName:name, types:[{description:'JSON', accept:{'application/json':['.json']}}] }); console.log('[exportNotes] picker returned handle:', !!handle); if(!handle) return; const w=await handle.createWritable(); await w.write(data); await w.close(); toast(T('manExported')+' · '+name); return; }catch(e){ console.warn('[exportNotes] showSaveFilePicker error:', e.name||e.code, e.message||e); if(e&&(e.name==='AbortError'||e.code===20)) return; } } console.log('[exportNotes] FALLBACK to <a> download'); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')+' · '+name); }
+  async function exportNotes(){ console.log('[exportNotes] called'); const arr=notes(); console.log('[exportNotes] notes() returned:', arr.length, 'items'); if(!arr.length){ console.log('[exportNotes] BLOCKED: empty notes array'); toast(T('manNoNote')); return; } const payload={ type:'cub3d-notes', lang: currentLang, longVersion: (window.__CUB3D_LONG__||BOOTV), notes: arr }; const data=JSON.stringify(payload, null, 2); const name=defaultJsonName('notes'); console.log('[exportNotes] showSaveFilePicker exists:', !!window.showSaveFilePicker); if(window.showSaveFilePicker){ try{ console.log('[exportNotes] calling showSaveFilePicker with suggestName:', name); const handle=await window.showSaveFilePicker({ suggestedName:name, types:[{description:'JSON', accept:{'application/json':['.json']}}] }); console.log('[exportNotes] picker returned handle:', !!handle); if(!handle) return; const w=await handle.createWritable(); await w.write(data); await w.close(); toast(T('manExported')+' · '+name); return; }catch(e){ console.warn('[exportNotes] showSaveFilePicker error:', e.name||e.code, e.message||e); if(e&&(e.name==='AbortError'||e.code===20)) return; } } console.log('[exportNotes] FALLBACK to <a> download'); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')+' · '+name); }
   function importNotes(file){ const reader=new FileReader(); reader.onload=()=>{ try{
     const LONG = window.__CUB3D_LONG__ || BOOTV;
-    const SHORT = window.__CUB3D_VERSION__ || __APP_VERSION__;
     const raw=JSON.parse(reader.result);
     // 解析：新格式 {type:'cub3d-notes',...}；纯数组/单对象为旧格式（无 longVersion），将在下方因无法比较版本号被拒绝
     let payloadLang, noteArr;
@@ -12660,11 +12580,11 @@ function openManual(){
     const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0, moved=0, failed=0, oldVer=0, lostSkip=0, oldVerSample=null;
     // 停止对连版本号都无法比较的旧格式的支持：整批都没有 longVersion 则拒绝导入
     if(noteArr.length && noteArr.every(n=>!n || typeof n!=='object' || !n.longVersion)){
-      toast(T('manImportNoVer').replace('{0}', SHORT));
+      toast(T('manImportNoVer'));
       return;
     }
     noteArr.forEach(n=>{ if(!n||typeof n!=='object') return;
-      const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now(), longVersion: LONG, shortVersion: SHORT}, n);
+      const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now(), longVersion: LONG}, n);
       item.id=String(item.id||newNoteId()); if(ids.has(item.id)) item.id=newNoteId(); ids.add(String(item.id));
       // 版本识别仅认 longVersion（长号 YYYYMMDD）；单体无 longVersion 视为无法比较，跳过
       if(!item.longVersion){ failed++; return; }
@@ -12679,10 +12599,10 @@ function openManual(){
       if(item.longVersion!==LONG){ oldVer++; if(!oldVerSample) oldVerSample=item.longVersion; }
       if(!off[2]){
         item.start=off[0]; item.end=off[1]; item.line=offsetToLine(off[0]);
-        item.longVersion=LONG; item.shortVersion=SHORT; // 已校准到新位置，记载版本号刷新为当前
+        item.longVersion=LONG; // 已校准到新位置，记载版本号刷新为当前
         moved++;
       } else {
-        item.longVersion=LONG; item.shortVersion=SHORT; // 正常命中，记载版本号刷新为当前
+        item.longVersion=LONG; // 正常命中，记载版本号刷新为当前
         added++;
       }
       cur.push(item);
@@ -12798,7 +12718,7 @@ function openManual(){
       if(act==='close'){ closeSticky(el); }
       else if(act==='save'){ flushSticky(el); el.classList.remove('sticky-unsaved'); el.dataset.mode='ro'; applyStickyMode(el); toast(T('manNoteSaved')); }
       else if(act==='del'){ if(!await showConfirm(T('manDelConfirm'))) return; flushSticky(el); el.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
-      else if(act==='recal'){ const n=noteById(id); if(n&&n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||__APP_VERSION__; saveStore('notes', notes()); renderNotes(); closeSticky(el); openSticky(id,true); toast(T('manRecalibrated').replace('{0}',1)); } else { toast(T('manNoteLostTitle')); } } }
+      else if(act==='recal'){ const n=noteById(id); if(n&&n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||BOOTV; saveStore('notes', notes()); renderNotes(); closeSticky(el); openSticky(id,true); toast(T('manRecalibrated').replace('{0}',1)); } else { toast(T('manNoteLostTitle')); } } }
       else if(act==='delQ'){ if(!await showConfirm(T('manDelConfirm'))) return; const n=noteById(id); const q=n?n.quote:''; const arr=notes().filter(x=>!(x.lost && x.quote===q)); saveStore('notes', arr); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
       else if(act==='delAll'){ const cnt=notes().filter(x=>x.lost).length; if(!cnt) return; if(!await showConfirm(T('manBatchDelConfirm').replace('{0}', cnt))) return; const arr=notes().filter(x=>!x.lost); saveStore('notes', arr); closeSticky(el); renderNotes(); toast(T('manBatchDeleted').replace('{0}', arr.length)); }
       else if(act==='edit'){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(),0); }
@@ -12814,7 +12734,7 @@ function openManual(){
       }
     }));
   }
-  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now(), longVersion: (window.__CUB3D_LONG__||BOOTV), shortVersion: (window.__CUB3D_VERSION__||__APP_VERSION__)}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
+  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now(), longVersion: (window.__CUB3D_LONG__||BOOTV)}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
   function hilites(){ return loadStore('hilites', []); }
   function applyHighlights(){ unwrapHighlights(docEl); let arr=hilites(); let maxId=0; arr.forEach(h=>{ const n=parseInt(h.id,10); if(!isNaN(n)&&n>maxId) maxId=n; }); openManual._hlSeq=maxId; let changed=false; arr=arr.filter(h=>{ if(h.start==null){ const off=findTextOffsets(docEl, h.text); if(off){ h.start=off[0]; h.end=off[1]; changed=true; return true; } changed=true; return false; } return true; });
     // 合并互相重叠/相邻的高亮区间，避免同一文本被多次高亮导致颜色嵌套叠加
@@ -13474,16 +13394,6 @@ function openGuide(){
       window.openTermPlain = openTermPlain;
       })();
       </script>
-
-<!-- 更新提示弹窗：同源检测到 web 端有新版本且用户尚未「我已知晓」时弹出；确认后本地记忆，不强制刷新 -->
-<div class="update-notice" id="update-notice">
-  <div class="update-notice-mask"></div>
-  <div class="update-notice-card" role="dialog" aria-modal="true" aria-labelledby="un-title">
-    <h3 class="update-notice-title" data-notice-title></h3>
-    <p class="update-notice-body" data-notice-body></p>
-    <button class="update-notice-ok" data-notice-ok></button>
-  </div>
-</div>
 
 </body>
 </html>

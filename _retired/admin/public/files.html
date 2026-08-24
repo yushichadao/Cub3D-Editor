@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>管理后台 · Cub3D Editor 文件系统</title>
+<style>
+  /* ============ 样式与其他管理页一致（深色玻璃拟态） ============ */
+  :root {
+    --bg-deep: #0c0e16; --bg-panel: rgba(20, 22, 34, 0.82); --bg-panel-solid: #14161f;
+    --accent: #6ee7ff; --accent-2: #c084fc; --accent-3: #fb7185; --warn: #fbbf24; --ok: #34d399;
+    --text: #e8e8f0; --text-dim: #8b8ba0; --border: rgba(110, 231, 255, 0.18);
+    --radius: 14px; --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+    --input-bg: rgba(255,255,255,0.05); --control-bg: rgba(255,255,255,0.05);
+    --control-bg-hover: rgba(255,255,255,0.08); --section-border: rgba(255,255,255,0.05);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    min-height: 100%; background: var(--bg-deep); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased; padding: 24px 14px 40px; display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  *::-webkit-scrollbar { display: none; }
+
+  /* ===== 顶部导航（返回门户 / 串门） ===== */
+  .biz-nav { width: min(980px, 100%); display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding:10px 14px; border:1px solid var(--border); border-radius:12px; background: var(--control-bg); }
+  .biz-nav-back, .biz-nav-jump { font-size:13px; text-decoration:none; padding:6px 12px; border-radius:8px;
+    border:1px solid var(--border); color:var(--text); transition: all .18s; }
+  .biz-nav-back:hover, .biz-nav-jump:hover { background: var(--control-bg-hover); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+  .biz-nav-here { font-size:13px; color:var(--text-dim); margin-left:auto; display:flex; align-items:center; gap:8px; }
+  .page-head { text-align:center; max-width: 980px; }
+  .page-head h1 { font-size: 19px; font-weight: 700; letter-spacing: .5px; }
+  .page-head p { font-size:12.5px; color:var(--text-dim); margin-top:6px; line-height:1.7; }
+  .tag { display:inline-block; font-size:11px; padding:3px 9px; border-radius:999px; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); border:1px solid var(--border); margin:0 3px; }
+  .tag.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+  .tag.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+  .tag.stop { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); }
+  .pk-badge { font-size:11px; padding:2px 9px; border-radius:999px; border:1px solid var(--border); }
+  .pk-badge.cn { color:var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+
+  .panel { width: min(980px, 100%); border:1px solid var(--border); border-radius: var(--radius); background: var(--bg-panel-solid); overflow:hidden; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .panel-head h2 { font-size:14px; font-weight:600; }
+  .panel-head .hint { font-size:12px; color:var(--text-dim); }
+  .panel-body { padding: 14px 16px; }
+
+  .field { display:flex; flex-direction:column; gap:4px; }
+  .field label { font-size:12px; color:var(--text-dim); }
+  .field input, .field select {
+    background: var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text);
+    padding:8px 10px; font-size:13px; font-family:inherit; outline:none; color-scheme: dark;
+    font-family: "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  }
+  .field select option { background: var(--bg-panel-solid); color: var(--text); }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+  .field .mini { font-size:11px; color:var(--text-dim); opacity:.75; }
+  .form-row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+
+  .btn-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .btn {
+    padding:8px 14px; border-radius:9px; font-size:13px; cursor:pointer; font-family:inherit;
+    background: var(--control-bg); color:var(--text); border:1px solid var(--border); transition: all .18s;
+  }
+  .btn:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); border-color: var(--accent); }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; font-weight:600; border-color:transparent; }
+  .btn.danger { border-color: color-mix(in srgb, var(--accent-3) 55%, transparent); color: var(--accent-3); font-weight:600; }
+  .btn.danger:hover { background: color-mix(in srgb, var(--accent-3) 14%, transparent); border-color: var(--accent-3); }
+  .btn.small { padding:4px 10px; font-size:12px; }
+  .btn-sep { width:1px; height:20px; background: rgba(255,255,255,.10); }
+
+  /* ===== 标签页切换 ===== */
+  .seg { display:flex; gap:8px; background:var(--control-bg); border:1px solid var(--border); border-radius:11px; padding:5px; width:min(980px,100%); }
+  .seg button { flex:1; padding:9px 12px; border-radius:8px; background:transparent; color:var(--text-dim);
+    border:1px solid transparent; cursor:pointer; font-size:13.5px; font-family:inherit; transition:all .18s; }
+  .seg button.on { background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; font-weight:600; }
+  .seg button:not(.on):hover { background:var(--control-bg-hover); color:var(--text); }
+
+  /* ===== 文件行 ===== */
+  .file-row { display:flex; align-items:center; gap:10px; padding:11px 4px; border-bottom:1px solid var(--section-border); }
+  .file-row:last-child { border-bottom:none; }
+  .file-ico { font-size:18px; flex:none; }
+  .file-main { flex:1; min-width:0; }
+  .file-name { font-size:13px; font-weight:600; word-break:break-all; }
+  .file-name .code { font-weight:400; }
+  .file-meta { font-size:11.5px; color:var(--text-dim); margin-top:3px; line-height:1.6; }
+  .file-ops { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+  .chk { accent-color: var(--accent); width:15px; height:15px; flex:none; cursor:pointer; }
+  .code { font-family: Consolas, Menlo, monospace; font-size: 12px; color: var(--accent); opacity:.85; }
+  .ok-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok); vertical-align:1px; margin-right:6px; }
+  .empty { text-align:center; color:var(--text-dim); font-size:13px; padding:34px 12px; line-height:2; }
+  .empty .big { font-size:30px; margin-bottom:6px; }
+  .hint { font-size:12.5px; color:var(--text-dim); line-height:1.8; }
+  .hint b { color: var(--text); }
+  .asset-row .file-main .file-name { font-weight:400; }
+
+  /* ===== 弹窗 / toast（修改密码 / 确认 / 提示共用） ===== */
+  .pwd-modal { position:fixed; inset:0; z-index:99999; display:none; align-items:center; justify-content:center;
+    background:rgba(8,10,18,0.7); backdrop-filter:blur(4px); }
+  .pwd-modal.show { display:flex; }
+  .pwd-card { width:min(360px,92vw); border:1px solid var(--border); border-radius:14px; background:var(--bg-panel-solid);
+    padding:24px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow); }
+  .pwd-card h3 { font-size:16px; font-weight:700; }
+  .pwd-card input { background:var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text);
+    padding:10px 12px; font-size:13px; font-family:inherit; outline:none; color-scheme:dark; }
+  .pwd-card input:focus { border-color:var(--accent); }
+  .pwd-row { display:flex; gap:10px; justify-content:flex-end; }
+  .pwd-msg { font-size:12.5px; color:var(--accent-3); min-height:14px; }
+  .toast { position:fixed; left:50%; bottom:42px; transform:translateX(-50%) translateY(20px); z-index:999999;
+    background:rgba(20,22,34,0.96); border:1px solid var(--border); color:var(--text); padding:10px 18px;
+    border-radius:10px; font-size:13px; opacity:0; transition:all .25s; pointer-events:none; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+<script src="/admin/assets/guard.js" defer></script>
+</head>
+<body>
+  <!-- 主界面（未登录前隐藏） -->
+  <div id="admin-main" style="display:none; width:100%; flex-direction:column; align-items:center; gap:18px;">
+    <div class="page-head">
+      <h1>文件系统 <span class="tag">管理站点 · 下辖</span></h1>
+      <p>以本服务器 <b>downloads/</b> 为中枢：<b>本地电脑</b>（打包代理）→ 国内 → 国际 GitHub，安装包一键流转。</p>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn" id="btn-pwd">🔑 修改密码</button>
+        <button class="btn" id="btn-logout">退出登录</button>
+      </div>
+    </div>
+
+    <div class="biz-nav">
+      <a class="biz-nav-back" href="/admin/">← 返回门户</a>
+      <span class="biz-nav-here"><span class="pk-badge cn">境内</span> 当前：文件系统</span>
+      <a class="biz-nav-jump" href="/admin/build/">串门 → 本地打包</a>
+      <a class="biz-nav-jump" href="/admin/distribute/">串门 → 分发至服务器</a>
+      <a class="biz-nav-jump" href="/admin/update/">串门 → 更新推送</a>
+    </div>
+
+    <div class="seg">
+      <button type="button" data-tab="local" class="on">💻 本地电脑</button>
+      <button type="button" data-tab="cn">🇨🇳 国内服务器</button>
+      <button type="button" data-tab="gh">🌍 国际 GitHub</button>
+    </div>
+
+    <!-- ===== 本地电脑 ===== -->
+    <div class="panel" id="panel-local">
+      <div class="panel-head">
+        <h2>💻 本地电脑（打包代理）</h2>
+        <span class="hint" id="local-state"></span>
+      </div>
+      <div class="panel-body">
+        <div id="local-list"></div>
+        <div class="btn-row">
+          <button class="btn" id="btn-local-refresh">↻ 刷新</button>
+          <button class="btn primary" id="btn-local-upload">⬆ 上传所选到国内</button>
+        </div>
+        <div class="hint" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--section-border);">
+          本机运行 <span class="code">node admin/local-packer.mjs --server http://139.196.104.56/admin --pass &lt;密码&gt;</span> 后，此页每 8 秒自动同步本机 <span class="code">release/</span> 目录清单（仅 ASCII 文件名）。勾选后「上传到国内」由代理分块传输，之后可继续推送国际 GitHub。
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 国内服务器 ===== -->
+    <div class="panel" id="panel-cn" style="display:none;">
+      <div class="panel-head">
+        <h2>🇨🇳 国内 downloads（安装包权威副本）</h2>
+        <span class="hint" id="cn-state"></span>
+      </div>
+      <div class="panel-body">
+        <div class="form-row">
+          <div class="field" style="flex:1; min-width:260px;">
+            <label>从浏览器上传安装包（大文件自动分块）</label>
+            <input type="file" id="cn-file" accept=".exe,.zip,.msi,.apk,.tar,.gz,.dmg,.bin" />
+          </div>
+          <div class="field" style="flex:none;">
+            <label>　</label>
+            <button class="btn primary" id="btn-cn-upload">⬆ 上传</button>
+          </div>
+        </div>
+        <div id="cn-list" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- ===== 国际 GitHub ===== -->
+    <div class="panel" id="panel-gh" style="display:none;">
+      <div class="panel-head">
+        <h2>🌍 国际 GitHub Releases</h2>
+        <span class="hint" id="gh-state"></span>
+      </div>
+      <div class="panel-body">
+        <div class="form-row" style="margin-bottom:12px;">
+          <div class="field" style="min-width:180px;">
+            <label>创建 Release 标签</label>
+            <input type="text" id="gh-tag" placeholder="v1.4.0" spellcheck="false" />
+          </div>
+          <div class="field" style="flex:1; min-width:200px;">
+            <label>发布标题（可留空）</label>
+            <input type="text" id="gh-name" placeholder="1.4.0 发布" spellcheck="false" />
+          </div>
+          <div class="field" style="flex:none;">
+            <label>　</label>
+            <button class="btn primary" id="btn-gh-create">＋ 创建 Release</button>
+          </div>
+        </div>
+        <div id="gh-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 修改密码浮窗 -->
+  <div class="pwd-modal" id="pwd-modal">
+    <div class="pwd-card">
+      <h3>修改密码</h3>
+      <input type="password" id="pm-old" placeholder="当前密码" autocomplete="current-password" />
+      <input type="password" id="pm-new" placeholder="新密码" autocomplete="new-password" />
+      <input type="password" id="pm-new2" placeholder="再次输入新密码" autocomplete="new-password" />
+      <p class="pwd-msg" id="pm-msg"></p>
+      <div class="pwd-row">
+        <button class="btn" id="pm-cancel">取消</button>
+        <button class="btn primary" id="pm-save">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通用确认弹窗 -->
+  <div class="pwd-modal" id="cfm-modal">
+    <div class="pwd-card">
+      <h3 id="cfm-title">确认</h3>
+      <p id="cfm-msg" style="font-size:13px; color:var(--text-dim); line-height:1.8; margin:2px 0 4px;"></p>
+      <p class="pwd-msg" id="cfm-err"></p>
+      <div class="pwd-row">
+        <button class="btn" id="cfm-cancel">取消</button>
+        <button class="btn primary" id="cfm-ok">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+  /* ============ 鉴权（服务端 ADMIN_TOKEN，与其他管理页一致） ============ */
+  const LS_TOKEN = 'cub3d_admin_token';
+  const SS_TOKEN = 'cub3d_admin_sess';
+  let token = '';
+  function $(id) { return document.getElementById(id); }
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove('show'); }, 1900); }
+  function remStore(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  function api(path, opts) {
+    if (path.indexOf('api/') === 0) path = '/admin/' + path;
+    opts = opts || {};
+    opts.headers = opts.headers || {};
+    if (token) opts.headers['X-Admin-Token'] = token;
+    if (opts.body && typeof opts.body === 'object') {
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(opts.body);
+    }
+    return fetch(path, opts).then(function (r) {
+      return r.json().then(function (j) { return { status: r.status, body: j }; });
+    }).then(function (res) {
+      if (res.status === 401 && res.body && res.body.error === 'unauthorized') {
+        remStore(LS_TOKEN); try { sessionStorage.removeItem(SS_TOKEN); } catch (e) {}
+        token = ''; location.href = '/admin/';
+      }
+      return res;
+    });
+  }
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmtSize(n) {
+    n = Number(n) || 0;
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    if (n < 1073741824) return (n / 1048576).toFixed(1) + ' MB';
+    return (n / 1073741824).toFixed(2) + ' GB';
+  }
+  function relTime(iso) {
+    if (!iso) return '—';
+    const s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (s < 60) return Math.max(0, Math.round(s)) + ' 秒前';
+    if (s < 3600) return (s / 60).toFixed(1) + ' 分钟前';
+    return String(iso).replace('T', ' ').slice(0, 19);
+  }
+  function showConfirm(title, msg, onOk) {
+    $('cfm-title').textContent = title;
+    $('cfm-msg').innerHTML = msg;
+    $('cfm-err').textContent = '';
+    $('cfm-modal').classList.add('show');
+    const done = function (ok) {
+      $('cfm-modal').classList.remove('show');
+      $('cfm-ok').onclick = null; $('cfm-cancel').onclick = null;
+      if (ok) onOk();
+    };
+    $('cfm-ok').onclick = function () { done(true); };
+    $('cfm-cancel').onclick = function () { done(false); };
+  }
+  function openPwd() {
+    $('pm-old').value = ''; $('pm-new').value = ''; $('pm-new2').value = ''; $('pm-msg').textContent = '';
+    $('pwd-modal').classList.add('show');
+  }
+  function closePwd() { $('pwd-modal').classList.remove('show'); }
+  function logout() {
+    remStore(LS_TOKEN); try { sessionStorage.removeItem(SS_TOKEN); } catch (e) {}
+    token = ''; location.href = '/admin/';
+  }
+
+  /* ============ 分块上传（走 /api/packer/agent/upload，规避 nginx body 限制） ============ */
+  function uploadChunked(file, onProgress) {
+    const CHUNK = 8 * 1024 * 1024;
+    const name = String(file.name).replace(/[^\w.\-]/g, '_');
+    const total = Math.max(1, Math.ceil(file.size / CHUNK));
+    let seq = 0;
+    return new Promise(function (resolve, reject) {
+      (function next() {
+        const start = seq * CHUNK;
+        const slice = file.slice(start, Math.min(start + CHUNK, file.size));
+        const params = 'name=' + encodeURIComponent(name) + '&seq=' + seq + '&total=' + total;
+        fetch('/admin/api/packer/agent/upload?' + params, {
+          method: 'POST',
+          headers: { 'X-Admin-Token': token, 'Content-Type': 'application/octet-stream' },
+          body: slice,
+        }).then(function (r) { return r.json(); }).then(function (r) {
+          if (!r.ok) throw new Error(r.error || 'upload_failed');
+          seq++;
+          if (onProgress) onProgress(seq, total);
+          if (seq < total) next(); else resolve({ ok: true, name: name });
+        }).catch(reject);
+      })();
+    });
+  }
+
+  /* ============ 数据状态 ============ */
+  let state = { st: null, cnNames: new Set(), tab: 'local', ghReleases: [] };
+  const uploading = new Set(); // 正在代传的本地文件名
+
+  function load(silent) {
+    return api('api/fs/status').then(function (r) {
+      if (!r.body.ok) { if (!silent) toast('加载失败：' + (r.body.error || r.status)); return; }
+      state.st = r.body;
+      state.cnNames = new Set((r.body.cn.files || []).map(function (f) { return f.name; }));
+      renderLocal(); renderCn(); renderGh();
+    });
+  }
+
+  /* ---------- 本地电脑 ---------- */
+  function renderLocal() {
+    const l = state.st.local;
+    $('local-state').innerHTML = l.online
+      ? '<span class="tag ok">在线</span> ' + escHtml(l.name || '') + ' · ' + escHtml(l.os || '') + ' · 心跳 ' + relTime(l.lastSeen) + ' · ' + (l.snapshot || []).length + ' 个文件'
+      : '<span class="tag stop">代理离线</span> 无法访问本机文件';
+    const files = l.snapshot || [];
+    const wrap = $('local-list');
+    if (!files.length) {
+      wrap.innerHTML = '<div class="empty"><div class="big">💻</div>未收到本机文件清单。<br>请在本机启动打包代理后重试（见下方说明）。</div>';
+      return;
+    }
+    wrap.innerHTML = files.slice().sort(function (a, b) { return b.size - a.size; }).map(function (f) {
+      const inCn = state.cnNames.has(f.name);
+      const busy = uploading.has(f.name);
+      return '<div class="file-row" data-name="' + escHtml(f.name) + '" data-path="' + escHtml(f.path) + '">' +
+        '<input type="checkbox" class="chk f-chk" data-name="' + escHtml(f.name) + '" data-path="' + escHtml(f.path) + '" ' + (busy ? 'disabled' : '') + '>' +
+        '<span class="file-ico">📦</span>' +
+        '<div class="file-main"><div class="file-name">' + escHtml(f.name) + '</div>' +
+        '<div class="file-meta">' + fmtSize(f.size) + ' · <span class="code">' + escHtml(f.path) + '</span> · ' + relTime(f.mtime) + '</div></div>' +
+        '<div class="file-ops">' + (busy ? '<span class="tag warn">传输中…</span>' : inCn ? '<span class="tag ok">已在国内</span>' : '<button class="btn small" data-act="upload">上传到国内</button>') + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function localUpload(files) {
+    if (!files.length) return;
+    api('api/fs/local/upload', { method: 'POST', body: { files: files } }).then(function (r) {
+      if (!r.body.ok) { toast('派发失败：' + (r.body.error || r.status)); return; }
+      files.forEach(function (f) { uploading.add(f.name); });
+      toast(r.body.message || '已派发上传任务');
+      renderLocal();
+      setTimeout(function () {
+        files.forEach(function (f) { uploading.delete(f.name); });
+        load(true);
+        toast('本地文件传输完成，请到「国内服务器」标签查看');
+      }, 12000);
+    });
+  }
+
+  /* ---------- 国内服务器 ---------- */
+  function renderCn() {
+    const files = state.st.cn.files || [];
+    $('cn-state').textContent = files.length + ' 个安装包 · ' + (state.st.cn.dir || '');
+    const wrap = $('cn-list');
+    if (!files.length) {
+      wrap.innerHTML = '<div class="empty"><div class="big">🗂</div>downloads/ 目录暂无安装包。<br>可上传本地文件到国内，或直接从浏览器上传。</div>';
+      return;
+    }
+    wrap.innerHTML = files.map(function (f) {
+      return '<div class="file-row" data-name="' + escHtml(f.name) + '">' +
+        '<span class="file-ico">📦</span>' +
+        '<div class="file-main"><div class="file-name">' + escHtml(f.name) + '</div>' +
+        '<div class="file-meta">' + fmtSize(f.size) + ' · ' + relTime(f.mtime) + '</div></div>' +
+        '<div class="file-ops">' +
+        '<button class="btn small" data-act="copy" title="复制下载链接">链接</button>' +
+        '<button class="btn small" data-act="dl">下载</button>' +
+        '<button class="btn small" data-act="gh">→ 国际</button>' +
+        '<button class="btn small danger" data-act="del">删除</button>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  /* ---------- 国际 GitHub ---------- */
+  function renderGh() {
+    const gh = state.st.intl;
+    $('gh-state').innerHTML = gh.ghEnabled
+      ? '<span class="tag ok">已配置 GH_TOKEN</span> ' + escHtml(gh.repo)
+      : '<span class="tag warn">未配置 GH_TOKEN</span> 只读浏览，上传/删除不可用';
+  }
+
+  function loadGh(silent) {
+    return api('api/fs/gh').then(function (r) {
+      if (!r.body.ok) {
+        $('gh-list').innerHTML = '<div class="empty"><div class="big">🐙</div>国际列表加载失败：' + escHtml(r.body.error || r.status) +
+          '<br>（本服务器到 GitHub 网络不通或限流；读写功能不受影响）</div>';
+        return;
+      }
+      state.ghReleases = r.body.releases || [];
+      const writable = state.st.intl.ghEnabled;
+      const cnFiles = (state.st.cn.files || []).map(function (f) { return f.name; }).filter(function (n) { return /^[\w.\-]+$/.test(n); });
+      const box = $('gh-list');
+      const rels = state.ghReleases;
+      if (!rels.length) {
+        box.innerHTML = '<div class="empty"><div class="big">🐙</div>暂无 GitHub Release。<br>输入标签后点击「创建 Release」，或将国内文件上传到指定标签。</div>';
+        return;
+      }
+      box.innerHTML = rels.map(function (rel) {
+        const assets = (rel.assets || []).map(function (a) {
+          return '<div class="file-row asset-row" data-tag="' + escHtml(rel.tag) + '">' +
+            '<span class="file-ico" style="font-size:14px">🔗</span>' +
+            '<div class="file-main"><div class="file-name">' + escHtml(a.name) + '</div><div class="file-meta">' + fmtSize(a.size) + '</div></div>' +
+            '<div class="file-ops">' +
+            '<button class="btn small" data-act="adl" data-url="' + escHtml(a.url) + '">下载</button>' +
+            (writable && a.id ? '<button class="btn small danger" data-act="adel" data-id="' + a.id + '" data-name="' + escHtml(a.name) + '">删除</button>' : '') +
+            '</div></div>';
+        }).join('');
+        const opts = cnFiles.length
+          ? cnFiles.map(function (n) { return '<option value="' + escHtml(n) + '">' + escHtml(n) + '</option>'; }).join('')
+          : '<option value="">（国内暂无文件）</option>';
+        return '<div class="file-row" style="border-bottom:none; padding:14px 2px;">' +
+          '<span class="file-ico">🏷</span>' +
+          '<div class="file-main"><div class="file-name">' + escHtml(rel.tag) + ' ' + escHtml(rel.name || '') + '</div>' +
+          '<div class="file-meta">' + relTime(rel.created_at) + (rel.draft ? ' · 草稿' : '') + (rel.prerelease ? ' · 预发布' : '') + '</div></div>' +
+          (writable ? '<div class="file-ops">' +
+            '<select class="field" style="padding:5px 8px; max-width:230px;" data-tag="' + escHtml(rel.tag) + '" ' + (cnFiles.length ? '' : 'disabled') + '>' + opts + '</select>' +
+            '<button class="btn small" data-act="au" data-tag="' + escHtml(rel.tag) + '" ' + (cnFiles.length ? '' : 'disabled') + '>上传资产</button>' +
+            '</div>' : '') +
+          '</div>' +
+          (assets ? '<div style="padding-left:28px; border-top:1px dashed var(--section-border);">' + assets + '</div>' : '');
+      }).join('');
+    });
+  }
+
+  /* ============ 事件 ============ */
+  function bind() {
+    document.querySelectorAll('.seg button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.tab = b.dataset.tab;
+        document.querySelectorAll('.seg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        $('panel-local').style.display = state.tab === 'local' ? '' : 'none';
+        $('panel-cn').style.display = state.tab === 'cn' ? '' : 'none';
+        $('panel-gh').style.display = state.tab === 'gh' ? '' : 'none';
+        if (state.tab === 'cn') load(true);
+        if (state.tab === 'gh') loadGh(true);
+      });
+    });
+
+    $('btn-local-refresh').addEventListener('click', function () { load(); });
+    $('btn-local-upload').addEventListener('click', function () {
+      const files = Array.prototype.map.call(document.querySelectorAll('#local-list .f-chk:checked'), function (c) {
+        return { name: c.dataset.name, path: c.dataset.path };
+      });
+      if (!files.length) { toast('请先勾选要上传的文件'); return; }
+      localUpload(files);
+    });
+    $('local-list').addEventListener('click', function (e) {
+      const btn = e.target.closest('button[data-act=upload]');
+      if (!btn) return;
+      const row = btn.closest('.file-row');
+      localUpload([{ name: row.dataset.name, path: row.dataset.path }]);
+    });
+
+    $('btn-cn-upload').addEventListener('click', function () {
+      const file = $('cn-file').files[0];
+      if (!file) { toast('请先选择要上传的安装包'); return; }
+      toast('正在上传 ' + file.name + ' …');
+      $('btn-cn-upload').disabled = true;
+      uploadChunked(file).then(function () {
+        $('btn-cn-upload').disabled = false;
+        return load(true);
+      }).then(function () {
+        toast('已上传到国内 downloads/：' + file.name);
+        $('cn-file').value = '';
+      }).catch(function (err) {
+        $('btn-cn-upload').disabled = false;
+        toast('上传失败：' + (err.message || err));
+      });
+    });
+
+    $('cn-list').addEventListener('click', function (e) {
+      const btn = e.target.closest('button[data-act]');
+      if (!btn) return;
+      const name = btn.closest('.file-row').dataset.name;
+      const act = btn.dataset.act;
+      if (act === 'copy') {
+        const url = location.origin + '/admin/downloads/' + encodeURIComponent(name);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () { toast('下载链接已复制'); }, function () { toast(url); });
+        } else { toast(url); }
+      } else if (act === 'dl') {
+        location.href = '/admin/downloads/' + encodeURIComponent(name);
+      } else if (act === 'gh') {
+        showConfirm('推送到国际', '把 <b>' + escHtml(name) + '</b> 上传到 GitHub Release？<br>目标标签在下一步指定（同名资产需先删除）。', function () {
+          const tag = prompt('目标 Release 标签（不存在将自动创建）：');
+          if (!tag) return;
+          api('api/fs/gh/asset', { method: 'POST', body: { tag: tag.trim(), file: name } }).then(function (r) {
+            if (!r.body.ok) { toast('推送失败：' + (r.body.error || r.status)); return; }
+            toast(r.body.message || '已推送');
+            loadGh(true);
+          });
+        });
+      } else if (act === 'del') {
+        showConfirm('删除文件', '确定从国内 downloads/ 删除 <b>' + escHtml(name) + '</b>？', function () {
+          api('api/release/delete-file', { method: 'POST', body: { name: name } }).then(function (r) {
+            if (!r.body.ok) { toast('删除失败：' + (r.body.error || r.status)); return; }
+            toast('已删除');
+            load(true);
+          });
+        });
+      }
+    });
+
+    $('gh-list').addEventListener('click', function (e) {
+      const btn = e.target.closest('button[data-act]');
+      if (!btn) return;
+      const act = btn.dataset.act;
+      if (act === 'adl') {
+        location.href = btn.dataset.url;
+      } else if (act === 'adel') {
+        showConfirm('删除国际资产', '确定删除 GitHub 资产 <b>' + escHtml(btn.dataset.name) + '</b>？', function () {
+          api('api/fs/gh/asset-delete', { method: 'POST', body: { assetId: btn.dataset.id } }).then(function (r) {
+            if (!r.body.ok) { toast('删除失败：' + (r.body.error || r.status)); return; }
+            toast('已删除');
+            loadGh(true);
+          });
+        });
+      } else if (act === 'au') {
+        const tag = btn.dataset.tag;
+        const sel = btn.closest('.file-ops').querySelector('select');
+        const name = sel.value;
+        if (!name) { toast('请先选择要上传的国内文件'); return; }
+        btn.disabled = true;
+        api('api/fs/gh/asset', { method: 'POST', body: { tag: tag, file: name } }).then(function (r) {
+          btn.disabled = false;
+          if (!r.body.ok) { toast('上传失败：' + (r.body.error || r.status)); return; }
+          toast(r.body.message || '已上传');
+          loadGh(true);
+        });
+      }
+    });
+
+    $('btn-gh-create').addEventListener('click', function () {
+      const tag = $('gh-tag').value.trim();
+      if (!tag) { toast('请填写 Release 标签'); return; }
+      const name = $('gh-name').value.trim();
+      api('api/fs/gh/release', { method: 'POST', body: { tag: tag, name: name } }).then(function (r) {
+        if (!r.body.ok) { toast('创建失败：' + (r.body.error || r.status)); return; }
+        toast(r.body.message || '已创建');
+        $('gh-tag').value = ''; $('gh-name').value = '';
+        loadGh(true);
+      });
+    });
+
+    $('btn-pwd').addEventListener('click', openPwd);
+    $('btn-logout').addEventListener('click', logout);
+    $('pm-cancel').addEventListener('click', closePwd);
+    $('pm-save').addEventListener('click', function () {
+      const old = $('pm-old').value, n1 = $('pm-new').value, n2 = $('pm-new2').value;
+      if (!old || !n1) { $('pm-msg').textContent = '请填写当前密码与新密码'; return; }
+      if (n1 !== n2) { $('pm-msg').textContent = '两次输入的新密码不一致'; return; }
+      $('pm-save').disabled = true;
+      api('api/portal/passwd', { method: 'POST', body: { old: old, next: n1 } }).then(function (r) {
+        $('pm-save').disabled = false;
+        if (r.body.ok) {
+          token = r.body.token;
+          try { sessionStorage.setItem(SS_TOKEN, token); } catch (e) {}
+          try { localStorage.setItem(LS_TOKEN, token); } catch (e) {}
+          closePwd(); toast('密码已修改');
+        } else {
+          $('pm-msg').textContent = (r.body && r.body.error) || '修改失败';
+        }
+      });
+    });
+  }
+
+  /* ============ 初始化 ============ */
+  function tryAutoLogin() {
+    let saved = null;
+    try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch (e) {}
+    if (!saved) { location.href = '/admin/'; return; }
+    token = saved;
+    $('admin-main').style.display = 'flex';
+    api('api/portal/auth-check').then(function (r) {
+      if (r.status === 401) {
+        try { remStore(LS_TOKEN); sessionStorage.removeItem(SS_TOKEN); } catch (e) {}
+        token = '';
+        location.href = '/admin/';
+      }
+    }).catch(function () {});
+  }
+
+  bind();
+  tryAutoLogin();
+  load();
+  setInterval(function () { if (state.tab === 'local') load(true); }, 8000);
+})();
+</script>
+</body>
+</html>

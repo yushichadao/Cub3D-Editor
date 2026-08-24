@@ -42,15 +42,9 @@
 | `Cub3D-Editor-Portable-1.2.0-x64.exe` | Windows 便携版（免安装） |
 | `Cub3D-Editor-release-1.2.0-universal.apk` | Android 安装包（release 签名，universal 全 ABI，包名 `com.cub3deditor.app`） |
 
-下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮默认跳转到最新 Release 的对应附件；境内站点（cub3d-editor.cn）联通后，「下载」按钮自动改指 `https://cub3d-editor.cn/downloads/` 下的镜像文件。
+下载入口：<https://github.com/yushichadao/Cub3D-Editor/releases/latest> —— 宣传页与说明书里的「下载」按钮统一跳转到最新 Release 的对应附件（境内境外同一入口）。
 
-> 注：安装包不再进 git，因此 `.git` 不会再因反复打包而膨胀；各端自身的 `dist/`、`build/`、`node_modules/` 按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。发布新版本请运行 `tools/release.mjs`（自动构建三端产物并上传为 Release 附件）：
->
-> ```powershell
-> node tools/release.mjs          # 默认按 package.json 的 version 发布，如 v1.0.0
-> node tools/release.mjs 1.2.0    # 指定版本
-> node tools/release.mjs --replace # 已存在同名 Release 时删除重建
-> ```
+> 注：安装包不再进 git，因此 `.git` 不会再因反复打包而膨胀；各端自身的 `dist/`、`build/`、`node_modules/` 按 `.gitignore` 规则忽略。Android 签名密钥 `release.keystore` 不入库，请自行备份。发布新版本时，运行各端构建命令产出安装包后，手动上传为 GitHub Release 附件。
 
 ---
 
@@ -63,7 +57,6 @@
 - **视图辅助**：坐标轴、网格、地面参考面、线框模式
 - **PC 版增强**：崩溃恢复、拖放打开、自动保存/会话恢复、置顶便签窗
 - **Android 版增强**：全屏运行、返回键确认、导出 PNG 截图与 `.json` 场景
-- **应用更新**：PC 版与 Android 版启动时自动检查新版本（可在设置中关闭），支持一键更新，更新不影响本地数据
 
 ---
 
@@ -113,9 +106,8 @@ Cub3D Editor/
 │   └── electron/           # Electron 主进程
 ├── Android/                # Android 版（Capacitor）
 │   └── android/            # Capacitor 原生工程（含 release.keystore 签名，不入库）
-├── tools/                  # 仓库维护脚本（同步 / 语言包 / 校验 / 发布）
+├── tools/                  # 仓库维护脚本（同步 / 语言包 / 校验）
 │   ├── sync-shared.mjs     # 同步 shared/ → 各端 + 生成语言包
-│   ├── release.mjs         # 构建三端产物并发布为 GitHub Release 附件
 │   ├── check_manual.mjs    # 说明书 ↔ 界面文案一致性校验
 │   ├── _check_syntax.mjs   # 三端 index.html 语法检查
 │   ├── sync-wiki.mjs       # 同步 wiki/Home.md 到 GitHub Wiki
@@ -180,7 +172,7 @@ npm run apk:debug       # 调试包
 
 > 注：若本机启用了文件删除防护（如部分 IDE 会拦截 `cap sync` 的批量删除），构建时请临时关闭该防护（例如设置 `CODEBUDDY_SAFE_DELETE_ENABLED=0`），否则 `cap sync` 会中断。
 
-产物位于 `Android/dist/Cub3D-Editor-release-1.2.0-universal.apk`；发布时由 `tools/release.mjs` 收集，与 PC 版一起作为 GitHub Release 附件上传（不再复制到仓库根 `dist/`）。
+产物位于 `Android/dist/Cub3D-Editor-release-1.2.0-universal.apk`；发布时与 PC 版一起手动上传为 GitHub Release 附件。
 
 ### 部署到 GitHub Pages
 
@@ -189,13 +181,13 @@ npm run apk:debug       # 调试包
 - `/` → 宣传页（产品介绍、九语言切换、下载入口）
 - `/Web/` → 网页版编辑器
 
-**安装包不随站点发布**：PC / Android 安装包由 `tools/release.mjs` 上传到 GitHub Releases，宣传页的「下载」按钮指向 `releases/latest/download/` 对应附件。修改上述任一目录并推送即触发部署。
+**安装包不随站点发布**：PC / Android 安装包作为 GitHub Releases 附件发布，宣传页的「下载」按钮指向 `releases/latest/download/` 对应附件。修改上述任一目录并推送即触发部署。
 
 ### 部署到境内站点（cub3d-editor.cn）
 
 境内站点与境外 GitHub Pages 共用同一份静态代码（宣传页按域名自动切换下载链接、版本信息与 ICP 显示），部署到轻量云服务器。`cub3d-editor.cn` 需要 **ICP 备案**；备案号取得后填入 `index.html` 顶部 `SITE.cn.icp` 字段，境内页脚即自动显示，境外 GitHub Pages 自动隐藏。
 
-> **备案过渡期（当前状态）**：`cub3d-editor.cn` 的 ICP 备案尚未完成，域名暂不解析，境内访问临时使用 `http://139.196.104.56/`（即本服务器站点根目录 `/www/wwwroot/139.196.104.56/`）。代码已将该 IP 识别为境内站（ICP 框显示、下载走站内 `downloads/`、主页链接指向当前站），本文档中的域名引用保持不变。备案完成后将 A 记录解析到该 IP，页面经 `location.origin` 自动以域名继续工作，**无需改码**。
+> **备案过渡期（当前状态）**：`cub3d-editor.cn` 的 ICP 备案尚未完成，域名暂不解析，境内访问临时使用 `http://139.196.104.56/`（即本服务器站点根目录 `/www/wwwroot/139.196.104.56/`）。代码已将该 IP 识别为境内站（ICP 框显示、主页链接指向当前站），本文档中的域名引用保持不变。备案完成后将 A 记录解析到该 IP，页面经 `location.origin` 自动以域名继续工作，**无需改码**。
 
 部署步骤：
 
@@ -207,15 +199,8 @@ npm run apk:debug       # 调试包
    - `legal-tos.html` / `legal-disclaimer.html` / `legal-privacy.html`（法律页）
    - `.nojekyll`（如使用 GitHub Pages 产物则已包含）
 3. **配置 HTTPS**：为 `cub3d-editor.cn` 签发免费证书（如 Let's Encrypt 或云厂商免费证书）。
-4. **放置安装包与版本信息**：将 `Cub3D-Editor-Setup-1.1.0-x64.exe`、`Cub3D-Editor-Portable-1.1.0-x64.exe`、`Cub3D-Editor-release-1.1.0-universal.apk` 及 `versions.json` 放入站点根目录的 `downloads/`，境内页面的「下载」按钮即自动指向 `https://cub3d-editor.cn/downloads/<文件名>`，版本/体积信息从 `versions.json` 读取。
 
-`downloads/versions.json` 约定格式（`assets` 键为文件名 → 字节数）：
-
-```json
-{ "version": "v1.1.0", "assets": { "Cub3D-Editor-Setup-1.1.0-x64.exe": 100672359, "Cub3D-Editor-Portable-1.1.0-x64.exe": 100430321, "Cub3D-Editor-release-1.1.0-universal.apk": 4274840 } }
-```
-
-> 注：境内站 `downloads/` 未放置文件前，下载按钮与版本信息自动回退到 GitHub Releases；安装包镜像与服务器联通为后续阶段工作。
+> 注：下载按钮与版本信息统一从 GitHub Releases 拉取，境内站不再维护 `downloads/` 安装包镜像。
 
 本地预览（从仓库根启动静态服务器即可同时看到宣传页与编辑器）：
 
