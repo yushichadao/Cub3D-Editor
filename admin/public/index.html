@@ -136,15 +136,15 @@
       <div class="panel-head"><h2>🧭 选择功能</h2><span class="hint">管理后台下辖三大功能（共享同一登录态）</span></div>
       <div class="panel-body">
         <div class="pkg-cards"><div class="pkg-cards-row">
-          <a class="pkg-card" href="./build/" style="flex:0 0 260px;">
+          <a class="pkg-card" href="/admin/build/" style="flex:0 0 260px;">
             <div class="pk"><span class="pk-badge android">① 打包</span><span class="pk-name">本地打包</span></div>
             <div class="pk-file">统一短版本号（X.X.X）、勾选包类型、本地构建安装包；构建时自动注入长+短版本号（长号=打包日 YYYYMMDD，未打包态 00000000）</div>
           </a>
-          <a class="pkg-card" href="./distribute/" style="flex:0 0 260px;">
+          <a class="pkg-card" href="/admin/distribute/" style="flex:0 0 260px;">
             <div class="pk"><span class="pk-badge cn">② 分发</span><span class="pk-name">分发至服务器</span></div>
             <div class="pk-file">将构建产物分发到境内 downloads/ 与境外 GitHub；Web 分发时注入长版本号</div>
           </a>
-          <a class="pkg-card" href="./update/" style="flex:0 0 260px;">
+          <a class="pkg-card" href="/admin/update/" style="flex:0 0 260px;">
             <div class="pk"><span class="pk-badge cn">③ 推送</span><span class="pk-name">更新推送</span></div>
             <div class="pk-file">发布更新话术、按平台区分展示长短版本号、境内外推送（Web 仅显示长版本号）</div>
           </a>
@@ -236,6 +236,7 @@
   function zhErr(code, fb){ return (code && ERR_ZH[code]) || fb; }
 
   function api(path, opts){
+    if (path.indexOf('api/') === 0) path = '/admin/' + path; // 归一化绝对路径，门户与子页面一致
     opts = opts || {};
     opts.headers = opts.headers || {};
     if (token) opts.headers['X-Admin-Token'] = token;

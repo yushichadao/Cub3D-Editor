@@ -195,13 +195,26 @@ const zhAll = parseNotes(notesAll);
 const zhPc = parseNotes(notesPc);
 const zhAnd = parseNotes(notesAnd);
 
-function toAssetObjs(names){
+// 统一为后端数组格式：{ name, platform, srcs, channel, kind }（旧式对象 {pc:[],android:[]} 已弃用）
+function toAssetObjs(names, platform){
   return names.map(n => {
     let kind;
     if(n.endsWith('.exe')) kind = n.includes('Portable') ? '便携版 x64' : '安装版 x64';
     else kind = n.includes('arm64') ? 'APK arm64-v8a' : 'APK';
-    return { name: n, kind };
+    return { name: n, platform, kind, srcs: ['cn'], channel: 'cn' };
   });
+}
+function ensureAssetsArray(assets){
+  if (Array.isArray(assets)) return assets;
+  const arr = [];
+  if (assets && typeof assets === 'object') {
+    for (const pl of ['pc', 'android', 'web']) {
+      if (Array.isArray(assets[pl])) for (const f of assets[pl]) {
+        if (f && f.name) arr.push(Object.assign({}, f, { platform: pl, srcs: (f && f.srcs) || [f.channel || 'cn'], channel: (f && f.channel) || 'cn' }));
+      }
+    }
+  }
+  return arr;
 }
 
 async function main(){
@@ -222,8 +235,8 @@ async function main(){
     rec.type = typeArg; rec.status = statusArg;
     rec.targets = targetsArg;
     rec.notes = notes;
-    if(pcPkgs.length){ rec.assets = rec.assets || {}; rec.assets.pc = toAssetObjs(pcPkgs); }
-    if(andPkgs.length){ rec.assets = rec.assets || {}; rec.assets.android = toAssetObjs(andPkgs); }
+    if(pcPkgs.length){ rec.assets = ensureAssetsArray(rec.assets).concat(toAssetObjs(pcPkgs, 'pc')); }
+    if(andPkgs.length){ rec.assets = ensureAssetsArray(rec.assets).concat(toAssetObjs(andPkgs, 'android')); }
     console.log(`✓ 已更新 v${versionArg}`);
   } else {
     if(!pcPkgs.length || !andPkgs.length){
@@ -236,7 +249,7 @@ async function main(){
       publishedAt: nowLocal(),
       type: typeArg, status: statusArg, targets: targetsArg,
       notes: notes,
-      assets: { pc: toAssetObjs(pcPkgs), android: toAssetObjs(andPkgs) }
+      assets: toAssetObjs(pcPkgs, 'pc').concat(toAssetObjs(andPkgs, 'android'))
     });
     console.log(`✓ 已新增 v${versionArg}`);
   }

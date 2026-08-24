@@ -31,6 +31,10 @@ export function registerPackerRouter(app) {
   const PACK_STATE_FILE = path.join(__dirname, 'data', 'pack-state.json');
   const VERSION_STATE_FILE = path.join(__dirname, 'data', 'version.json');
   const VERSION_FILES = [path.join(ROOT, 'package.json'), path.join(ROOT, 'PC', 'package.json'), path.join(ROOT, 'Android', 'package.json')];
+  const AGENT_FILE = path.join(__dirname, 'data', 'agent.json');
+  const TASK_FILE = path.join(__dirname, 'data', 'agent-task.json');
+  const AGENT_TIMEOUT = 60 * 1000;          // 心跳间隔内视为在线
+  const TASK_CLAIM_TIMEOUT = 15 * 60 * 1000; // 代理认领任务后 15 分钟未完成视为失联，任务作废
 
   const PKG_TYPES = {
     'pc-setup': { label: 'PC 安装版', platform: 'pc', kind: '安装版',
@@ -67,11 +71,32 @@ export function registerPackerRouter(app) {
       if (!fs.existsSync(f)) continue;
       try { const j = JSON.parse(fs.readFileSync(f, 'utf8')); if (j.version !== ver) { j.version = ver; fs.writeFileSync(f, JSON.stringify(j, null, 2) + '\n', 'utf8'); n++; } } catch {}
     }
+    // 同步单一版本源 shared/version.json —— inject-version.mjs 打包时从它读取短版本号注入构建产物
+    const SHARED_VERSION = path.join(ROOT, 'shared', 'version.json');
+    if (fs.existsSync(SHARED_VERSION)) {
+      try {
+        const j = JSON.parse(fs.readFileSync(SHARED_VERSION, 'utf8'));
+        if (j.version !== ver) j.version = ver;
+        if (j.platforms) for (const k of Object.keys(j.platforms)) if (j.platforms[k].version !== ver) j.platforms[k].version = ver;
+        j.updatedAt = new Date().toISOString();
+        fs.writeFileSync(SHARED_VERSION, JSON.stringify(j, null, 2) + '\n', 'utf8'); n++;
+      } catch {}
+    }
     return n;
   }
 
   function loadPackState() { try { return JSON.parse(fs.readFileSync(PACK_STATE_FILE, 'utf8')); } catch { return null; } }
   function savePackState(s) { fs.mkdirSync(path.dirname(PACK_STATE_FILE), { recursive: true }); fs.writeFileSync(PACK_STATE_FILE, JSON.stringify(s, null, 2) + '\n', 'utf8'); }
+  function loadAgent() { try { return JSON.parse(fs.readFileSync(AGENT_FILE, 'utf8')); } catch { return null; } }
+  function saveAgent(a) { fs.mkdirSync(path.dirname(AGENT_FILE), { recursive: true }); fs.writeFileSync(AGENT_FILE, JSON.stringify(a, null, 2) + '\n', 'utf8'); }
+  function loadTask() { try { return JSON.parse(fs.readFileSync(TASK_FILE, 'utf8')); } catch { return null; } }
+  function saveTask(t) { fs.mkdirSync(path.dirname(TASK_FILE), { recursive: true }); fs.writeFileSync(TASK_FILE, JSON.stringify(t, null, 2) + '\n', 'utf8'); }
+  function removeTask() { try { fs.unlinkSync(TASK_FILE); } catch {} }
+  function agentOnline() {
+    const a = loadAgent();
+    if (!a || !a.online) return false;
+    try { return (Date.now() - new Date(a.lastSeen).getTime()) < AGENT_TIMEOUT; } catch { return false; }
+  }
   function fmtSize(n) {
     if (n == null) return '';
     if (n >= 1073741824) return (n/1073741824).toFixed(2) + ' GB';
@@ -80,13 +105,15 @@ export function registerPackerRouter(app) {
     return n + ' B';
   }
 
-  // 状态（公开只读部分：含打包进度与版本号，供下辖页面拉取）
+  // 状态（公开只读部分：含打包进度、版本号与本机代理在线状态，供下辖页面拉取）
   app.get('/api/packer/state', (req, res) => {
     const st = loadPackState();
     res.writeHead(200, { 'Content-Type': 'application/json' });
+    const a = loadAgent();
     res.end(JSON.stringify({ ok: true, version: readCurrentVersion(),
       pkgTypes: Object.keys(PKG_TYPES).map(k => ({ key: k, label: PKG_TYPES[k].label, platform: PKG_TYPES[k].platform, kind: PKG_TYPES[k].kind })),
-      ghEnabled: !!GH_TOKEN, downloadsDir: DOWNLOADS, pack: st }));
+      ghEnabled: !!GH_TOKEN, downloadsDir: DOWNLOADS, pack: st,
+      agent: { online: agentOnline(), name: a ? a.name : null, os: a ? a.os : null, lastSeen: a ? a.lastSeen : null } }));
   });
 
   app.post('/api/packer/version', (req, res) => {
@@ -116,8 +143,27 @@ export function registerPackerRouter(app) {
       if (!types.length) { res.writeHead(400, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: false, error: '请至少选择一种包类型' })); }
       if (!outDir) outDir = path.join(ROOT, 'release', ver);
       outDir = path.resolve(outDir);
-      if (running) { res.writeHead(409, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: false, error: '已有打包任务进行中，请稍候' })); }
+      if (running) {
+        // 代理任务认领后超时未完成 → 作废任务，允许重新发起
+        const t0 = loadTask();
+        if (t0 && t0.claimedAt && (Date.now() - new Date(t0.claimedAt).getTime() > TASK_CLAIM_TIMEOUT)) { removeTask(); running = false; }
+        else { res.writeHead(409, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: false, error: '已有打包任务进行中，请稍候' })); }
+      }
       try { applyVersion(ver); } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: false, error: '写版本号失败：' + e.message })); }
+
+      // 本机打包代理在线 → 任务派发给本机执行（遥控本地打包）
+      const agent = loadAgent();
+      if (agent && agentOnline()) {
+        running = true;
+        const task = { id: 'task-' + Date.now(), version: ver, types, createdAt: new Date().toISOString() };
+        saveTask(task);
+        const st2 = { running: true, version: ver, outDir: '(本机构建)', startedAt: new Date().toISOString(), finishedAt: null,
+          steps: types.map(t => ({ type: t, label: PKG_TYPES[t].label, platform: PKG_TYPES[t].platform, kind: PKG_TYPES[t].kind, status: 'pending', msg: '已派发给本机代理 ' + (agent.name || '') + '，等待本机执行…' })),
+          dist: null, agentTask: task.id };
+        savePackState(st2);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ ok: true, message: '已派发给本机打包代理 ' + (agent.name || '') + '（' + (agent.os || '') + '），本机开始构建后自动更新进度', outDir: '(本机)' }));
+      }
 
       running = true;
       const state = { running: true, version: ver, outDir, startedAt: new Date().toISOString(), finishedAt: null,
@@ -211,7 +257,10 @@ export function registerPackerRouter(app) {
         dist.cn.status = 'running'; dist.cn.msg = '复制到境内 downloads/ 并登记版本…'; savePackState(st);
         try {
           fs.mkdirSync(DOWNLOADS, { recursive: true });
-          for (const s of okSteps) await fsp.copyFile(s.path, path.join(DOWNLOADS, s.artifact));
+          for (const s of okSteps) {
+            const dst = path.join(DOWNLOADS, s.artifact);
+            if (s.path !== dst) await fsp.copyFile(s.path, dst); // 代理上传的产物已在 downloads，跳过复制到自己
+          }
           const doc = global.__readDoc();
           const ver = st.version;
           const longVer = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD 长版本号（打包时间）
@@ -295,6 +344,118 @@ export function registerPackerRouter(app) {
         res.end(JSON.stringify({ ok: true, message: `已登记 ${added} 个安装包到版本 ${ver}`, registered: added }));
       } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(e.message || e) })); }
     });
+  });
+
+  // ===== 本机打包代理（遥控本地打包）=====
+  // 本机运行 admin/local-packer.mjs 后：注册 → 轮询任务 → 本机构建 → 上报进度 → 分块上传产物到 downloads。
+
+  app.post('/api/packer/agent/register', (req, res) => {
+    const ok = requireAuth(req, res); if (!ok) return;
+    let body = ''; req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const b = JSON.parse(body || '{}');
+        const a = { online: true, name: String(b.name || '本机打包代理').slice(0, 40), os: String(b.os || '').slice(0, 40),
+          arch: String(b.arch || '').slice(0, 20), lastSeen: new Date().toISOString(), ver: readCurrentVersion() };
+        saveAgent(a);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, message: '代理已注册', agent: a }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }
+    });
+  });
+
+  app.post('/api/packer/agent/heartbeat', (req, res) => {
+    const ok = requireAuth(req, res); if (!ok) return;
+    const a = loadAgent() || { online: true, name: '本机打包代理' };
+    a.online = true; a.lastSeen = new Date().toISOString();
+    saveAgent(a);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, at: a.lastSeen }));
+  });
+
+  app.get('/api/packer/agent/poll', (req, res) => {
+    const ok = requireAuth(req, res); if (!ok) return;
+    const a = loadAgent() || { online: true, name: '本机打包代理' };
+    a.online = true; a.lastSeen = new Date().toISOString(); saveAgent(a);
+    const t = loadTask();
+    if (t && !t.claimedAt) { t.claimedAt = new Date().toISOString(); t.claimedBy = a.name; saveTask(t); }
+    if (t && t.claimedAt && (Date.now() - new Date(t.claimedAt).getTime() > TASK_CLAIM_TIMEOUT)) { removeTask(); }
+    const task = loadTask();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, task: task ? { id: task.id, version: task.version, types: task.types } : null }));
+  });
+
+  app.post('/api/packer/agent/report', (req, res) => {
+    const ok = requireAuth(req, res); if (!ok) return;
+    let body = ''; req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const b = JSON.parse(body || '{}');
+        const st = loadPackState() || { steps: [], dist: null };
+        if (!st.steps) st.steps = [];
+        for (const s of (b.steps || [])) {
+          const step = st.steps.find(x => x.type === s.type);
+          if (!step) continue;
+          step.status = s.status; step.msg = s.msg || ''; step.at = new Date().toISOString();
+          // 代理已把产物分块上传到服务器 downloads → 记录本地路径，分发（cn/gh）直接复用
+          if (s.status === 'ok' && s.uploaded && s.name) {
+            step.artifact = s.name; step.size = s.size || 0; step.path = path.join(DOWNLOADS, s.name);
+          }
+        }
+        if (b.taskId) { const t = loadTask(); if (t && t.id === b.taskId) removeTask(); }
+        if (b.finished) {
+          st.running = false; st.finishedAt = new Date().toISOString();
+          if (!st.dist) st.dist = { pending: true, cn: { status: 'idle', msg: '' }, gh: { status: 'idle', msg: '' } };
+        }
+        savePackState(st);
+        running = false;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true }));
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }
+    });
+  });
+
+  // 代理分块上传产物到 downloads（每块 ≤ 8MB，避开 Nginx body 限制）
+  app.post('/api/packer/agent/upload', (req, res) => {
+    const ok = requireAuth(req, res); if (!ok) return;
+    const q = new URL(req.url, 'http://x').searchParams;
+    const name = String(q.get('name') || '').trim();
+    const seq = parseInt(q.get('seq') || '0', 10);
+    const total = parseInt(q.get('total') || '1', 10);
+    if (!/^[\w.\-]+$/.test(name) || !isFinite(seq) || !isFinite(total) || seq < 0 || total < 1 || seq >= total) {
+      res.writeHead(400, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: false, error: '参数错误' }));
+    }
+    const UP = path.join(__dirname, 'data', 'uploads');
+    try { fs.mkdirSync(UP, { recursive: true }); } catch {}
+    const part = path.join(UP, name + '.' + seq);
+    const w = fs.createWriteStream(part);
+    req.pipe(w);
+    req.on('end', () => {
+      const parts = [];
+      for (let i = 0; i < total; i++) { const p = path.join(UP, name + '.' + i); if (!fs.existsSync(p)) { parts.length = 0; break; } parts.push(p); }
+      if (!parts.length) { res.writeHead(409, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: false, error: '缺少分块，请重传' })); }
+      try {
+        fs.mkdirSync(DOWNLOADS, { recursive: true });
+        const finalPath = path.join(DOWNLOADS, name);
+        const ws = fs.createWriteStream(finalPath);
+        let i = 0;
+        (function next() {
+          if (i >= parts.length) { ws.end(); return; }
+          const rs = fs.createReadStream(parts[i]);
+          rs.pipe(ws, { end: false });
+          rs.on('end', () => { i++; next(); });
+          rs.on('error', (e) => { ws.destroy(e); });
+        })();
+        ws.on('error', (e) => { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); });
+        ws.on('finish', () => {
+          for (const p of parts) try { fs.unlinkSync(p); } catch {}
+          const size = fs.statSync(finalPath).size;
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, name, size, seq, total }));
+        });
+      } catch (e) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: e.message })); }
+    });
+    req.on('error', () => { try { fs.unlinkSync(part); } catch {} });
   });
 
   // GitHub 辅助

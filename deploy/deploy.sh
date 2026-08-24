@@ -62,4 +62,5 @@ ssh "$USER@$SERVER" "sed -i 's#__DEPLOY_ROOT__#$REMOTE_ROOT#g' /etc/systemd/syst
 echo "==> 重启管理端服务"
 ssh "$USER@$SERVER" "cd '$REMOTE_ROOT/admin' && (pm2 restart cub3d-manager 2>/dev/null || systemctl restart cub3d-manager 2>/dev/null || echo '请手动启动: node server.mjs')" || true
 
-echo "==> 部署完成。管理端: https://$SERVER/admin/  更新源: https://$SERVER/downloads/update-doc.json"
+echo "==> 部署完成。管理端: https://cub3d-editor.cn/admin/  更新源: https://cub3d-editor.cn/downloads/update-doc.json"
+echo "==> (IP 过渡兜底: http://$SERVER/admin/ ；域名不可达时客户端自动降级)"

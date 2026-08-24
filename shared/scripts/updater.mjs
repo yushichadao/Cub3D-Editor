@@ -34,12 +34,28 @@ const MIN_LOADING_MS = 1500; // 加载页最短展示
  * 解析 doc 得到本端可更新项（与 PC/Android 现有 resolveDoc 语义对齐）。
  * @returns {null | {latest:string, asset:object, notes:object}}
  */
+// 取某版本中「本平台」的安装包列表（兼容后端数组格式与旧式对象格式）：
+//   数组 [{name,platform,channel,srcs}] → 按 platform 过滤（无 platform 时按文件名后缀推断 .apk→android）
+//   对象 {pc:[...],android:[...]} → 取对应平台数组
+function __assetsOf(ver, platform) {
+  const aa = (ver && ver.assets) || [];
+  if (Array.isArray(aa)) {
+    return aa.filter((a) => {
+      if (a == null) return false;
+      const name = (typeof a === 'string') ? a : (a.name || '');
+      const p = (typeof a === 'string') ? null : (a.platform || null);
+      return (p || (/\.apk$/i.test(String(name)) ? 'android' : 'pc')) === platform;
+    });
+  }
+  return aa[platform] || [];
+}
+
 export function resolveDoc(doc, currentVersion, platform) {
   const latest = latestOf(doc, platform);
   if (!latest) return null;
   if (cmpVer(latest, currentVersion) <= 0) return null; // 已是最新
   const ver = doc.versions.find((v) => v.version === latest);
-  const assets = (ver && ver.assets && ver.assets[platform]) || [];
+  const assets = __assetsOf(ver, platform);
   const asset = assets[0] || null;
   if (!asset) return null;
   return { latest, asset, notes: (ver && ver.notes) || {} };

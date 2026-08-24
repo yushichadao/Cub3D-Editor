@@ -88,19 +88,39 @@ function pickLatest(versions, filter) {
 // ===== update-doc 读写（统一复用 server.mjs 暴露的全局实现，保证三系统写同一份）=====
 // 数据结构兼容：旧 packer 曾把 v.assets 写成 {pc:[],android:[]} 对象，
 // 三系统统一为数组 [{name,size,platform,channel}]，读取时做归一避免崩溃。
+function platformOfName(name){
+  if (/\.apk$/i.test(String(name))) return 'android';
+  return 'pc';
+}
+// 安装包记录统一格式：{ name, platform, channel, srcs, kind, size }
+// 兼容：字符串元素（旧纯数组）、缺 platform / channel / srcs 字段的旧数据
+function normalizeAssetItem(f){
+  if (f == null) return null;
+  if (typeof f === 'string') return { name: f, platform: platformOfName(f), channel: 'cn', srcs: ['cn'], kind: '', size: 0 };
+  if (!f.name) return null;
+  const srcs = (Array.isArray(f.srcs) && f.srcs.length) ? f.srcs.slice() : (f.channel ? [f.channel] : ['cn']);
+  const platform = f.platform || platformOfName(f.name);
+  return { name: f.name, platform, channel: f.channel || srcs[0] || 'cn', srcs, kind: f.kind || '', size: f.size || 0 };
+}
 function normalizeAssets(doc) {
   for (const v of (doc.versions || [])) {
     const a = v.assets;
-    if (Array.isArray(a)) continue;
-    const arr = [];
+    if (!a) { v.assets = []; continue; }
+    if (Array.isArray(a)) {
+      // 已是数组：统一元素字段（字符串元素、缺 srcs/kind 的旧数据一并补全）
+      v.assets = a.map(normalizeAssetItem).filter(Boolean);
+      continue;
+    }
     if (a && typeof a === 'object') {
+      // 旧 packer 对象格式 {pc:[],android:[]} → 转数组（补 srcs/kind）
+      const arr = [];
       for (const plat of ['pc', 'android', 'web']) {
         if (Array.isArray(a[plat])) for (const f of a[plat]) {
-          if (f && f.name) arr.push({ name: f.name, size: f.size || 0, platform: plat, channel: f.channel || 'cn' });
+          if (f && f.name) arr.push(Object.assign(normalizeAssetItem(f) || {}, { platform: plat }));
         }
       }
+      v.assets = arr;
     }
-    v.assets = arr;
   }
   return doc;
 }
@@ -192,6 +212,9 @@ function handlePublish(req, res) {
       if (p.type) v.type = p.type;
       if (p.status) v.status = p.status;
       if (p.targets) v.targets = p.targets;
+      if (p.platform) v.platform = p.platform;
+      // 实际发布日期：首次发布时记录，重发不覆盖
+      if (!v.publishedAt) v.publishedAt = new Date().toISOString();
       // 长版本号（打包时间 YYYYMMDD）程序自动生成：优先用前端提交的，否则按发布当天自动生成
       v.longVersion = (p.longVersion && /^\d{8}$/.test(String(p.longVersion))) ? String(p.longVersion) : yyyymmdd();
       // notes：支持中文数组自动翻译为多语言分桶；也支持已翻译的分桶对象
@@ -213,20 +236,40 @@ function handlePublish(req, res) {
             }
           }
         } else if (typeof p.notes === 'object') {
-          // 已翻译的分桶对象（pc/android/web 各自数组）
-          for (const platform of ['pc', 'android', 'web']) {
-            if (Array.isArray(p.notes[platform])) {
-              v.notes[platform] = p.notes[platform].map(line =>
+          // 已翻译的分桶对象（pc/android/web 各自数组）；兼容 {all:[...]} 三端同一份话术
+          if (Array.isArray(p.notes.all)) {
+            v.notes = {};
+            for (const platform of ['pc', 'android', 'web']) {
+              v.notes[platform] = p.notes.all.map(line =>
                 (typeof line === 'string') ? { lang: 'zh', text: line } : line);
+            }
+          } else {
+            for (const platform of ['pc', 'android', 'web']) {
+              if (Array.isArray(p.notes[platform])) {
+                v.notes[platform] = p.notes[platform].map(line =>
+                  (typeof line === 'string') ? { lang: 'zh', text: line } : line);
+              }
             }
           }
         }
       }
-      if (p.assets && Array.isArray(p.assets)) {
-        const existing = new Set((v.assets || []).map(a => a.name));
-        for (const a of p.assets) {
-          if (!existing.has(a.name)) { v.assets.push(a); existing.add(a.name); }
-          else { const idx = v.assets.findIndex(x => x.name === a.name); v.assets[idx] = { ...v.assets[idx], ...a }; }
+      if (p.assets != null) {
+        // 兼容「数组 [{name,platform,srcs,kind,size}]」与旧「对象 {pc:[],android:[]}」两种提交
+        let list = [];
+        if (Array.isArray(p.assets)) {
+          list = p.assets.map(normalizeAssetItem).filter(Boolean);
+        } else if (typeof p.assets === 'object') {
+          for (const pl of ['pc', 'android', 'web']) {
+            if (Array.isArray(p.assets[pl])) {
+              for (const x of p.assets[pl]) list.push(Object.assign(normalizeAssetItem(x) || {}, { platform: pl }));
+            }
+          }
+        }
+        const existing = new Set((v.assets || []).map(x => x.name));
+        for (const item of list) {
+          if (!item || !item.name) continue;
+          if (!existing.has(item.name)) { v.assets.push(item); existing.add(item.name); }
+          else { const idx = v.assets.findIndex(x => x.name === item.name); if (idx >= 0) v.assets[idx] = Object.assign({}, v.assets[idx], item); }
         }
       }
       if (isNew) doc.versions.push(v);

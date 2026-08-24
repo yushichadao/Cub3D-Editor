@@ -348,9 +348,9 @@
     <!-- 站点导航：管理站点下辖的两个系统 -->
     <!-- 业务页顶部导航：返回门户 / 串门另一业务 -->
     <div class="biz-nav">
-      <a class="biz-nav-back" href="../">← 返回门户</a>
+      <a class="biz-nav-back" href="/admin/">← 返回门户</a>
       <span class="biz-nav-here"><span class="pk-badge cn">境内</span> 当前：更新话术发布系统</span>
-      <a class="biz-nav-jump" href="../packer/">串门 → 打包分发</a>
+      <a class="biz-nav-jump" href="/admin/distribute/">串门 → 分发至服务器</a>
     </div>
 
     <!-- 卡片式新增发布 -->
@@ -559,6 +559,7 @@
 
   // 统一 API：相对路径（部署子路径自适配），写操作携带令牌
   function api(path, opts){
+    if (path.indexOf('api/') === 0) path = '/admin/' + path; // 子页面（/admin/update/）相对路径归一化为绝对路径，避免 404
     opts = opts || {};
     opts.headers = opts.headers || {};
     if (token) opts.headers['X-Admin-Token'] = token;
@@ -767,18 +768,22 @@
     return c === 'both' ? '国内+国际' : (c === 'cn' ? '国内' : '国际 GitHub');
   }
   // 已发布包判定：按「来源::平台::文件名」判定（与卡片 key 一致）。
-  // update-doc 中该版本 assets 里存在包名、且其 srcs 覆盖该来源 → 该来源的卡灰显
+  // 后端统一以数组 [{name,platform,channel,srcs,...}] 存储 assets；旧式对象 {pc:[],android:[]} / 纯字符串数组同样兼容
   function publishedKeys(ver){
     const map = {};
     (state.doc && state.doc.versions || []).forEach(function(v){
       if (v.version !== ver) return;
-      ['pc','android'].forEach(function(pl){
-        (v.assets && v.assets[pl] || []).forEach(function(a){
-          const name = (a && a.name) || a;
-          const srcs = (a && a.srcs) || [];
-          srcs.forEach(function(s){
-            map[s + '::' + pl + '::' + name] = true;
-          });
+      (v.assets || []).forEach(function(a){
+        if (typeof a === 'string') {   // 旧纯字符串元素：默认 cn 来源
+          map['cn::' + platformOf(a) + '::' + a] = true;
+          return;
+        }
+        const name = (a && a.name) || a;
+        if (!name) return;
+        const pl = (a && a.platform) || platformOf(name);
+        const srcs = (a && a.srcs && a.srcs.length) ? a.srcs : ((a && a.channel) ? [a.channel] : ['cn']);
+        srcs.forEach(function(s){
+          map[s + '::' + pl + '::' + name] = true;
         });
       });
     });
@@ -814,17 +819,27 @@
       lbl.dataset.base = base;
       lbl.textContent = on ? base : base + '（未选 ' + cfg.name + ' 安装包，已禁用输入）';
     });
-    // 长短版本号展示按平台切换：检测到 PC/安卓 → 显示短号框；仅 Web 文案 → 仅显长号
-    const hasPcAnd = plats.has('pc') || plats.has('android');
-    document.getElementById('shortver-field').style.display = hasPcAnd ? '' : 'none';
+    // 短版本号（X.X.X）是 PC/安卓的核心输入，始终显示：
+    // Web 端不依赖安装包卡片勾选（无卡片可勾选），因此不存在「仅 Web」场景，
+    // 未勾选任何包时若隐藏短号框会让用户找不到版本号输入框
     // 长版本号（打包时间 YYYYMMDD）自动预填当天，供发布者核对（程序生成，不在前端改）
     const today = new Date();
     const p2 = x => String(x).padStart(2, '0');
     const longToday = '' + today.getFullYear() + p2(today.getMonth() + 1) + p2(today.getDate());
     if (!$('f-longver').value || $('f-longver').value === '00000000') $('f-longver').value = longToday;
   }
-  // 从分桶结构取中文源（兼容旧式纯数组）：bucket 为数组则返回原数组，为对象则取 zh-CN/all
-  function zhOf(bucket){ if (!bucket) return []; return Array.isArray(bucket) ? bucket : (bucket.zh-CN || bucket.all || []); }
+  // 从分桶结构取中文源：兼容三类结构
+  //   ① 纯字符串数组 ['文案1',...] → 原样
+  //   ② 后端统一对象数组 [{lang:'zh',text:'文案1',en:'...'},...] → 取每项 text（中文源）
+  //   ③ 旧式分桶对象 { 'zh-CN':[...], all:[...] } → 取 zh-CN（方括号写法，避免 zh-CN 被解析为减法）/ zh / all
+  function zhOf(bucket){
+    if (!bucket) return [];
+    if (Array.isArray(bucket)) {
+      return bucket.map(x => (x && typeof x === 'object') ? (x.text != null ? String(x.text) : '') : x).filter(s => s !== '');
+    }
+    const zh = bucket['zh-CN'] || bucket.zh || bucket.all || [];
+    return Array.isArray(zh) ? zh : [];
+  }
   // 填入/自动确认版本号后，从 update-doc 搜索该版本已有文案并复现到两个文案框（供开发者修改）
   function fillExistingNotes(ver){
     const v = (state.doc && state.doc.versions || []).find(function(x){ return x.version === ver; });
@@ -1041,7 +1056,8 @@
     if (!notesPc.length && !notesAnd.length && !notesWeb.length){ toast('请填写更新内容（PC / Android / Web 至少其一）'); return; }
     // 发布渠道 = 勾选卡片的来源（来源不同 = 不同安装包，可单独/合并发布）：
     //   勾选境内卡 → srcs 含 cn；勾选 GitHub 卡 → srcs 含 gh；同名不同来源都勾 → srcs 并集
-    const assets = { pc: [], android: [] };
+    // 后端 assets 统一为数组 [{name,platform,srcs,kind,size}]（不再用 {pc:[],android:[]} 对象）
+    const assets = [];
     const seen = {};
     selectedPkgs.forEach(key => {
       const parts = key.split('::');
@@ -1049,17 +1065,17 @@
       const pname = platform + '::' + name;
       const info = lastCards.find(x => x.src === src && x.name === name) || {};
       if (seen[pname]) {   // 同名不同来源：srcs 并集，合并为一条（客户端按文件名取包）
-        const a = assets[platform].find(x => x.name === name);
+        const a = assets.find(x => x.platform === platform && x.name === name);
         if (a && a.srcs.indexOf(src) < 0) a.srcs.push(src);
         return;
       }
       seen[pname] = true;
-      assets[platform].push({ name: name, kind: info.kind || '', size: info.size != null ? String(info.size) : '', srcs: [src] });
+      assets.push({ name: name, platform: platform, kind: info.kind || '', size: info.size != null ? String(info.size) : '', srcs: [src] });
     });
     // targets（版本渠道标记）= 勾选来源的实际并集，而非下拉框值
     const targets = [];
     const allSrcs = {};
-    assets.pc.concat(assets.android).forEach(function(x){
+    assets.forEach(function(x){
       (x.srcs || []).forEach(function(s){ allSrcs[s] = true; });
     });
     if (allSrcs.cn) targets.push('cn');
@@ -1082,11 +1098,16 @@
       $('btn-add').textContent = '🚀 批量发布所选包';
       if (r.body && r.body.ok) {
         // 用户感知的包数 = 勾选的卡片数（来源不同 = 不同安装包，即使同名也各算一个）
-        const pcN = assets.pc.length, andN = assets.android.length;
+        const pcN = assets.filter(x => x.platform === 'pc').length;
+        const andN = assets.filter(x => x.platform === 'android').length;
         const srcSummary = summarySrcs(assets);   // 例：国内+GitHub
         // toast 按平台统计（PC/Android 各自包数）；任务面板按渠道统计（国内/境外各自包数）
         toast('已发布 ' + ver + '：PC ' + pcN + ' 个 / Android ' + andN + ' 个 → ' + srcSummary);
         addLog(ver, '发布', '', false, makePubTask(ver, targets, assets, srcSummary));
+        // 实际发布日期：后端首次发布时已记录 publishedAt，这里同步回填到表单
+        const dNow = new Date(); const pd2 = x => String(x).padStart(2, '0');
+        const disp = $('f-actual-disp');
+        if (disp) { disp.textContent = dNow.getFullYear() + '-' + pd2(dNow.getMonth() + 1) + '-' + pd2(dNow.getDate()); disp.classList.remove('is-empty'); }
         // 发布成功：清空勾选；state 刷新后再重渲染卡片（刚发布的包将灰显）
         selectedPkgs.clear();
         loadState().then(function(){ renderPkgCards(collectShown()); });
@@ -1108,7 +1129,9 @@
     if(!notes || !notes.length) return '<span style="color:var(--text-dim)">—</span>';
     // 转义文本防注入（百度翻译后的多语言内容可能含 < > & 等字符）
     const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    return notes.map(s => '<div>· ' + esc(s) + '</div>').join('');
+    // 兼容对象数组 [{lang,text,...}] 与纯字符串数组（对象取中文源 text）
+    const txt = s => (s && typeof s === 'object') ? (s.text != null ? String(s.text) : '') : s;
+    return notes.map(s => '<div>· ' + esc(txt(s)) + '</div>').join('');
   }
   function targetLabel(t){
     if (t === 'both') return '国内+国际';
@@ -1133,7 +1156,8 @@
       // 按平台（PC / Android / Web）分区：notes 各自取对应分桶，
       // 安装包按所属平台归区。渠道（境内 / GitHub）仅作为包的来源标签，不再当作分区。
       function platBlock(title, cls, pl){
-        const pkgs = (v.assets && v.assets[pl] || []);
+        // 后端统一数组格式；旧式对象 {pc:[],android:[]} 由后端归一化为数组后返回
+        const pkgs = (v.assets || []).filter(function(x){ return x && x.platform === pl; });
         const notesHtml = fmtNotes(pl === 'pc' ? pcNotes : pl === 'android' ? andNotes : webNotes);
         const pkgsHtml = pkgs.length
           ? pkgs.map(x => {
@@ -1239,10 +1263,8 @@
   // 汇总发布渠道来源（按 assets 中各包的 srcs 并集）：例「国内+GitHub」/「仅国内」/「仅 GitHub」
   function summarySrcs(assets){
     const s = {};
-    ['pc','android'].forEach(function(pl){
-      (assets[pl] || []).forEach(function(p){
-        (p.srcs || []).forEach(function(x){ s[x] = true; });
-      });
+    (assets || []).forEach(function(p){
+      (p.srcs || []).forEach(function(x){ s[x] = true; });
     });
     const keys = Object.keys(s);
     if (keys.indexOf('cn') >= 0 && keys.indexOf('gh') >= 0) return '国内+GitHub';
@@ -1260,12 +1282,10 @@
   // 每个渠道显示「该渠道实际发布的包数」：srcs 含 cn 的包数 → 国内站点；srcs 含 gh 的包数 → GitHub Release
   function makePubTask(ver, targets, assets, srcSummary){
     let cnN = 0, ghN = 0;
-    ['pc','android'].forEach(function(pl){
-      (assets[pl] || []).forEach(function(x){
-        const srcs = x.srcs || [];
-        if (srcs.indexOf('cn') >= 0) cnN++;
-        if (srcs.indexOf('gh') >= 0) ghN++;
-      });
+    (assets || []).forEach(function(x){
+      const srcs = x.srcs || [];
+      if (srcs.indexOf('cn') >= 0) cnN++;
+      if (srcs.indexOf('gh') >= 0) ghN++;
     });
     const platforms = [];
     if (targets.indexOf('github') >= 0) platforms.push({ key: 'github', name: 'GitHub Release', status: 'ok', msg: 'update-doc.json 已写入后端（境外 ' + ghN + ' 个包）' });

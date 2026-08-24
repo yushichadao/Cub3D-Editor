@@ -396,8 +396,6 @@ window.__packs['zh-TW'] = {
   "manImportLangMismatch": "該便籤備份為 {0} 語言，當前說明書為 {1} 語言，已跳過導入以避免混合不同語言",
   "manImportLangUnknown": "該備份未攜帶語言標識，僅當你確認它導出自當前（{0}）說明書時才可導入",
   "manImportMoved": "其中 {0} 條引用位置已隨說明書更新自動校準",
-  "manImportLostSkip": "其中 {0} 條因說明書已更新、引用原文不再匹配，已自動跳過匯入",
-  "manRecalibrated": "已為 {0} 條舊版便籤重新定位到目前說明書",
   "manImportNoVer": "該備份無版本標識，便籤已標記為當前版本（{0}）",
   "manImportOldVer": "已導入 {0} 條便籤，其中部分創建於舊版本（{1}），若說明書已更新請複核",
   "manImported": "已導入 {0} 條便籤",

@@ -396,8 +396,6 @@ window.__packs['es'] = {
   "manImportLangMismatch": "Esta copia de seguridad de notas es en {0}; el manual actual es {1}. Importación omitida para evitar mezclar idiomas",
   "manImportLangUnknown": "Esta copia de seguridad no tiene etiqueta de idioma. Impórtala solo si fue exportada del manual actual ({0})",
   "manImportMoved": "其中 {0} 条引用位置已随说明书更新自动校准",
-  "manImportLostSkip": "De ellas, {0} se omitieron: el texto original ya no coincide con el manual actualizado",
-  "manRecalibrated": "Se recalibraron {0} notas obsoletas a la ubicación del manual actual",
   "manImportNoVer": "Esta copia de seguridad no tenía etiqueta de versión; las notas se marcaron como versión actual ({0})",
   "manImportOldVer": "Importadas {0} nota(s); algunas fueron creadas en una versión anterior ({1}). Revísalas si el manual cambió",
   "manImported": "Importadas {0} notas",

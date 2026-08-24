@@ -5,15 +5,15 @@ window.CUB3D_UPDATE_SOURCES = {
     "base": "http://139.196.104.56/admin",
     "updateApi": "http://139.196.104.56/admin/api/release/update",
     "docPath": "/downloads/update-doc.json",
-    "note": "境内源（现在=IP，HTTP，经 /admin 代理）。安卓当前唯一可达境内源。"
+    "note": "境内 IP 兜底源（HTTP，经 /admin 代理；域名不可达时自动降级至此）。"
   },
   "cnDomain": {
     "label": "cn-domain",
     "base": "https://cub3d-editor.cn/admin",
     "updateApi": "https://cub3d-editor.cn/admin/api/release/update",
     "docPath": "/downloads/update-doc.json",
-    "enabled": false,
-    "note": "境内站域名（备案后启用，正式网址）。"
+    "enabled": true,
+    "note": "境内站域名（正式网址，HTTPS 主源）。"
   },
   "intl": {
     "label": "intl",

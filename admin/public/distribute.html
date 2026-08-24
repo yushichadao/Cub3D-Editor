@@ -171,9 +171,9 @@
     <div class="page-head">
       <h1>分发至服务器 <span class="tag">管理站点 · 下辖</span></h1>
       <div class="btn-row" style="justify-content:center;">
-        <a class="btn" href="../" title="返回门户">← 返回门户</a>
-        <a class="btn" href="../build/" title="本地打包">🛠 串门→本地打包</a>
-        <a class="btn" href="../update/" title="更新推送">📢 串门→更新推送</a>
+        <a class="btn" href="/admin/" title="返回门户">← 返回门户</a>
+        <a class="btn" href="/admin/build/" title="本地打包">🛠 串门→本地打包</a>
+        <a class="btn" href="/admin/update/" title="更新推送">📢 串门→更新推送</a>
         <button class="btn" id="btn-pwd">🔑 修改密码</button>
         <button class="btn" id="btn-logout">退出登录</button>
       </div>
@@ -279,6 +279,7 @@
 
   function api(path, opts){
     if (/^api\/(state|version|pack|distribute)$/.test(path)) path = '/packer/' + path;
+    if (path.indexOf('api/') === 0) path = '/admin/' + path; // 子页面（/admin/distribute/）相对路径归一化为绝对路径，避免 404
     opts = opts || {};
     opts.headers = opts.headers || {};
     if (token) opts.headers['X-Admin-Token'] = token;

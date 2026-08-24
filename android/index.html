@@ -13180,6 +13180,22 @@ window.addEventListener('beforeunload', markClosed);
       return r.json();
     });
   }
+  // 取某版本中「本平台」的安装包列表（兼容后端数组格式与旧式对象格式）：
+  //   数组 [{name,platform,channel,srcs}] → 按 platform 过滤（无 platform 时按文件名后缀推断 .apk→android）
+  //   对象 {pc:[...],android:[...]} → 取对应平台数组
+  function __assetsFor(v, platform){
+    var aa = (v && v.assets) || [];
+    if (Array.isArray(aa)) {
+      return aa.filter(function(a){
+        if (a == null) return false;
+        var name = (typeof a === 'string') ? a : (a.name || '');
+        var p = (typeof a === 'string') ? null : (a.platform || null);
+        if (!p) p = /\.apk$/i.test(String(name)) ? 'android' : 'pc';
+        return p === platform;
+      });
+    }
+    return aa[platform] || [];
+  }
   // 解析 update-doc.json：目标 = 高于当前版本的已发布最高版本；
   // 强制更新链 = 路径上任一版本 type=force → 整体强制；线上无对应平台安装包 → online=false
   function resolveDoc(doc, cur, platform){
@@ -13189,22 +13205,27 @@ window.addEventListener('beforeunload', markClosed);
     // 只选「高于当前版本且当前平台（platform）有可用安装包」的版本；
     // 避免全局最新版本（如 PC 专属的 1.2.0）因无本平台包而误报「包不存在」
     var targets = sorted.filter(function(x){
-      return cmp(x.version, cur) > 0 && x.assets && x.assets[platform] && x.assets[platform].length;
+      return cmp(x.version, cur) > 0 && __assetsFor(x, platform).length;
     });
     if (!targets.length) return null;
     var target = targets[targets.length - 1];
     var force = targets.some(function(x){ return x.type === 'force'; });
-    var assets = (target.assets && target.assets[platform]) || [];
+    var assets = __assetsFor(target, platform);
     var pkg = null;
     if (assets.length) { pkg = (typeof assets[0] === 'string') ? assets[0] : (assets[0].name || null); }
     var notes = target.notes || {};
     // 按当前语言从分桶 notes 取更新说明：notes = { all:{ lang:[...] }, pc:{...}, android:{...} }
-    // 兼容旧格式（notes.all 直接是数组 / notes['zh-CN'] 是数组）
+    // 兼容旧格式（notes.all 直接是数组 / notes['zh-CN'] 是数组）与后端统一对象数组 [{lang,text,..}]
     function __pickLang(bucket){
       if (!bucket) return null;
-      if (Array.isArray(bucket)) return bucket;            // 旧格式：整段就是数组
-      var __lang = (window.localStorage && localStorage.getItem('lang')) || (typeof currentLang !== 'undefined' ? currentLang : 'zh-CN');
-      return bucket[__lang] || bucket['zh-CN'] || (bucket.all || []);
+      var list = bucket;
+      if (!Array.isArray(bucket)) {
+        var __lang = (window.localStorage && localStorage.getItem('lang')) || (typeof currentLang !== 'undefined' ? currentLang : 'zh-CN');
+        list = bucket[__lang] || bucket['zh-CN'] || (bucket.all || []);
+      }
+      if (!Array.isArray(list)) return [];
+      // 对象数组（后端统一存储 [{lang:'zh',text:'..'},...]）→ 取中文源 text；纯字符串数组原样
+      return list.map(function(x){ return (x && typeof x === 'object') ? (x.text != null ? String(x.text) : '') : x; }).filter(function(s){ return s !== ''; });
     }
     var list = __pickLang(notes.all) || __pickLang(notes[platform]) || __pickLang(notes['zh-CN']) || __pickLang(notes['cn']) || [];
     return { target: target, force: force, pkg: pkg, notes: list, date: target.date || '' };
@@ -13228,7 +13249,7 @@ window.addEventListener('beforeunload', markClosed);
             var _sv = _pub.slice().sort(function(a, b){ return cmp(a.version, b.version); });
             for (var j = _sv.length - 1; j >= 0; j--) {
               var _v = _sv[j];
-              var _aa = (_v.assets && _v.assets[PLATFORM]) || [];
+              var _aa = __assetsFor(_v, PLATFORM);
               if (_aa.length) { latestVer = _v.version; break; }
             }
           }

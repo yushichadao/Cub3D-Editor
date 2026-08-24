@@ -396,8 +396,6 @@ window.__packs['en'] = {
   "manImportLangMismatch": "This note backup is in {0}; the current manual is {1}. Import skipped to avoid mixing languages",
   "manImportLangUnknown": "This backup has no language tag. Only import it if it was exported from the current ({0}) manual",
   "manImportMoved": "其中 {0} 条引用位置已随说明书更新自动校准",
-  "manImportLostSkip": "其中 {0} 条因说明书已更新、引用原文不再匹配，已自动跳过导入",
-  "manRecalibrated": "已为 {0} 条旧版便签重新定位到当前说明书",
   "manImportNoVer": "This backup had no version tag; notes were marked as current version ({0})",
   "manImportOldVer": "Imported {0} sticky note(s); some were created in an older version ({1}). Review them if the manual changed",
   "manImported": "Imported {0} sticky notes",

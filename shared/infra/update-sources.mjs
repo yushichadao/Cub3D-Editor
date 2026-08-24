@@ -3,10 +3,9 @@
  * 更新源单一化（改进 A）+ IP 境内外检测（运行期规则）+ 客户端智能分流配置外置。
  *
  * 设计要点（与已确认硬规则一致）：
- *  - 域名/IP 只在一处维护；备案后切 cub3d-editor.cn 只改这里。
- *  - 安卓更新源现状硬约束：主站域名 cub3d-editor.cn 备案过渡期未生效/未指向，
- *    安卓当前只能通过境内 IP（https）拿到更新；故 cn 源当前指向 IP，
- *    cnDomain 为备案后启用项。无 http 明文分支（高版本 Android 禁明文）。
+ *  - 域名/IP 只在一处维护；迁移正式网址/服务器只改这里。
+ *  - 境内源已切换为正式域名 cnDomain（HTTPS 主源）；cn=IP 保留为兜底，
+ *    域名不可达（DNS 未生效/证书异常）时 buildFetchOrder 自动降级，无明文隐患（HTTPS 优先）。
  *  - GitHub 源统一走服务端代理 /api/gh-releases（改进 C），客户端不直接连 GitHub。
  *  - 分流第一判据 = IP 检测（境内/境外）；检测失败或缺网 → 本地优先 + 不阻塞。
  *
@@ -15,26 +14,25 @@
 
 // ===== 可配置源（域名/IP 只在此处维护）=====
 export const UPDATE_SOURCES = {
-  // 境内源：当前以 IP 为权威可达源（安卓当前只能走这）；备案后 cnDomain 升为主源。
+  // 境内源：cnDomain（域名 HTTPS）为正式主源；cn=IP 保留为兜底（域名解析/证书异常时降级）。
   // 更新探测统一走「发布更新信息系统」/admin/api/release/update?current=X（服务端代理，CORS=*）；
   // docPath 静态 update-doc.json 作为兜底源（nginx 静态，独立于管理端进程，避免管理端重启期间客户端无法更新）。
-  // 注：当前服务器仅开放 HTTP(80)，HTTPS(443) 未启用，故此处用 http；
-  //     Android 端已在 network_security_config.xml 对 139.196.104.56 精确放行明文（不开全局）。
+  // cn 当前为 IP HTTP(80)：仅作兜底；Android 端已在 network_security_config.xml 对 139.196.104.56 精确放行明文（不开全局）。
   cn: {
     label: 'cn-ip',
     base: 'http://139.196.104.56/admin',
     updateApi: 'http://139.196.104.56/admin/api/release/update',
     docPath: '/downloads/update-doc.json',
-    note: '境内源（现在=IP，HTTP，经 /admin 代理）。安卓当前唯一可达境内源。',
+    note: '境内 IP 兜底源（HTTP，经 /admin 代理；域名不可达时自动降级至此）。',
   },
-  // 境内域名源：备案完成后启用（启用后即为正式网址，无需改端口/路径）
+  // 境内域名源：正式主源（HTTPS）。已启用；域名不可达时由 buildFetchOrder 自动降级到 cn(IP)。
   cnDomain: {
     label: 'cn-domain',
     base: 'https://cub3d-editor.cn/admin',
     updateApi: 'https://cub3d-editor.cn/admin/api/release/update',
     docPath: '/downloads/update-doc.json',
-    enabled: false, // 备案完成后置 true
-    note: '境内站域名（备案后启用，正式网址）。',
+    enabled: true, // 正式主源（HTTPS）
+    note: '境内站域名（正式网址，HTTPS 主源）。',
   },
   // 国际站（GitHub Pages）
   intl: {
@@ -90,6 +88,22 @@ export const PLATFORM = {
   ANDROID: 'android',
 };
 
+// 取某版本中「本平台」的安装包列表（兼容后端数组格式与旧式对象格式）：
+//   数组 [{name,platform,channel,srcs}] → 按 platform 过滤（无 platform 时按文件名后缀推断 .apk→android）
+//   对象 {pc:[...],android:[...]} → 取对应平台数组
+function __assetsOf(v, platform) {
+  const aa = (v && v.assets) || [];
+  if (Array.isArray(aa)) {
+    return aa.filter((a) => {
+      if (a == null) return false;
+      const name = (typeof a === 'string') ? a : (a.name || '');
+      const p = (typeof a === 'string') ? null : (a.platform || null);
+      return (p || (/\.apk$/i.test(String(name)) ? 'android' : 'pc')) === platform;
+    });
+  }
+  return aa[platform] || [];
+}
+
 /**
  * 取某端最新版本（端间可不同步）。
  * @param {object} doc update-doc.json 解析对象
@@ -101,7 +115,7 @@ export function latestOf(doc, platform) {
   let best = null;
   for (const v of doc.versions) {
     if (v.status !== 'published') continue;
-    const assets = (v.assets && v.assets[platform]) || [];
+    const assets = __assetsOf(v, platform);
     if (assets.length === 0) continue;
     if (best === null || cmpVer(v.version, best) > 0) best = v.version;
   }
