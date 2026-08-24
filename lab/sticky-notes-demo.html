@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>便签功能与 UI 测试效果 Demo</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --bg-panel:#fff; --control-bg:#eceef1;
+    --text:#1f2329; --text-dim:#8a9099; --border:#e3e6ea; --accent:#3b82f6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+       background:var(--bg);color:var(--text);line-height:1.5;}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 60px;}
+  h1{font-size:22px;margin:0 0 4px;}
+  .sub{color:var(--text-dim);font-size:13px;margin-bottom:20px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:820px){.grid{grid-template-columns:1fr;}}
+  .card{background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .card h2{font-size:15px;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .card h2 .tag{font-size:11px;font-weight:400;color:var(--text-dim);background:var(--control-bg);padding:2px 8px;border-radius:10px;}
+  /* 列表顶部工具条（与工程一致：计数 + 批量删除） */
+  .list-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:var(--text-dim);}
+  .list-bar .count{font-weight:600;color:var(--text);}
+  .btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:13px;}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .btn.danger{background:#c0392b;color:#fff;border-color:#c0392b;font-weight:600;}
+  .btn.danger:hover{background:#a93226;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  /* 便签列表（与工程 web 1051-1057 / 列表渲染一致） */
+  .manual-note-item{padding:8px 28px 10px 12px;position:relative;border:1px solid var(--border);border-left:4px solid #ffe9a3;border-radius:8px;margin-bottom:8px;background:var(--bg-panel);}
+  .manual-note-item[data-color="green"]{border-left-color:#cdeeb0;}
+  .manual-note-item[data-color="blue"]{border-left-color:#b9dcf7;}
+  .manual-note-item[data-color="pink"]{border-left-color:#ffc9d8;}
+  .manual-note-item[data-color="purple"]{border-left-color:#dcc9f7;}
+  .manual-note-item .note-check{position:absolute;top:10px;right:10px;width:15px;height:15px;cursor:pointer;accent-color:var(--accent);}
+  .note-line{font-size:12px;color:var(--text-dim);}
+  .note-ver{color:#c0392b;font-size:11px;margin-left:4px;}
+  .note-quote{color:var(--text-dim);margin:4px 0;font-style:italic;word-break:break-all;font-size:13px;}
+  .note-text{color:var(--text);cursor:pointer;white-space:pre-wrap;word-break:break-word;max-height:3.4em;overflow:hidden;font-size:13px;}
+  .note-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+  .manual-btn{font-size:12px;border:1px solid var(--border);background:var(--bg-panel);border-radius:6px;padding:4px 10px;cursor:pointer;color:var(--text);}
+  .manual-btn:hover{background:var(--control-bg);}
+  .manual-btn.danger{background:#c0392b;color:#fff;border-color:#c0392b;font-weight:600;}
+  .manual-btn.danger:hover{background:#a93226;border-color:#a93226;}
+  .manual-btn:disabled{opacity:.5;cursor:not-allowed;filter:grayscale(.5);}
+  .manual-btn:disabled:hover{background:var(--bg-panel);}
+  /* 失效便签（原文找不到）：与工程一致——不整卡置灰，仅灰底弱化 + 文字 dim，删除按钮保持危机红可点 */
+  .manual-note-item.lost{background:var(--control-bg);border-left-color:#bbb;}
+  .manual-note-item.lost .note-text,.manual-note-item.lost .note-quote{cursor:default;color:var(--text-dim);}
+  .manual-note-item.lost .note-actions{display:flex;gap:6px;align-items:center;}
+  .note-lost-hint{color:#c0392b;font-size:11px;line-height:1.3;}
+  /* 便签浮窗（与工程 web/pc/android 浮窗 CSS 逐条一致） */
+  .sticky-layer{position:fixed;inset:0;pointer-events:none;z-index:4000;}
+  .sticky-note{position:absolute;pointer-events:auto;display:flex;flex-direction:column;width:300px;height:250px;min-width:210px;min-height:150px;border-radius:10px;border:1px solid rgba(0,0,0,.22);overflow:hidden;color:#1c1c1c;--sfs:13px;}
+  .sticky-note[data-color="yellow"]{background:#ffe9a3;}
+  .sticky-note[data-color="green"]{background:#cdeeb0;}
+  .sticky-note[data-color="blue"]{background:#b9dcf7;}
+  .sticky-note[data-color="pink"]{background:#ffc9d8;}
+  .sticky-note[data-color="purple"]{background:#dcc9f7;}
+  .sticky-note.pinned{outline:2px solid var(--accent);outline-offset:0;}
+  .sticky-head{display:flex;align-items:center;gap:3px;padding:5px 7px;background:rgba(0,0,0,.09);cursor:move;user-select:none;-webkit-user-select:none;touch-action:none;}
+  .sticky-title{flex:1;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sticky-ico{background:transparent;border:none;color:#1c1c1c;cursor:pointer;font-size:12px;line-height:1;padding:3px 5px;border-radius:5px;font-family:inherit;}
+  .sticky-ico:hover{background:rgba(255,255,255,.65);}
+  /* "A+" / "A−" 等带符号文本保持 LTR，避免 RTL 镜像 */
+  #manual-zoom-out, #manual-zoom-in,
+  .sticky-ico[data-act="fs-"], .sticky-ico[data-act="fs+"]{direction:ltr;unicode-bidi:isolate;}
+  .sticky-quote{font-size:11.5px;font-style:italic;color:rgba(0,0,0,.62);padding:5px 8px;max-height:70px;overflow:auto;border-bottom:1px dashed rgba(0,0,0,.22);word-break:break-word;cursor:pointer;}
+  .sticky-quote.hide{display:none;}
+  .sticky-area{flex:1;min-height:0;border:none;outline:none;resize:none;background:transparent;color:#161616;padding:8px;font-size:var(--sfs);line-height:1.6;font-family:inherit;user-select:text;-webkit-user-select:text;}
+  .sticky-foot{display:flex;align-items:center;gap:4px;padding:5px 6px;background:rgba(0,0,0,.07);flex-shrink:0;}
+  .sticky-btn{background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.18);color:#1c1c1c;border-radius:6px;padding:3px 8px;font-size:11.5px;cursor:pointer;font-family:inherit;white-space:nowrap;}
+  .sticky-btn:hover{background:#fff;}
+  .sticky-colors{display:flex;gap:3px;margin-left:auto;}
+  .sticky-dot{width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.3);cursor:pointer;}
+  .sticky-dot.on{outline:2px solid rgba(0,0,0,.55);outline-offset:1px;}
+  .sticky-resize{position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;touch-action:none;}
+  .sticky-resize::after{content:'';position:absolute;right:3px;bottom:3px;width:7px;height:7px;border-right:2px solid rgba(0,0,0,.32);border-bottom:2px solid rgba(0,0,0,.32);border-bottom-right-radius:2px;}
+  .sticky-note textarea, .sticky-quote, .sticky-lost-box{scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.28) transparent;}
+  .sticky-note textarea::-webkit-scrollbar, .sticky-quote::-webkit-scrollbar, .sticky-lost-box::-webkit-scrollbar{width:6px;height:6px;}
+  .sticky-note textarea::-webkit-scrollbar-thumb, .sticky-quote::-webkit-scrollbar-thumb, .sticky-lost-box::-webkit-scrollbar-thumb{background:rgba(0,0,0,.25);border-radius:4px;}
+  .sticky-unsaved .sticky-title::after{content:' •';color:#c0392b;}
+  /* 失效便签浮窗（与工程一致：灰底、只读、突出删除引导） */
+  .sticky-note.lost{background:#e9e9ec;border-color:rgba(0,0,0,.18);}
+  .sticky-note.lost .sticky-head{background:rgba(0,0,0,.06);}
+  .sticky-note .sticky-lost-box{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding:14px;text-align:center;color:#5a5a5f;}
+  .sticky-note .sticky-lost-icon{font-size:30px;}
+  .sticky-note .sticky-lost-msg{font-size:var(--sfs);line-height:1.5;}
+  .sticky-note .sticky-lost-hint{font-size:var(--sfs);color:#c0392b;}
+  .sticky-note.lost .sticky-foot{border-top:1px solid rgba(0,0,0,.12);}
+  .sticky-note.lost .sticky-btn.danger{background:#c0392b;color:#fff;font-weight:600;}
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:#32363b;color:#fff;
+       padding:10px 18px;border-radius:8px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);max-width:90vw;z-index:99;}
+  /* 确认弹窗（与工程 showConfirm / 删除确认一致） */
+  .modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:5000;}
+  .modal-box{background:#fff;border-radius:12px;padding:20px 22px;max-width:360px;width:90%;box-shadow:0 10px 40px rgba(0,0,0,.25);}
+  .modal-msg{font-size:14px;color:var(--text);margin-bottom:18px;line-height:1.6;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;}
+  .legend{font-size:12px;color:var(--text-dim);margin-top:8px;line-height:1.7;}
+  .legend b{color:var(--text);}
+  textarea.sim{width:100%;height:120px;font-family:monospace;font-size:11px;margin-top:8px;border:1px solid var(--border);border-radius:6px;padding:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>便签功能与 UI 测试效果 Demo</h1>
+  <div class="sub">展示三端（Web / PC / 安卓）统一的便签行为：正常、窜到新位置（自动校准）、原文失效（灰度·引导删除）、旧版本角标、导入拒绝旧格式、删除确认。</div>
+
+  <div class="grid">
+    <!-- 列表面板 -->
+    <div class="card">
+      <h2>说明书便签列表 <span class="tag">renderNotes</span></h2>
+      <div class="list-bar">
+        <span class="count" id="noteCount">共 0 条</span>
+        <span id="selCount"></span>
+        <button class="btn danger" id="batchDel" style="margin-left:auto;" disabled>删除选中</button>
+      </div>
+      <div id="list"></div>
+      <div class="legend">
+        <b>正常便签</b>：可打开/跳转/删除（删除与批量删除均有确认弹窗）。<br>
+        <b>旧版本角标 ⚠</b>：长版本号（YYYYMMDD）与当前不同，提示说明书可能已更新。<br>
+        <b>失效便签（灰底弱化）</b>：引用原文被删除或改动，无法定位；可打开预览但内容不可查看，引导删除。删除按钮保持危机红可点（与工程一致，不整卡置灰）。失效浮窗右上角同样有 A− / A+ / ⛶ / ☆ / ✕ 五个按钮（缩放字号、最大化、置顶、关闭均可交互），底部保留危机红删除（带确认弹窗）。
+      </div>
+    </div>
+
+    <!-- 浮窗 -->
+    <div class="card">
+      <h2>便签浮窗 <span class="tag">openSticky</span></h2>
+      <div class="legend" style="margin:0 0 10px;">
+        便签浮窗由 <b>openSticky(id)</b> 动态生成到顶部 fixed 叠加层（与工程一致），可拖动标题栏、拖右下角缩放、A± 调字号、⛶ 最大化、☆ 置顶、切换 5 色、保存/编辑/删除/关闭；默认只读，点「编辑」或双击正文进入编辑，Ctrl/Cmd+S 保存。<br>
+        点击左侧列表「打开」弹出真实可交互浮窗；右下角为自动打开的正常便签示例。
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn primary" onclick="openSticky('n1', true)">打开示例·正常便签</button>
+        <button class="btn" onclick="openSticky('n4', true)">打开示例·失效便签</button>
+        <button class="btn" onclick="closeSticky()">关闭浮窗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导入交互 -->
+  <div class="card" style="margin-top:20px;">
+    <h2>导入测试 <span class="tag">importNotes / applySceneText</span></h2>
+    <p style="font-size:13px;margin:0 0 8px;">粘贴一份便签/场景 JSON（或点按钮用示例），点击"模拟导入"查看行为：</p>
+    <textarea class="sim" id="jsonIn">{
+  "type":"cub3d-notes",
+  "lang":"zh-CN",
+  "longVersion":"20240101",
+  "shortVersion":"1.0.0",
+  "notes":[
+    {"id":"a1","line":42,"quote":"在立方体顶部添加旋转动画","note":"用 rAF 驱动","color":"yellow","longVersion":"20260824"},
+    {"id":"b2","line":10,"quote":"（引用原文已不存在）","note":"旧便签内容","color":"blue","longVersion":"20240101"}
+  ]
+}</textarea>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn primary" onclick="simImport()">模拟导入便签</button>
+      <button class="btn" onclick="simScene()">模拟导入场景</button>
+      <button class="btn" onclick="simOld()">模拟旧格式（无版本号，应被拒绝）</button>
+    </div>
+    <div class="legend" style="margin-top:10px;">
+      <b>逻辑：</b>导入时按 <code>longVersion</code>（长号 YYYYMMDD）判断兼容性。<br>
+      • 有 <code>longVersion</code> 且原文仍能定位 → 正常导入；窜到新位置则自动校准并刷新记载版本号。<br>
+      • 有 <code>longVersion</code> 但原文被删/改、无法定位 → 标记 <b>lost</b> 导入（灰度、引导删除）。<br>
+      • <b>整批无 <code>longVersion</code></b>（旧格式，连版本号都无法比较）→ <b>拒绝导入</b>。<br>
+      • 场景同上：<code>applySceneText</code> 无 <code>longVersion</code> 直接拒绝。
+    </div>
+  </div>
+</div>
+
+<div class="sticky-layer" id="stickyLayer"></div>
+<div class="toast" id="toast" style="display:none;"></div>
+<div class="modal-mask" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-msg" id="confirmMsg"></div>
+    <div class="modal-actions">
+      <button class="btn" id="confirmCancel">取消</button>
+      <button class="btn danger" id="confirmOk">删除</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ===================== 数据（内存版，对应工程 notes() / noteById / updateNote / removeNote） ===================== */
+  const LONG='20260824';
+  const STICKY_COLORS=['yellow','green','blue','pink','purple'];
+  const COLORS={yellow:'#ffe9a3',green:'#cdeeb0',blue:'#b9dcf7',pink:'#ffc9d8',purple:'#dcc9f7'};
+  let NOTES=[
+    {id:'n1',line:42,quote:'在立方体顶部添加旋转动画，注意帧率与性能',note:'用 requestAnimationFrame 驱动，避免卡顿。',color:'yellow',longVersion:LONG},
+    {id:'n2',line:88,quote:'导出时记得带上 longVersion / shortVersion',note:'管理端打包会自动注入。',color:'green',longVersion:LONG},
+    {id:'n3',line:15,quote:'旧版本便签示例',note:'这部分在较早版本写的。',color:'blue',longVersion:'20240101'},
+    {id:'n4',line:30,quote:'在渲染循环中控制帧率上限为 60fps',note:'性能较差的设备需要动态降帧，避免发热。',color:'pink',longVersion:'20260510',lost:true}
+  ];
+  function notes(){ return NOTES; }
+  function noteById(id){ return NOTES.find(n=>n.id===id); }
+  function updateNote(id,patch){ const n=noteById(id); if(n) Object.assign(n,patch); }
+  function removeNote(id){ NOTES=NOTES.filter(n=>n.id!==id); }
+
+  /* ===================== 列表渲染（与工程 renderNotes 一致，含 checkbox / lost 分支） ===================== */
+  function renderNotes(){
+    const list=document.getElementById('list');
+    const arr=notes();
+    if(!arr.length){ list.innerHTML='<div class="manual-note-empty" style="color:var(--text-dim);font-size:13px;padding:8px 0;">暂无便签</div>'; updateNoteCount(); return; }
+    list.innerHTML=arr.map(n=>'<div class="manual-note-item'+(n.lost?' lost':'')+'" data-id="'+n.id+'" data-color="'+(n.color||'yellow')+'">'
+      +'<input type="checkbox" class="note-check" data-id="'+n.id+'"'+(n.lost?'':'')+'>'
+      +'<div class="note-line"'+(n.lost?'':' data-jump="'+n.id+'"')+'>'+(n.lost ? '原文已失效' : ('行 '+n.line+(n.longVersion && n.longVersion!==LONG ? ' <span class="note-ver" title="旧版本 '+n.longVersion+'">⚠ '+n.longVersion+'</span>' : '')))+'</div>'
+      +'<div class="note-quote">'+n.quote+'</div>'
+      +'<div class="note-text" data-open="'+n.id+'">'+n.note+'</div>'
+      +(n.lost
+        ? '<div class="note-actions"><button class="manual-btn" data-open="'+n.id+'">打开</button><button class="manual-btn" disabled>跳转</button><button class="manual-btn danger" data-del="'+n.id+'">删除</button><span class="note-lost-hint">请删除此失效便签</span></div>'
+        : '<div class="note-actions"><button class="manual-btn" data-open="'+n.id+'">打开</button><button class="manual-btn" data-jump="'+n.id+'">跳转</button><button class="manual-btn" data-del="'+n.id+'">删除</button></div>'
+      )
+      +'</div>').join('');
+    updateNoteCount();
+  }
+  function updateNoteCount(){
+    const total=notes().length;
+    const sel=document.querySelectorAll('#list .note-check:checked').length;
+    document.getElementById('noteCount').textContent='共 '+total+' 条';
+    document.getElementById('selCount').textContent= sel? ('已选 '+sel+' 条') : '';
+    document.getElementById('batchDel').disabled=!sel;
+  }
+
+  /* ===================== toast ===================== */
+  let toastTimer;
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.style.display='block';
+    clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.style.display='none',4200);
+  }
+
+  /* ===================== 确认弹窗（与工程 showConfirm 一致：返回 Promise<boolean>） ===================== */
+  let confirmCb=null;
+  function showConfirm(msg){
+    return new Promise(res=>{
+      document.getElementById('confirmMsg').textContent=msg;
+      document.getElementById('confirmModal').style.display='flex';
+      confirmCb=res;
+    });
+  }
+  document.getElementById('confirmOk').addEventListener('click',()=>{ document.getElementById('confirmModal').style.display='none'; if(confirmCb) confirmCb(true); });
+  document.getElementById('confirmCancel').addEventListener('click',()=>{ document.getElementById('confirmModal').style.display='none'; if(confirmCb) confirmCb(false); });
+
+  /* ===================== 便签浮窗（逐字对齐工程 openSticky / bindSticky） ===================== */
+  const layer=document.getElementById('stickyLayer');
+  let zTop=4001;
+  function bringFront(el){ el.style.zIndex=++zTop; }
+  function saveStickyBox(el){ el.dataset.max=''; }           // 工程：持久化位置/尺寸，demo 简化为清除 max 标记
+  function syncStickyVisibility(){}
+  function applyStickyMode(el){ const a=el.querySelector('.sticky-area'); if(a) a.readOnly=(el.dataset.mode!=='edit'); }  // ro 默认只读，edit 可写
+  function flushSticky(el){ const id=el.dataset.id, a=el.querySelector('.sticky-area'); const n=noteById(id); if(n&&a) n.note=a.value; }  // 写回内容
+
+  function openSticky(id, forceEdit){
+    const n=noteById(id); if(!n) return;
+    let el=layer.querySelector('.sticky-note[data-id="'+id+'"]');
+    if(el){ bringFront(el); el.style.display='flex'; const a=el.querySelector('.sticky-area'); if(a) a.focus(); return; }
+    el=document.createElement('div');
+    el.className='sticky-note'+(n.pinned?' pinned':'')+(n.lost?' lost':'');
+    el.dataset.id=n.id; el.dataset.color=n.color||'yellow'; el.dataset.fs=String(13);
+    el.style.left='auto'; el.style.top='auto'; el.style.right='24px'; el.style.bottom='24px';
+    el.style.setProperty('--sfs', '13px');
+    if(n.lost){
+      el.innerHTML=''
+        +'<div class="sticky-head">'
+        +'<span class="sticky-title">原文已失效</span>'
+        +'<button class="sticky-ico" data-act="fs-" title="缩小">A−</button>'
+        +'<button class="sticky-ico" data-act="fs+" title="放大">A+</button>'
+        +'<button class="sticky-ico" data-act="max" title="最大化">⛶</button>'
+        +'<button class="sticky-ico" data-act="pin" title="置顶">☆</button>'
+        +'<button class="sticky-ico" data-act="close" title="关闭">✕</button>'
+        +'</div>'
+        +'<div class="sticky-lost-box">'
+        +'<div class="sticky-lost-icon">⚠</div>'
+        +'<div class="sticky-lost-msg">该便签引用的原文已在本版说明书中被删除或改动，无法恢复显示。便签仅可预览，内容不可查看。</div>'
+        +'<div class="sticky-lost-hint">请删除此失效便签</div>'
+        +'</div>'
+        +'<div class="sticky-foot">'
+        +'<button class="sticky-btn danger" data-act="del">删除</button>'
+        +'</div>'
+        +'<div class="sticky-resize"></div>';
+    } else {
+      el.innerHTML=''
+        +'<div class="sticky-head">'
+        +'<span class="sticky-title">行 '+n.line+'</span>'
+        +'<button class="sticky-ico" data-act="fs-" title="缩小">A−</button>'
+        +'<button class="sticky-ico" data-act="fs+" title="放大">A+</button>'
+        +'<button class="sticky-ico" data-act="max" title="最大化">⛶</button>'
+        +'<button class="sticky-ico" data-act="pin" title="置顶">☆</button>'
+        +'<button class="sticky-ico" data-act="close" title="关闭">✕</button>'
+        +'</div>'
+        +'<div class="sticky-quote">'+n.quote+'</div>'
+        +'<textarea class="sticky-area" spellcheck="false" placeholder="便签内容…"></textarea>'
+        +'<div class="sticky-foot">'
+        +'<button class="sticky-btn" data-act="save">保存</button>'
+        +'<button class="sticky-btn" data-act="edit">编辑</button>'
+        +'<button class="sticky-btn" data-act="del">删除</button>'
+        +'<span class="sticky-colors">'+STICKY_COLORS.map(c=>'<span class="sticky-dot'+((n.color||'yellow')===c?' on':'')+'" data-color="'+c+'" style="background:'+COLORS[c]+'"></span>').join('')+'</span>'
+        +'</div>'
+        +'<div class="sticky-resize"></div>';
+    }
+    layer.appendChild(el);
+    const area=el.querySelector('.sticky-area');
+    if(area){ area.value=n.note||''; }
+    bindSticky(el);
+    bringFront(el);
+    el.dataset.mode= forceEdit && !n.lost ? 'edit' : 'ro';
+    applyStickyMode(el);
+    if(area) setTimeout(()=>area.focus(), 30);
+  }
+  function closeSticky(el){
+    if(!el){ layer.innerHTML=''; return; }
+    flushSticky(el); el.classList.remove('sticky-unsaved');
+    if(el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  function bindSticky(el){
+    const id=el.dataset.id;
+    const area=el.querySelector('.sticky-area');
+    const head=el.querySelector('.sticky-head');
+    el.addEventListener('pointerdown', e=>{ bringFront(el); e.stopPropagation(); });
+    // 拖拽
+    head.addEventListener('pointerdown', e=>{
+      if(e.target.closest('button')) return;
+      const sx=e.clientX, sy=e.clientY, ox=parseInt(el.style.left,10)||0, oy=parseInt(el.style.top,10)||0;
+      head.setPointerCapture(e.pointerId);
+      const mv=ev=>{ el.style.right='auto'; el.style.bottom='auto'; el.style.left=Math.max(0, Math.min(window.innerWidth-40, ox+ev.clientX-sx))+'px'; el.style.top=Math.max(0, Math.min(window.innerHeight-30, oy+ev.clientY-sy))+'px'; };
+      const up=()=>{ head.removeEventListener('pointermove',mv); head.removeEventListener('pointerup',up); saveStickyBox(el); };
+      head.addEventListener('pointermove',mv); head.addEventListener('pointerup',up);
+      e.preventDefault();
+    });
+    // 缩放
+    const rz=el.querySelector('.sticky-resize');
+    rz.addEventListener('pointerdown', e=>{
+      const sx=e.clientX, sy=e.clientY, ow=el.offsetWidth, oh=el.offsetHeight;
+      rz.setPointerCapture(e.pointerId);
+      const mv=ev=>{ el.style.width=Math.max(210, ow+ev.clientX-sx)+'px'; el.style.height=Math.max(150, oh+ev.clientY-sy)+'px'; };
+      const up=()=>{ rz.removeEventListener('pointermove',mv); rz.removeEventListener('pointerup',up); saveStickyBox(el); };
+      rz.addEventListener('pointermove',mv); rz.addEventListener('pointerup',up);
+      e.preventDefault(); e.stopPropagation();
+    });
+    // 编辑：输入标记未保存；双击进编辑；Ctrl/Cmd+S 保存
+    if(area){
+      area.addEventListener('input', ()=>{ el.classList.add('sticky-dirty'); el.classList.add('sticky-unsaved'); });
+      area.addEventListener('dblclick', ()=>{ if(area.readOnly){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(), 0); } });
+      area.addEventListener('keydown', e=>{ if(e.key==='Escape'){ return; } if((e.ctrlKey||e.metaKey) && e.key==='s'){ e.preventDefault(); flushSticky(el); el.classList.remove('sticky-unsaved'); showToast('已保存'); } e.stopPropagation(); });
+    }
+    // 颜色
+    el.querySelectorAll('.sticky-dot').forEach(d=>d.addEventListener('click', ()=>{ const c=d.dataset.color; el.dataset.color=c; updateNote(id,{color:c}); el.querySelectorAll('.sticky-dot').forEach(x=>x.classList.toggle('on', x===d)); renderNotes(); }));
+    // 头/尾按钮（与工程逐按钮绑定一致）
+    el.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click', async ev=>{
+      ev.stopPropagation();
+      const act=b.dataset.act;
+      if(act==='close'){ closeSticky(el); }
+      else if(act==='save'){ flushSticky(el); el.classList.remove('sticky-unsaved'); el.dataset.mode='ro'; applyStickyMode(el); showToast('已保存'); }
+      else if(act==='del'){ if(!await showConfirm('确定要删除这条便签吗？删除后无法恢复。')) return; flushSticky(el); el.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(el); renderNotes(); showToast('已删除'); }
+      else if(act==='edit'){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(),0); }
+      else if(act==='pin'){ const n=noteById(id); const p=!(n&&n.pinned); updateNote(id,{pinned:p}); el.classList.toggle('pinned', p); b.textContent=p?'★':'☆'; b.title=p?'取消置顶':'置顶'; syncStickyVisibility(); }
+      else if(act==='fs+'||act==='fs-'){ let fs=parseFloat(el.dataset.fs||'13'); fs=Math.max(11, Math.min(26, act==='fs+'?fs*1.12:fs*0.9)); el.dataset.fs=String(fs); el.style.setProperty('--sfs', fs+'px'); saveStickyBox(el); }
+      else if(act==='max'){
+        if(el.dataset.max==='1'){ return; }
+        el._prevBox={x:parseInt(el.style.left,10)||0, y:parseInt(el.style.top,10)||0, w:el.offsetWidth, h:el.offsetHeight};
+        const w=Math.round(window.innerWidth*0.7), h=Math.round(window.innerHeight*0.7);
+        el.style.width=w+'px'; el.style.height=h+'px';
+        el.style.left=Math.round((window.innerWidth-w)/2)+'px'; el.style.top=Math.round((window.innerHeight-h)/2)+'px';
+        el.dataset.max='1'; b.title='还原';
+      }
+    }));
+  }
+
+  /* ===================== 列表交互（打开 / 跳转 / 删除 / 多选 / 批量删除） ===================== */
+  document.getElementById('list').addEventListener('click', async e=>{
+    const open=e.target.closest('[data-open]');
+    const jump=e.target.closest('[data-jump]');
+    const del=e.target.closest('[data-del]');
+    if(open){ openSticky(open.getAttribute('data-open')); }
+    else if(jump){ const n=noteById(jump.getAttribute('data-jump')); showToast('已跳转到第 '+n.line+' 行（演示）'); }
+    else if(del){
+      const id=del.getAttribute('data-del');
+      if(!await showConfirm('确定要删除这条便签吗？删除后无法恢复。')) return;
+      removeNote(id); renderNotes(); showToast('已删除');
+    }
+  });
+  document.getElementById('list').addEventListener('change', e=>{ if(e.target.classList.contains('note-check')) updateNoteCount(); });
+  document.getElementById('batchDel').addEventListener('click', async ()=>{
+    const ids=Array.from(document.querySelectorAll('#list .note-check:checked')).map(c=>c.dataset.id);
+    if(!ids.length){ showToast('未选择便签'); return; }
+    if(!await showConfirm('确定要删除选中的 '+ids.length+' 条便签吗？删除后无法恢复。')) return;
+    ids.forEach(id=>removeNote(id));
+    renderNotes(); showToast('已删除 '+ids.length+' 条便签');
+  });
+
+  /* ===================== 导入模拟 ===================== */
+  function simImport(){
+    let raw; try{ raw=JSON.parse(document.getElementById('jsonIn').value); }catch(e){ return showToast('JSON 解析失败：'+e.message); }
+    if(Array.isArray(raw)) raw={notes:raw};
+    if(!raw.notes) return showToast('导入失败：无法识别的格式');
+    const arr=raw.notes;
+    if(arr.length && arr.every(n=>!n || typeof n!=='object' || !n.longVersion)){
+      return showToast('该便签备份无法识别版本号（旧格式），已停止支持，无法导入。请使用新版导出的备份');
+    }
+    let added=0,moved=0,orphan=0;
+    arr.forEach(n=>{
+      if(!n.longVersion){ orphan++; return; }
+      if(n.longVersion!==LONG){ moved++; } else { added++; }
+    });
+    const parts=[];
+    if(added)parts.push('已导入 '+added+' 条便签');
+    if(moved)parts.push('其中 '+moved+' 条引用位置已随说明书更新自动校准');
+    if(orphan)parts.push('其中 '+orphan+' 条便签的引用原文已被删除或改动，无法在当前版本定位，已标记为失效（灰度），请清理后删除');
+    showToast(parts.join('；')||'已导入 0 条');
+  }
+  function simScene(){
+    let raw; try{ raw=JSON.parse(document.getElementById('jsonIn').value); }catch(e){ return showToast('JSON 解析失败：'+e.message); }
+    if(!raw.objects) return showToast('导入失败：无法识别的工程格式');
+    if(!raw.longVersion) return showToast('该工程文件无法识别版本号（旧格式），已停止支持，无法导入。请使用新版导出的备份');
+    showToast('场景已导入（长版本 '+raw.longVersion+'）');
+  }
+  function simOld(){
+    document.getElementById('jsonIn').value='[\n  {"id":"x","line":5,"quote":"旧格式便签，无 longVersion","note":"很久以前的导出"}\n]';
+    showToast('已填入旧格式（无 longVersion），点"模拟导入便签"查看拒绝效果');
+  }
+
+  /* ===================== 初始化 ===================== */
+  renderNotes();
+  openSticky('n1', true);   // 自动打开一条示例正常便签（可编辑），展示真实可交互浮窗
+</script>
+</body>
+</html>

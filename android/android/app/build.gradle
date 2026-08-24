@@ -14,7 +14,8 @@ android {
         applicationId "com.cub3deditor.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10201
+        // versionCode 由 build-apk.mjs 注入为长版本号（当天日期 YYYYMMDD）；versionName 注入为 package.json 短版本 X.X.X
+        versionCode 20260824
         versionName "1.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {

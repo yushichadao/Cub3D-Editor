@@ -948,6 +948,9 @@
 .manual-bar-actions { display:flex; gap:6px; }
 .manual-btn { background:var(--control-bg, rgba(255,255,255,.08)); border:1px solid var(--border, rgba(255,255,255,.15)); color:var(--text, #e8e8f0); padding:5px 10px; border-radius:8px; cursor:pointer; font-size:12px; font-family:inherit; transition:all .15s; }
 .manual-btn:hover { border-color:var(--accent); background:var(--control-bg-hover); }
+.manual-btn.danger { background:#c0392b; color:#fff; border-color:#c0392b; }
+.manual-btn:disabled { opacity:.45; cursor:not-allowed; filter:grayscale(.5); }
+.manual-btn.danger:hover { background:#a93226; border-color:#a93226; }
 .manual-body { flex:1; display:flex; min-height:0; }
 .manual-toc { width:300px; max-width:40%; flex-shrink:0; border-right:1px solid var(--border); display:none; flex-direction:column; overflow:hidden; }
 .manual-toc.open { display:flex; }
@@ -1056,6 +1059,11 @@
 .manual-note-item { padding:8px 24px 8px 8px; position:relative; }
 .manual-note-item .note-check { position:absolute; top:9px; right:9px; width:15px; height:15px; cursor:pointer; accent-color:var(--accent); }
 .manual-note-item .note-text { color:var(--text); cursor:pointer; white-space:pre-wrap; word-break:break-word; max-height:3.4em; overflow:hidden; }
+/* 失效便签（原文找不到）：原文与内容仍可阅读，仅无法定位行数；不整卡置灰，删除按钮保持可点 */
+.manual-note-item.lost { background:var(--control-bg); border-left-color:#bbb; }
+.manual-note-item.lost .note-text, .manual-note-item.lost .note-quote { cursor:default; color:var(--text-dim); }
+.manual-note-item.lost .note-actions { display:flex; gap:6px; align-items:center; }
+.manual-note-item .note-lost-hint { color:#c0392b; font-size:11px; line-height:1.3; }
 .sticky-area[readonly] { background:rgba(0,0,0,.06); cursor:default; }
 .manual-note-edit { border-top:1px solid var(--border); padding:10px; display:none; flex-direction:column; gap:8px; }
 .manual-note-edit.open { display:flex; }
@@ -1090,7 +1098,7 @@
 .sticky-dot.on { outline:2px solid rgba(0,0,0,.55); outline-offset:1px; }
 .sticky-resize { position:absolute; right:0; bottom:0; width:16px; height:16px; cursor:nwse-resize; touch-action:none; }
 .sticky-resize::after { content:''; position:absolute; right:3px; bottom:3px; width:7px; height:7px; border-right:2px solid rgba(0,0,0,.32); border-bottom:2px solid rgba(0,0,0,.32); border-bottom-right-radius:2px; }
-.sticky-note textarea, .sticky-quote { scrollbar-width:thin; scrollbar-color:rgba(0,0,0,.28) transparent; }
+.sticky-note textarea, .sticky-quote, .sticky-lost-box { scrollbar-width:thin; scrollbar-color:rgba(0,0,0,.28) transparent; }
 .sticky-note textarea::-webkit-scrollbar, .sticky-quote::-webkit-scrollbar { width:6px; height:6px; }
 .sticky-note textarea::-webkit-scrollbar-thumb, .sticky-quote::-webkit-scrollbar-thumb { background:rgba(0,0,0,.25); border-radius:4px; }
 .sticky-unsaved .sticky-title::after { content:' •'; color:#c0392b; }
@@ -1198,7 +1206,16 @@
 .touch-device .manual-bottombar .mb-btn:active { background:var(--control-bg); }
 .touch-device .manual-bottombar .mb-btn.on { color:var(--accent); }
 .touch-device .manual-progress { display:block; position:absolute; top:0; left:0; height:3px; width:0; background:var(--accent); z-index:70; transition:width .08s linear; }
-.touch-device .sticky-note { width:min(92vw,340px) !important; max-height:72vh; }
+.touch-device .sticky-note { width:min(92vw,340px); max-width:92vw; max-height:72vh; }
+/* 失效便签浮窗：灰底、只读、突出删除引导 */
+.sticky-note.lost { background:#e9e9ec; border-color:rgba(0,0,0,.18); }
+.sticky-note.lost .sticky-head { background:rgba(0,0,0,.06); }
+.sticky-note .sticky-lost-box { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:8px; padding:14px; text-align:center; color:#5a5a5f; overflow:auto; }
+.sticky-note .sticky-lost-icon { font-size:30px; }
+.sticky-note .sticky-lost-msg { font-size:13px; line-height:1.5; }
+.sticky-note .sticky-lost-hint { font-size:var(--sfs); color:#c0392b; }
+.sticky-note.lost .sticky-foot { border-top:1px solid rgba(0,0,0,.12); }
+.sticky-note.lost .sticky-btn.danger { background:#c0392b; color:#fff; font-weight:600; }
 .manual-float { position:absolute; display:none; gap:4px; background:var(--bg-panel-solid); border:1px solid var(--border); border-radius:8px; padding:4px; box-shadow:none; z-index:20; }
 .manual-float button { background:transparent; border:none; color:var(--text); padding:4px 9px; cursor:pointer; font-size:12px; border-radius:5px; font-family:inherit; }
 .manual-float button:hover { background:var(--control-bg-hover); }
@@ -2174,6 +2191,10 @@ html[dir="rtl"] .num-field{ direction:rtl; }
 
 // 发版版本号（与 <head> 中 meta[name=bootv] 保持一致）
 const BOOTV = '20260824';
+// 未打包态（预览态）占位：长版本号=BOOTV（真实 YYYYMMDD）、短版本号=X.X.X；构建时由注入脚本覆盖为真实值。
+// 注意不能预置 '00000000' 之类的非空占位：会使 `__CUB3D_LONG__ || __APP_VERSION__` 短路，导致便签 longVersion 全被写成占位、旧版本角标永不触发。
+window.__CUB3D_LONG__ = window.__CUB3D_LONG__ || BOOTV;
+window.__CUB3D_VERSION__ = window.__CUB3D_VERSION__ || 'X.X.X';
 
 // 加载页开始显示的时间：用于保证最低展示时长，防止加载过快时缓冲页一闪而过
 window.__bootT0 = Date.now();
@@ -2773,7 +2794,7 @@ setTimeout(function () {
     var cv = curVer();
     var chain = HOSTS.map(function(h, i){
       return function(){
-        return fetchDoc(h.api + (i < 2 ? ('?current=' + encodeURIComponent(cv)) : '')).then(function(j){
+        return fetchDoc(h.api + (i < 2 ? ('?current=' + encodeURIComponent(cv) + '&platform=' + encodeURIComponent(PLATFORM)) : '')).then(function(j){
           var doc = (j && j.doc) ? j.doc : j;
           // doc 本身无效（结构异常/为空）→ 视为当前源不可用，链到下一个源
           if (!doc || !Array.isArray(doc.versions) || !doc.versions.length) throw new Error('bad doc');

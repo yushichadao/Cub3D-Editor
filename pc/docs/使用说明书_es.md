@@ -142,7 +142,7 @@ Cada «Capítulo X …» del índice es un enlace de salto clicable que te lleva
 
 **Parte Decimotercera: Problemas y apéndices**
 - [Capítulo 45 Manual de solución de problemas comunes](jump:Capítulo 45: Manual de solución de problemas frecuentes)
-- [Capítulo 46 Glosario de términos (versión china-inglés)](jump:Capítulo 46: Glosario de términos (español-inglés))
+- [Capítulo 46 Glosario de términos (español-inglés)](jump:Capítulo 46: Glosario de términos (español-inglés))
 - [Capítulo 47 Tabla rápida de atajos](jump:Capítulo 47: Tabla rápida de atajos de teclado)
 - [Capítulo 48 Índice de figuras · texturas · colores](jump:Capítulo 48: Índice de figuras · patrones · colores)
 
@@ -2700,7 +2700,7 @@ La tabla anterior es en su mayoría común a las cuatro plataformas. Los siguien
 
 Glosario de consulta rápida. Los marcados con `*` son términos propios de esta herramienta.
 
-| Chino | Inglés | Explicación en una frase |
+| Español | Inglés | Explicación en una frase |
 |---|---|---|
 | Unidad de cuadrícula* | GRID_UNIT | La longitud de una celda del suelo, también la base del paso de movimiento (0.1 celda / 1 celda) |
 | Arriba es Z* | Z-up | Esta herramienta usa el eje Z como "arriba", a diferencia de la mayoría de software 3D que usa Y como "arriba" |

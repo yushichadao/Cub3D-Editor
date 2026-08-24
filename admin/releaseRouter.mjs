@@ -49,8 +49,15 @@ function requireAuth(req, res) {
 }
 
 // ===== 版本比较 / 解析工具 =====
+// 支持两种版本号：
+//  • 长版本号 YYYYMMDD（8 位纯数字，Web 端内部标记）→ 拆为 年/月/日 便于比较
+//  • 短版本号 X.X.X（PC/安卓构建产物对外标记）
 function parseVersion(v) {
-  const m = String(v || '').match(/^(\d+)\.(\d+)\.(\d+)/);
+  const s = String(v || '');
+  if (/^\d{8}$/.test(s)) {
+    return { major: +s.slice(0, 4), minor: +s.slice(4, 6), patch: +s.slice(6, 8), raw: v };
+  }
+  const m = s.match(/^(\d+)\.(\d+)\.(\d+)/);
   if (!m) return null;
   return { major: +m[1], minor: +m[2], patch: +m[3], raw: v };
 }
@@ -100,17 +107,37 @@ function normalizeAssets(doc) {
 function readDoc() { return normalizeAssets(global.__readDoc()); }
 function writeDoc(doc) { normalizeAssets(doc); global.__writeDoc(doc); }
 
+// 长版本号（打包时间 YYYYMMDD）生成工具，统一一处
+function yyyymmdd(d) {
+  d = d || new Date();
+  const p = x => String(x).padStart(2, '0');
+  return '' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+}
+
 // ===== 公开只读：更新探测 =====
+// 按 platform 隔离比较：不同端打包方式不同，禁止跨端混排。
+//   platform=web     → 比较键用 longVersion（YYYYMMDD，打包时间）
+//   platform=pc/android → 比较键用 version（短号 X.X.X）
+// current 由前端按其平台传入对应体系的版本号（web 传长号、pc/android 传短号）。
 function handleUpdate(req, res, url) {
   const current = url.searchParams.get('current') || '';
   const channel = url.searchParams.get('channel') || 'stable';
+  const platform = (url.searchParams.get('platform') || '').toLowerCase();
   const doc = readDoc();
   const filter = resolveChannelFilter(channel);
-  const target = pickLatest(doc.versions, filter);
+  // 该端比较键：web 用 longVersion；pc/android 用 version（短号）
+  const keyOf = v => (platform === 'web') ? (v.longVersion || v.version) : (v.version || v.longVersion);
+  // 仅取该端有比较键且匹配 channel 的版本，按比较键排序取最新（不再全局混排）
+  const arr = (doc.versions || []).filter(v => {
+    const k = String(keyOf(v) || '');
+    return k && filter(k);
+  });
+  const target = arr.slice().sort((a, b) => cmpVersion(keyOf(b), keyOf(a)))[0] || null;
   let update = null;
-  if (target && isNewer(current, target.version) && filter(target.version) && target.status !== 'stopped') {
+  if (target && isNewer(current, keyOf(target)) && filter(String(keyOf(target) || '')) && target.status !== 'stopped') {
     update = {
-      version: target.version,
+      version: keyOf(target),
+      longVersion: target.longVersion || null,
       date: target.date,
       type: target.type,
       status: target.status,
@@ -125,7 +152,7 @@ function handleUpdate(req, res, url) {
     };
   }
   res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ ok: true, current, channel, update, latest: target ? target.version : null }));
+  res.end(JSON.stringify({ ok: true, current, channel, platform, update, latest: target ? keyOf(target) : null }));
 }
 
 // ===== 公开只读：完整状态 =====
@@ -165,6 +192,8 @@ function handlePublish(req, res) {
       if (p.type) v.type = p.type;
       if (p.status) v.status = p.status;
       if (p.targets) v.targets = p.targets;
+      // 长版本号（打包时间 YYYYMMDD）程序自动生成：优先用前端提交的，否则按发布当天自动生成
+      v.longVersion = (p.longVersion && /^\d{8}$/.test(String(p.longVersion))) ? String(p.longVersion) : yyyymmdd();
       // notes：支持中文数组自动翻译为多语言分桶；也支持已翻译的分桶对象
       if (p.notes != null) {
         if (Array.isArray(p.notes)) {

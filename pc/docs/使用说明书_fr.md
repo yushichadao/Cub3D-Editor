@@ -155,7 +155,7 @@ Chaque « Chapitre X … » de la table des matières est un lien de saut cliqua
 **Partie Treize : Dépannage et annexes**
 
 - [Chapitre 45 : Guide de dépannage des problèmes courants](jump:Chapitre 45 Manuel de dépannage des problèmes courants)
-- [Chapitre 46 : Glossaire (français-anglais)](jump:Chapitre 46 Glossaire（chinois-anglais）)
+- [Chapitre 46 : Glossaire (français-anglais)](jump:Chapitre 46 Glossaire（français-anglais）)
 - [Chapitre 47 : Tableau rapide des raccourcis](jump:Chapitre 47 : Tableau rapide des raccourcis)
 - [Chapitre 48 : Index des graphiques · motifs · couleurs](jump:Chapitre 48 : Index des formes · motifs · couleurs)
 
@@ -2717,11 +2717,11 @@ Le tableau ci-dessus est généralement commun aux quatre plateformes. Ceux-ci n
 
 ---
 
-## Chapitre 46 Glossaire (chinois-anglais)
+## Chapitre 46 Glossaire (français-anglais)
 
 Glossaire de consultation rapide. Les termes avec `*` sont propres à cet outil.
 
-| Chinois | Anglais | Explication en une phrase |
+| Français | Anglais | Explication en une phrase |
 |---|---|---|
 | Unité de grille* | GRID_UNIT | Longueur d'une case au sol, aussi base du pas de déplacement (0,1 case / 1 case) |
 | Z vers le haut* | Z-up | Cet outil prend l'axe Z comme « haut », contrairement à la plupart des logiciels 3D qui prennent Y comme « haut » |

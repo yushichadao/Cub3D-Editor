@@ -151,7 +151,6 @@ CORS 全部 `Access-Control-Allow-Origin: *`。
   `file:open-data-folder`、`file:current`、`file:set-current`
 - **语言包**：`langpack:sync-packs`（on，同步注入）、`langpack:list`、`langpack:install`、
   `langpack:install-dir`、`langpack:remove`、`langpack:export-template`、`langpack:manual-url`、`langpack:open-folder`
-- **便签窗**：`sticky:create`、`sticky:close`、`sticky:list`、`sticky:sync`（广播）
 - **杂项**：`shell:open-external`、`updater:save`、`updater:list`、`updater:open`、
   `clipboard:write-text`、`clipboard:read-text`、`dialog:message`、`theme:set-native`
 

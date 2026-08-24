@@ -143,14 +143,6 @@ function register() {
   ipcMain.handle('langpack:manual-url', (_e, code) => ok({ url: langSvc.resolveManual(code) }));
   ipcMain.handle('langpack:open-folder', () => ok({ path: langSvc.openFolder() }));
 
-  /* -------------------------------- 便签窗口 ------------------------------- */
-
-  ipcMain.handle('sticky:create', (_e, note) => { W.createStickyWindow(note); return ok(); });
-  ipcMain.handle('sticky:close', (_e, id) => { W.closeStickyWindow(id); return ok(); });
-  ipcMain.handle('sticky:list', () => ok({ ids: [...W.stickyWindows.keys()] }));
-  // 便签窗与主窗之间的数据同步
-  ipcMain.on('sticky:sync', (_e, payload) => W.broadcast('sticky:sync', payload));
-
   /* --------------------------------- 杂项 --------------------------------- */
 
   ipcMain.handle('shell:open-external', (_e, url) => {

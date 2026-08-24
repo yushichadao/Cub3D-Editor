@@ -194,7 +194,8 @@ export function registerPackerRouter(app) {
           fs.writeFileSync(path.join(WEB, 'version.txt'), bootv + '\n', 'utf8');
           const doc = global.__readDoc();
           let w = doc.versions.find(x => x.version === bootv && x.platform === 'web');
-          if (!w) { w = { version: bootv, date: new Date().toISOString().slice(0, 10), status: 'published', platform: 'web', targets: ['cn', 'github'], notes: {}, assets: [] }; doc.versions.push(w); }
+          if (!w) { w = { version: bootv, longVersion: bootv, shortVersion: readCurrentVersion(), date: new Date().toISOString().slice(0, 10), status: 'published', platform: 'web', targets: ['cn', 'github'], notes: {}, assets: [] }; doc.versions.push(w); }
+          else w.longVersion = bootv;
           w.assets = collectWebFiles(WEB).map(f => ({ name: f.rel, size: f.size, platform: 'web', channel: 'web' }));
           global.__writeDoc(doc);
           let pushed = 'skipped';
@@ -213,8 +214,10 @@ export function registerPackerRouter(app) {
           for (const s of okSteps) await fsp.copyFile(s.path, path.join(DOWNLOADS, s.artifact));
           const doc = global.__readDoc();
           const ver = st.version;
+          const longVer = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD 长版本号（打包时间）
           let v = doc.versions.find(x => x.version === ver);
-          if (!v) { v = { version: ver, date: new Date().toISOString().slice(0, 10), status: 'published', targets: ['cn', 'github'], notes: {}, assets: [] }; doc.versions.push(v); }
+          if (!v) { v = { version: ver, longVersion: longVer, date: new Date().toISOString().slice(0, 10), status: 'published', targets: ['cn', 'github'], notes: {}, assets: [] }; doc.versions.push(v); }
+          else v.longVersion = longVer;
           for (const s of okSteps) {
             const a = { name: s.artifact, size: s.size || 0, platform: s.platform, channel: 'cn' };
             if (!v.assets.find(x => x.name === a.name)) v.assets.push(a);

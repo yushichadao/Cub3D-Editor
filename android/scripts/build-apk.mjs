@@ -22,28 +22,26 @@ if (!['debug', 'release'].includes(mode)) {
   process.exit(1);
 }
 
-// 版本同步：把 package.json 的版本同步进 android/app/build.gradle 的 versionName/versionCode，
-// 避免「APK 文件名已是新版本、包内系统版本号仍是旧版」的不一致问题。
-// versionCode 采用语义化映射 major*10000 + minor*100 + patch，且不小于现有值，保证单调递增、同一版本重复构建幂等。
+// 版本同步：把 package.json 的短版本（X.X.X）同步进 android/app/build.gradle 的 versionName，
+// 并把 versionCode 设为「长版本号 = 当天日期 YYYYMMDD」（内部标记，与三端长短版本号规范一致）。
+// versionCode 作为 Android 系统级标识，采用 YYYYMMDD 整数（构建日自然单调递增，且 < 2^31 安全范围）。
 function syncGradleVersion() {
   const gradleFile = path.join(ANDROID_DIR, 'app', 'build.gradle');
   const pkg = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   const version = String(pkg.version || '0.0.0').replace(/^v/, '');
-  const [maj, min, pat] = version.split('.').map((n) => parseInt(n, 10) || 0);
-  const wantCode = maj * 10000 + min * 100 + pat;
+  const longCode = parseInt(new Date().toISOString().slice(0, 10).replace(/-/g, ''), 10); // YYYYMMDD
   const gradle = readFileSync(gradleFile, 'utf8');
   const curName = (gradle.match(/versionName\s+"([^"]*)"/) || [])[1];
   const curCode = parseInt((gradle.match(/versionCode\s+(\d+)/) || [])[1], 10) || 0;
-  const nextCode = Math.max(wantCode, curCode);
-  if (curName === version && nextCode === curCode) {
-    console.log(`[apk] 版本号已一致（v${version} / versionCode ${nextCode}），无需同步`);
+  if (curName === version && curCode === longCode) {
+    console.log(`[apk] 版本号已一致（v${version} / versionCode ${longCode}），无需同步`);
     return version;
   }
   const next = gradle
     .replace(/versionName\s+"[^"]*"/, `versionName "${version}"`)
-    .replace(/versionCode\s+\d+/, `versionCode ${nextCode}`);
+    .replace(/versionCode\s+\d+/, `versionCode ${longCode}`);
   writeFileSync(gradleFile, next, 'utf8');
-  console.log(`[apk] 已同步版本号 v${version} (versionCode ${curCode} -> ${nextCode}) -> ${path.relative(ROOT, gradleFile)}`);
+  console.log(`[apk] 已同步版本号 v${version} (versionCode ${curCode} -> ${longCode}) -> ${path.relative(ROOT, gradleFile)}`);
   return version;
 }
 

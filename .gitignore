@@ -113,6 +113,8 @@ i18n-draft/
 PC/_run-*.txt
 PC/_verify*.ps1
 PC/_zh-legal.json
+# 根目录 PC 启动 stderr 采集（调试残留，不入库）
+pc-dev.err
 
 # 根目录截图与调试工具产物（不入库）
 main-load.png

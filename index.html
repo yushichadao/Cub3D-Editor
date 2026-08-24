@@ -78,6 +78,11 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
+<!-- 统一 i18n 字典（shared/i18n/data.js）：作为 promo 域单一真源，下载降级等文案从此读取 -->
+<script type="module">
+  import { DOMAINS } from './shared/i18n/data.js';
+  window.__I18N_DOMAINS = DOMAINS;
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Cub3D Editor</title>
@@ -259,11 +264,13 @@
   @media (pointer:coarse){
     .preview-desktop{display:none}
     .preview-touch{display:block}
-    /* 触屏设备下「鼠标模式打开」按钮置灰不可点击（鼠标模式仅桌面适用） */
-    #plat1Btn{opacity:.45;pointer-events:none;filter:grayscale(1);cursor:default}
+    /* 触屏设备：「鼠标模式打开」按钮置灰不可点（鼠标模式仅桌面适用），点击由 JS 兜底阻止 */
+    #plat1Btn{opacity:.45;cursor:not-allowed;filter:grayscale(.85);border-color:transparent;box-shadow:none}
+    #plat1Btn:hover{background:var(--accent);color:var(--text);border-color:transparent;box-shadow:none}
   }
   @media (pointer:fine){
     .preview-touch{display:none}
+    /* 桌面设备：触屏模式仍可打开（URL 加 ?touch 切换触控布局），仅隐藏其预览 */
   }
 
   /* ===== 功能亮点数字条 ===== */
@@ -332,6 +339,20 @@
   .avatar-hold .av-ring .av-progress{
     stroke:var(--accent);stroke-dasharray:397.66;
     stroke-dashoffset:calc(397.66 - (var(--p,0) * 397.66 / 100))}
+  /* 下载/主 CTA 按钮禁用态（无可用下载源或设备不适用）：
+     统一灰显：降透明度 + 灰度化 + not-allowed 指针。
+     注意不用 pointer-events:none（会使 cursor:not-allowed 失效），禁用按钮移除 href 且点击由 JS 委托兜底阻止 */
+  .lbtn.dl-disabled,.lbtn.is-disabled{
+    opacity:.45;cursor:not-allowed;filter:grayscale(.85);
+    border-color:transparent;box-shadow:none;color:var(--text);background:var(--bg-soft)}
+  .lbtn.main.dl-disabled,.lbtn.main.is-disabled{background:var(--accent)}
+  .lbtn.dl-disabled:hover,.lbtn.is-disabled:hover{
+    border-color:transparent;color:var(--text);box-shadow:none;background:var(--bg-soft)}
+  .lbtn.main.dl-disabled:hover,.lbtn.main.is-disabled:hover{background:var(--accent)}
+  .btn.dl-disabled,.btn.is-disabled,
+  .btn.dl-disabled:hover,.btn.is-disabled:hover{
+    border-color:var(--line);background:var(--bg-soft);color:var(--dim-2);
+    cursor:not-allowed;box-shadow:none;opacity:.6;transform:none}
   .author h3{font-size:22px;font-weight:700}
   .author .role{color:var(--accent);font-weight:600;margin:4px 0 12px;font-size:14px}
   .author p{color:var(--dim);max-width:60ch;font-size:14.5px;line-height:1.7;text-wrap:pretty;overflow-wrap:anywhere}
@@ -1737,6 +1758,12 @@ if(langMobile) langMobile.addEventListener('click', e=>{
 });
 
 /* ============ 设备识别 ============ */
+/* 「暂无可用下载」文案：优先统一字典 shared/i18n/data.js 的 promo.plat.nodl[cur]，回退 T 与固定文案 */
+function nodlText(){
+  const dome = window.__I18N_DOMAINS;
+  return (dome && dome.promo && dome.promo['plat.nodl'] && dome.promo['plat.nodl'][cur])
+      || (T[cur] && T[cur]['plat.nodl']) || '暂无可用下载';
+}
 function detectDevice(){
   const ua = navigator.userAgent;
   let type='other';
@@ -1779,9 +1806,27 @@ function detectDevice(){
     "fr":{hero:{windows:"Télécharger pour Windows",android:"Télécharger pour Android",harmonyos:"Web tactile",ios:"Web tactile",macos:"Version Web",linux:"Version Web",other:"Ouvrir dans le navigateur"}}
   };
   const m = map[type]; const label = (extra[cur]&&extra[cur].hero[type]) || dict[m.t] || dict['hero.ctaWeb'];
-  heroCta.href = m.url; heroText.textContent = label;
-  cta.href = m.url;
+  /* 首屏主 CTA 与推荐按钮：windows/android 指向下载包，其 key 无可用源时置灰避免死链；其余平台指向网页入口恒可用 */
+  const dlKey = (type==='windows' ? 'setup' : (type==='android' ? 'apk' : ''));
+  heroCta.dataset.dlKey = dlKey; cta.dataset.dlKey = dlKey;
+  if(dlKey && !LATEST_DL[dlKey]){
+    const nodl = nodlText();
+    heroCta.classList.add('is-disabled'); heroCta.removeAttribute('href'); heroText.textContent = nodl;
+    cta.classList.add('is-disabled'); cta.removeAttribute('href');
+    const cs = cta.querySelector('span') || cta; cs.textContent = nodl;
+  } else {
+    heroCta.classList.remove('is-disabled'); heroCta.href = m.url; heroText.textContent = label;
+    cta.classList.remove('is-disabled'); cta.href = m.url;
+  }
 }
+/* 灰显按钮点击兜底：禁用态（dl-disabled/is-disabled）或设备不适用（触屏设备下鼠标模式按钮）时阻止跳转 */
+document.addEventListener('click', e=>{
+  const a = e.target.closest && e.target.closest('a');
+  if(!a) return;
+  const md = window.matchMedia;
+  const devDisabled = a.id==='plat1Btn' && md && md('(pointer:coarse)').matches;
+  if(devDisabled || a.classList.contains('dl-disabled') || a.classList.contains('is-disabled')) e.preventDefault();
+});
 
 /* ============ 移动端菜单（选择栏）============ */
 const menuBtn = document.getElementById('menuBtn');
@@ -1911,14 +1956,31 @@ buildLangBars();
     return { byName, found, maxVer };
   }
 
+  /* 禁用单个 [data-dl] 按钮：灰显 + 移除死链 + aria 标记（只禁缺失 key 的按钮，不整批禁用，避免误伤有可用源的按钮） */
+  const disableOne = a => {
+    a.classList.add('dl-disabled');
+    a.removeAttribute('href');
+    a.setAttribute('aria-disabled', 'true');
+    if(!a.dataset.noText) a.textContent = nodlText();
+  };
+  /* 无可下载源时：禁用全部 [data-dl] 按钮并显示提示，避免指向已删除的死链 */
+  function disableDownloads(){
+    document.querySelectorAll('[data-dl]').forEach(disableOne);
+  }
   /* 重写 [data-dl] 下载链接（当前站基址），并让 hero/主 CTA 跟随最新文件 */
   function rewriteLinks(){
+    let anyOk = false;
     document.querySelectorAll('[data-dl]').forEach(a=>{
-      const k = keyOf(a.dataset.dl); if(!k || !LATEST_DL[k]) return;
+      const k = keyOf(a.dataset.dl);
+      if(!k || !LATEST_DL[k]){ disableOne(a); return; }   // 仅禁用缺失 key 的按钮，不影响其余可用按钮
+      anyOk = true;
       const f = LATEST_DL[k].file;
       if(a.dataset.dl !== f) a.dataset.dl = f;
       a.href = dlHref(k);
+      a.classList.remove('dl-disabled');
+      a.removeAttribute('aria-disabled');
     });
+    if(!anyOk) disableDownloads();
     detectDevice();
   }
 
@@ -1932,12 +1994,17 @@ buildLangBars();
       const n = found[k].name; if(byName[n] == null) return;
       document.querySelectorAll('[data-size-for="'+k+'"]').forEach(el=>{ el.textContent=fmt(byName[n]); });
     });
-    rewriteLinks();
+    if(!Object.keys(found).length){
+      disableDownloads();   // 空库 / 无可用版本：禁用下载按钮并提示
+    } else {
+      rewriteLinks();
+    }
   }
 
   function renderFail(){
     document.querySelectorAll('[data-size-ver]').forEach(el=>el.textContent='—');
     document.querySelectorAll('[data-size-for]').forEach(el=>el.textContent='—');
+    disableDownloads();   // 拉取失败：禁用下载按钮并提示
   }
 
   /* 境外：latest 缺失的 key 回退到含该文件的最新历史 Release（releases/download/<tag>/<file>） */
@@ -2170,17 +2237,17 @@ window.addEventListener('storage', ev=>{
              带视觉反馈：按住即出现头像外圈圆环进度条，手指移开/松开即取消并恢复 ============ */
 (function(){
   // 管理后台候选地址（按优先级探测，打开第一个可达的）：
-  //   1) 同源 /manager/ —— 境内 IP/域名直连时命中（备案过渡期自动跟随当前域名）
+  //   1) 同源 /admin/ —— 与 nginx location /admin/ 一致（境内 IP/域名直连时命中，备案过渡期自动跟随当前域名）
   //   2) 境内主站 https —— 备案完成后生效
   //   3) 境内备用 IP（https）—— fallback：https 页面探测 https，探测失败也直接打开（导航不受混合内容限制）
   //   4) 本机 localhost:3000 —— 本地部署形态（npm start）
-  // 当前访问站点是否为境内官网（IP 直连或备案域名）：若是，同源 / 就是真正的管理门户（门户为管理后台根）
+  // 当前访问站点是否为境内官网（IP 直连或备案域名）：若是，同源 /admin/ 即为真正的管理门户（404 也打开）
   const host = (location.hostname || '').toLowerCase();
   const isCnSite = (host === '139.196.104.56' || /(^|\.)cub3d-editor\.cn$/i.test(host));
   const ADMIN_URLS = [
-    { url: location.origin + '/', fallback: isCnSite },   // 境内官网 → 同源直达门户（404 也打开）
-    { url: 'https://cub3d-editor.cn/manager/', fallback: false },
-    { url: 'https://139.196.104.56/manager/', fallback: true },
+    { url: location.origin + '/admin/', fallback: isCnSite },   // 境内官网 → 同源管理后台（404 也打开）
+    { url: 'https://cub3d-editor.cn/admin/', fallback: false },
+    { url: 'https://139.196.104.56/admin/', fallback: true },
     { url: 'http://localhost:3000/', fallback: false },
     { url: 'http://127.0.0.1:3000/', fallback: false }
   ];
@@ -2243,7 +2310,7 @@ window.addEventListener('storage', ev=>{
         const w = window.open(url, '_blank', 'noopener');
         if (!w) window.location.href = url;
       }
-      // 境内官网的同源 /manager/：无论 404 还是探测失败都直接打开（它就是本服务器的后台）
+      // 境内官网的同源 /admin/：无论 404 还是探测失败都直接打开（它就是本服务器的后台）
       if (item.fallback && sameOrigin) { openIt(); return; }
       fetch(url, sameOrigin ? { cache: 'no-store' } : { cache: 'no-store', mode: 'no-cors' }).then(function(r){
         if (sameOrigin && !r.ok) return tryNext();   // 同源 404 等（非境内官网）→ 尝试下一候选

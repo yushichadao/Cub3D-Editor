@@ -1,5 +1,5 @@
 'use strict';
-/** 窗口工厂：主窗口（无边框自绘）、便签窗。 */
+/** 窗口工厂：主窗口（无边框自绘）。 */
 const { BrowserWindow, screen, shell, nativeTheme, ipcMain } = require('electron');
 const path = require('path');
 const P = require('./paths');
@@ -8,8 +8,6 @@ const { INDEX_URL, SCHEME } = require('./protocol');
 
 /** @type {BrowserWindow|null} */
 let mainWindow = null;
-/** @type {Map<string, BrowserWindow>} */
-const stickyWindows = new Map();
 
 const PRELOAD = path.join(__dirname, 'preload.js');
 
@@ -164,8 +162,6 @@ function createMainWindow() {
 
   win.on('closed', () => {
     mainWindow = null;
-    for (const w of stickyWindows.values()) { if (!w.isDestroyed()) w.destroy(); }
-    stickyWindows.clear();
   });
 
   // 外链一律走系统浏览器，绝不在应用内开新窗
@@ -183,40 +179,6 @@ function createMainWindow() {
   return win;
 }
 
-/** 便签独立小窗：置顶、无边框、可跨屏拖动 */
-function createStickyWindow(note) {
-  const id = String(note && note.id != null ? note.id : Date.now());
-  const exist = stickyWindows.get(id);
-  if (exist && !exist.isDestroyed()) { exist.focus(); return exist; }
-
-  const win = new BrowserWindow({
-    width: note && note.width ? note.width : 300,
-    height: note && note.height ? note.height : 240,
-    x: note && Number.isFinite(note.x) ? note.x : undefined,
-    y: note && Number.isFinite(note.y) ? note.y : undefined,
-    frame: false,
-    transparent: true,
-    resizable: true,
-    alwaysOnTop: true,
-    skipTaskbar: true,
-    minimizable: false,
-    maximizable: false,
-    backgroundColor: '#00000000',
-    webPreferences: baseWebPreferences()
-  });
-
-  win.loadURL(`${SCHEME}://local/shell/sticky.html?id=${encodeURIComponent(id)}`);
-  win.setAlwaysOnTop(true, 'floating');
-  stickyWindows.set(id, win);
-  win.on('closed', () => stickyWindows.delete(id));
-  return win;
-}
-
-function closeStickyWindow(id) {
-  const win = stickyWindows.get(String(id));
-  if (win && !win.isDestroyed()) win.close();
-}
-
 function getMain() { return mainWindow; }
 function broadcast(channel, payload) {
   for (const w of BrowserWindow.getAllWindows()) {
@@ -225,6 +187,6 @@ function broadcast(channel, payload) {
 }
 
 module.exports = {
-  createMainWindow, createStickyWindow, closeStickyWindow,
-  getMain, broadcast, persistBounds, stickyWindows
+  createMainWindow,
+  getMain, broadcast, persistBounds
 };

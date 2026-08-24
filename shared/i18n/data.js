@@ -567,14 +567,14 @@ export const DOMAINS = {
     },
     "effectiveDate": {
       "zh-CN": "本文件生效日期：2026年8月21日",
-      "en": "本文件生效日期：2026年8月21日",
-      "ja": "本文件生效日期：2026年8月21日",
+      "en": "Effective date of this document: August 21, 2026",
+      "ja": "本文件の発効日：2026年8月21日",
       "zh-TW": "本文件生效日期：2026年8月21日",
-      "ko": "本文件生效日期：2026年8月21日",
-      "ru": "本文件生效日期：2026年8月21日",
-      "es": "本文件生效日期：2026年8月21日",
-      "fr": "本文件生效日期：2026年8月21日",
-      "ar": "本文件生效日期：2026年8月21日"
+      "ko": "본 문서 시행일: 2026년 8월 21일",
+      "ru": "Дата вступления в силу настоящего документа: 21 августа 2026 г.",
+      "es": "Fecha de entrada en vigor de este documento: 21 de agosto de 2026",
+      "fr": "Date d'entrée en vigueur du présent document : 21 août 2026",
+      "ar": "تاريخ نفاذ هذا المستند: 21 أغسطس 2026"
     },
     "emptyHint": {
       "zh-CN": "未选中对象。\\n从左侧选择图形，点击地面放置；或点击已有对象进行编辑。\\nShift+点选可多选，多选时变换作为整体操作。",
@@ -9238,6 +9238,17 @@ export const DOMAINS = {
       "es": "Descargar .apk",
       "fr": "Télécharger .apk",
       "ar": "تنزيل .apk"
+    },
+    "plat.nodl": {
+      "zh-CN": "暂无可用下载",
+      "en": "No download available",
+      "ja": "ダウンロードは準備中",
+      "zh-TW": "暫無可用下載",
+      "ko": "다운로드 없음",
+      "ru": "Загрузка недоступна",
+      "es": "Sin descargas disponibles",
+      "fr": "Aucun téléchargement",
+      "ar": "لا تتوفر تنزيلات"
     },
     "plat4.desc": {
       "zh-CN": "安卓手机/平板安装包（release 签名）。全屏、分享导出等增强。",

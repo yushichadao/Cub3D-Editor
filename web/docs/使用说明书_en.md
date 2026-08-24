@@ -141,7 +141,7 @@ Every "Chapter X …" in the table of contents is a clickable jump link that tak
 
 **Part Thirteen: Troubleshooting and Appendix**
 - [Chapter 45: FAQ Troubleshooting Guide](jump:Chapter 45: Common Issues Troubleshooting Manual)
-- [Chapter 46: Glossary (Chinese-English)](jump:Chapter 46: Glossary（Chinese–English）)
+- [Chapter 46: Glossary (English)](jump:Chapter 46: Glossary（English）)
 - [Chapter 47: Shortcut Quick Reference](jump:Chapter 47: Keyboard Shortcut Quick Reference)
 - [Chapter 48: Shape · Pattern · Color Index](jump:Chapter 48: Graphics · Patterns · Color Index)
 
@@ -2694,11 +2694,11 @@ Most of the table above applies to all four forms. The following only appear in 
 
 ---
 
-## Chapter 46: Glossary (Chinese–English)
+## Chapter 46: Glossary (English)
 
 A handy vocabulary list for quick lookup. Entries marked with `*` are terms specific to this tool.
 
-| Chinese | English | One-line explanation |
+| English | English | One-line explanation |
 |---|---|---|
 | Grid unit* | GRID_UNIT | Length of one ground cell, also the basis for move step size (0.1 cell / 1 cell) |
 | Z is up* | Z-up | This tool uses the Z axis as "up," unlike most 3D software that uses Y as "up" |

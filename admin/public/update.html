@@ -362,17 +362,30 @@
       <div class="panel-body">
         <div class="form-grid">
           <div class="field">
-            <label>版本号</label>
+            <label>长版本号（打包时间 · 自动 YYYYMMDD）</label>
+            <input type="text" id="f-longver" readonly placeholder="构建/分发时自动注入，预览态 00000000" style="background:var(--bg-deep); color:var(--text-dim); cursor:not-allowed;" />
+            <span class="mini">程序自动生成（打包日）；PC/安卓与 Web 均展示此长号</span>
+          </div>
+          <div class="field" id="shortver-field">
+            <label>短版本号（X.X.X，人工输入）</label>
             <input type="text" id="f-ver" placeholder="X.X.X" />
-            <span class="mini">点击「自动检测最新」可填充线上最高版本</span>
+            <span class="mini">仅 PC / 安卓填短号；Web 无短号（仅展示长版本号）</span>
           </div>
           <div class="field">
-            <label>声称发布日期（对外展示）</label>
+            <label>宣传发布日期（对外展示）</label>
             <div class="date-wrap">
               <span class="date-disp" id="f-date-disp" data-placeholder="点击选择日期">点击选择日期</span>
               <input type="date" id="f-date" />
             </div>
-            <span class="mini">实际发布日期将在发布时自动记录</span>
+            <span class="mini">对外公告用，可与真实发布时间不同</span>
+          </div>
+          <div class="field">
+            <label>实际发布日期（发布时自动记录）</label>
+            <div class="date-wrap">
+              <span class="date-disp" id="f-actual-disp" data-placeholder="尚未发布">尚未发布</span>
+              <input type="date" id="f-actual" readonly style="pointer-events:none;" />
+            </div>
+            <span class="mini">不可人工填写，由发布动作回填</span>
           </div>
           <div class="field">
             <label>更新类型</label>
@@ -772,6 +785,10 @@
     return map;
   }
   // 当前勾选涉及的平台集合（pc / android）
+  function longTodayNow(){
+    const t = new Date(); const p2 = x => String(x).padStart(2, '0');
+    return '' + t.getFullYear() + p2(t.getMonth() + 1) + p2(t.getDate());
+  }
   function selectedPlatforms(){
     const pl = new Set();
     selectedPkgs.forEach(function(k){ const p = k.split('::'); if (p[1]) pl.add(p[1]); });
@@ -797,6 +814,14 @@
       lbl.dataset.base = base;
       lbl.textContent = on ? base : base + '（未选 ' + cfg.name + ' 安装包，已禁用输入）';
     });
+    // 长短版本号展示按平台切换：检测到 PC/安卓 → 显示短号框；仅 Web 文案 → 仅显长号
+    const hasPcAnd = plats.has('pc') || plats.has('android');
+    document.getElementById('shortver-field').style.display = hasPcAnd ? '' : 'none';
+    // 长版本号（打包时间 YYYYMMDD）自动预填当天，供发布者核对（程序生成，不在前端改）
+    const today = new Date();
+    const p2 = x => String(x).padStart(2, '0');
+    const longToday = '' + today.getFullYear() + p2(today.getMonth() + 1) + p2(today.getDate());
+    if (!$('f-longver').value || $('f-longver').value === '00000000') $('f-longver').value = longToday;
   }
   // 从分桶结构取中文源（兼容旧式纯数组）：bucket 为数组则返回原数组，为对象则取 zh-CN/all
   function zhOf(bucket){ if (!bucket) return []; return Array.isArray(bucket) ? bucket : (bucket.zh-CN || bucket.all || []); }
@@ -1042,6 +1067,8 @@
     if (!targets.length) targets.push('cn');
     const body = {
       version: ver,
+      longVersion: $('f-longver').value || longTodayNow(),
+      platform: (function(){ const ps = selectedPlatforms(); return ps.has('pc') ? 'pc' : (ps.has('android') ? 'android' : 'web'); })(),
       date: announced,
       type: $('f-type').value,
       targets: targets,
@@ -1129,18 +1156,24 @@
           platBlock('Android', 'android', 'android') +
           platBlock('Web', 'web', 'web') +
         '</div>';
+      // 长短版本号展示区分（不带 v 前缀）：PC/安卓含 longVersion 且≠短号 → 显示「长 / 短」；Web（version 即长号）仅显示长版本号
+      const showLong = v.longVersion && v.longVersion !== v.version;
+      const verTitle = showLong
+        ? ('<span class="ver">长 ' + v.longVersion + '</span><span class="ver ver-short">短 ' + v.version + '</span>')
+        : ('<span class="ver">' + v.version + '</span><span class="ver-tag">' + (v.platform === 'web' ? '长版本号' : '版本') + '</span>');
       const item = document.createElement('div');
       item.className = 'ver-item';
       item.innerHTML =
         '<div class="ver-top">' +
-          '<span class="ver">' + v.version + '</span>' +
+          verTitle +
           typeHtml +
           '<span class="st ' + (st?'pub':'stop') + '">' + (st?'发布中':'已停止') + '</span>' +
           '<span class="tag">' + targetLabel(v.targets || 'both') + '</span>' +
         '</div>' +
         '<div class="ver-meta">' +
-          '<span><b>声称发布日期</b> ' + (v.date || '—') + '</span>' +
-          '<span><b>实际发布</b> ' + (v.publishedAt ? String(v.publishedAt).replace('T',' ').slice(0,16) : '—') + '</span>' +
+          (showLong ? '<span><b>长版本号（打包时间）</b> ' + v.longVersion + '</span>' : '') +
+          '<span><b>宣传发布日期（对外展示）</b> ' + (v.date || '—') + '</span>' +
+          '<span><b>实际发布日期</b> ' + (v.publishedAt ? String(v.publishedAt).replace('T',' ').slice(0,16) : '—') + '</span>' +
         '</div>' +
         platformsHtml +
         '<div class="ver-ops">' +

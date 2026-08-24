@@ -180,7 +180,7 @@ kbdSliderPgSel:'大幅增/减',
   appTitle:'Cub3D Editor',
   // 说明书阅读器
   tabGuide:'快捷操作', tabManual:'使用说明书', manTitle:'使用说明书', manToc:'目录', manLine:'行', manGotoPh:'输入行号', manGoto:'跳转', manSearchPh:'搜索…', manNote:'便签', manHi:'高亮', manCopy:'复制', manCopyAll:'复制全文', manZoomIn:'放大', manZoomOut:'缩小', manClose:'关闭', manLoading:'加载中…', manLoadFail:'说明书加载失败，请检查部署目录下 docs/ 文件是否完整', manCurLine:'当前行', manNoNote:'暂无便签', manNotePh:'输入便签…', manSave:'保存', manDelete:'删除', manJump:'跳转', manAdded:'已添加便签', manDeleted:'已删除便签', manCopied:'已复制', manNext:'下一个', manPrev:'上一个', manCount:'{0} / {1}', manNoteAt:'行 {0}', manUnHl:'已取消高亮', manSearch:'搜索', manCancel:'取消', manHiCancel:'取消高亮', manHiExpand:'扩充高亮', manHiExpanded:'已扩充高亮',
-  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manImportFailPart:'其中 {0} 条因说明书已更新、无法在当前位置匹配到引用原文，已跳过导入', manImportMoved:'其中 {0} 条引用位置已随说明书更新自动校准', manImportLangMismatch:'该便签备份为 {0} 语言，当前说明书为 {1} 语言，已跳过导入以避免混合不同语言', manImportLangUnknown:'该备份未携带语言标识，仅当你确认它导出自当前（{0}）说明书时才可导入', manImportOldVer:'已导入 {0} 条便签，其中部分创建于旧版本（{1}），若说明书已更新请复核', manImportNoVer:'该备份无版本标识，便签已标记为当前版本（{0}）', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', manExportFail:'导出失败', toastExportCancelled:'已取消导出', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', manPrevCh:'上一章', manNextCh:'下一章', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', recoveryTime:'恢复时间', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出', tosReadDone:'我已读至文末', tosReadProgress:'已阅读 <b id="tos-progress-num">{0}</b> / 3 份文件', tosReadHint:'尚未阅读到文末', tosReadDoneHint:'已完整阅读，可关闭',
+  manNoteOpen:'打开', manEdit:'编辑', manReadOnly:'只读', manExport:'导出', manImport:'导入', manSelectAll:'全选', manBatchDel:'批量删除', manExported:'便签已导出', manImported:'已导入 {0} 条便签', manImportFail:'导入失败', manImportFailPart:'其中 {0} 条因说明书已更新、无法在当前位置匹配到引用原文，已跳过导入', manImportMoved:'其中 {0} 条引用位置已随说明书更新自动校准', manImportLangMismatch:'该便签备份为 {0} 语言，当前说明书为 {1} 语言，已跳过导入以避免混合不同语言', manImportLangUnknown:'该备份未携带语言标识，仅当你确认它导出自当前（{0}）说明书时才可导入', manImportOldVer:'已导入 {0} 条便签，其中部分创建于旧版本（{1}），若说明书已更新请复核', manImportNoVer:'该便签备份无法识别版本号（旧格式），已停止支持，无法导入。请使用新版导出的备份', manImportLost:'其中 {0} 条便签的引用原文已被删除或改动，无法在当前版本定位，已标记为失效（灰度），请清理后删除', manNoteLostTitle:'原文已失效', manNoteLostQuote:'（引用原文已不存在）', manNoteLostText:'该便签引用的原文已在本版说明书中被删除或改动，无法恢复显示。便签仅可预览，内容不可查看。', manNoteLostHint:'请删除此失效便签', manBatchDeleted:'已删除 {0} 条', manNoSel:'请先选择便签', manNoteCount:'共 {0} 条', manSelCount:'已选 {0}/{1}', manNoteEmpty:'（空）', manMaximize:'最大化', manRestore:'还原', manPin:'置顶', manUnpin:'取消置顶', manNoteSaved:'便签已保存', manJumpFallback:'原文已变动，已跳转至所在段落', manJumpFail:'未找到便签对应的原文', manNoteQuoteTip:'点击折叠/展开引用原文', tosGateTitle:'服务协议与隐私政策', tosGateSub:'请您先阅读以下文件（点击链接查看全文），确认理解并同意全部条款后，点击下方“同意并继续”。如不同意，请选择“不同意并退出”，将无法使用本软件。', tosGateExit:'不同意并退出', tosGateAccept:'同意并继续', tosGateBlocked:'您尚未同意《服务协议》《免责声明》《隐私政策》，无法使用本软件。请点击下方按钮重新阅读并同意，或手动关闭本页面 / 退出应用。', tosGateBlockedTitle:'需同意条款方可使用', tosGateReread:'重新阅读', manExportFail:'导出失败', toastExportCancelled:'已取消导出', manDelConfirm:'确认删除此便签？此操作不可撤销', manBatchDelConfirm:'确认删除选中的 {0} 条便签？此操作不可撤销', manNoteUnsaved:'便签有未保存内容，是否保存？', manNoteDiscard:'不保存', manPrevCh:'上一章', manNextCh:'下一章', recoveryTitle:'检测到未保存的会话', recoveryMsg:'上次程序未正常关闭，是否恢复自动保存的进度？当前共 {0} 个对象。', recoveryTime:'恢复时间', tosGateExitAlert:'您尚未同意使用条款，请关闭此网页。', exitTitle:'退出确认', exitMsg:'是否保存当前场景？未保存的内容将在退出后丢失。', exitMsgCancel:'你未选择保存位置，场景尚未保存。确定要退出吗？', exitMsgFail:'保存失败，确定要退出吗？', exitCancel:'取消', exitNoSave:'不保存退出', exitSave:'保存并退出', tosReadDone:'我已读至文末', tosReadProgress:'已阅读 <b id="tos-progress-num">{0}</b> / 3 份文件', tosReadHint:'尚未阅读到文末', tosReadDoneHint:'已完整阅读，可关闭',
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
@@ -5041,12 +5041,11 @@ function exportScene() {
   const now = new Date().toISOString();
   const data = JSON.stringify({
     format: 'cube3d-scene',
-    schemaVersion: 2,
-    version: 2,
+    longVersion: (window.__CUB3D_LONG__ || __APP_VERSION__),
+    shortVersion: (window.__CUB3D_VERSION__ || __APP_VERSION__),
     meta: {
       createdAt: (state.meta && state.meta.createdAt) || now,
       updatedAt: now,
-      appVersion: __APP_VERSION__,
       platform: 'pc',
       generator: 'Cub3D Editor PC',
       locale: currentLang,
@@ -5092,6 +5091,8 @@ document.getElementById('file-import').addEventListener('change', (e) => {
     try {
       const json = JSON.parse(r.result);
       if (!json.objects) throw new Error('格式错误');
+      // 停止对连版本号都无法比较的旧格式工程的支持：无 longVersion 则拒绝导入
+      if (!json.longVersion) throw new Error(_t('manImportNoVer'));
       // 直接 restore 并重置历史
       state.objects.forEach(disposeObject);
       state.objects = [];
@@ -9717,19 +9718,27 @@ function openManual(){
   function removeNote(id){ const arr=notes().filter(n=>String(n.id)!==String(id)); saveStore('notes', arr); try{ localStorage.removeItem(lsKey('sticky.'+id)); }catch(e){} }
   function notePreview(s){ s=(s||'').replace(/\r?\n/g,' ').replace(/\s+/g,' ').trim(); if(s.length>40) s=s.slice(0,40)+'…'; return s||T('manNoteEmpty'); }
   function updateNoteCount(){ const total=notes().length; const sel=noteListEl.querySelectorAll('.note-check:checked').length; const c=document.getElementById('manual-note-count'); if(c) c.textContent = sel? T('manSelCount').replace('{0}', sel).replace('{1}', total) : T('manNoteCount').replace('{0}', total); }
+  function recalibrateOldNotes(){
+    const arr=notes(); let recal=0;
+    arr.forEach(n=>{ if(n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||__APP_VERSION__; recal++; } } });
+    if(recal){ saveStore('notes', arr); renderNotes(); toast(T('manRecalibrated').replace('{0}', recal)); }
+  }
+
   function renderNotes(){
     const arr=notes();
     if(!arr.length){ noteListEl.innerHTML='<div class="manual-note-empty">'+T('manNoNote')+'</div>'; updateNoteCount(); return; }
-    noteListEl.innerHTML=arr.map(n=>'<div class="manual-note-item" data-id="'+n.id+'" data-color="'+(n.color||'yellow')+'">'
+    noteListEl.innerHTML=arr.map(n=>'<div class="manual-note-item'+(n.lost?' lost':'')+'" data-id="'+n.id+'" data-color="'+(n.color||'yellow')+'">'
       +'<input type="checkbox" class="note-check" data-id="'+n.id+'">'
-      +'<div class="note-line" data-jump="'+n.id+'">'+T('manNoteAt').replace('{0}', n.line)+(n.appVersion && n.appVersion!==__APP_VERSION__ ? ' <span class="note-ver" title="'+T('manImportOldVer').replace('{0}','').replace('{1}', n.appVersion)+'">⚠ '+n.appVersion+'</span>' : '')+'</div>'
+      +'<div class="note-line"'+(n.lost?'':' data-jump="'+n.id+'"')+'>'+(n.lost ? T('manNoteLostTitle') : T('manNoteAt').replace('{0}', n.line)+(n.longVersion && n.longVersion!==(window.__CUB3D_LONG__||__APP_VERSION__) ? ' <span class="note-ver" title="'+T('manImportOldVer').replace('{0}','').replace('{1}', n.longVersion)+'">⚠ '+n.longVersion+'</span>' : ''))+'</div>'
       +'<div class="note-quote">'+mdEscape(n.quote||'')+'</div>'
-      +'<div class="note-text" data-open="'+n.id+'">'+mdEscape(notePreview(n.note))+'</div>'
-      +'<div class="note-actions">'
-      +'<button class="manual-btn" data-open="'+n.id+'">'+T('manNoteOpen')+'</button>'
-      +'<button class="manual-btn" data-jump="'+n.id+'">'+T('manJump')+'</button>'
-      +'<button class="manual-btn" data-del="'+n.id+'">'+T('manDelete')+'</button>'
-      +'</div></div>').join('');
+      +'<div class="note-text'+(n.lost?' lost-text':'')+'"'+(n.lost?'':' data-open="'+n.id+'"')+'>'+mdEscape(notePreview(n.note))+'</div>'
+      +(n.lost
+        ? '<div class="note-actions"><button class="manual-btn" data-open="'+n.id+'">'+T('manNoteOpen')+'</button><button class="manual-btn" disabled style="opacity:.45;cursor:not-allowed;">'+T('manJump')+'</button><button class="manual-btn danger" data-del="'+n.id+'">'+T('manDelete')+'</button><span class="note-lost-hint">'+T('manNoteLostHint')+'</span></div>'
+        : '<div class="note-actions">'
+          +'<button class="manual-btn" data-open="'+n.id+'">'+T('manNoteOpen')+'</button>'
+          +'<button class="manual-btn" data-jump="'+n.id+'">'+T('manJump')+'</button>'
+          +'<button class="manual-btn" data-del="'+n.id+'">'+T('manDelete')+'</button>'
+          +'</div>')+'</div>').join('');
     noteListEl.querySelectorAll('[data-del]').forEach(el=>el.addEventListener('click', async e=>{ e.preventDefault(); if(!await showConfirm(T('manDelConfirm'))) return; const id=el.dataset.del; const stEl=stickyEl(id); if(stEl) stEl.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(id); renderNotes(); toast(T('manDeleted')); }));
     noteListEl.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click', ()=>openSticky(el.dataset.open, false)));
     noteListEl.querySelectorAll('[data-jump]').forEach(el=>el.addEventListener('click', ()=>{ const n=noteById(el.dataset.jump); if(n) jumpToNote(n); }));
@@ -9767,7 +9776,9 @@ function openManual(){
         return;
       }
     }
-    toast(T('manJumpFail')); // 原文找不到或无法唯一匹配 → 报错
+    // 失效便签（原文找不到/无法唯一匹配）：灰度降级——滚动到文档大致位置并提示，而非硬报错
+    if(docEl){ docEl.scrollIntoView({behavior:'smooth', block:'start'}); }
+    toast(T('manNoteLostTitle'));
   }
   // ===== 便签浮窗（多开，最多 5 个） =====
   function stickyLayer(){ let l=document.getElementById('manual-sticky-layer'); if(!l){ l=document.createElement('div'); l.id='manual-sticky-layer'; l.className='sticky-layer'; document.body.appendChild(l); } return l; }
@@ -9799,11 +9810,13 @@ function openManual(){
   }
   async function closeSticky(id){ const el=typeof id==='string'?stickyEl(id):id; if(!el || !el.parentNode) return true; if(el.classList.contains('sticky-unsaved')){ const v=await showStickyUnsaved(el); if(v==='cancel') return false; if(v==='save') flushSticky(el); } el.classList.remove('sticky-unsaved'); el.parentNode.removeChild(el); return true; }
   async function closeAllStickies(){ const els=Array.from(stickyLayer().querySelectorAll('.sticky-note')); for(const el of els){ const ok=await closeSticky(el); if(!ok) return false; } return true; }
-  function flushSticky(el){ if(!el || !el.classList.contains('sticky-dirty')) return; const area=el.querySelector('.sticky-area'); updateNote(el.dataset.id, {note: area.value}); el.classList.remove('sticky-dirty'); renderNotes(); }
+  function flushSticky(el){ if(!el || !el.classList.contains('sticky-dirty')) return; const area=el.querySelector('.sticky-area'); if(!area) return; updateNote(el.dataset.id, {note: area.value}); el.classList.remove('sticky-dirty'); renderNotes(); }
   function syncStickyVisibility(){ const open=modal.classList.contains('show'); stickyLayer().querySelectorAll('.sticky-note').forEach(el=>{ el.style.display=(open||el.classList.contains('pinned'))?'flex':'none'; }); }
-  function applyStickyMode(el){ const area=el.querySelector('.sticky-area'); const ro=el.dataset.mode!=='edit'; area.readOnly=ro; el.classList.toggle('sticky-readonly', ro); const saveBtn=el.querySelector('[data-act="save"]'); const editBtn=el.querySelector('[data-act="edit"]'); if(saveBtn) saveBtn.style.display=ro?'none':''; if(editBtn) editBtn.style.display=ro?'':'none'; }
-  function exportNotes(){ console.log('[exportNotes] called'); const arr=notes(); console.log('[exportNotes] notes() returned:', arr.length, 'items'); if(!arr.length){ console.log('[exportNotes] BLOCKED: empty notes array'); toast(T('manNoNote')); return; } const payload={ type:'cub3d-notes', lang: currentLang, version: 1, appVersion: __APP_VERSION__, notes: arr }; const data=JSON.stringify(payload, null, 2); const name=defaultJsonName('notes'); const fd=window.desktop&&window.desktop.file; console.log('[exportNotes] window.desktop:', !!window.desktop, '| file:', !!fd, '| saveJson:', !!(fd&&fd.saveJson)); if(fd&&fd.saveJson){ console.log('[exportNotes] calling fd.saveJson with suggestName:', name); fd.saveJson({ data:data, suggestName:name, title:T('manExport') }).then(function(res){ console.log('[exportNotes] saveJson resolved:', res); if(res&&res.ok) toast(T('manExported')+' · '+(res.path||name)); else if(res&&res.canceled){} else toast(T('manExportFail')); }).catch(function(e){ console.error('[exportNotes] saveJson rejected:', e); toast(T('manExportFail')); }); return; } console.log('[exportNotes] FALLBACK to <a> download (no native save API)'); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')+' · '+name); }
+  function applyStickyMode(el){ const area=el.querySelector('.sticky-area'); const ro=el.dataset.mode!=='edit'; if(area) area.readOnly=ro; el.classList.toggle('sticky-readonly', ro); const saveBtn=el.querySelector('[data-act="save"]'); const editBtn=el.querySelector('[data-act="edit"]'); if(saveBtn) saveBtn.style.display=ro?'none':''; if(editBtn) editBtn.style.display=ro?'':'none'; }
+  function exportNotes(){ console.log('[exportNotes] called'); const arr=notes(); console.log('[exportNotes] notes() returned:', arr.length, 'items'); if(!arr.length){ console.log('[exportNotes] BLOCKED: empty notes array'); toast(T('manNoNote')); return; } const payload={ type:'cub3d-notes', lang: currentLang, longVersion: (window.__CUB3D_LONG__||__APP_VERSION__), shortVersion: (window.__CUB3D_VERSION__||__APP_VERSION__), notes: arr }; const data=JSON.stringify(payload, null, 2); const name=defaultJsonName('notes'); const fd=window.desktop&&window.desktop.file; console.log('[exportNotes] window.desktop:', !!window.desktop, '| file:', !!fd, '| saveJson:', !!(fd&&fd.saveJson)); if(fd&&fd.saveJson){ console.log('[exportNotes] calling fd.saveJson with suggestName:', name); fd.saveJson({ data:data, suggestName:name, title:T('manExport') }).then(function(res){ console.log('[exportNotes] saveJson resolved:', res); if(res&&res.ok) toast(T('manExported')+' · '+(res.path||name)); else if(res&&res.canceled){} else toast(T('manExportFail')); }).catch(function(e){ console.error('[exportNotes] saveJson rejected:', e); toast(T('manExportFail')); }); return; } console.log('[exportNotes] FALLBACK to <a> download (no native save API)'); const blob=new Blob([data], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast(T('manExported')+' · '+name); }
   function importNotes(file){ const reader=new FileReader(); reader.onload=()=>{ try{
+    const LONG = window.__CUB3D_LONG__ || __APP_VERSION__;
+    const SHORT = window.__CUB3D_VERSION__ || __APP_VERSION__;
     const raw=JSON.parse(reader.result);
     let payloadLang, noteArr;
     if(Array.isArray(raw)){ payloadLang=null; noteArr=raw; }
@@ -9817,16 +9830,32 @@ function openManual(){
     if(!payloadLang){
       toast(T('manImportLangUnknown').replace('{0}', manualLangName(currentLang)));
     }
-    const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0, moved=0, failed=0, oldVer=0;
+    const cur=notes(); const ids=new Set(cur.map(n=>String(n.id))); let added=0, moved=0, failed=0, oldVer=0, lostSkip=0, oldVerSample=null;
+    // 停止对连版本号都无法比较的旧格式的支持：整批都没有 longVersion 则拒绝导入
+    if(noteArr.length && noteArr.every(n=>!n || typeof n!=='object' || !n.longVersion)){
+      toast(T('manImportNoVer').replace('{0}', SHORT));
+      return;
+    }
     noteArr.forEach(n=>{ if(!n||typeof n!=='object') return;
-      const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now(), appVersion: __APP_VERSION__}, n);
+      const item=Object.assign({id:newNoteId(), line:0, quote:'', note:'', color:'yellow', created:Date.now(), updated:Date.now(), longVersion: LONG, shortVersion: SHORT}, n);
       item.id=String(item.id||newNoteId()); if(ids.has(item.id)) item.id=newNoteId(); ids.add(String(item.id));
-      if(item.appVersion && item.appVersion!==__APP_VERSION__){ oldVer++; }
-      // 导入前定位校验：完全对上 → 正常导入；唯一匹配 → 自动校准新位置；无法匹配 → 跳过导入
+      // 版本识别仅认 longVersion（长号 YYYYMMDD）；单体无 longVersion 视为无法比较，跳过
+      if(!item.longVersion){ failed++; return; }
+      // 导入前定位校验：
+      // ① 完全对上 → 正常导入；② 唯一匹配（窜到新位置）→ 校准新位置并刷新记载版本号；③ 彻底找不到（原文被删/改）→ 标记 lost 导入，灰度不可打开、引导删除
       const off=noteOffsets(item);
-      if(off===null){ failed++; return; }
-      if(!off[2]){ item.start=off[0]; item.end=off[1]; item.line=offsetToLine(off[0]); moved++; }
-      else added++;
+      if(off===null){
+        lostSkip++; return;
+      }
+      // 定位成功且来自旧版本（长号不一致）才计入 oldVer，并记录首个旧版本样例
+      // （必须在下方刷新 longVersion 之前捕获，否则刷新后无法再按长版本号识别旧便签）
+      if(item.longVersion!==LONG){ oldVer++; if(!oldVerSample) oldVerSample=item.longVersion; }
+      if(!off[2]){
+        item.start=off[0]; item.end=off[1]; item.line=offsetToLine(off[0]);
+        item.longVersion=LONG; item.shortVersion=SHORT; moved++;
+      } else {
+        item.longVersion=LONG; item.shortVersion=SHORT; added++;
+      }
       cur.push(item);
     });
     saveStore('notes', cur); renderNotes();
@@ -9834,9 +9863,8 @@ function openManual(){
     if(added>0) parts.push(T('manImported').replace('{0}', added));
     if(moved>0) parts.push(T('manImportMoved').replace('{0}', moved));
     if(failed>0) parts.push(T('manImportFailPart').replace('{0}', failed));
-    const oldVerNote=cur.find(n=>n.appVersion&&n.appVersion!==__APP_VERSION__);
-    if(oldVer>0 && oldVerNote) parts.push(T('manImportOldVer').replace('{0}', oldVer).replace('{1}', oldVerNote.appVersion));
-    else if(!payloadLang) parts.push(T('manImportNoVer').replace('{0}', __APP_VERSION__));
+    if(lostSkip>0) parts.push(T('manImportLostSkip').replace('{0}', lostSkip));
+    if(oldVer>0 && oldVerSample) parts.push(T('manImportOldVer').replace('{0}', oldVer).replace('{1}', oldVerSample));
     if(parts.length) toast(parts.join('；'));
   }catch(e){ toast(T('manImportFail')); } }; reader.readAsText(file); }
   async function batchDeleteNotes(){ const ids=Array.from(noteListEl.querySelectorAll('.note-check:checked')).map(c=>String(c.dataset.id)); if(!ids.length){ toast(T('manNoSel')); return; } if(!await showConfirm(T('manBatchDelConfirm').replace('{0}', ids.length))) return; ids.forEach(id=>{ const st=stickyEl(id); if(st) st.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(id); }); renderNotes(); toast(T('manBatchDeleted').replace('{0}', ids.length)); }
@@ -9849,35 +9877,56 @@ function openManual(){
     if(opened.length>=5){ const _o=opened[0]; flushSticky(_o); _o.classList.remove('sticky-unsaved'); closeSticky(_o); }
     const box=loadStore('sticky.'+id, null) || defaultBox(opened.length);
     el=document.createElement('div');
-    el.className='sticky-note'+(n.pinned?' pinned':'');
+    el.className='sticky-note'+(n.pinned?' pinned':'')+(n.lost?' lost':'');
     el.dataset.id=n.id; el.dataset.color=n.color||'yellow'; el.dataset.fs=String(box.fs||13);
     el.style.left=Math.max(0, Math.min(window.innerWidth-120, box.x))+'px';
     el.style.top=Math.max(0, Math.min(window.innerHeight-60, box.y))+'px';
     el.style.width=box.w+'px'; el.style.height=box.h+'px';
     el.style.setProperty('--sfs', (box.fs||13)+'px');
-    el.innerHTML=''
-      +'<div class="sticky-head">'
-      +'<span class="sticky-title">'+mdEscape(T('manNoteAt').replace('{0}', n.line))+'</span>'
-      +'<button class="sticky-ico" data-act="fs-" title="'+mdEscape(T('manZoomOut'))+'">A−</button>'
-      +'<button class="sticky-ico" data-act="fs+" title="'+mdEscape(T('manZoomIn'))+'">A+</button>'
-      +'<button class="sticky-ico" data-act="max" title="'+mdEscape(T('manMaximize'))+'">⛶</button>'
-      +'<button class="sticky-ico" data-act="pin" title="'+mdEscape(T('manPin'))+'">'+(n.pinned?'★':'☆')+'</button>'
-      +'<button class="sticky-ico" data-act="close" title="'+mdEscape(T('manClose'))+'">✕</button>'
-      +'</div>'
-      +'<div class="sticky-quote">'+mdEscape(n.quote||'')+'</div>'
-      +'<textarea class="sticky-area" spellcheck="false"></textarea>'
-      +'<div class="sticky-foot">'
-      +'<button class="sticky-btn" data-act="save">'+mdEscape(T('manSave'))+'</button>'
-      +'<button class="sticky-btn" data-act="edit">'+mdEscape(T('manEdit'))+'</button>'
-      +'<button class="sticky-btn" data-act="del">'+mdEscape(T('manDelete'))+'</button>'
-      +'<span class="sticky-colors">'+STICKY_COLORS.map(c=>'<span class="sticky-dot'+((n.color||'yellow')===c?' on':'')+'" data-color="'+c+'" style="background:'+({yellow:'#ffe9a3',green:'#cdeeb0',blue:'#b9dcf7',pink:'#ffc9d8',purple:'#dcc9f7'})[c]+'"></span>').join('')+'</span>'
-      +'</div>'
-      +'<div class="sticky-resize"></div>';
+    if(n.lost){
+      el.innerHTML=''
+        +'<div class="sticky-head">'
+        +'<span class="sticky-title">'+mdEscape(T('manNoteLostTitle'))+'</span>'
+        +'<button class="sticky-ico" data-act="close" title="'+mdEscape(T('manClose'))+'">✕</button>'
+        +'</div>'
+        +'<div class="sticky-lost-box">'
+        +'<div class="sticky-lost-icon">⚠</div>'
+        +'<div class="sticky-lost-msg">'+mdEscape(T('manNoteLostText'))+'</div>'
+        +'<div class="sticky-lost-hint">'+mdEscape(T('manNoteLostHint'))+'</div>'
+        +'</div>'
+        +'<div class="sticky-foot">'
+        +'<button class="sticky-btn" data-act="close">'+mdEscape(T('manClose'))+'</button>'
+        +'<button class="sticky-btn danger" data-act="del">'+mdEscape(T('manDelete'))+'</button>'
+        +'<button class="sticky-btn" data-act="recal">'+mdEscape(T('manNoteRecal'))+'</button>'
+        +'<button class="sticky-btn" data-act="delQ">'+mdEscape(T('manNoteDelQuote'))+'</button>'
+        +'<button class="sticky-btn danger" data-act="delAll">'+mdEscape(T('manNoteDelAll'))+'</button>'
+        +'</div>'
+        +'<div class="sticky-resize"></div>';
+    } else {
+      el.innerHTML=''
+        +'<div class="sticky-head">'
+        +'<span class="sticky-title">'+mdEscape(T('manNoteAt').replace('{0}', n.line))+'</span>'
+        +'<button class="sticky-ico" data-act="fs-" title="'+mdEscape(T('manZoomOut'))+'">A−</button>'
+        +'<button class="sticky-ico" data-act="fs+" title="'+mdEscape(T('manZoomIn'))+'">A+</button>'
+        +'<button class="sticky-ico" data-act="max" title="'+mdEscape(T('manMaximize'))+'">⛶</button>'
+        +'<button class="sticky-ico" data-act="pin" title="'+mdEscape(T('manPin'))+'">'+(n.pinned?'★':'☆')+'</button>'
+        +'<button class="sticky-ico" data-act="close" title="'+mdEscape(T('manClose'))+'">✕</button>'
+        +'</div>'
+        +'<div class="sticky-quote">'+mdEscape(n.quote||'')+'</div>'
+        +'<textarea class="sticky-area" spellcheck="false"></textarea>'
+        +'<div class="sticky-foot">'
+        +'<button class="sticky-btn" data-act="save">'+mdEscape(T('manSave'))+'</button>'
+        +'<button class="sticky-btn" data-act="edit">'+mdEscape(T('manEdit'))+'</button>'
+        +'<button class="sticky-btn" data-act="del">'+mdEscape(T('manDelete'))+'</button>'
+        +'<span class="sticky-colors">'+STICKY_COLORS.map(c=>'<span class="sticky-dot'+((n.color||'yellow')===c?' on':'')+'" data-color="'+c+'" style="background:'+({yellow:'#ffe9a3',green:'#cdeeb0',blue:'#b9dcf7',pink:'#ffc9d8',purple:'#dcc9f7'})[c]+'"></span>').join('')+'</span>'
+        +'</div>'
+        +'<div class="sticky-resize"></div>';
+    }
     layer.appendChild(el);
     const area=el.querySelector('.sticky-area');
-    area.value=n.note||''; area.placeholder=T('manNotePh');
-    bindSticky(el); bringFront(el); el.dataset.mode=forceEdit?'edit':'ro'; applyStickyMode(el); syncStickyVisibility();
-    setTimeout(()=>area.focus(), 30);
+    if(area){ area.value=n.note||''; area.placeholder=T('manNotePh'); }
+    bindSticky(el); bringFront(el); el.dataset.mode=forceEdit && !n.lost ?'edit':'ro'; applyStickyMode(el); syncStickyVisibility();
+    if(area) setTimeout(()=>area.focus(), 30);
   }
   function bindSticky(el){
     const id=el.dataset.id;
@@ -9904,11 +9953,13 @@ function openManual(){
       rz.addEventListener('pointermove',mv); rz.addEventListener('pointerup',up);
       e.preventDefault(); e.stopPropagation();
     });
-    // 编辑：输入防抖自动保存 + 失焦保存
-    area.addEventListener('input', ()=>{ el.classList.add('sticky-dirty'); el.classList.add('sticky-unsaved'); });
-    area.addEventListener('blur', ()=>{});
-    area.addEventListener('dblclick', ()=>{ if(area.readOnly){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(), 0); } });
-    area.addEventListener('keydown', e=>{ if(e.key==='Escape'){ return; } if((e.ctrlKey||e.metaKey) && e.key==='s'){ e.preventDefault(); flushSticky(el); el.classList.remove('sticky-unsaved'); toast(T('manNoteSaved')); } e.stopPropagation(); });
+    // 编辑：输入防抖自动保存 + 失焦保存（lost 便签无 textarea，跳过）
+    if(area){
+      area.addEventListener('input', ()=>{ el.classList.add('sticky-dirty'); el.classList.add('sticky-unsaved'); });
+      area.addEventListener('blur', ()=>{});
+      area.addEventListener('dblclick', ()=>{ if(area.readOnly){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(), 0); } });
+      area.addEventListener('keydown', e=>{ if(e.key==='Escape'){ return; } if((e.ctrlKey||e.metaKey) && e.key==='s'){ e.preventDefault(); flushSticky(el); el.classList.remove('sticky-unsaved'); toast(T('manNoteSaved')); } e.stopPropagation(); });
+    }
     // 颜色
     el.querySelectorAll('.sticky-dot').forEach(d=>d.addEventListener('click', ()=>{ const c=d.dataset.color; el.dataset.color=c; updateNote(id,{color:c}); el.querySelectorAll('.sticky-dot').forEach(x=>x.classList.toggle('on', x===d)); renderNotes(); }));
     // 头/尾按钮
@@ -9918,6 +9969,9 @@ function openManual(){
       if(act==='close'){ closeSticky(el); }
       else if(act==='save'){ flushSticky(el); el.classList.remove('sticky-unsaved'); el.dataset.mode='ro'; applyStickyMode(el); toast(T('manNoteSaved')); }
       else if(act==='del'){ if(!await showConfirm(T('manDelConfirm'))) return; flushSticky(el); el.classList.remove('sticky-unsaved'); removeNote(id); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
+      else if(act==='recal'){ const n=noteById(id); if(n&&n.lost){ const off=noteOffsets(n); if(off){ n.start=off[0]; n.end=off[1]; n.line=offsetToLine(off[0]); n.lost=false; n.longVersion=window.__CUB3D_LONG__||__APP_VERSION__; saveStore('notes', notes()); renderNotes(); closeSticky(el); openSticky(id,true); toast(T('manRecalibrated').replace('{0}',1)); } else { toast(T('manNoteLostTitle')); } } }
+      else if(act==='delQ'){ if(!await showConfirm(T('manDelConfirm'))) return; const n=noteById(id); const q=n?n.quote:''; const arr=notes().filter(x=>!(x.lost && x.quote===q)); saveStore('notes', arr); closeSticky(el); renderNotes(); toast(T('manDeleted')); }
+      else if(act==='delAll'){ const cnt=notes().filter(x=>x.lost).length; if(!cnt) return; if(!await showConfirm(T('manBatchDelConfirm').replace('{0}', cnt))) return; const arr=notes().filter(x=>!x.lost); saveStore('notes', arr); closeSticky(el); renderNotes(); toast(T('manBatchDeleted').replace('{0}', arr.length)); }
       else if(act==='edit'){ el.dataset.mode='edit'; applyStickyMode(el); setTimeout(()=>area.focus(),0); }
       else if(act==='pin'){ const n=noteById(id); const p=!(n&&n.pinned); updateNote(id,{pinned:p}); el.classList.toggle('pinned', p); b.textContent=p?'★':'☆'; b.title=T(p?'manUnpin':'manPin'); syncStickyVisibility(); }
       else if(act==='fs+'||act==='fs-'){ let fs=parseFloat(el.dataset.fs||'13'); fs=Math.max(11, Math.min(26, act==='fs+'?fs*1.12:fs*0.9)); el.dataset.fs=String(fs); el.style.setProperty('--sfs', fs+'px'); saveStickyBox(el); }
@@ -9931,7 +9985,7 @@ function openManual(){
       }
     }));
   }
-  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now(), appVersion: __APP_VERSION__}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
+  function startNoteFromSelection(){ const s=openManual._sel; if(!s || !s.text) return; const id=newNoteId(); const arr=notes(); arr.push({id, line:s.line, quote:s.text, note:'', start:s.start, end:s.end, color:'yellow', created:Date.now(), updated:Date.now(), longVersion: (window.__CUB3D_LONG__||__APP_VERSION__), shortVersion: (window.__CUB3D_VERSION__||__APP_VERSION__)}); saveStore('notes', arr); renderNotes(); floatEl.style.display='none'; openSticky(id, true); }
   function hilites(){ return loadStore('hilites', []); }
   function applyHighlights(){ unwrapHighlights(docEl); let arr=hilites(); let maxId=0; arr.forEach(h=>{ const n=parseInt(h.id,10); if(!isNaN(n)&&n>maxId) maxId=n; }); openManual._hlSeq=maxId; let changed=false; arr=arr.filter(h=>{ if(h.start==null){ const off=findTextOffsets(docEl, h.text); if(off){ h.start=off[0]; h.end=off[1]; changed=true; return true; } changed=true; return false; } return true; });
     // 合并互相重叠/相邻的高亮区间，避免同一文本被多次高亮导致颜色嵌套叠加
@@ -9963,7 +10017,7 @@ function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); 
     // 内置说明书：从同源站点内的 docs/ 目录加载，避免使用外链（GitHub 等）
     const url='docs/'+encodeURIComponent(file);
     docEl.innerHTML='<div class="manual-loading">'+T('manLoading')+'</div>'; tocEl.innerHTML='';
-    try{ const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('http '+res.status); const md=await res.text(); docEl.innerHTML=parseBlocks(md).map(renderBlock).join(''); buildToc(); applyHighlights(); renderNotes(); const z=isTouchMode()?(loadStore('manualMobileFontSize')||16):loadStore('zoom',15); docEl.dataset.zoom=z; docEl.style.fontSize=z+'px'; restoreScroll(); if(docEl.querySelectorAll('.md-block[data-type^="heading"]').length < 100) toast('该语言说明书翻译尚未完成（内容较简体中文版简略）'); if(!isTouchMode()) tocEl.classList.add('open'); }
+    try{ const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('http '+res.status); const md=await res.text(); docEl.innerHTML=parseBlocks(md).map(renderBlock).join(''); buildToc(); applyHighlights(); recalibrateOldNotes(); renderNotes(); const z=isTouchMode()?(loadStore('manualMobileFontSize')||16):loadStore('zoom',15); docEl.dataset.zoom=z; docEl.style.fontSize=z+'px'; restoreScroll(); if(docEl.querySelectorAll('.md-block[data-type^="heading"]').length < 100) toast('该语言说明书翻译尚未完成（内容较简体中文版简略）'); if(!isTouchMode()) tocEl.classList.add('open'); }
     catch(e){ docEl.innerHTML='<div class="manual-error">'+mdEscape(T('manLoadFail'))+'</div>'; }
   }
   function buildToc(){ const heads=chapterHeads(); tocEl.innerHTML='<div class="manual-toc-head"><span>'+mdEscape(T('manToc'))+'</span><button class="manual-toc-close" id="manual-toc-close" title="'+mdEscape(T('manClose'))+'" aria-label="'+mdEscape(T('manClose'))+'">✕</button></div><div class="manual-toc-body">'+heads.map(h=>'<a class="lvl'+h.dataset.level+'" data-line="'+h.dataset.line+'">'+mdEscape((h.textContent||'').trim())+'</a>').join('')+'</div>'; const tc=document.getElementById('manual-toc-close'); if(tc) tc.addEventListener('click', ()=>{ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); }); tocEl.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{ const ln=parseInt(a.dataset.line,10); jumpToLine(ln); if(isTouchMode()){ tocEl.classList.remove('open'); notePanel.classList.remove('open'); maskEl.classList.remove('open'); } })); }

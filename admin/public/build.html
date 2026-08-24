@@ -4,9 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>管理后台 · Cub3D Editor 打包分发</title>
+<title>管理后台 · Cub3D Editor 本地打包</title>
 <style>
-  /* ============ 样式与「更新话术发布系统」(manager/public/index.html) 完全一致 ============ */
   :root {
     --bg-deep: #0c0e16; --bg-panel: rgba(20, 22, 34, 0.82); --bg-panel-solid: #14161f;
     --accent: #6ee7ff; --accent-2: #c084fc; --accent-3: #fb7185; --warn: #fbbf24; --ok: #34d399;
@@ -30,7 +29,6 @@
   .tag.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
   .tag.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
   .tag.stop { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); }
-  .tag.op-danger { background: color-mix(in srgb, var(--accent-3) 18%, transparent); color: var(--accent-3); border-color: color-mix(in srgb, var(--accent-3) 45%, transparent); font-weight:600; }
 
   .panel { width: min(980px, 100%); border:1px solid var(--border); border-radius: var(--radius); background: var(--bg-panel-solid); overflow:hidden; }
   .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
@@ -62,12 +60,11 @@
   .btn:disabled { opacity:.5; cursor:not-allowed; }
   .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0a0a14; font-weight:600; border-color:transparent; }
   .btn.danger { border-color: color-mix(in srgb, var(--accent-3) 55%, transparent); color: var(--accent-3); font-weight:600; }
-  .btn.danger:hover { background: color-mix(in srgb, var(--accent-3) 14%, transparent); border-color: var(--accent-3); }
   .btn.small { padding:4px 10px; font-size:12px; }
   .btn-sep { width:1px; height:20px; background: rgba(255,255,255,.10); }
   a.btn { text-decoration:none; display:inline-flex; align-items:center; }
 
-  /* ===== 登录门（与更新话术系统一致） ===== */
+  /* ===== 登录门 ===== */
   #login-gate {
     position: fixed; inset:0; z-index: 99999; display:flex; align-items:center; justify-content:center;
     background: radial-gradient(900px 480px at 50% -10%, rgba(192,132,252,.14), transparent 60%), var(--bg-deep);
@@ -101,7 +98,7 @@
   .lg-remember:hover { color: var(--text); }
   .lg-msg { font-size:12px; color:var(--accent-3); min-height:16px; text-align:center; }
 
-  /* ===== 卡片式包类型选择（仿安装包卡片） ===== */
+  /* ===== 卡片式包类型选择 ===== */
   .pkg-cards { display:flex; flex-direction:column; gap:4px; margin-top:12px; }
   .pkg-cards-row { display:flex; flex-wrap:wrap; gap:10px; overflow-x:auto; padding-bottom:2px; }
   .pkg-card {
@@ -120,24 +117,7 @@
   .pkg-card .pk-file { font-size:11px; color:var(--text); word-break:break-all; line-height:1.5; margin-top:6px; font-family: ui-monospace, Menlo, Consolas, monospace; }
   .pkg-card .pk-size { font-size:11px; color:var(--text-dim); margin-top:4px; }
 
-  /* 分发渠道卡片（境内 / 境外） */
-  .chan-cards { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-  .chan-card {
-    flex:1 1 260px; border:1px solid var(--border); border-radius:12px; padding:12px 14px; cursor:pointer;
-    background: var(--control-bg); transition:all .18s; user-select:none; position:relative;
-  }
-  .chan-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
-  .chan-card.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: 0 0 0 1px var(--accent) inset; }
-  .chan-card.sel::after { content:'✓'; position:absolute; top:10px; right:12px; color:var(--accent); font-weight:700; }
-  .chan-card .ch-title { font-size:13px; font-weight:600; }
-  .chan-card .ch-sub { font-size:11px; color:var(--text-dim); margin-top:5px; line-height:1.6; word-break:break-all; }
-  .chan-card .ch-badge { font-size:10px; padding:2px 7px; border-radius:999px; margin-right:6px; }
-  .chan-card .ch-badge.cn { background: color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); }
-  .chan-card .ch-badge.gh { background: color-mix(in srgb, var(--accent-2) 14%, transparent); color:var(--accent-2); }
-  /* 未配置令牌的境外卡：灰度禁用，禁止勾选 */
-  .chan-card.disabled { opacity:.45; cursor:not-allowed; pointer-events:none; filter:grayscale(1); }
-
-  /* ===== 进度 / 任务面板（仿发布操作日志） ===== */
+  /* ===== 进度 / 任务面板 ===== */
   .task-list { display:flex; flex-direction:column; gap:10px; }
   .task-empty { font-size:13px; color:var(--text-dim); padding:16px 4px; text-align:center; }
   .task-item { border:1px solid var(--border); border-radius:10px; padding:12px 14px; background: var(--bg-panel); }
@@ -149,7 +129,7 @@
   .task-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; background: var(--bg-deep); }
   .task-row .pl { font-size:12.5px; font-weight:600; width:96px; flex-shrink:0; }
   .task-row .pl.api { color: var(--accent); }
-  .task-row .stbar { flex:1; font-size:11.5px; color: var(--text-dim); }
+  .task-row .stbar { flex:1; font-size:11.5px; color:var(--text-dim); }
   .task-row .stbar.ok { color: var(--ok); }
   .task-row .stbar.fail { color: var(--accent-3); }
   .task-row .stbar.info { color: var(--accent); }
@@ -159,14 +139,8 @@
   pre { background: var(--bg-deep); border:1px solid var(--border); border-radius:10px; padding:12px; overflow:auto;
     font-family: ui-monospace, Menlo, Consolas, monospace; font-size:11.5px; color:var(--text-dim); line-height:1.6; max-height:260px; }
   .foot { font-size:11.5px; color:var(--text-dim); opacity:.7; }
-  .toast {
-    position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-16px); padding:9px 18px; z-index:9999;
-    background: var(--bg-panel-solid); border:1px solid var(--accent); border-radius:26px; color:var(--text); font-size:12.5px;
-    opacity:0; pointer-events:none; transition:all .28s; max-width:86vw; text-align:center;
-  }
-  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-  /* 浮窗（修改密码 / 通用确认，与更新话术系统一致） */
+  /* 浮窗（修改密码 / 通用确认） */
   .pwd-modal {
     position: fixed; inset:0; z-index: 90000; display:none; align-items:center; justify-content:center;
     background: rgba(6,8,16,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
@@ -185,6 +159,15 @@
   .st.fail { background: color-mix(in srgb, var(--accent-3) 16%, transparent); color: var(--accent-3); }
   .st.run { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
   .st.idle { background: color-mix(in srgb, var(--text-dim) 16%, transparent); color: var(--text-dim); }
+
+  .hint-box { font-size:12px; line-height:1.8; background:color-mix(in srgb,var(--accent) 8%,transparent); border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); border-radius:8px; padding:10px 12px; color:var(--text-dim); }
+  .hint-box b { color: var(--accent); }
+  .toast {
+    position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-16px); padding:9px 18px; z-index:9999;
+    background: var(--bg-panel-solid); border:1px solid var(--accent); border-radius:26px; color:var(--text); font-size:12.5px;
+    opacity:0; pointer-events:none; transition:all .28s; max-width:86vw; text-align:center;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -204,27 +187,33 @@
     </div>
   </div>
 
-  <!-- 主界面 -->
+  <!-- 主界面：本地打包 -->
   <div id="admin-main" style="display:none; width:100%; flex-direction:column; align-items:center; gap:18px;">
     <div class="page-head">
-      <h1>本地打包 · 在线分发 <span class="tag">管理站点 · 下辖</span></h1>
+      <h1>本地打包 <span class="tag">管理站点 · 下辖</span></h1>
       <div class="btn-row" style="justify-content:center;">
         <a class="btn" href="../" title="返回门户">← 返回门户</a>
-        <a class="btn" href="../update/" title="更新话术发布系统">📢 串门→更新话术</a>
+        <a class="btn" href="../distribute/" title="分发至服务器">📦 串门→分发</a>
+        <a class="btn" href="../update/" title="更新推送">📢 串门→更新推送</a>
         <button class="btn" id="btn-pwd">🔑 修改密码</button>
         <button class="btn" id="btn-logout">退出登录</button>
       </div>
     </div>
 
-    <!-- ① 统一版本号 -->
+    <!-- ① 统一版本号（短号人工输入） -->
     <div class="panel">
-      <div class="panel-head"><h2>① 统一版本号</h2><span class="hint">一次性写入根 / PC / Android 三个 package.json，双端一致</span></div>
+      <div class="panel-head"><h2>① 统一短版本号（X.X.X）</h2><span class="hint">写入根 / PC / Android 三个 package.json，双端一致；长版本号（打包时间 YYYYMMDD）由打包自动注入</span></div>
       <div class="panel-body">
         <div class="form-grid">
           <div class="field">
-            <label>统一版本号（X.X.X）</label>
+            <label>短版本号（X.X.X，人工输入）</label>
             <input type="text" id="f-ver" placeholder="例如 1.3.0" />
             <span class="mini" id="ver-cur">当前线上版本：—</span>
+          </div>
+          <div class="field">
+            <label>长版本号（自动，打包时间 YYYYMMDD）</label>
+            <input type="text" id="f-longver" readonly placeholder="打包时自动注入，预览态 00000000" style="background:var(--bg-deep); color:var(--text-dim); cursor:not-allowed;" />
+            <span class="mini">PC/安卓打包时注入「长+短」；测试未打包态长号=00000000</span>
           </div>
         </div>
         <div class="btn-row">
@@ -244,46 +233,18 @@
       </div>
     </div>
 
-    <!-- ③ 境内外分发 -->
-    <div class="panel">
-      <div class="panel-head"><h2>③ 境内外分发</h2><span class="hint">打包完成后可分发：境内 downloads/ 目录 + 境外 GitHub Pages / Releases（Web 端默认一并发布）</span></div>
-      <div class="panel-body">
-        <div class="chan-cards" id="dist-cards"></div>
-        <div class="field" style="margin-top:12px;">
-          <label>GitHub Release 标签（境外分发用，自动派生）</label>
-          <input type="text" id="f-tag" readonly placeholder="由①的版本号自动生成，如 v1.3.0" style="background:var(--bg-deep); color:var(--text-dim); cursor:not-allowed;" />
-          <span class="mini">无需手动填写：标签 = <b style="color:var(--accent-2)">v</b> + ①统一版本号。只勾选「境外 GitHub」才会使用。</span>
-        </div>
-        <div id="gh-guide" class="hint" style="display:none; margin-top:10px; font-size:12px; line-height:1.8; background:color-mix(in srgb,var(--accent-3) 10%,transparent); border:1px solid color-mix(in srgb,var(--accent-3) 30%,transparent); border-radius:8px; padding:10px 12px;">
-          🚧 <b>境外分发尚未启用</b>：服务端缺少 <code>GH_TOKEN</code> 环境变量，无法上传到 GitHub Releases。<br>
-          启用步骤（在部署服务器上）：<br>
-          1. 申请 GitHub Personal Access Token（<code>repo</code> 权限）→ <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--accent-2);">github.com/settings/tokens</a><br>
-          2. 在 <code>/etc/cub3d-manager.env</code> 中设置：<code>GH_REPO=yushichadao/Cub3D-Editor</code> 与 <code>GH_TOKEN=你的token</code><br>
-          3. 重启管理器服务：<code>sudo systemctl restart cub3d-manager</code>（或对应启动方式）<br>
-          配置后刷新本页，境外卡片即可勾选。
-        </div>
-      </div>
-    </div>
-
     <!-- 主操作 -->
     <div class="panel">
-      <div class="panel-head"><h2>🚀 开始打包与分发</h2><span class="hint" id="main-hint">流程：统一版本号 → 本地打包 →（可选）境内外分发</span></div>
+      <div class="panel-head"><h2>🚀 开始打包</h2><span class="hint" id="main-hint">流程：统一版本号 → 勾选包类型 → 本地构建（自动注入长+短版本号）</span></div>
       <div class="panel-body">
         <div class="btn-row">
-          <button class="btn primary" id="btn-pack">① ② ③ 打包（本地构建）</button>
-          <button class="btn" id="btn-dist" disabled>③ 分发到所选渠道</button>
+          <button class="btn primary" id="btn-pack">①② 打包（本地构建）</button>
           <button class="btn" id="btn-refresh-state">🔄 刷新状态</button>
         </div>
         <div id="pack-area" style="margin-top:14px;"></div>
-      </div>
-    </div>
-
-    <!-- 打包 / 分发 任务面板 -->
-    <div class="panel">
-      <div class="panel-head"><h2>任务进度 · 打包 + 分发状态</h2><span class="hint" id="task-hint">打包逐类型进行，分发逐渠道进行</span></div>
-      <div class="panel-body">
-        <div id="task-list" class="task-list">
-          <div class="task-empty" id="task-empty">暂无任务。点击「打包」后会显示各包构建进度，完成后可点「分发」。</div>
+        <div class="hint-box" style="margin-top:12px;">
+          📌 打包完成后请到 <b>「分发至服务器」</b> 页面将产物分发到境内 downloads / 境外 GitHub。<br>
+          长版本号（打包日 YYYYMMDD）与短版本号（上方 X.X.X）会在构建时一并注入安装包；Web 端无短号，仅注入长版本号（在分发时写入）。
         </div>
       </div>
     </div>
@@ -305,19 +266,6 @@
     </div>
   </div>
 
-  <!-- 通用确认弹窗 -->
-  <div class="pwd-modal" id="cfm-modal">
-    <div class="pwd-card">
-      <h3 id="cfm-title">确认</h3>
-      <p id="cfm-msg" style="font-size:13px; color:var(--text-dim); line-height:1.8; margin:2px 0 4px;"></p>
-      <p class="pwd-msg" id="cfm-err"></p>
-      <div class="pwd-row" style="justify-content:flex-end;">
-        <button class="btn primary" id="cfm-yes">确定</button>
-        <button class="btn" id="cfm-no">取消</button>
-      </div>
-    </div>
-  </div>
-
   <div class="toast" id="toast"></div>
 
 <script>
@@ -325,7 +273,6 @@
   'use strict';
   const $ = id => document.getElementById(id);
 
-  // 密码框自绘眼睛（与更新话术系统一致）
   (function initPwdEyes(){
     document.querySelectorAll('input[type="password"]').forEach(function(inp){
       if(inp.dataset.pwdEye) return;
@@ -349,7 +296,6 @@
     });
   })();
 
-  /* ===== 鉴权（与更新话术系统完全一致） ===== */
   const LS_TOKEN = 'cub3d_admin_token';
   const SS_TOKEN = 'cub3d_admin_sess';
   const LS_AUTO = 'cub3d_admin_auto';
@@ -363,15 +309,11 @@
   function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove('show'),1900); }
 
   function api(path, opts){
-    // 打包分发下辖页面：打包相关接口走 /packer 前缀；登录/密码/鉴权走管理站点根，
-    // 与更新话术系统共享同一登录态（同一账号与密码）。
     if (/^api\/(state|version|pack|distribute)$/.test(path)) path = '/packer/' + path;
-    else if (/^packer\//.test(path)) { /* 已是前缀写法 */ }
     opts = opts || {};
     opts.headers = opts.headers || {};
     if (token) opts.headers['X-Admin-Token'] = token;
-    if (opts.raw) { /* FormData：不 JSON 化、不手动设 Content-Type，由浏览器自动加 boundary */ }
-    else if (opts.body && typeof opts.body === 'object') { opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(opts.body); }
+    if (opts.body && typeof opts.body === 'object') { opts.headers['Content-Type']='application/json'; opts.body=JSON.stringify(opts.body); }
     return fetch(path, opts).then(r => r.json().then(j => ({status:r.status, body:j})).then(function(res){
       if (res.status === 401 && res.body && res.body.error === 'unauthorized') {
         remStore(LS_TOKEN); remStore(LS_AUTO); try { sessionStorage.removeItem(SS_TOKEN); } catch(e){}
@@ -402,7 +344,6 @@
   /* ===== 数据状态 ===== */
   let state = { version:'', pkgTypes:[], ghEnabled:false, downloadsDir:'', pack:null };
   let selectedTypes = new Set();
-  let selectedTargets = new Set();   // 'cn' / 'github'
   let pollTimer = null;
 
   function loadState(){
@@ -412,10 +353,9 @@
   }
 
   function renderStatic(){
-    $('ver-cur').textContent = '当前一致版本号：' + (state.version || '—');
+    $('ver-cur').textContent = '当前一致短版本号：' + (state.version || '—');
     if(!$('f-ver').value) $('f-ver').value = state.version || '';
 
-    // 包类型卡片（默认全选 3 包）
     selectedTypes = new Set((state.pkgTypes||[]).map(t => t.key));
     const tc = $('type-cards'); tc.innerHTML='';
     (state.pkgTypes||[]).forEach(function(t){
@@ -425,108 +365,51 @@
         '<span class="pk-name">'+t.kind+'</span></div><div class="pk-file">'+t.label+'</div>';
       div.addEventListener('click', function(){
         if(selectedTypes.has(t.key)) selectedTypes.delete(t.key); else selectedTypes.add(t.key);
-        div.classList.toggle('sel'); syncDistEnabled();
+        div.classList.toggle('sel');
       });
       tc.appendChild(div);
     });
-
-    // 分发渠道卡片：境内恒可选；境外未配 GH_TOKEN 时灰度禁用
-    const dc=$('dist-cards'); dc.innerHTML='';
-    const cn={key:'cn',title:'境内站点 downloads/',label:'复制到境内 downloads/ 目录',badge:'cn',sub:state.downloadsDir||'（同更新话术系统目录）'};
-    const gh={key:'github',title:'境外 GitHub Releases',label:state.ghEnabled?'上传到 GitHub Releases（'+ (state.GH_REPO||'') +'）':'未配置 GH_TOKEN，无法境外分发',badge:'gh',sub:state.ghEnabled?'配置有效':'服务端缺少 GH_TOKEN 环境变量',disabled:!state.ghEnabled};
-    [cn,gh].forEach(function(c){
-      const div=document.createElement('div');
-      div.className='chan-card'+(selectedTargets.has(c.key)?' sel':'')+(c.disabled?' disabled':'');
-      div.innerHTML='<div class="ch-title"><span class="ch-badge '+c.badge+'">'+(c.badge==='cn'?'境内':'境外')+'</span>'+c.title+'</div>'+
-        '<div class="ch-sub">'+c.label+'</div>'+
-        (c.sub?'<div class="ch-sub">'+c.sub+'</div>':'');
-      if(!c.disabled){
-        div.addEventListener('click', function(){
-          if(selectedTargets.has(c.key)) selectedTargets.delete(c.key); else selectedTargets.add(c.key);
-          div.classList.toggle('sel'); syncDistEnabled();
-        });
-      }
-      dc.appendChild(div);
-    });
-    // 境外引导框：未启用时显示配置步骤
-    $('gh-guide').style.display = state.ghEnabled ? 'none' : 'block';
-    // GitHub 标签自动派生 = v + ①版本号（无需手动填写）
-    const baseVer = (state.version || $('f-ver').value || '').trim();
-    $('f-tag').value = baseVer ? ('v' + baseVer) : '';
-    syncDistEnabled();
   }
 
-  // 离线检测：无网时不能推送到云端（客户端拉不到更新），分发按钮灰度禁用并提示
-  function isOffline(){
-    return (typeof navigator !== 'undefined' && navigator.onLine === false);
-  }
-  window.addEventListener('offline', function(){ syncDistEnabled(); toast('已离线：分发到云端已禁用，本地打包不受影响'); });
-  window.addEventListener('online', function(){ syncDistEnabled(); });
-
-  // 分发按钮：只有打包成功且有勾选渠道才启用；灰度逻辑与更新话术一致
-  function syncDistEnabled(){
-    const okSteps = (state.pack && state.pack.steps || []).filter(s=>s.status==='ok');
-    const can = okSteps.length>0 && selectedTargets.size>0 && !state.pack?.running;
-    const offline = isOffline();
-    $('btn-dist').disabled = !can || offline;
-    if (offline && can) $('btn-dist').title = '离线时无法推送到云端，联网后可分发';
-  }
-
-  /* ===== 统一版本号 ===== */
+  /* ===== 统一版本号（短号） ===== */
   $('btn-apply-ver').addEventListener('click', function(){
     const ver=$('f-ver').value.trim();
     if(!ver){ toast('请填写版本号，格式 X.X.X（如 1.3.0，不要带 v 前缀）'); return; }
     if(!/^\d+\.\d+\.\d+$/.test(ver)){ toast('版本号格式错误：必须是 X.X.X（三位数字，如 1.3.0），不要带 v 前缀'); return; }
     api('api/packer/version',{method:'POST',body:{version:ver}}).then(function(r){
-      if(r.body&&r.body.ok){ toast('已写入统一版本号 '+ver+'（更新 '+r.body.filesUpdated+' 个 package.json）'); state.version=ver; renderStatic(); }
+      if(r.body&&r.body.ok){ toast('已写入统一短版本号 '+ver+'（更新 '+r.body.filesUpdated+' 个 package.json）'); state.version=ver; renderStatic(); }
       else toast('写版本号失败：'+(r.body&&r.body.error||'未知错误'));
     }).catch(function(){ toast('无法连接后端'); });
   });
-  $('btn-pull-ver').addEventListener('click', function(){ loadState().then(function(){ toast('已拉取当前版本号 '+ (state.version||'—')); }); });
+  $('btn-pull-ver').addEventListener('click', function(){ loadState().then(function(){ toast('已拉取当前短版本号 '+ (state.version||'—')); }); });
 
-  // ① 版本号输入时实时净化：去掉 v 前缀与非数字/点字符，并同步派生 GitHub 标签
   $('f-ver').addEventListener('input', function(){
     let v = $('f-ver').value.replace(/^v+/i,'').replace(/[^0-9.]/g,'');
     if(v !== $('f-ver').value){ $('f-ver').value = v; }
-    $('f-tag').value = v ? ('v' + v) : '';
   });
 
-  /* ===== 打包 ===== */
+  /* ===== 打包（注入长+短版本号） ===== */
   $('btn-pack').addEventListener('click', function(){
     const ver=$('f-ver').value.trim();
-    if(!/^\d+\.\d+\.\d+$/.test(ver)){ toast('请先填写合法版本号'); return; }
+    if(!/^\d+\.\d+\.\d+$/.test(ver)){ toast('请先填写合法短版本号'); return; }
     if(selectedTypes.size===0){ toast('请至少勾选一种包类型'); return; }
     $('btn-pack').disabled=true;
     api('api/packer/pack',{method:'POST',body:{version:ver, types:[...selectedTypes]}}).then(function(r){
-      if(r.body&&r.body.ok){ toast('打包任务已启动 → '+r.body.outDir); startPoll(); }
+      if(r.body&&r.body.ok){ toast('打包任务已启动 → '+r.body.outDir+'（构建时注入长+短版本号）'); startPoll(); }
       else { $('btn-pack').disabled=false; toast('打包启动失败：'+(r.body&&r.body.error||'未知错误')); }
     }).catch(function(){ $('btn-pack').disabled=false; toast('无法连接后端'); });
   });
 
-  /* ===== 分发 ===== */
-  $('btn-dist').addEventListener('click', function(){
-    if(selectedTargets.size===0){ toast('请至少勾选一个分发渠道'); return; }
-    const tag=$('f-tag').value.trim();
-    $('btn-dist').disabled=true;
-    api('api/packer/distribute',{method:'POST',body:{targets:[...selectedTargets], tag:tag, web:true}}).then(function(r){
-      if(r.body&&r.body.ok){ toast('已发起分发任务'); startPoll(); }
-      else { $('btn-dist').disabled=false; toast('分发失败：'+(r.body&&r.body.error||'未知错误')); }
-    }).catch(function(){ $('btn-dist').disabled=false; toast('无法连接后端'); });
-  });
-
   $('btn-refresh-state').addEventListener('click', function(){ loadState().then(function(){ toast('已刷新状态'); }); });
 
-  /* ===== 轮询打包/分发包状态 ===== */
+  /* ===== 轮询打包状态 ===== */
   function startPoll(){
     if(pollTimer) clearInterval(pollTimer);
     pollTimer=setInterval(function(){
       api('api/packer/state').then(function(r){
         if(r.body&&r.body.ok){ state.pack=r.body.pack; renderPack(r.body.pack);
           if(!r.body.pack || !r.body.pack.running){
-            // 分发是否仍在进行
-            const dist=r.body.pack&&r.body.pack.dist;
-            const distRunning = dist && ['cn','github'].some(k=>dist[k]&&dist[k].status==='running');
-            if(!distRunning){ clearInterval(pollTimer); pollTimer=null; $('btn-pack').disabled=false; syncDistEnabled(); }
+            clearInterval(pollTimer); pollTimer=null; $('btn-pack').disabled=false;
           }
         }
       });
@@ -540,11 +423,6 @@
     if(n>=1024) return (n/1024).toFixed(0)+' KB';
     return n+' B';
   }
-  function nowLocal(){
-    const d=new Date(); const p=x=>String(x).padStart(2,'0');
-    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
-  }
-
   function statusCls(s){ return s==='ok'?'ok':(s==='fail'?'fail':(s==='running'?'run':(s==='needs-local'?'warn':'idle'))); }
   function statusText(s){ return s==='ok'?'✓ 成功':(s==='fail'?'✗ 失败':(s==='running'?'构建中…':(s==='needs-local'?'需本机打包':'等待中'))); }
 
@@ -564,22 +442,11 @@
       html+='<div class="task-row"><span class="pl '+(s.platform==='pc'?'api':'')+'">'+s.label+'</span>'+
         '<span class="stbar '+stCls+'">'+spin+(s.msg||statusText(s.status))+'</span></div>';
     });
-    // 分发阶段
-    if(pack.dist){
-      ['cn','github'].forEach(function(k){
-        const d=pack.dist[k]; if(!d||d.status==='idle') return;
-        const name=k==='cn'?'境内 downloads/':'境外 GitHub';
-        const spin=d.status==='running'?'<span class="spin"></span>':'';
-        html+='<div class="task-row"><span class="pl '+(k==='cn'?'api':'')+'">分发·'+name+'</span>'+
-          '<span class="stbar '+statusCls(d.status)+'">'+spin+(d.msg||statusText(d.status))+'</span></div>';
-      });
-    }
     html+='</div></div>';
     wrap.innerHTML=html;
-    syncDistEnabled();
   }
 
-  /* ===== 修改密码（与更新话术系统一致） ===== */
+  /* ===== 修改密码 ===== */
   function openPwd(){ $('pm-old').value=''; $('pm-new').value=''; $('pm-new2').value=''; $('pm-msg').textContent=''; $('pwd-modal').classList.add('show'); }
   function closePwd(){ $('pwd-modal').classList.remove('show'); }
   $('btn-pwd').addEventListener('click', openPwd);
@@ -597,25 +464,16 @@
     }).catch(function(){ $('pm-save').disabled=false; $('pm-msg').textContent='无法连接后端'; });
   });
 
-  /* ===== 确认弹窗 ===== */
-  let cfmOnYes=null;
-  function showConfirm(title,msg,yesLabel,noLabel,onYes){ $('cfm-title').textContent=title; $('cfm-msg').textContent=msg; $('cfm-err').textContent=''; $('cfm-yes').textContent=yesLabel||'确定'; $('cfm-no').textContent=noLabel||'取消'; cfmOnYes=onYes; $('cfm-modal').classList.add('show'); }
-  function hideConfirm(){ $('cfm-modal').classList.remove('show'); cfmOnYes=null; }
-  $('cfm-yes').addEventListener('click', function(){ const cb=cfmOnYes; hideConfirm(); if(cb) cb(); });
-  $('cfm-no').addEventListener('click', hideConfirm);
-
-  /* ===== 初始化（自动登录恢复，与更新话术系统一致） ===== */
+  /* ===== 初始化 ===== */
   function tryAutoLogin(){
     let saved=null;
     try { saved = localStorage.getItem(LS_TOKEN) || sessionStorage.getItem(SS_TOKEN); } catch(e){}
-    // 业务页：未登录直接回门户（门户负责登录门）
     if(!saved){ location.href = new URL('../', location.href).href; return; }
     token=saved; enterAdmin();
     api('api/portal/auth-check').then(function(r){ if(r.status===401){ remStore(LS_TOKEN); try{sessionStorage.removeItem(SS_TOKEN);}catch(e){} token=''; location.href = new URL('../', location.href).href; } })
       .catch(function(){});
   }
-  // 预填默认版本号显示
-  $('ver-cur').textContent='当前一致版本号：加载中…';
+  $('ver-cur').textContent='当前一致短版本号：加载中…';
   tryAutoLogin();
   loadState();
 })();

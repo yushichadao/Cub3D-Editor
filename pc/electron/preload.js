@@ -78,14 +78,6 @@ const api = {
     onChanged: cb => on('langpack:changed', cb)
   },
 
-  sticky: {
-    create: note => invoke('sticky:create', note),
-    close: id => invoke('sticky:close', id),
-    list: () => invoke('sticky:list'),
-    sync: payload => ipcRenderer.send('sticky:sync', payload),
-    onSync: cb => on('sticky:sync', cb)
-  },
-
   shell: {
     openExternal: url => invoke('shell:open-external', url)
   },
