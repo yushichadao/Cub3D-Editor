@@ -185,3 +185,6 @@ pc/dist/
 **/out/
 **/dist/
 
+# ===== 安装包产物不入库（经 GitHub Releases 分发）=====
+downloads/
+

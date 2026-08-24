@@ -741,8 +741,8 @@
           </span>
         </div>
         <div class="acts">
-          <a class="lbtn main" data-dl="Cub3D-Editor-Setup-1.2.0-x64.exe" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup-1.2.0-x64.exe" data-i18n="plat3.setup">下载安装版</a>
-          <a class="lbtn" data-dl="Cub3D-Editor-Portable-1.2.0-x64.exe" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Portable-1.2.0-x64.exe" data-i18n="plat3.portable">下载便携版</a>
+          <a class="lbtn main" data-dl="Cub3D-Editor-Setup-1.0.0-x64.exe" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Setup-1.0.0-x64.exe" data-i18n="plat3.setup">下载安装版</a>
+          <a class="lbtn" data-dl="Cub3D-Editor-Portable-1.0.0-x64.exe" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-Portable-1.0.0-x64.exe" data-i18n="plat3.portable">下载便携版</a>
         </div>
       </div>
       <div class="card reveal">
@@ -755,7 +755,7 @@
           <span><b data-i18n="plat.size">体积</b> <span class="size" data-size-for="apk">…</span></span>
         </div>
         <div class="acts">
-          <a class="lbtn main" data-dl="Cub3D-Editor-release-1.2.0-universal.apk" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-release-1.2.0-universal.apk" data-i18n="plat4.btn">下载 .apk</a>
+          <a class="lbtn main" data-dl="Cub3D-Editor-release-1.0.0-universal.apk" href="https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/Cub3D-Editor-release-1.0.0-universal.apk" data-i18n="plat4.btn">下载 .apk</a>
         </div>
       </div>
     </div>
@@ -948,9 +948,9 @@ const dl = f => SITE.ovs.releaseBase + f;
 /* ============ 下载文件名兜底与“当前站”动态解析结果（key：setup/portable/apk） ============ */
 /* 兜底：动态解析完成前/失败时使用（与 HTML 内 data-dl 一致） */
 const FALLBACK_DL = {
-  setup:    'Cub3D-Editor-Setup-1.2.0-x64.exe',
-  portable: 'Cub3D-Editor-Portable-1.2.0-x64.exe',
-  apk:      'Cub3D-Editor-release-1.2.0-universal.apk'
+  setup:    'Cub3D-Editor-Setup-1.0.0-x64.exe',
+  portable: 'Cub3D-Editor-Portable-1.0.0-x64.exe',
+  apk:      'Cub3D-Editor-release-1.0.0-universal.apk'
 };
 /* 解析结果：{ key: {file, tag} }，由下方动态拉取按“当前站源”填充（tag 供境外缺失 key 回退历史 Release 用） */
 const LATEST_DL = { setup:null, portable:null, apk:null };

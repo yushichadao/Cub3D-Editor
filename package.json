@@ -17,5 +17,8 @@
   "homepage": "https://github.com/yushichadao/Cub3D-Editor#readme",
   "dependencies": {
     "opencc-js": "^1.4.2"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1"
   }
 }

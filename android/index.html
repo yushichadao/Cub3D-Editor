@@ -1195,7 +1195,7 @@
 .md-block code { background:var(--control-bg); border:1px solid var(--border); border-radius:4px; padding:1px 5px; font-size:0.83em; font-family:ui-monospace,Menlo,Consolas,monospace; }
 .md-block hr { border:none; border-top:1px solid var(--border); margin:14px 0; }
 </style>
-  <meta name="bootv" content="20260824">
+  <meta name="bootv" content="20260825">
   <script>
     // —— 加载页（缓冲页）轻量翻译：在主应用 I18N/_t 就绪前即可使用 ——
     // 简体中文作为默认与回退；其余语言来自 window.__packs（language/ 目录，已在 <head> 注入）。
@@ -1921,7 +1921,7 @@ html[dir="rtl"] .num-field{ direction:rtl; }
 // 原则：加载未完成前绝不隐藏 loader，避免暴露半成品/错乱界面。
 
 // 发版版本号（与 <head> 中 meta[name=bootv] 保持一致）
-const BOOTV = '20260824';
+const BOOTV = '20260825';
 // 未打包态（预览态）占位：长版本号=BOOTV（真实 YYYYMMDD）、短版本号=X.X.X；构建时由注入脚本覆盖为真实值。
 // 注意不能预置 '00000000' 之类的非空占位：会使 `__CUB3D_LONG__` 短路，导致便签 longVersion 全被写成占位、旧版本角标永不触发。
 window.__CUB3D_LONG__ = window.__CUB3D_LONG__ || BOOTV;

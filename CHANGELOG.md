@@ -1,5 +1,15 @@
 # 更新记录 / Changelog
 
+## v1.0.0（2026-08-25）
+
+新起点发布（GitHub 首个 Release，安装包文件名携带短版本号 `1.0.0`；软件内部仅使用长版本号 `20260825`）。
+
+- 撤除：在线更新系统与配套服务器管理端（归档至 `_retired/`），项目回归纯静态分发；安装包统一经 GitHub Releases 附件分发。
+- 撤除：短版本号 `__CUB3D_VERSION__`（X.X.X）的注入与全部对外界面显示，仅保留长版本号 `__CUB3D_LONG__` / `BOOTV`（YYYYMMDD）。
+- 修复：`tools/check-i18n-keys.mjs` 语言包扫描字符串时缺少无条件前进步进导致的死循环（阻塞构建）。
+
+---
+
 ## v1.2.1（2026-08-22）
 
 本次仅发布 Android APK（Cub3D-Editor-release-1.2.1-universal.apk）。
