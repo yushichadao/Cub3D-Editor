@@ -159,6 +159,7 @@ _ref.err
 _ref2.err
 *.tmp.err
 tools/_*.mjs
+tools/_*.js
 tools/_*.err
 tools/_*.out
 

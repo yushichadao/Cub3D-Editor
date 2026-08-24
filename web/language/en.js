@@ -821,8 +821,5 @@ window.__packs['en'] = {
   "whyNoColorSome": "contains {0} colorless object(s) (recolor them to edit)",
   "whyTexShapePat": "textured shapes must clear their texture first",
   "whyTextPat": "text does not support pattern / texture",
-  "wireframe": "Wireframe",
-  "updateNoticeTitle": "A new Web version is available",
-  "updateNoticeBody": "The web app has been updated to a new version. We recommend refreshing to get the latest features and fixes. Click \"I understand\" to keep using the current page (no automatic refresh).",
-  "updateKnown": "I understand"
+  "wireframe": "Wireframe"
 };

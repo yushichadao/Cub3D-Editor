@@ -821,8 +821,5 @@ window.__packs['fr'] = {
   "whyNoColorSome": "contient {0} objet(s) sans couleur (recolorez-les pour modifier)",
   "whyTexShapePat": "les formes texturées doivent d’abord effacer leur texture",
   "whyTextPat": "le texte ne prend pas en charge le motif / la texture",
-  "wireframe": "Fil de fer",
-  "updateNoticeTitle": "Une nouvelle version Web est disponible",
-  "updateNoticeBody": "La version web a été mise à jour vers une nouvelle version. Nous vous recommandons d'actualiser la page pour profiter des dernières fonctionnalités et corrections. Cliquez sur « Compris » pour continuer à utiliser la page actuelle (aucun rafraîchissement automatique).",
-  "updateKnown": "Compris"
+  "wireframe": "Fil de fer"
 };

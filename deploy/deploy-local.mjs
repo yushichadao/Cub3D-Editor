@@ -9,12 +9,19 @@
 //     --user yushichadao --pass zich963yu \
 //     --ver 1.3.0 \
 //     --types pc-setup,pc-portable,android-apk \
-//     --out release/1.3.0
+//     --out release/1.3.0 \
+//     --github --web \
+//     --gh-token ghp_xxx --gh-repo cub3d-editor/cub3d-editor
 //
 // 说明：
 //   --out 为本地构建产物根目录（packer 的 CUB3D_RELEASE_OUT）。脚本会递归查找其中的
-//   .exe / .apk 文件，逐个上传到服务器 downloads/，并登记到版本 <ver>。
+//   .exe / .apk 文件，逐个上传到服务器 downloads/，并登记到版本 <ver>（境内分发）。
 //   若未传 --out，脚本会先在本机执行构建（npm run dist:*），再收集产物。
+//
+//   --github  把产物上传到境外 GitHub Releases（需 GH_TOKEN，可用 --gh-token 或环境变量 GH_TOKEN 传入，
+//             repo 用 --gh-repo 或环境变量 GH_REPO，默认 cub3d-editor/cub3d-editor，tag = v<ver>）。
+//   --web     发布 Web 端：更新 web/index.html 的 BOOTV（长序号）+ web/version.txt，
+//             并把 web/ 与 downloads/ 一起 git push origin main（触发 GitHub Pages）。
 import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
@@ -33,8 +40,13 @@ const VER = opt('--ver') || '';
 const TYPES = (opt('--types') || 'pc-setup,pc-portable,android-apk').split(',').map(s => s.trim()).filter(Boolean);
 const OUT = opt('--out');
 const NO_BUILD = has('--no-build');
+const DO_GITHUB = has('--github');
+const DO_WEB = has('--web');
+const GH_TOKEN = opt('--gh-token') || process.env.GH_TOKEN || '';
+const GH_REPO = opt('--gh-repo') || process.env.GH_REPO || 'cub3d-editor/cub3d-editor';
 
 if (!/^\d+\.\d+\.\d+$/.test(VER)) { console.error('✗ 请用 --ver 指定合法版本号，如 1.3.0'); process.exit(1); }
+if (DO_GITHUB && !GH_TOKEN) { console.error('✗ 启用 --github 但缺少 GH_TOKEN（用 --gh-token 或环境变量 GH_TOKEN 传入）'); process.exit(1); }
 
 // PC / Android 构建命令（与 packerRouter PKG_TYPES 对齐）
 const BUILD = {
@@ -119,12 +131,99 @@ function collectArtifacts(dir) {
   if (!reg.body || !reg.body.ok) { console.error('  ✗ 登记失败：' + (reg.body && reg.body.error || reg.status)); process.exit(1); }
   console.log('  ✓ ' + (reg.body.message || '已登记') + '（境内分发完成，更新话术系统已可见）');
 
-  // 5) 境外 GitHub（可选）
-  if (has('--github')) {
-    console.log('⑤ 境外 GitHub Releases（需服务器配置 GH_TOKEN，由 /admin/api/packer/distribute 处理）');
-    console.warn('  提示：当前脚本通过 register 完成境内分发；境外请在管理后台「打包分发」页勾选 GitHub 后点分发，或后续扩展本脚本直连 GitHub API。');
+  // 5) 境外 GitHub Releases（可选）
+  if (DO_GITHUB) {
+    console.log('⑤ 境外 GitHub Releases（repo=' + GH_REPO + '，tag=v' + VER + '）');
+    try {
+      await ghPublish(artifacts, 'v' + VER);
+      console.log('  ✓ 境外 GitHub Releases 发布完成');
+    } catch (e) {
+      console.error('  ✗ 境外 GitHub 发布失败：' + (e.message || e));
+      process.exit(1);
+    }
   }
 
-  console.log('\n✅ 本地部署完成：版本 ' + VER + ' 已上线境内分发。');
+  // 6) Web 端自动发布（可选）：更新 BOOTV + version.txt，并 git push 触发 GitHub Pages
+  if (DO_WEB) {
+    console.log('⑥ Web 端自动发布（更新 BOOTV + git push origin main）');
+    try {
+      await webPublish();
+      console.log('  ✓ Web 端已发布（GitHub Pages 将在数分钟内更新）');
+    } catch (e) {
+      console.error('  ✗ Web 端发布失败：' + (e.message || e));
+      process.exit(1);
+    }
+  }
+
+  console.log('\n✅ 本地部署完成：版本 ' + VER + ' 已上线' +
+    (DO_GITHUB ? ' 境内+境外分发' : ' 境内分发') + (DO_WEB ? '，Web 端已发布' : '') + '。');
   console.log('   更新话术系统：' + SERVER + '/  管理后台发布页可立即看到该版本。');
 })().catch(e => { console.error('部署异常：' + (e.message || e)); process.exit(1); });
+
+/* ===== 境外 GitHub Releases 发布（与后端 packerRouter 同一套 API） ===== */
+async function ghReq(method, url, { body, isBinary } = {}) {
+  const headers = { 'Authorization': 'Bearer ' + GH_TOKEN, 'User-Agent': 'cub3d-packer', 'Accept': 'application/vnd.github+json' };
+  const init = { method, headers };
+  if (body) {
+    if (isBinary) { init.body = body; headers['Content-Type'] = 'application/octet-stream'; }
+    else { headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(body); }
+  }
+  const r = await fetch(url, init);
+  const text = await r.text();
+  let json; try { json = JSON.parse(text); } catch (e) { json = { raw: text }; }
+  return { status: r.status, body: json };
+}
+
+async function ghPublish(files, tag) {
+  // 5.1 取得或创建 release
+  let rel = await ghReq('GET', `https://api.github.com/repos/${GH_REPO}/releases/tags/${tag}`);
+  if (rel.status === 404) {
+    rel = await ghReq('POST', `https://api.github.com/repos/${GH_REPO}/releases`, {
+      body: { tag_name: tag, name: tag, body: `Cub3D Editor ${tag}`, draft: false, prerelease: false }
+    });
+  }
+  if (!rel.body || !rel.body.id) throw new Error('无法获取/创建 release（' + rel.status + ' ' + (rel.body && rel.body.message || '') + '）');
+  const relId = rel.body.id;
+  const existing = new Set((rel.body.assets || []).map(a => a.name));
+
+  // 5.2 逐个上传资产（已存在则先删后传）
+  for (const a of files) {
+    const name = path.basename(a);
+    if (existing.has(name)) {
+      const old = rel.body.assets.find(x => x.name === name);
+      await ghReq('DELETE', `https://api.github.com/repos/${GH_REPO}/releases/assets/${old.id}`);
+      console.log('    覆盖已存在资产 ' + name);
+    }
+    const buf = await fsp.readFile(a);
+    const up = await ghReq('POST',
+      `https://api.github.com/repos/${GH_REPO}/releases/${relId}/assets?name=${encodeURIComponent(name)}`,
+      { body: buf, isBinary: true });
+    if (up.status < 200 || up.status >= 300) throw new Error('上传 ' + name + ' 失败（' + up.status + ' ' + (up.body && up.body.message || '') + '）');
+    console.log('    ✓ ' + name);
+  }
+}
+
+/* ===== Web 端自动发布 ===== */
+function todayBOOTV() {
+  const d = new Date();
+  const p = x => String(x).padStart(2, '0');
+  return '' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+}
+
+async function webPublish() {
+  const bootv = todayBOOTV();
+  const idx = path.join(ROOT, 'web', 'index.html');
+  let s = await fsp.readFile(idx, 'utf8');
+  s = s.replace(/<meta name="bootv" content="\d+">/, `<meta name="bootv" content="${bootv}">`);
+  s = s.replace(/const BOOTV = '\d+';/, `const BOOTV = '${bootv}';`);
+  await fsp.writeFile(idx, s, 'utf8');
+  await fsp.writeFile(path.join(ROOT, 'web', 'version.txt'), bootv, 'utf8');
+
+  const git = (...a) => {
+    const r = spawnSync('git', a, { cwd: ROOT, stdio: 'inherit' });
+    if (r.status !== 0) throw new Error('git ' + a.join(' ') + ' 失败（退出码 ' + r.status + '）');
+  };
+  git('add', 'web', 'downloads');
+  git('commit', '-m', `chore: publish web bootv ${bootv} + release ${VER}`);
+  git('push', 'origin', 'main');
+}

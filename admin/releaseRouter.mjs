@@ -38,7 +38,7 @@ function checkUploadLimit(ip) {
 }
 
 function requireAuth(req, res) {
-  let admin = { user: 'admin', pass: 'admin123' };
+  let admin = { user: 'yushichadao', pass: 'admin123' };
   try { admin = JSON.parse(fs().readFileSync(ADMIN_JSON(), 'utf8')); } catch {}
   if ((req.headers['x-admin-token'] || '') !== admin.pass) {
     res.writeHead(401, { 'Content-Type': 'application/json' });

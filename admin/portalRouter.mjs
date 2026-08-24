@@ -7,7 +7,7 @@ function readAdmin() {
   const fs = global.__fs;
   const ADMIN_JSON = global.__ADMIN_JSON;
   try { return JSON.parse(fs.readFileSync(ADMIN_JSON, 'utf8')); }
-  catch { return { user: 'admin', pass: 'admin123' }; }
+  catch { return { user: 'yushichadao', pass: 'admin123' }; }
 }
 function writeAdmin(obj) {
   const fs = global.__fs;

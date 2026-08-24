@@ -821,8 +821,5 @@ window.__packs['zh-TW'] = {
   "whyNoColorSome": "包含 {0} 個無顏色對象（重新上色後可調）",
   "whyTexShapePat": "帶貼圖的圖形需先清除貼圖",
   "whyTextPat": "文本不支持花紋 / 貼圖",
-  "wireframe": "線框",
-  "updateNoticeTitle": "有新的 Web 版本",
-  "updateNoticeBody": "網頁版已更新到新版本，建議重新整理以體驗最新功能與修復。點擊「我已知曉」即可繼續使用目前頁面（不會自動重新整理）。",
-  "updateKnown": "我已知曉"
+  "wireframe": "線框"
 };

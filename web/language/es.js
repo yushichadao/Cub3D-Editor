@@ -821,8 +821,5 @@ window.__packs['es'] = {
   "whyNoColorSome": "contiene {0} objeto(s) sin color (recolóralos para editar)",
   "whyTexShapePat": "las formas con textura deben quitar su textura primero",
   "whyTextPat": "el texto no admite patrón / textura",
-  "wireframe": "Malla de alambre",
-  "updateNoticeTitle": "Hay una nueva versión web",
-  "updateNoticeBody": "La versión web se ha actualizado a una nueva versión. Recomendamos recargar la página para obtener las últimas funciones y correcciones. Haz clic en «Entendido» para seguir usando la página actual (sin actualización automática).",
-  "updateKnown": "Entendido"
+  "wireframe": "Malla de alambre"
 };

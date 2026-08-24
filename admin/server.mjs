@@ -82,7 +82,7 @@ function redirectLegacy(req, res, target) {
 
 // 首启确保 downloads 与轻量级端点存在
 if (!fs.existsSync(DOWNLOADS_DIR)) fs.mkdirSync(DOWNLOADS_DIR, { recursive: true });
-if (!fs.existsSync(ADMIN_JSON)) fs.writeFileSync(ADMIN_JSON, JSON.stringify({ user: 'admin', pass: 'admin123' }, null, 2));
+if (!fs.existsSync(ADMIN_JSON)) fs.writeFileSync(ADMIN_JSON, JSON.stringify({ user: 'yushichadao', pass: 'admin123' }, null, 2));
 if (!fs.existsSync(UPDATE_DOC)) fs.writeFileSync(UPDATE_DOC, JSON.stringify({ versions: [] }, null, 2));
 
 function sendFile(req, res, filePath, type) {
