@@ -171,8 +171,11 @@ const server = http.createServer((req, res) => {
   if (pathname === '/admin/update' || pathname === '/admin/update/') {
     return sendFile(req, res, path.join(PUBLIC_DIR, 'update.html'), MIME['.html']);
   }
-  if (pathname === '/admin/packer' || pathname === '/admin/packer/') {
-    return sendFile(req, res, path.join(PUBLIC_DIR, 'packer.html'), MIME['.html']);
+  if (pathname === '/admin/build' || pathname === '/admin/build/') {
+    return sendFile(req, res, path.join(PUBLIC_DIR, 'build.html'), MIME['.html']);
+  }
+  if (pathname === '/admin/distribute' || pathname === '/admin/distribute/') {
+    return sendFile(req, res, path.join(PUBLIC_DIR, 'distribute.html'), MIME['.html']);
   }
   if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/api/')) {
     const rel = pathname.slice('/admin/'.length);
