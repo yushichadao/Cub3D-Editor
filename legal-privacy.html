@@ -185,7 +185,7 @@
     <span class="icp-slot" aria-hidden="true"></span>
   </div>
 </footer>
-<script>(function(){var c=/(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i.test(location.hostname||'');var e=document.querySelector('.icp-slot');if(e){if(c){e.textContent='浙ICP备2026068891号-1';e.style.color='';e.style.cursor='pointer';e.onclick=function(){window.open('https://beian.miit.gov.cn/','_blank','noopener');};}else{e.style.display='none';}}})();</script>
+<script>(function(){var c=/(^|\.)cub3d-editor\.cn$/i.test(location.hostname||'');var e=document.querySelector('.icp-slot');if(e){if(c){var ICP='浙ICP备2026068891号-1';e.textContent=ICP;e.style.color='';e.style.cursor='pointer';e.title='点击复制备案号';e.onclick=function(){var ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ICP);ok=true;}}catch(x){}if(!ok){try{var t=document.createElement('textarea');t.value=ICP;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);ok=true;}catch(y){}}var o=e.textContent;e.textContent='已复制备案号';setTimeout(function(){e.textContent=o;},1500);};}else{e.style.display='none';}}})();</script>
 <script src="assets/legal-i18n.js"></script>
 <script>
 const LANGS=[

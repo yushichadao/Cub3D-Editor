@@ -13044,20 +13044,27 @@ function openGuide(){
   }).catch(()=>{});
 })();
 
-/* 项目主页按当前域名自适应：境内 cub3d-editor.cn / 备案过渡期 IP / 境外 GitHub Pages；ICP 框仅境内显示 */
+/* 项目主页按当前域名自适应：境内 cub3d-editor.cn，境外 GitHub Pages；ICP 框仅境内显示 */
 (function(){
   function run(){
-    const isCnHost = /(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i.test(location.hostname||'');
+    const isCnHost = /(^|\.)cub3d-editor\.cn$/i.test(location.hostname||'');
     const home = document.getElementById('about-home');
     if(home) home.href = isCnHost ? (location.origin + '/') : 'https://yushichadao.github.io/Cub3D-Editor/';
     const icp = document.querySelector('.icp-slot');
     if(icp){
       if(isCnHost){
-        icp.textContent = '浙ICP备2026068891号-1';
+        const ICP = '浙ICP备2026068891号-1';
+        icp.textContent = ICP;
         icp.style.display = '';
         icp.style.cursor = 'pointer';
         icp.setAttribute('aria-hidden', 'false');
-        icp.onclick = () => window.open('https://beian.miit.gov.cn/', '_blank', 'noopener');
+        icp.title = '点击复制备案号';
+        icp.onclick = function(){
+          var ok=false;
+          try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(ICP); ok=true; } }catch(e){}
+          if(!ok){ try{ var t=document.createElement('textarea'); t.value=ICP; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); ok=true; }catch(e2){} }
+          var old=icp.textContent; icp.textContent='已复制备案号'; setTimeout(function(){ icp.textContent=old; }, 1500);
+        };
       } else {
         icp.style.display = 'none';
       }
