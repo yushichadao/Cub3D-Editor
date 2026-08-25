@@ -2128,7 +2128,10 @@ window.__refillIcp = function(){
     icpEl.onclick=()=>{
       const icp = SITE.cn.icp || '';
       copyText(icp).then(ok=>{
-        showToast(ok ? ('已复制备案号：'+icp) : ('备案号：'+icp));
+        try{
+          if('Notification' in window && Notification.permission==='granted'){ new Notification('立方·3D设计工坊', { body:(ok?'已复制备案号：':'备案号：')+icp }); }
+          else if('Notification' in window && Notification.permission!=='denied'){ Notification.requestPermission().then(p=>{ if(p==='granted'){ new Notification('立方·3D设计工坊', { body:(ok?'已复制备案号：':'备案号：')+icp }); } }); }
+        }catch(e){}
       });
       window.open('https://beian.miit.gov.cn/', '_blank', 'noopener');
     };
