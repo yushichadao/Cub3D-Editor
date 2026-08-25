@@ -2124,7 +2124,13 @@ window.__refillIcp = function(){
     icpEl.style.display='';
     icpEl.style.color = SITE.cn.icp ? '' : 'transparent';
     icpEl.style.cursor='pointer';
-    icpEl.onclick=()=>window.open('https://beian.miit.gov.cn/','_blank','noopener');
+    icpEl.title='点击复制备案号';
+    icpEl.onclick=()=>{
+      const icp = SITE.cn.icp || '';
+      copyText(icp).then(ok=>{
+        showToast(ok ? ('已复制备案号：'+icp) : ('备案号：'+icp));
+      });
+    };
   } else {
     icpEl.textContent = '';
     icpEl.style.display='none';
