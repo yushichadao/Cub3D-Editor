@@ -943,7 +943,7 @@ const isCnHost = CN_HOST_RE.test(location.hostname||'');
 /* 境内站对外入口：统一走域名（IP 直访已由 Nginx 重定向到域名） */
 const CN_ENTRY = 'https://cub3d-editor.cn/';
 /* 境内站当前基址：IP/域名访问均以当前 origin 为准，域名解析后自动生效，无需改码 */
-const cnBase = isCnHost ? location.origin + '/' : CN_ENTRY;
+const cnBase = isCnHost ? 'https://cub3d-editor.cn/' : CN_ENTRY;
 const curSite = isCnHost ? SITE.cn : SITE.ovs;
 /* 下载直链按站分流：境内 → 本服务器 /downloads/；境外 → GitHub Releases */
 const dl = f => isCnHost ? (cnBase + SITE.cn.downloadBase + f) : (SITE.ovs.releaseBase + f);
