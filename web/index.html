@@ -37,7 +37,7 @@
     height: 100%; overflow: hidden;
     background: var(--bg-deep); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+                 "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans Arabic", Tahoma, sans-serif;
     -webkit-font-smoothing: antialiased;
     user-select: none;
   }
@@ -610,9 +610,10 @@
   .about-link:hover { text-decoration:underline; }
   .about-copy { font-size:12px; color:var(--text-dim); margin-top: 10px; unicode-bidi:isolate; direction:ltr; }
   /* ICP 备案号预留空框：现阶段只画框占位、不写任何内容，后续在此填写备案号 */
-  .icp-slot { display:flex; align-items:center; justify-content:center; margin:10px 0 0;
-    min-height:26px; border:1px dashed var(--border); border-radius:8px; color:transparent;
-    font-size:12px; }
+  .icp-slot { display:flex; align-items:center; justify-content:center; width:100%; margin:10px 0 0;
+    padding:2px 4px; color:var(--accent); font-size:12.5px; font-weight:600; letter-spacing:.02em;
+    cursor:pointer; transition:opacity .2s; }
+  .icp-slot:hover { opacity:.8; }
   .about-author { font-size:13px; color:var(--text-dim); margin:8px 0; }
   .about-author span { color:var(--text); font-weight:600; }
   .about-terms { margin:14px 0 4px; display:flex; flex-direction:column; gap:8px; text-align:left; }
@@ -1347,7 +1348,7 @@ padding:9px 12px; font-size:13px; color:var(--text); vertical-align:middle;
 <style>
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/noto-kufi-arabic-400.woff2') format('woff2');}
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/noto-kufi-arabic-700.woff2') format('woff2');}
-html[lang="ar"] body,html[lang="ar"] button,html[lang="ar"] input,html[lang="ar"] select,html[lang="ar"] textarea{font-family:'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif;}
+html[lang="ar"] body,html[lang="ar"] button,html[lang="ar"] input,html[lang="ar"] select,html[lang="ar"] textarea{font-family:'Noto Kufi Arabic','Noto Sans Arabic','Segoe UI',Tahoma,Arial,'PingFang SC','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',sans-serif;}
 html[dir="rtl"]{direction:rtl;}
 /* 便签浮窗：RTL 下底部按钮区与颜色选择、缩放手柄做左右镜像 */
 html[dir="rtl"] .sticky-colors{margin-left:0; margin-right:auto;}
@@ -2054,8 +2055,8 @@ html[dir="rtl"] .num-field{ direction:rtl; }
             <p class="about-ai" data-i18n="aboutAI">本网站由 TRAE 与 CodeBuddy 工具 AI 辅助生成</p>
             <a class="about-link" id="about-home" href="https://yushichadao.github.io/Cub3D-Editor/" target="_blank" rel="noopener" data-i18n="aboutHome">项目主页</a>
             <a class="about-link" id="about-repo" href="https://github.com/yushichadao/Cub3D-Editor" target="_blank" rel="noopener" data-i18n="aboutRepo">GitHub 仓库</a>
-            <!-- ICP 备案号预留空框：现阶段无备案，仅画框占位不写内容，后续在此填写备案号 -->
-            <div class="icp-slot" aria-hidden="true"></div>
+            <!-- ICP 备案号：境内站显示，由下方脚本按域名填充 -->
+            <div class="icp-slot"></div>
             <div class="about-terms">
               <button type="button" class="about-card" data-term="tos">
                 <span class="about-card-ico"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/></svg></span>
@@ -12954,8 +12955,8 @@ function openGuide(){
 /* 打开网页版编辑器时的境内外分流：在加载页阶段探测 IP，目标站可达才跳转（探活防呆，避免盲跳死站）；
    一旦 window.__booted（编辑器已就绪）则不再跳转，保护编辑会话不被打断 */
 (function(){
-  /* 境内站入口：ICP 备案过渡期暂用 IP；备案完成后改回 https://cub3d-editor.cn/ */
-  const CN_HOME = 'http://139.196.104.56/';
+  /* 境内站入口：统一走域名（IP 直访已由 Nginx 重定向到域名） */
+  const CN_HOME = 'https://cub3d-editor.cn/';
   const OVS_HOME = 'https://yushichadao.github.io/Cub3D-Editor/';
   const host = location.hostname || '';
   const isCnHost = /(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i.test(host);
@@ -13031,11 +13032,25 @@ function openGuide(){
 
 /* 项目主页按当前域名自适应：境内 cub3d-editor.cn / 备案过渡期 IP / 境外 GitHub Pages；ICP 框仅境内显示 */
 (function(){
-  const isCnHost = /(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i.test(location.hostname||'');
-  const home = document.getElementById('about-home');
-  if(home) home.href = isCnHost ? (location.origin + '/') : 'https://yushichadao.github.io/Cub3D-Editor/';
-  const icp = document.querySelector('.icp-slot');
-  if(icp) icp.style.display = isCnHost ? '' : 'none';
+  function run(){
+    const isCnHost = /(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i.test(location.hostname||'');
+    const home = document.getElementById('about-home');
+    if(home) home.href = isCnHost ? (location.origin + '/') : 'https://yushichadao.github.io/Cub3D-Editor/';
+    const icp = document.querySelector('.icp-slot');
+    if(icp){
+      if(isCnHost){
+        icp.textContent = '浙ICP备2026068891号';
+        icp.style.display = '';
+        icp.style.cursor = 'pointer';
+        icp.setAttribute('aria-hidden', 'false');
+        icp.onclick = () => window.open('https://beian.miit.gov.cn/', '_blank', 'noopener');
+      } else {
+        icp.style.display = 'none';
+      }
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
 })();
 
 </script>

@@ -391,9 +391,9 @@
   .foot-copy{white-space:normal;direction:ltr;unicode-bidi:isolate}
   /* ICP 备案号预留空框：无备案时画虚线框占位（文字透明），备案号取得后填文字；境内显示、境外隐藏 */
   .icp-slot{display:inline-flex;align-items:center;gap:8px;margin-top:10px;
-    min-width:170px;min-height:26px;padding:3px 12px;
-    border:1px dashed var(--line);border-radius:7px;
-    font-size:12px;white-space:nowrap}
+    padding:2px 4px;color:var(--accent);font-size:12.5px;font-weight:600;letter-spacing:.02em;
+    white-space:nowrap;cursor:pointer;transition:opacity .2s}
+  .icp-slot:hover{opacity:.8}
 
   /* ===== 场景卡片 ===== */
   .scn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:36px}
@@ -555,7 +555,7 @@
       src:url("assets/fonts/noto-kufi-arabic-700.woff2") format("woff2");
     }
     html[lang="ar"], html[lang="ar"] body{
-      font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+      font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
       line-height:1.7;
     }
     /* 阿拉伯语专项：标题取消负字距（连写文字用 -letter-spacing 会导致字母粘连重叠）并放宽行高；
@@ -566,7 +566,7 @@
     /* 中间点分隔符单独包裹，避免被阿拉伯文连字吞掉 */
     html[lang="ar"] .hero h1 .dot-sep{font-feature-settings:"liga" 0,"calt" 0}
     html[lang="ar"] [data-i18n], html[lang="ar"] input, html[lang="ar"] select, html[lang="ar"] button, html[lang="ar"] textarea{
-      font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+      font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
     }
     /* 语言选择器的按钮含中文/日文/韩文/俄文/阿拉伯文字，需保留与正常语言一致的多语言无衬线字体（含 Noto Sans Arabic 以正确显示 ع），
        否则阿拉伯文字体无对应汉字字形会回退到衬线体，与中文等语言下观感不一致 */
@@ -932,7 +932,7 @@
 const SITE = {
   /* 境内站：安装包由境内服务器托管于站点根 /downloads/ 下（versions.json 为清单源，体积/版本/下载同源） */
   cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/',
-         downloadBase:'downloads/', metaUrl:'downloads/versions.json', icp:'' },
+         downloadBase:'downloads/', metaUrl:'downloads/versions.json', icp:'浙ICP备2026068891号' },
   ovs: { host:'yushichadao.github.io', home:'https://yushichadao.github.io/Cub3D-Editor/',
          releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
          apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }
@@ -940,8 +940,8 @@ const SITE = {
 /* 境内判定：正式域名 cub3d-editor.cn，或 ICP 备案过渡期临时入口 IP 139.196.104.56（IP 打开同样按境内站处理） */
 const CN_HOST_RE = /(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i;
 const isCnHost = CN_HOST_RE.test(location.hostname||'');
-/* 境内站对外入口：备案完成前暂用 IP 直访（https）；备案完成后改回 https://cub3d-editor.cn/ */
-const CN_ENTRY = 'https://139.196.104.56/';
+/* 境内站对外入口：统一走域名（IP 直访已由 Nginx 重定向到域名） */
+const CN_ENTRY = 'https://cub3d-editor.cn/';
 /* 境内站当前基址：IP/域名访问均以当前 origin 为准，域名解析后自动生效，无需改码 */
 const cnBase = isCnHost ? location.origin + '/' : CN_ENTRY;
 const curSite = isCnHost ? SITE.cn : SITE.ovs;
@@ -2054,6 +2054,8 @@ function initSite(){
       icpEl.textContent = SITE.cn.icp;
       icpEl.style.display='';
       icpEl.style.color = SITE.cn.icp ? '' : 'transparent';
+      icpEl.style.cursor='pointer';
+      icpEl.onclick=()=>window.open('https://beian.miit.gov.cn/','_blank','noopener');
     } else {
       icpEl.textContent = '';
       icpEl.style.display='none';

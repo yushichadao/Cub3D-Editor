@@ -130,7 +130,8 @@
   footer .foot{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
   footer a{color:var(--dim);text-decoration:none;transition:color .2s}
   footer a:hover{color:var(--accent)}
-  .icp-slot{display:inline-flex;min-width:170px;min-height:24px;padding:2px 12px;border:1px dashed var(--line);border-radius:7px}
+  .icp-slot{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:2px 4px;color:var(--accent);font-size:12.5px;font-weight:600;letter-spacing:.02em;text-decoration:none;cursor:pointer;transition:opacity .2s}
+  .icp-slot:hover{opacity:.8;text-decoration:underline}
   @media(max-width:600px){.brand span{display:none}.bar .lang{display:none}.nav-toggle{display:block}}
   /* ===== 阿拉伯语字体（与宣传页一致）===== */
   @font-face{
@@ -144,12 +145,12 @@
     src:url("assets/fonts/noto-kufi-arabic-700.woff2") format("woff2");
   }
   html[lang="ar"] body{
-    font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+    font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   }
   html[lang="ar"] .panel, html[lang="ar"] .panel p, html[lang="ar"] .panel li,
   html[lang="ar"] .panel h4, html[lang="ar"] .panel strong, html[lang="ar"] .panel a,
   html[lang="ar"] .legal h1, html[lang="ar"] .back{
-    font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma",serif;
+    font-family:"Noto Kufi Arabic","Sakkal Majalla","Simplified Arabic","Andalus","Segoe UI","Noto Sans Arabic","Geeza Pro","Tahoma","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   }
   html[lang="ar"] .brand, html[lang="ar"] .lang button{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","Malgun Gothic",sans-serif;
@@ -184,7 +185,7 @@
     <span class="icp-slot" aria-hidden="true"></span>
   </div>
 </footer>
-<script>(function(){var c=/(^|\.)cub3d-editor\.cn$/i.test(location.hostname||'');var e=document.querySelector('.icp-slot');if(e)e.style.display=c?'':'none';})();</script>
+<script>(function(){var c=/(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i.test(location.hostname||'');var e=document.querySelector('.icp-slot');if(e){if(c){e.textContent='浙ICP备2026068891号';e.style.color='';e.style.cursor='pointer';e.onclick=function(){window.open('https://beian.miit.gov.cn/','_blank','noopener');};}else{e.style.display='none';}}})();</script>
 <script src="assets/legal-i18n.js"></script>
 <script>
 const LANGS=[
