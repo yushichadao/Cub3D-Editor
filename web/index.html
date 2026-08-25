@@ -597,6 +597,7 @@
 
   .lang-list { display:flex; flex-direction:column; gap:6px; margin-top:8px; }
   .lang-item { display:flex; align-items:center; justify-content:space-between; padding:11px 12px; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-size:13px; color:var(--text); transition:all .15s; }
+  .lang-item > span:first-child { unicode-bidi:isolate; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .lang-item:hover { border-color:var(--accent); }
   .lang-item.active { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); }
   .lang-check { color:var(--accent); opacity:0; }
@@ -7323,7 +7324,7 @@ function updateThemeActive() {
 const langList = document.getElementById('lang-list');
 Object.entries(LANGS).forEach(([code, l]) => {
   const item = document.createElement('div');
-  item.className = 'lang-item'; item.dataset.lang = code; item.dir = 'auto';
+  item.className = 'lang-item'; item.dataset.lang = code;
   item.innerHTML = '<span>'+l.label+'</span><span class="lang-check">✓</span>';
   item.addEventListener('click', () => {
     currentLang = code; localStorage.setItem('lang', code); applyLang(); updateLangActive();
