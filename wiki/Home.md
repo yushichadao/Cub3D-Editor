@@ -31,11 +31,11 @@
 
 ### PC 版（Windows）
 1. 前往 [Releases](https://github.com/yushichadao/Cub3D-Editor/releases/latest)。
-2. 下载 `Cub3D-Editor-Setup-1.2.0-x64.exe`（安装版）或 `Cub3D-Editor-Portable-1.2.0-x64.exe`（便携版，免安装）。
+2. 下载 `Cub3D-Editor-Setup-1.0.0-x64.exe`（安装版）或 `Cub3D-Editor-Portable-1.0.0-x64.exe`（便携版，免安装）。
 3. 运行即可开始使用。
 
 ### Android 版
-1. 下载 Release 中的 `Cub3D-Editor-release-1.2.0-universal.apk`。
+1. 下载 Release 中的 `Cub3D-Editor-release-1.0.0-universal.apk`。
 2. 允许「未知来源」应用安装。
 3. 安装后打开，支持全屏运行与系统分享面板导出。
 
