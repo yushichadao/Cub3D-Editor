@@ -13058,12 +13058,16 @@ function openGuide(){
         icp.style.display = '';
         icp.style.cursor = 'pointer';
         icp.setAttribute('aria-hidden', 'false');
-        icp.title = '点击复制备案号';
+        icp.title = '点击复制备案号并前往备案查询';
         icp.onclick = function(){
           var ok=false;
           try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(ICP); ok=true; } }catch(e){}
           if(!ok){ try{ var t=document.createElement('textarea'); t.value=ICP; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); ok=true; }catch(e2){} }
-          var old=icp.textContent; icp.textContent='已复制备案号'; setTimeout(function(){ icp.textContent=old; }, 1500);
+          var tip=document.getElementById('__icpToast');
+          if(!tip){ tip=document.createElement('div'); tip.id='__icpToast'; tip.style.cssText='position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:2147483646;background:#1a1c2a;color:#6fe0d3;border:1px solid #6fe0d3;border-radius:8px;padding:9px 14px;font:12.5px/1.5 system-ui;box-shadow:0 6px 18px rgba(0,0,0,.35);opacity:0;transition:opacity .2s'; document.body.appendChild(tip); }
+          tip.textContent = ok ? ('已复制备案号：'+ICP) : ('备案号：'+ICP);
+          tip.style.opacity='1'; clearTimeout(tip._tm); tip._tm=setTimeout(function(){ tip.style.opacity='0'; }, 2200);
+          window.open('https://beian.miit.gov.cn/', '_blank', 'noopener');
         };
       } else {
         icp.style.display = 'none';
