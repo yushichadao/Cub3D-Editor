@@ -35,7 +35,8 @@
     hookProp(Node.prototype, 'textContent');
   }catch(e){}
 
-  // ===== 关键常驻元素守护：快照 + 强制恢复 =====
+  // ===== 反篡改守护：保护除「设备检测弹框 #detect」外的全部元素 =====
+  // 关键常驻元素（含 JS 注入内容，如 ICP 备案号）做快照，删除后从快照重建并归位
   var GUARD_KEYS = ['header','footer','icp-slot','foot-copy','donateBanner','float-btns'];
   var guardSnap = {}; // key -> {html, parent, before}
   function snapshotGuards(root){
@@ -48,14 +49,10 @@
   function restoreGuard(k){
     var s = guardSnap[k];
     if(!s) return false;
-    // 若元素仍在文档中，无需恢复
     var existing = document.querySelector('[data-guard="'+k+'"]');
     if(existing && existing.isConnected) return true;
     var holder = s.parent;
-    if(!holder || !holder.isConnected){
-      // 父节点也被删：挂在 body 末尾兜底，再尝试归位
-      holder = document.body;
-    }
+    if(!holder || !holder.isConnected) holder = document.body;
     var tmp = document.createElement('div');
     tmp.innerHTML = s.html;
     var node = tmp.firstElementChild;
@@ -64,9 +61,16 @@
       if(s.before && s.before.isConnected) holder.insertBefore(node, s.before);
       else holder.appendChild(node);
     }catch(e){ try{ document.body.appendChild(node); }catch(e2){ return false; } }
-    // 备案号等动态内容重新填充
     if(k==='icp-slot' && window.__refillIcp) window.__refillIcp();
     return true;
+  }
+  // 弹框（设备检测 #detect）及其子树不受保护，允许删除/修改
+  function inDetect(n){
+    if(!n || n.nodeType!==1) return false;
+    if(n.id==='detect') return true;
+    var p = n;
+    while(p && p!==document){ if(p.id==='detect') return true; p = p.parentNode; }
+    return false;
   }
 
   function showTamperTip(tag){
@@ -99,19 +103,26 @@
       for(var j=0;j<m.removedNodes.length;j++){
         var n=m.removedNodes[j];
         if(n.nodeType!==1) continue;
+        if(inDetect(n)) continue; // 设备检测弹框及其子树：允许删除/修改
         if(__skip && __skip.has(n)){ try{ __skip.delete(n); }catch(e){} continue; } // 程序自身删除，豁免
         if(m.addedNodes && m.addedNodes.length > 0) continue; // 同批重建（程序 innerHTML 等重写），跳过
         jobs.push({node:n, parent:m.target, before:m.nextSibling});
       }
     }
     jobs.forEach(function(j){
+      var n=j.node;
+      // 关键常驻元素（含 JS 注入内容）：从快照重建并归位
+      if(n.hasAttribute && n.hasAttribute('data-guard')){
+        var k=n.getAttribute('data-guard');
+        if(restoreGuard(k)){ showTamperTip('#'+k); return; }
+      }
       var parent=j.parent;
       if(!parent || !parent.isConnected) return;
       try{
-        if(j.before && j.before.isConnected) parent.insertBefore(j.node, j.before);
-        else parent.appendChild(j.node);
-      }catch(e){ try{ parent.appendChild(j.node); }catch(e2){} }
-      showTamperTip(j.node.id?('#'+j.node.id):j.node.tagName.toLowerCase());
+        if(j.before && j.before.isConnected) parent.insertBefore(n, j.before);
+        else parent.appendChild(n);
+      }catch(e){ try{ parent.appendChild(n); }catch(e2){} }
+      showTamperTip(n.id?('#'+n.id):n.tagName.toLowerCase());
     });
     busy=false;
   }
