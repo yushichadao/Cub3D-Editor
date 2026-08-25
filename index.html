@@ -34,6 +34,41 @@
     hookProp(Element.prototype, 'outerHTML');
     hookProp(Node.prototype, 'textContent');
   }catch(e){}
+
+  // ===== 关键常驻元素守护：快照 + 强制恢复 =====
+  var GUARD_KEYS = ['header','footer','icp-slot','foot-copy','donateBanner','float-btns'];
+  var guardSnap = {}; // key -> {html, parent, before}
+  function snapshotGuards(root){
+    GUARD_KEYS.forEach(function(k){
+      var el = root.querySelector('[data-guard="'+k+'"]');
+      if(!el || !el.parentNode) return;
+      guardSnap[k] = { html: el.outerHTML, parent: el.parentNode, before: el.nextSibling };
+    });
+  }
+  function restoreGuard(k){
+    var s = guardSnap[k];
+    if(!s) return false;
+    // 若元素仍在文档中，无需恢复
+    var existing = document.querySelector('[data-guard="'+k+'"]');
+    if(existing && existing.isConnected) return true;
+    var holder = s.parent;
+    if(!holder || !holder.isConnected){
+      // 父节点也被删：挂在 body 末尾兜底，再尝试归位
+      holder = document.body;
+    }
+    var tmp = document.createElement('div');
+    tmp.innerHTML = s.html;
+    var node = tmp.firstElementChild;
+    if(!node) return false;
+    try{
+      if(s.before && s.before.isConnected) holder.insertBefore(node, s.before);
+      else holder.appendChild(node);
+    }catch(e){ try{ document.body.appendChild(node); }catch(e2){ return false; } }
+    // 备案号等动态内容重新填充
+    if(k==='icp-slot' && window.__refillIcp) window.__refillIcp();
+    return true;
+  }
+
   function showTamperTip(tag){
     var tip=document.getElementById('tamperTip');
     if(!tip){
@@ -47,6 +82,7 @@
     clearTimeout(tip._tm);
     tip._tm=setTimeout(function(){ tip.style.opacity='0'; }, 2400);
   }
+
   var busy=false;
   function onMuts(muts){
     if(busy) return; busy=true;
@@ -54,12 +90,19 @@
     for(var i=0;i<muts.length;i++){
       var m=muts[i];
       if(m.type!=='childList' || !m.removedNodes || m.removedNodes.length===0) continue;
-      if(m.removedNodes.length>=2) continue; // 批量整体重写（程序渲染），跳过
-      var n=m.removedNodes[0];
-      if(n.nodeType!==1) continue;
-      if(__skip && __skip.has(n)){ try{ __skip.delete(n); }catch(e){} continue; } // 程序自身删除，豁免
-      if(m.addedNodes && m.addedNodes.length > 0) continue; // 同批重建（程序 innerHTML 等重写），跳过
-      jobs.push({node:n, parent:m.target, before:m.nextSibling});
+      // 程序渲染（innerHTML 整体重写 / 大量移除）通常伴随 addedNodes 或豁免标记，单删不跳过
+      if(__skip && m.removedNodes.length>0){
+        var allSkip=true;
+        for(var x=0;x<m.removedNodes.length;x++){ if(m.removedNodes[x].nodeType===1 && !__skip.has(m.removedNodes[x])){ allSkip=false; break; } }
+        if(allSkip) { busy=false; return; }
+      }
+      for(var j=0;j<m.removedNodes.length;j++){
+        var n=m.removedNodes[j];
+        if(n.nodeType!==1) continue;
+        if(__skip && __skip.has(n)){ try{ __skip.delete(n); }catch(e){} continue; } // 程序自身删除，豁免
+        if(m.addedNodes && m.addedNodes.length > 0) continue; // 同批重建（程序 innerHTML 等重写），跳过
+        jobs.push({node:n, parent:m.target, before:m.nextSibling});
+      }
     }
     jobs.forEach(function(j){
       var parent=j.parent;
@@ -72,8 +115,19 @@
     });
     busy=false;
   }
+
   function init(){
-    if(window.MutationObserver) new MutationObserver(onMuts).observe(document.documentElement,{childList:true,subtree:true});
+    snapshotGuards(document);
+    if(window.MutationObserver){
+      new MutationObserver(onMuts).observe(document.documentElement,{childList:true,subtree:true});
+    }
+    // 兜底巡检：确保关键常驻元素始终存在（应对 MutationObserver 被禁用/绕过的情况）
+    setInterval(function(){
+      GUARD_KEYS.forEach(function(k){
+        var el = document.querySelector('[data-guard="'+k+'"]');
+        if(!el || !el.isConnected) restoreGuard(k);
+      });
+    }, 1500);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
@@ -624,7 +678,7 @@
   </style>
 </head>
 <body>
-<header>
+<header data-guard="header">
   <div class="wrap nav">
     <a class="brand" href="#top"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></a>
     <div class="nav-right">
@@ -668,7 +722,7 @@
         <a class="btn btn-primary go" id="detectCta" href="web/index.html"><span data-i18n="detect.go">前往推荐版本</span></a>
       </div>
       <!-- 捐赠提示横幅：首屏显眼（位于设备推荐之后），可点击 ✕ 关闭，7 天内不再显示 -->
-      <div class="donate-banner" id="donateBanner">
+      <div class="donate-banner" id="donateBanner" data-guard="donateBanner">
         <span class="donate-heart">♥</span>
         <span class="donate-text"><b data-i18n="donate.title">喜欢 Cub3D Editor 吗？</b> <span data-i18n="donate.tip">你的赞助将支持独立开发者持续改进，让项目走得更远。</span></span>
         <a class="btn btn-primary donate-btn" href="https://afdian.com/a/cub3d-editor" target="_blank" rel="noopener" data-i18n="donate.cta">♥ 赞助支持</a>
@@ -895,7 +949,7 @@
   </section>
 </main>
 
-<footer>
+<footer data-guard="footer">
   <div class="wrap foot">
     <div class="foot-links">
       <a href="web/index.html" data-i18n="footer.app">进入编辑器</a>
@@ -912,14 +966,14 @@
     <div class="foot-info">
       <!-- 品牌行：图标 + 品牌名，布局与顶栏一致 -->
       <a class="brand" href="#top"><span class="mark">C</span><span data-i18n="brand">Cub3D Editor</span></a>
-      <div class="foot-copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
+      <div class="foot-copy" data-guard="foot-copy">Copyright © 2026-Present Yushichadao. All Rights Reserved.</div>
       <!-- ICP 备案号：有备案号时 JS 填文字并显示，无则隐藏不占位 -->
-      <span class="icp-slot" aria-hidden="true"></span>
+      <span class="icp-slot" data-guard="icp-slot" aria-hidden="true"></span>
     </div>
   </div>
 </footer>
 
-<div class="float-btns" aria-hidden="false">
+<div class="float-btns" data-guard="float-btns" aria-hidden="false">
   <button class="fab" id="fabToggle" type="button" title="Hide buttons" aria-label="Hide buttons"><span>✕</span></button>
   <button class="fab" id="shareBtn" type="button" title="Share" aria-label="Share"><span>📤</span></button>
   <button class="fab" id="toTop" type="button" title="Back to top" aria-label="Back to top"><span>↑</span></button>
@@ -937,8 +991,8 @@ const SITE = {
          releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
          apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }
 };
-/* 境内判定：正式域名 cub3d-editor.cn，或 ICP 备案过渡期临时入口 IP 139.196.104.56（IP 打开同样按境内站处理） */
-const CN_HOST_RE = /(^|\.)cub3d-editor\.cn$|^139\.196\.104\.56$/i;
+/* 境内判定：正式域名 cub3d-editor.cn */
+const CN_HOST_RE = /(^|\.)cub3d-editor\.cn$/i;
 const isCnHost = CN_HOST_RE.test(location.hostname||'');
 /* 境内站对外入口：统一走域名（IP 直访已由 Nginx 重定向到域名） */
 const CN_ENTRY = 'https://cub3d-editor.cn/';
@@ -2048,20 +2102,23 @@ function initSite(){
     siteSwitch.textContent = dict[siteSwitch.dataset.i18n] || (toCn ? '境内入口' : '国际版入口');
   }
   // ICP：仅境内显示（有备案号填文字并恢复颜色，无则空虚线框占位），境外隐藏
-  const icpEl = document.querySelector('.icp-slot');
-  if(icpEl){
-    if(isCnHost){
-      icpEl.textContent = SITE.cn.icp;
-      icpEl.style.display='';
-      icpEl.style.color = SITE.cn.icp ? '' : 'transparent';
-      icpEl.style.cursor='pointer';
-      icpEl.onclick=()=>window.open('https://beian.miit.gov.cn/','_blank','noopener');
-    } else {
-      icpEl.textContent = '';
-      icpEl.style.display='none';
-    }
-  }
+  if(window.__refillIcp) window.__refillIcp();
 }
+// ICP 填充抽成独立函数，供初始化与守护恢复时复用
+window.__refillIcp = function(){
+  const icpEl = document.querySelector('.icp-slot');
+  if(!icpEl) return;
+  if(isCnHost){
+    icpEl.textContent = SITE.cn.icp;
+    icpEl.style.display='';
+    icpEl.style.color = SITE.cn.icp ? '' : 'transparent';
+    icpEl.style.cursor='pointer';
+    icpEl.onclick=()=>window.open('https://beian.miit.gov.cn/','_blank','noopener');
+  } else {
+    icpEl.textContent = '';
+    icpEl.style.display='none';
+  }
+};
 
 /* ============ 境内外双站：IP 归属检测与双向自动跳转（仅宣传页；编辑器页面不参与，避免打断编辑） ============ */
 (function(){
