@@ -264,7 +264,7 @@ window.__packs['ko'] = {
   "helpThDesc": "설명",
   "helpThOp": "조작",
   "helpTouchBackKey": "뒤로 가기 키 탭 (Android 전용)",
-  "helpTouchBackKeyDesc": "Esc와 동일: 창을 단계별로 닫기 → 선택 해제 → 없으면 종료 확인",
+  "helpTouchBackKeyDesc": "Esc와 동일: 창을 단계별로 닫기 ⁦→⁩ 선택 해제 ⁦→⁩ 없으면 종료 확인",
   "helpTouchBoxSelect": "\"박스 선택\" 버튼",
   "helpTouchBoxSelectDesc": "활성화 후 한 손가락으로 드래그하여 객체 박스 선택",
   "helpTouchDblTap": "한 손가락 더블 탭",

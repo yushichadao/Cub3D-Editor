@@ -264,7 +264,7 @@ window.__packs['ru'] = {
   "helpThDesc": "Описание",
   "helpThOp": "Действие",
   "helpTouchBackKey": "Нажатие кнопки «Назад» (только Android)",
-  "helpTouchBackKeyDesc": "Как Esc: последовательно закрыть окна → снять выбор → при отсутствии — подтверждение выхода",
+  "helpTouchBackKeyDesc": "Как Esc: последовательно закрыть окна ⁦→⁩ снять выбор ⁦→⁩ при отсутствии — подтверждение выхода",
   "helpTouchBoxSelect": "Кнопка «Рамка выбора»",
   "helpTouchBoxSelectDesc": "Включает перетаскивание рамкой выбора объектов",
   "helpTouchDblTap": "Двойное касание",

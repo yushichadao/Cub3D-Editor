@@ -264,7 +264,7 @@ window.__packs['en'] = {
   "helpThDesc": "Description",
   "helpThOp": "Operation",
   "helpTouchBackKey": "Tap Back Key (Android only)",
-  "helpTouchBackKeyDesc": "Same as Esc: close windows layer by layer → clear selection → if none, exit confirm",
+  "helpTouchBackKeyDesc": "Same as Esc: close windows layer by layer ⁦→⁩ clear selection ⁦→⁩ if none, exit confirm",
   "helpTouchBoxSelect": "\"Box Select\" Button",
   "helpTouchBoxSelectDesc": "After enabling, drag with one finger to box-select objects",
   "helpTouchDblTap": "One-finger Double Tap",

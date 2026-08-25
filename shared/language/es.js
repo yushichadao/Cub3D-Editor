@@ -264,7 +264,7 @@ window.__packs['es'] = {
   "helpThDesc": "Descripción",
   "helpThOp": "Operación",
   "helpTouchBackKey": "Pulsar tecla Atrás (solo Android)",
-  "helpTouchBackKeyDesc": "Igual que Esc: cierra ventanas capa por capa → borra selección → si no hay, confirma salida",
+  "helpTouchBackKeyDesc": "Igual que Esc: cierra ventanas capa por capa ⁦→⁩ borra selección ⁦→⁩ si no hay, confirma salida",
   "helpTouchBoxSelect": "Botón «Selección por caja»",
   "helpTouchBoxSelectDesc": "Tras activarlo, arrastra con un dedo para selección por caja",
   "helpTouchDblTap": "Doble toque con un dedo",

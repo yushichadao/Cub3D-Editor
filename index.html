@@ -116,7 +116,7 @@
   ::-webkit-scrollbar-corner{background:transparent}
   body{
     background:var(--bg); color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","MS PGothic",sans-serif;
+    font-family:"Noto Kufi Arabic",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","MS PGothic",sans-serif;
     -webkit-font-smoothing:antialiased; line-height:1.6; overflow-x:hidden;
   }
   a{color:inherit;text-decoration:none}
@@ -571,7 +571,7 @@
     /* 语言选择器的按钮含中文/日文/韩文/俄文/阿拉伯文字，需保留与正常语言一致的多语言无衬线字体（含 Noto Sans Arabic 以正确显示 ع），
        否则阿拉伯文字体无对应汉字字形会回退到衬线体，与中文等语言下观感不一致 */
     html[lang="ar"] .lang button, html[lang="ar"] .lang-mobile button{
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","Malgun Gothic",sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Kufi Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP","Malgun Gothic",sans-serif;
     }
     /* RTL：常见问题标题在右、+ 按钮在左 —— html 已设 dir=rtl，summary 的 flex row 自动镜像，
        切勿再加 flex-direction:row-reverse（会在已 RTL 的主轴上再反转，导致标题靠左、按钮靠右） */
@@ -591,7 +591,7 @@
     /* 品牌标志含拉丁品牌名 Cub3D Editor：RTL 下允许容器随书写方向镜像（图标在右、名称在左，
        与整页 RTL 一致），但强制无衬线字体——否则阿拉伯字体无拉丁字形会回退衬线体，造成标志渲染异常；
        图标与名称各自用 isolate 包裹为独立双向单元，避免拉丁字母被混入阿拉伯语双向上下文 */
-    html[lang="ar"] .brand{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans JP","Malgun Gothic",sans-serif}
+    html[lang="ar"] .brand{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Kufi Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans JP","Malgun Gothic",sans-serif}
     html[lang="ar"] .brand .mark{font-family:inherit;direction:ltr;unicode-bidi:isolate}
     /* 底栏：html 在 ar 下 dir=rtl，.foot 继承 RTL 后默认 row 主轴即右→左，
        链接区落到右侧、信息块落到左侧，完成左右互换；切勿再写 row-reverse
@@ -932,7 +932,7 @@
 const SITE = {
   /* 境内站：安装包由境内服务器托管于站点根 /downloads/ 下（versions.json 为清单源，体积/版本/下载同源） */
   cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/',
-         downloadBase:'downloads/', metaUrl:'downloads/versions.json', icp:'浙ICP备2026068891号' },
+         downloadBase:'downloads/', metaUrl:'downloads/versions.json', icp:'浙ICP备2026068891号-1' },
   ovs: { host:'yushichadao.github.io', home:'https://yushichadao.github.io/Cub3D-Editor/',
          releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
          apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }

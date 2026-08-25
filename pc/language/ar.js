@@ -264,7 +264,7 @@ window.__packs['ar'] = {
   "helpThDesc": "الوصف",
   "helpThOp": "العملية",
   "helpTouchBackKey": "نقرة زر الرجوع ‎(Android‎ فقط)",
-  "helpTouchBackKeyDesc": "مثل ‎Esc:‎ إغلاق النوافذ طبقة تلو الأخرى → مسح التحديد → إن لم يكن، تأكيد الخروج",
+  "helpTouchBackKeyDesc": "مثل ‎Esc:‎ إغلاق النوافذ طبقة تلو الأخرى ⁦→⁩ مسح التحديد ⁦→⁩ إن لم يكن، تأكيد الخروج",
   "helpTouchBoxSelect": "زر «التحديد بالإطار»",
   "helpTouchBoxSelectDesc": "بعد التفعيل، اسحب بإصبع واحد لتحديد الكائنات بالإطار",
   "helpTouchDblTap": "نقرة مزدوجة بإصبع واحد",

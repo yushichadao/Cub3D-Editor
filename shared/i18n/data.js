@@ -1073,14 +1073,14 @@ export const DOMAINS = {
     },
     "helpTouchBackKeyDesc": {
       "zh-CN": "与 Esc 相同：逐层关窗口→取消选择→无则退出确认",
-      "en": "Same as Esc: close windows layer by layer → clear selection → if none, exit confirm",
-      "ja": "Escと同じ: ウィンドウを一層ずつ閉じる → 選択解除 → なければ終了確認",
+      "en": "Same as Esc: close windows layer by layer \u2066→\u2069 clear selection \u2066→\u2069 if none, exit confirm",
+      "ja": "Escと同じ: ウィンドウを一層ずつ閉じる \u2066→\u2069 選択解除 \u2066→\u2069 なければ終了確認",
       "zh-TW": "與 Esc 相同：逐層關窗口→取消選擇→無則退出確認",
-      "ko": "Esc와 동일: 창을 단계별로 닫기 → 선택 해제 → 없으면 종료 확인",
-      "ru": "Как Esc: последовательно закрыть окна → снять выбор → при отсутствии — подтверждение выхода",
-      "es": "Igual que Esc: cierra ventanas capa por capa → borra selección → si no hay, confirma salida",
-      "fr": "Identique à Échap : ferme les fenêtres couche par couche → efface la sélection → si rien, confirmation de quitter",
-      "ar": "مثل \u200EEsc:\u200E إغلاق النوافذ طبقة تلو الأخرى → مسح التحديد → إن لم يكن، تأكيد الخروج"
+      "ko": "Esc와 동일: 창을 단계별로 닫기 \u2066→\u2069 선택 해제 \u2066→\u2069 없으면 종료 확인",
+      "ru": "Как Esc: последовательно закрыть окна \u2066→\u2069 снять выбор \u2066→\u2069 при отсутствии — подтверждение выхода",
+      "es": "Igual que Esc: cierra ventanas capa por capa \u2066→\u2069 borra selección \u2066→\u2069 si no hay, confirma salida",
+      "fr": "Identique à Échap : ferme les fenêtres couche par couche \u2066→\u2069 efface la sélection \u2066→\u2069 si rien, confirmation de quitter",
+      "ar": "مثل \u200EEsc:\u200E إغلاق النوافذ طبقة تلو الأخرى \u2066→\u2069 مسح التحديد \u2066→\u2069 إن لم يكن، تأكيد الخروج"
     },
     "helpTouchBoxSelect": {
       "zh-CN": "「框选」按钮",

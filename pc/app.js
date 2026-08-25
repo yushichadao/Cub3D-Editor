@@ -9319,6 +9319,14 @@ window.__debug = {
 
 /* ===================== 说明书阅读器（零依赖 Markdown 阅读器） ===================== */
 function mdEscape(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// 在 RTL 文档（阿拉伯语等）中，标题/正文里的 LTR 片段（英文单词、数字、括号包裹的平台名如 (PC)、坐标字母 X/Y/Z、箭头 ◀▶）若不做方向隔离，
+// 浏览器 bidi 算法会把这些 LTR 片段整体翻转，导致出现“莫名右括号”等错乱。这里把连续 LTR 字符段包成 dir="ltr" 隔离块。
+function bidiWrap(s){
+  return String(s).replace(/([A-Za-z0-9]+(?:[ A-Za-z0-9.,()·\-_/:|◀▶%’'%]*[A-Za-z0-9.,()·%’'%])?)/g, m => {
+    if(m.length<=1 && !/[A-Za-z0-9]/.test(m)) return m;
+    return '<span dir="ltr" class="bidi-ltr">'+m+'</span>';
+  });
+}
 function slugify(s){ return String(s).normalize('NFKC').replace(/\s+/g,'').replace(/["']/g,''); }
 // 解码 HTML 实体：data-goto 由 mdEscape 生成（" → &quot;），某些浏览器下 dataset 取值未自动还原，
 // 导致 slugify 匹配时引号实体残留、与标题 slug 不一致，交叉引用无法跳转。这里统一解码。
@@ -9335,7 +9343,7 @@ function mdInline(text){
   s = s.replace(/(^|[^_])_([^_\s][^_]*?)_/g, '$1<em>$2</em>');
   s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (m,t,u)=>'<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a>');
   s = s.replace(/\[([^\]]+)\]\((#[^)\s]+)\)/g, (m,t,a)=>'<a href="'+a+'" class="md-anchor">'+t+'</a>');
-  s = s.replace(/\[([^\]]+)\]\((jump:[^)\n]+)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
+  s = s.replace(/\[([^\]]+)\]\((jump:(?:[^()\n]|\([^()\n]*\))*)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
   s = s.replace(/\uE000(\d+)\uE001/g, (m,idx)=>'<code>'+codes[+idx]+'</code>');
   return s;
 }

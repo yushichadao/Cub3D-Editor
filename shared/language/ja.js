@@ -264,7 +264,7 @@ window.__packs['ja'] = {
   "helpThDesc": "説明",
   "helpThOp": "操作",
   "helpTouchBackKey": "戻るキータップ（Androidのみ）",
-  "helpTouchBackKeyDesc": "Escと同じ: ウィンドウを一層ずつ閉じる → 選択解除 → なければ終了確認",
+  "helpTouchBackKeyDesc": "Escと同じ: ウィンドウを一層ずつ閉じる ⁦→⁩ 選択解除 ⁦→⁩ なければ終了確認",
   "helpTouchBoxSelect": "「枠選択」ボタン",
   "helpTouchBoxSelectDesc": "有効時、1本指ドラッグで枠内オブジェクトを選択",
   "helpTouchDblTap": "1本指ダブルタップ",

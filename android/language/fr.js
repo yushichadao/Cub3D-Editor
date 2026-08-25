@@ -264,7 +264,7 @@ window.__packs['fr'] = {
   "helpThDesc": "Description",
   "helpThOp": "Action",
   "helpTouchBackKey": "Tap sur Retour (Android uniquement)",
-  "helpTouchBackKeyDesc": "Identique à Échap : ferme les fenêtres couche par couche → efface la sélection → si rien, confirmation de quitter",
+  "helpTouchBackKeyDesc": "Identique à Échap : ferme les fenêtres couche par couche ⁦→⁩ efface la sélection ⁦→⁩ si rien, confirmation de quitter",
   "helpTouchBoxSelect": "Bouton « Sélection rectangulaire »",
   "helpTouchBoxSelectDesc": "Une fois activé, glissez avec un doigt pour sélectionner des objets par rectangle",
   "helpTouchDblTap": "Double tap à un doigt",
