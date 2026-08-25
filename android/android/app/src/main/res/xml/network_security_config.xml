@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 更新源：境内 IP 139.196.104.56 当前仅开放 HTTP(80)，HTTPS 未启用，
-     故对「仅此主机」精确放行明文（不开全局），消除高版本 Android 明文禁用导致的更新不可达。
-     全局仍强制 HTTPS；后续该主机启用 HTTPS 后可移除此 domain-config。 -->
+<!-- 单机版：无更新源/无远程通信，全局仅信任系统证书，不开放明文流量。 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
     </base-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="false">139.196.104.56</domain>
-    </domain-config>
 </network-security-config>

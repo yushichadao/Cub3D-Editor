@@ -10,10 +10,8 @@ const WWW = path.join(ROOT, 'www');
 // three / language / docs / fonts 统一来自仓库根的 shared/ 单一源，避免各端重复维护出现版本差
 // fonts 供 index.html 内 @font-face（阿拉伯语字体）引用，缺失会导致 RTL 界面字体回退。
 const COPY_DIRS = ['three', 'language', 'docs', 'fonts'];
-// version.txt 必须一并复制：index.html 启动时会 fetch('version.txt') 做版本探测，
-// 若 www/ 内缺失，server 返回的 404 错误页文本会被当成版本号，与 BOOTV 不同而触发
-// 无限「强制刷新」跳转，导致页面永远卡在加载页（Web/PC 直接服务根目录，天然有该文件）。
-const COPY_FILES = ['index.html', 'lang-override.js', 'version.txt'];
+// 单机版：Android 端不做 version.txt 版本探测，仅复制入口与语言覆盖文件。
+const COPY_FILES = ['index.html', 'lang-override.js'];
 
 async function copyDir(src, dest) {
   await fs.mkdir(dest, { recursive: true });

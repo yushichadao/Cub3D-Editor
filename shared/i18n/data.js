@@ -13,7 +13,7 @@ export const DOMAINS = {
       "ru": "Данное приложение создано с помощью ИИ-инструментов TRAE и CodeBuddy",
       "es": "Esta aplicación fue generada con asistencia de IA usando las herramientas TRAE y CodeBuddy.",
       "fr": "Cette application a été générée avec l’assistance de l’IA grâce aux outils TRAE et CodeBuddy.",
-      "ar": "تم توليد هذا التطبيق بمساعدة أدوات TRAE وCodeBuddy."
+      "ar": "تم توليد هذا التطبيق بمساعدة أدوات \u200ETRAE\u200E \u200EوCodeBuddy.\u200E"
     },
     "aboutAuthor": {
       "zh-CN": "作者",
@@ -35,7 +35,7 @@ export const DOMAINS = {
       "ru": "Copyright © 2026-Present Yushichadao. All Rights Reserved.",
       "es": "Copyright © 2026-Present Yushichadao. Todos los derechos reservados.",
       "fr": "Copyright © 2026-Présent Yushichadao. Tous droits réservés.",
-      "ar": "حقوق النشر © 2026-الحاضر Yushichadao. جميع الحقوق محفوظة."
+      "ar": "حقوق النشر © \u200E2026-الحاضر\u200E \u200EYushichadao.\u200E جميع الحقوق محفوظة."
     },
     "aboutDesc": {
       "zh-CN": "基于 Three.js 的网页端三维图形设计与编辑工具。",
@@ -46,7 +46,7 @@ export const DOMAINS = {
       "ru": "Инструмент для трёхмерного графического дизайна и редактирования на базе Three.js.",
       "es": "Una herramienta de diseño y edición 3D basada en la web y Three.js.",
       "fr": "Un outil de conception et d’édition 3D fonctionnant dans le navigateur, propulsé par Three.js.",
-      "ar": "أداة تصميم وتحرير مشاهد ثلاثية الأبعاد تعمل في المتصفح، مدعومة بـ Three.js."
+      "ar": "أداة تصميم وتحرير مشاهد ثلاثية الأبعاد تعمل في المتصفح، مدعومة بـ \u200EThree.js.\u200E"
     },
     "aboutHome": {
       "zh-CN": "项目主页",
@@ -90,7 +90,7 @@ export const DOMAINS = {
       "ru": "Репозиторий GitHub",
       "es": "Repositorio en GitHub",
       "fr": "Dépôt GitHub",
-      "ar": "مستودع GitHub"
+      "ar": "مستودع \u200EGitHub\u200E"
     },
     "aboutStack": {
       "zh-CN": "技术栈：Three.js / WebGL",
@@ -277,7 +277,7 @@ export const DOMAINS = {
       "ru": "已进入约束直线（水平 / 垂直 / 45°）",
       "es": "Línea recta restringida activada (horizontal / vertical / 45°)",
       "fr": "Ligne droite contrainte activée (horizontale / verticale / 45°)",
-      "ar": "تم تفعيل الخط المستقيم المقيد (أفقي / رأسي / 45°)"
+      "ar": "تم تفعيل الخط المستقيم المقيد (أفقي / رأسي / \u200E45°)\u200E"
     },
     "brushGap": {
       "zh-CN": "最小间距",
@@ -530,7 +530,7 @@ export const DOMAINS = {
       "ru": "<p>Настоящий «Отказ от ответственности» является неотъемлемой частью «Соглашения об использовании». <strong>Используя Программу, вы подтверждаете, что ознакомились и согласны со всем нижеизложенным. Программе не требуется учётная запись, и все творческие данные по умолчанию сохраняются на вашем локальном устройстве.</strong></p><h4>Статья 1. Услуга предоставляется «как есть»</h4><p>Программа и её функции предоставляются на основе «как есть» и «доступно». <strong>Мы приложили все усилия для обеспечения их точности и стабильности, но не даём никаких явных или подразумеваемых гарантий их корректности, актуальности, применимости, непрерывности или отсутствия ошибок.</strong> Вы должны самостоятельно оценивать ситуацию и нести риски принятия решений и творчества на этой основе.</p><h4>Статья 2. Без гарантий рендеринга и результатов</h4><p>Программа связана с операциями трёхмерного моделирования, графического рендеринга и предпросмотра анимации. <strong>Из-за различий в производительности устройства, модели видеокарты, версии драйвера, системной среде, браузере или сторонних графических интерфейсах фактическое отображение и результаты экспорта могут отличаться от предпросмотра. Мы не гарантируем согласованность, точность или пригодность результатов рендеринга для определённых целей.</strong></p><h4>Статья 3. Риск утраты локальных данных</h4><p><strong>Созданный вами контент по умолчанию сохраняется на локальном устройстве. Мы не несём ответственности за потерю, повреждение или нечитаемость данных из-за неисправности устройства, сбоя системы, очистки кэша браузера, удаления приложения, сброса системы, повреждения хранилища или ваших ошибочных действий и не гарантируем восстановление.</strong> Регулярно экспортируйте и резервируйте важные работы.</p><h4>Статья 4. Ответственность за пользовательский контент</h4><p>Законность и достоверность всего контента, который вы создаёте, импортируете, загружаете или распространяете в Программе, несёте вы. <strong>Споры и ответственность, возникшие из-за того, что ваш контент нарушает права третьих лиц, законодательство или причиняет ущерб третьим лицам, несёте исключительно вы, и мы не несём никакой совместной ответственности.</strong></p><h4>Статья 5. Сторонние компоненты и ссылки</h4><p>Программа может включать, вызывать или ссылаться на сторонние библиотеки открытого кода, веб-сайты, службы или ресурсы (например, Three.js и связанные компоненты WebGL). <strong>Мы не даём никаких гарантий относительно содержания, политики конфиденциальности, лицензионных условий или доступности третьих лиц и не несём ответственности; риски взаимодействия с третьими лицами несёте вы.</strong></p><h4>Статья 6. Экспортированные файлы и совместимость</h4><p><strong>Мы не гарантируем, что ваши экспортированные файлы проектов, изображения или модели откроются или будут совместимы на других устройствах, в другом ПО или в более новых версиях. Сохраняйте исходные файлы и самостоятельно проверяйте их пригодность.</strong></p><h4>Статья 7. Непреодолимая сила</h4><p>Мы не несём ответственности за нарушение обязательств в виде прерывания услуг, ограничения функций или потери данных, вызванных непреодолимой силой или причинами, не зависящими от нас, такими как стихийные бедствия, войны, действия властей, сетевые атаки, перебои с электричеством или связью, изменения политики платформы.</p><h4>Статья 8. Несовершеннолетние</h4><p><strong>Если вы несовершеннолетний, пожалуйста, прочитайте настоящий Отказ в сопровождении законного представителя и используйте Программу с его согласия. Представитель должен направлять несовершеннолетнего на здоровое и законное использование Программы и нести соответствующую ответственность за надзор.</strong></p><h4>Статья 9. Ограничение ответственности</h4><p>В максимальной степени, допустимой применимым законодательством, <strong>мы не несём ответственности за любые прямые, косвенные, сопутствующие, специальные, штрафные или последующие убытки (включая потерю данных, упущенную выгоду, повреждение устройства), возникающие из использования или невозможности использования Программы,</strong> даже если мы были уведомлены о возможности такого ущерба.</p><h4>Статья 10. Изменение Отказа</h4><p><strong>Настоящий Отказ может корректироваться вместе с обновлениями Программы и после обновления публикуется в ней. Продолжение использования означает принятие обновлённого содержания; если вы не согласны, прекратите использование Программы.</strong></p><h4>Статья 11. Обновления Программы и изменения документации</h4><p>1. Программа может обновляться периодически, и функции, интерфейс и документация после обновления могут отличаться от старой версии; мы не гарантируем полного соответствия между старой и новой версиями.</p><p>2. С обновлением версий текст руководства может быть пересмотрен, и заметки, созданные на основе старой версии, после изменения текста могут не сохранить исходную связь; пользуйтесь актуальной версией руководства.</p>",
       "es": "<h4>Aviso legal</h4><p>Este Aviso legal es parte integral de los Términos del Servicio. <strong>Al usar el Software reconoces y aceptas todo lo siguiente. El Software no requiere cuenta; todos los datos creativos se guardan en tu dispositivo local por defecto.</strong></p><h4>1. Servicio «tal cual»</h4><p>El Software y sus funciones se proporcionan sobre una base «tal cual» y «disponible». <strong>Hemos procurado garantizar la exactitud y estabilidad, pero no ofrecemos garantía expresa o implícita sobre la corrección, puntualidad, idoneidad, disponibilidad ininterrumpida o funcionamiento sin errores.</strong> Debes juzgar y asumir el riesgo de cualquier decisión o creación basada en él de forma independiente.</p><h4>2. Sin garantía de representación</h4><p>El Software involucra modelado 3D, representación gráfica y vista previa de animación. <strong>Debido a las diferencias en el rendimiento del dispositivo, tarjeta gráfica, controlador, entorno del sistema y navegador, los resultados reales de visualización y exportación pueden diferir de la vista previa. No garantizamos la coherencia, exactitud o idoneidad para cualquier fin de los resultados de representación.</strong></p><h4>3. Riesgo de pérdida de datos locales</h4><p><strong>Tu contenido creado se guarda en tu dispositivo local por defecto. No nos hacemos responsables de la pérdida, daño o ilegibilidad de datos causados por fallo del dispositivo, bloqueo del sistema, limpieza de la caché del navegador, desinstalación de la app, restablecimiento del sistema, daño del almacenamiento o tu mala operación, ni podemos garantizar su recuperación.</strong> Exporta y haz copias de seguridad del trabajo importante con regularidad.</p><h4>4. Responsabilidad por el contenido del usuario</h4><p>Eres responsable de la legalidad y veracidad de todo el contenido que creas, importas, subes o compartes. <strong>No asumimos responsabilidad conjunta por ninguna controversia o responsabilidad derivada de que tu contenido infrinja derechos de terceros, viole leyes o cause daños a terceros.</strong></p><h4>5. Componentes y enlaces de terceros</h4><p>El Software puede incluir, invocar o enlazar bibliotecas de código abierto, sitios web, servicios o recursos de terceros (como Three.js y componentes WebGL relacionados). <strong>No ofrecemos garantía sobre su contenido, política de privacidad, términos de licencia o disponibilidad, ni asumimos responsabilidad; corres el riesgo de interactuar con terceros.</strong></p><h4>6. Archivos de exportación y compatibilidad</h4><p><strong>No podemos garantizar que tus archivos de proyecto, imágenes o modelos exportados se abran o sigan siendo compatibles en otros dispositivos, otro software o versiones superiores. Conserva los archivos originales y verifica su usabilidad tú mismo.</strong></p><h4>7. Fuerza mayor</h4><p>No asumimos responsabilidad por interrupción del servicio, limitación de funciones o pérdida de datos causadas por desastres naturales, guerra, acciones gubernamentales, ataques de red, interrupción de energía o comunicaciones, o cambios de políticas de plataforma fuera de nuestro control.</p><h4>8. Menores</h4><p><strong>Si eres menor de edad, lee este Aviso legal con un tutor y usa el Software solo con su consentimiento. Los tutores deben orientar a los menores a usar el Software de forma sana y legal, y asumir las responsabilidades correspondientes.</strong></p><h4>9. Limitación de responsabilidad</h4><p>En la medida máxima permitida por la ley, <strong>no seremos responsables de ninguna pérdida directa, indirecta, incidental, especial, punitiva o consecuente (incluido la pérdida de datos, pérdida de beneficios, daño del dispositivo) derivada del uso o imposibilidad de uso del Software,</strong> incluso si se nos advirtió de la posibilidad.</p><h4>10. Cambios de este Aviso</h4><p><strong>Este Aviso legal puede ajustarse con las actualizaciones del software; la versión actualizada se anunciará dentro del Software. El uso continuado constituye aceptación; si no aceptas, deja de usarlo.</strong></p><h4>11. Actualizaciones del software y cambios del manual</h4><p>(1) El Software puede actualizarse de vez en cuando; tras una actualización, las funciones, la interfaz y la documentación pueden diferir de la versión anterior. No garantizamos una coherencia total entre las versiones antigua y nueva.</p><p>(2) A medida que se actualizan las versiones, el texto del manual puede revisarse; las notas adhesivas creadas a partir del texto anterior pueden no mantener su vínculo original después de los cambios de texto. Consulte la última versión del manual.</p>",
       "fr": "<p>Le présent « Avertissement de non-responsabilité » fait partie intégrante et indivisible des « Conditions d'utilisation ». <strong>En utilisant le Logiciel, vous reconnaissez et acceptez tout le contenu suivant. Le Logiciel ne nécessite pas de compte ; toutes les données créatives sont enregistrées par défaut sur votre appareil local.</strong></p><h4>Article 1. Le service est fourni « en l'état »</h4><p>Le Logiciel et ses fonctions sont fournis sur la base « en l'état » et « disponible ». <strong>Nous avons fait tout notre possible pour en garantir l'exactitude et la stabilité, mais nous n'offrons aucune garantie expresse ou implicite quant à leur correction, actualité, adéquation, absence d'interruption ou absence d'erreur.</strong> Vous devez juger par vous-même et assumer les risques liés aux décisions et à la création qui en découlent.</p><h4>Article 2. Absence de garantie sur le rendu et les résultats</h4><p>Le Logiciel implique des opérations telles que la modélisation tridimensionnelle, le rendu graphique et la prévisualisation d'animation. <strong>En raison des différences de performance de l'appareil, du modèle de carte graphique, de la version des pilotes, de l'environnement système, du navigateur ou des interfaces graphiques tierces, l'affichage et l'exportation réels peuvent différer de l'aperçu. Nous ne garantissons pas la cohérence, la précision ou l'adéquation des résultats de rendu.</strong></p><h4>Article 3. Risque de perte de données locales</h4><p><strong>Le contenu que vous créez est enregistré par défaut sur l'appareil local. Nous ne sommes pas responsables de la perte, de l'altération ou de l'illisibilité des données due à une panne d'appareil, un crash système, un nettoyage du cache du navigateur, une désinstallation, une réinitialisation système, une corruption de stockage ou une erreur de manipulation, et nous n'en garantissons pas la récupération.</strong> Exportez et sauvegardez régulièrement vos œuvres importantes.</p><h4>Article 4. Responsabilité relative au contenu de l'utilisateur</h4><p>La légalité et l'authenticité de tout contenu que vous créez, importez, téléchargez ou partagez dans le Logiciel relèvent de votre responsabilité. <strong>Les litiges et responsabilités découlant de ce que votre contenu porte atteinte aux droits d'autrui, viole la loi ou cause un préjudice à un tiers sont exclusivement à votre charge, et nous n'assumons aucune responsabilité solidaire.</strong></p><h4>Article 5. Composants et liens tiers</h4><p>Le Logiciel peut contenir, invoquer ou renvoyer à des bibliothèques open source, sites web, services ou ressources tiers (comme Three.js et composants WebGL associés). <strong>Nous n'offrons aucune garantie sur le contenu, les politiques de confidentialité, les termes de licence ou la disponibilité des tiers, ni n'assumons de responsabilité ; les risques de votre interaction vous incombent.</strong></p><h4>Article 6. Fichiers exportés et compatibilité</h4><p><strong>Nous ne garantissons pas que vos fichiers de projet, images ou modèles exportés s'ouvriront ou seront compatibles sur d'autres appareils, un autre logiciel ou des versions supérieures. Conservez les fichiers originaux et vérifiez leur utilisabilité.</strong></p><h4>Article 7. Force majeure</h4><p>Nous ne sommes pas responsables de l'interruption de service, de la limitation de fonctions ou de la perte de données causées par un cas de force majeure ou une cause non imputable, tels que catastrophe naturelle, guerre, acte gouvernemental, attaque réseau, interruption d'électricité ou de communication, ou changement de politique de plateforme.</p><h4>Article 8. Mineurs</h4><p><strong>Si vous êtes mineur, lisez le présent Avertissement avec un tuteur et utilisez le Logiciel avec son consentement. Le tuteur doit guider le mineur vers un usage sain et légal du Logiciel et assumer la responsabilité de surveillance correspondante.</strong></p><h4>Article 9. Limitation de responsabilité</h4><p>Dans la mesure maximale permise par la loi applicable, <strong>nous ne sommes pas responsables de toute perte directe, indirecte, accessoire, spéciale, punitive ou consécutive (y compris la perte de données, le manque à gagner, l'endommagement de l'appareil) découlant de l'utilisation ou de l'impossibilité d'utiliser le Logiciel,</strong> même si nous avons été informés de la possibilité d'un tel dommage.</p><h4>Article 10. Modifications de cet Avertissement</h4><p><strong>Le présent Avertissement peut être ajusté avec les mises à jour du Logiciel et, après mise à jour, est annoncé dans le Logiciel. L'utilisation continue vaut acceptation ; dans le cas contraire, cessez d'utiliser le Logiciel.</strong></p><h4>Article 11. Mises à jour du Logiciel et modifications de la documentation</h4><p>1. Le Logiciel peut être mis à jour périodiquement, et les fonctions, l'interface et la documentation après mise à jour peuvent différer de l'ancienne version ; nous ne garantissons pas la pleine cohérence entre les versions.</p><p>2. Avec les mises à jour de versions, le texte du manuel peut être révisé, et les notes créées sur l'ancien manuel pourraient ne pas conserver leur relation de liaison d'origine ; reportez-vous à la version la plus récente du manuel.</p>",
-      "ar": "<div dir=\"rtl\"><p>هذا الإخلاء جزء لا يتجزأ من شروط الخدمة. <strong>باستخدامك للبرنامج فإنك تقر وتوافق على جميع ما يلي. البرنامج لا يتطلب حساباً؛ وتُحفظ جميع البيانات الإبداعية على جهازك المحلي افتراضياً.</strong></p><h4>1. الخدمة «كما هي»</h4><p>يُقدم البرنامج ووظائفه على أساس «كما هو» و«متاح». <strong>لقد بذلنا قصارى جهدنا لضمان الدقة والاستقرار، ولكن لا نضمن بأي ضمان صريح أو ضمني الصحة أو حداثة البيانات أو الملاءمة أو التوافر المتواصل أو العمل الخالي من الأخطاء.</strong> عليك الحكم بشكل مستقل وتحمل مخاطر أي قرار أو إبداع بناءً عليه.</p><h4>2. عدم ضمان العرض</h4><p>يتضمن البرنامج النمذجة ثلاثية الأبعاد والعرض الرسومي ومعاينة الرسوم المتحركة. <strong>بسبب اختلافات أداء الجهاز والبطاقة الرسومية والتعريفات والبيئة النظامية والمتصفح، قد تختلف نتائج العرض والتصدير الفعلية عن المعاينة. ولا نضمن اتساق نتائج العرض أو دقتها أو ملاءمتها لأي غرض محدد.</strong></p><h4>3. مخاطر فقدان البيانات المحلية</h4><p><strong>يُحفظ المحتوى الذي تنشئه على جهازك المحلي افتراضياً. نحن غير مسؤولين عن فقدان البيانات أو تلفها أو عدم قابليتها للقراءة بسبب عطل الجهاز أو انهيار النظام أو تنظيف ذاكرة المتصفح أو إلغاء تثبيت التطبيق أو إعادة ضبط النظام أو تلف التخزين أو سوء تشغيلك، كما لا يمكننا ضمان استردادها.</strong> يرجى تصدير الأعمال المهمة ونسخها احتياطياً بانتظام.</p><h4>4. مسؤولية محتوى المستخدم</h4><p>أنت المسؤول عن مشروعية وأصالة جميع المحتوى الذي تنشئه أو تستورده أو ترفعه أو تشاركه. <strong>لا نتحمل أي مسؤولية مشتركة عن أي نزاع أو مسؤولية ناشئة عن انتهاك محتواك لحقوق الآخرين أو مخالفة القوانين أو التسبب في ضرر لأي طرف ثالث.</strong></p><h4>5. مكوّنات وروابط الجهات الخارجية</h4><p>قد يتضمن البرنامج أو يستدعي أو يربط بمكتبات مفتوحة المصدر لجهات خارجية أو مواقع أو خدمات أو موارد (مثل Three.js ومكوّنات WebGL ذات الصلة). <strong>لا نضمن محتواها أو سياسة خصوصيتها أو شروط ترخيصها أو توفرها، ولا نتحمل أي مسؤولية؛ وتتحمل أنت مخاطر التعامل مع الجهات الخارجية.</strong></p><h4>6. ملفات التصدير والتوافق</h4><p><strong>لا يمكننا ضمان أن ملفات المشروع أو الصور أو النماذج التي تصدرها ستفتح أو تظل متوافقة في أجهزة أخرى أو برامج أخرى أو إصدارات أحدث. احتفظ بالملفات الأصلية وتحقق من قابليتها للاستخدام بنفسك.</strong></p><h4>7. القوة القاهرة</h4><p>لا نتحمل المسؤولية عن انقطاع الخدمة أو تقييد الوظائف أو فقدان البيانات الناتج عن كوارث طبيعية أو حرب أو إجراء حكومي أو هجوم شبكي أو انقطاع الطاقة أو الاتصال أو تغيّر سياسات المنصة خارج سيطرتنا.</p><h4>8. القصّر</h4><p><strong>إذا كنت قاصراً، يرجى قراءة هذا الإخلاء مع ولي أمر واستخدام البرنامج فقط بموافقته. وعلى الأوصياء توجيه القصّر لاستخدام البرنامج بشكل صحي ومشروع وتحمل المسؤولية المقابلة.</strong></p><h4>9. الحد من المسؤولية</h4><p>إلى أقصى حد يسمح به القانون، <strong>لا نتحمل أي مسؤولية عن أي خسارة مباشرة أو غير مباشرة أو عارضة أو خاصة أو عقابية أو تبعية (بما في ذلك فقدان البيانات وخسارة الربح وتلف الجهاز) ناتجة عن استخدام البرنامج أو عدم القدرة على استخدامه،</strong> حتى إذا كنا قد نُبّهنا إلى إمكانية حدوثها.</p><h4>10. تغييرات هذا الإخلاء</h4><p><strong>يجوز تعديل هذا الإخلاء مع تحديثات البرنامج؛ سيُعلن عن النسخة المحدثة داخل البرنامج. ويُعد الاستمرار في الاستخدام قبولاً بها؛ وإذا كنت لا توافق، يرجى التوقف عن استخدامه.</strong></p><h4>11. تحديثات البرنامج وتغييرات الدليل</h4><p>(1) قد يتم تحديث البرنامج من وقت لآخر؛ وبعد التحديث، قد تختلف الوظائف والواجهة والتوثيق عن الإصدار الأقدم. نحن لا نضمن توافقاً كاملاً بين الإصدارين القديم والجديد.</p><p>(2) مع تحديث الإصدارات، قد يُنقَّح نص الدليل؛ وقد لا تحتفظ الملاحظات اللاصقة التي أنشأتها بناءً على النص القديم بعلاقتها الأصلية بعد تغيير النص. يرجى الرجوع إلى أحدث إصدار من الدليل.</p></div>"
+      "ar": "<div dir=\"rtl\"><p>هذا الإخلاء جزء لا يتجزأ من شروط الخدمة. <strong>باستخدامك للبرنامج فإنك تقر وتوافق على جميع ما يلي. البرنامج لا يتطلب حساباً؛ وتُحفظ جميع البيانات الإبداعية على جهازك المحلي افتراضياً.</strong></p><h4>\u200E1.\u200E الخدمة «كما هي»</h4><p>يُقدم البرنامج ووظائفه على أساس «كما هو» و«متاح». <strong>لقد بذلنا قصارى جهدنا لضمان الدقة والاستقرار، ولكن لا نضمن بأي ضمان صريح أو ضمني الصحة أو حداثة البيانات أو الملاءمة أو التوافر المتواصل أو العمل الخالي من الأخطاء.</strong> عليك الحكم بشكل مستقل وتحمل مخاطر أي قرار أو إبداع بناءً عليه.</p><h4>\u200E2.\u200E عدم ضمان العرض</h4><p>يتضمن البرنامج النمذجة ثلاثية الأبعاد والعرض الرسومي ومعاينة الرسوم المتحركة. <strong>بسبب اختلافات أداء الجهاز والبطاقة الرسومية والتعريفات والبيئة النظامية والمتصفح، قد تختلف نتائج العرض والتصدير الفعلية عن المعاينة. ولا نضمن اتساق نتائج العرض أو دقتها أو ملاءمتها لأي غرض محدد.</strong></p><h4>\u200E3.\u200E مخاطر فقدان البيانات المحلية</h4><p><strong>يُحفظ المحتوى الذي تنشئه على جهازك المحلي افتراضياً. نحن غير مسؤولين عن فقدان البيانات أو تلفها أو عدم قابليتها للقراءة بسبب عطل الجهاز أو انهيار النظام أو تنظيف ذاكرة المتصفح أو إلغاء تثبيت التطبيق أو إعادة ضبط النظام أو تلف التخزين أو سوء تشغيلك، كما لا يمكننا ضمان استردادها.</strong> يرجى تصدير الأعمال المهمة ونسخها احتياطياً بانتظام.</p><h4>\u200E4.\u200E مسؤولية محتوى المستخدم</h4><p>أنت المسؤول عن مشروعية وأصالة جميع المحتوى الذي تنشئه أو تستورده أو ترفعه أو تشاركه. <strong>لا نتحمل أي مسؤولية مشتركة عن أي نزاع أو مسؤولية ناشئة عن انتهاك محتواك لحقوق الآخرين أو مخالفة القوانين أو التسبب في ضرر لأي طرف ثالث.</strong></p><h4>\u200E5.\u200E مكوّنات وروابط الجهات الخارجية</h4><p>قد يتضمن البرنامج أو يستدعي أو يربط بمكتبات مفتوحة المصدر لجهات خارجية أو مواقع أو خدمات أو موارد (مثل \u200EThree.js\u200E ومكوّنات \u200EWebGL\u200E ذات الصلة). <strong>لا نضمن محتواها أو سياسة خصوصيتها أو شروط ترخيصها أو توفرها، ولا نتحمل أي مسؤولية؛ وتتحمل أنت مخاطر التعامل مع الجهات الخارجية.</strong></p><h4>\u200E6.\u200E ملفات التصدير والتوافق</h4><p><strong>لا يمكننا ضمان أن ملفات المشروع أو الصور أو النماذج التي تصدرها ستفتح أو تظل متوافقة في أجهزة أخرى أو برامج أخرى أو إصدارات أحدث. احتفظ بالملفات الأصلية وتحقق من قابليتها للاستخدام بنفسك.</strong></p><h4>\u200E7.\u200E القوة القاهرة</h4><p>لا نتحمل المسؤولية عن انقطاع الخدمة أو تقييد الوظائف أو فقدان البيانات الناتج عن كوارث طبيعية أو حرب أو إجراء حكومي أو هجوم شبكي أو انقطاع الطاقة أو الاتصال أو تغيّر سياسات المنصة خارج سيطرتنا.</p><h4>\u200E8.\u200E القصّر</h4><p><strong>إذا كنت قاصراً، يرجى قراءة هذا الإخلاء مع ولي أمر واستخدام البرنامج فقط بموافقته. وعلى الأوصياء توجيه القصّر لاستخدام البرنامج بشكل صحي ومشروع وتحمل المسؤولية المقابلة.</strong></p><h4>\u200E9.\u200E الحد من المسؤولية</h4><p>إلى أقصى حد يسمح به القانون، <strong>لا نتحمل أي مسؤولية عن أي خسارة مباشرة أو غير مباشرة أو عارضة أو خاصة أو عقابية أو تبعية (بما في ذلك فقدان البيانات وخسارة الربح وتلف الجهاز) ناتجة عن استخدام البرنامج أو عدم القدرة على استخدامه،</strong> حتى إذا كنا قد نُبّهنا إلى إمكانية حدوثها.</p><h4>\u200E10.\u200E تغييرات هذا الإخلاء</h4><p><strong>يجوز تعديل هذا الإخلاء مع تحديثات البرنامج؛ سيُعلن عن النسخة المحدثة داخل البرنامج. ويُعد الاستمرار في الاستخدام قبولاً بها؛ وإذا كنت لا توافق، يرجى التوقف عن استخدامه.</strong></p><h4>\u200E11.\u200E تحديثات البرنامج وتغييرات الدليل</h4><p>\u200E(1)\u200E قد يتم تحديث البرنامج من وقت لآخر؛ وبعد التحديث، قد تختلف الوظائف والواجهة والتوثيق عن الإصدار الأقدم. نحن لا نضمن توافقاً كاملاً بين الإصدارين القديم والجديد.</p><p>\u200E(2)\u200E مع تحديث الإصدارات، قد يُنقَّح نص الدليل؛ وقد لا تحتفظ الملاحظات اللاصقة التي أنشأتها بناءً على النص القديم بعلاقتها الأصلية بعد تغيير النص. يرجى الرجوع إلى أحدث إصدار من الدليل.</p></div>"
     },
     "disclaimerLink": {
       "zh-CN": "免责声明",
@@ -574,7 +574,7 @@ export const DOMAINS = {
       "ru": "Дата вступления в силу настоящего документа: 21 августа 2026 г.",
       "es": "Fecha de entrada en vigor de este documento: 21 de agosto de 2026",
       "fr": "Date d'entrée en vigueur du présent document : 21 août 2026",
-      "ar": "تاريخ نفاذ هذا المستند: 21 أغسطس 2026"
+      "ar": "تاريخ نفاذ هذا المستند: \u200E21\u200E أغسطس \u200E2026\u200E"
     },
     "emptyHint": {
       "zh-CN": "未选中对象。\\n从左侧选择图形，点击地面放置；或点击已有对象进行编辑。\\nShift+点选可多选，多选时变换作为整体操作。",
@@ -585,7 +585,7 @@ export const DOMAINS = {
       "ru": "Объект не выбран.\nВыберите фигуру слева и нажмите на землю, чтобы разместить; или нажмите на существующий объект для редактирования.\nShift+клик для множественного выбора; при множественном выборе трансформация применяется ко всем.",
       "es": "Ningún objeto seleccionado.\nElige una forma en el panel izquierdo, pulsa el suelo para colocarla; o pulsa un objeto existente para editarlo.\nPulsa Mayús+clic para selección múltiple; las transformaciones se aplican a todos los objetos seleccionados.",
       "fr": "Aucun objet sélectionné.\nChoisissez une forme dans le panneau de gauche, cliquez sur le sol pour la placer ; ou cliquez sur un objet existant pour le modifier.\nMaj+clic pour la sélection multiple ; les transformations s’appliquent à tous les objets sélectionnés.",
-      "ar": "لم يتم تحديد أي كائن.\nاختر شكلاً من اللوحة اليسرى، وانقر الأرضي للوضع؛ أو انقر كائناً موجوداً للتحرير.\nانقر مع Shift لتحديد متعدد؛ وتُطبَّق التحويلات على كل الكائنات المحددة."
+      "ar": "لم يتم تحديد أي \u200Eكائن.\nاختر\u200E شكلاً من اللوحة اليسرى، وانقر الأرضي للوضع؛ أو انقر كائناً موجوداً \u200Eللتحرير.\nانقر\u200E مع \u200EShift\u200E لتحديد متعدد؛ وتُطبَّق التحويلات على كل الكائنات المحددة."
     },
     "enterText": {
       "zh-CN": "输入文本",
@@ -1069,7 +1069,7 @@ export const DOMAINS = {
       "ru": "Нажатие кнопки «Назад» (только Android)",
       "es": "Pulsar tecla Atrás (solo Android)",
       "fr": "Tap sur Retour (Android uniquement)",
-      "ar": "نقرة زر الرجوع (Android فقط)"
+      "ar": "نقرة زر الرجوع \u200E(Android\u200E فقط)"
     },
     "helpTouchBackKeyDesc": {
       "zh-CN": "与 Esc 相同：逐层关窗口→取消选择→无则退出确认",
@@ -1080,7 +1080,7 @@ export const DOMAINS = {
       "ru": "Как Esc: последовательно закрыть окна → снять выбор → при отсутствии — подтверждение выхода",
       "es": "Igual que Esc: cierra ventanas capa por capa → borra selección → si no hay, confirma salida",
       "fr": "Identique à Échap : ferme les fenêtres couche par couche → efface la sélection → si rien, confirmation de quitter",
-      "ar": "مثل Esc: إغلاق النوافذ طبقة تلو الأخرى → مسح التحديد → إن لم يكن، تأكيد الخروج"
+      "ar": "مثل \u200EEsc:\u200E إغلاق النوافذ طبقة تلو الأخرى → مسح التحديد → إن لم يكن، تأكيد الخروج"
     },
     "helpTouchBoxSelect": {
       "zh-CN": "「框选」按钮",
@@ -1190,7 +1190,7 @@ export const DOMAINS = {
       "ru": "Добавить/снять выбор (как Shift+клик)",
       "es": "Añadir / quitar selección (igual que Mayús+clic)",
       "fr": "Ajouter / retirer de la sélection (équivalent au Maj+clic)",
-      "ar": "إضافة/إزالة التحديد (مثل Shift+نقرة)"
+      "ar": "إضافة/إزالة التحديد (مثل \u200EShift+نقرة)\u200E"
     },
     "helpTouchPinch": {
       "zh-CN": "双指捏合",
@@ -1311,7 +1311,7 @@ export const DOMAINS = {
       "ru": "HEX цвет",
       "es": "Valor HEX",
       "fr": "Valeur HEX",
-      "ar": "قيمة HEX"
+      "ar": "قيمة \u200EHEX\u200E"
     },
     "hintHideLine": {
       "zh-CN": "已隐藏「{0}」：{1}",
@@ -1322,7 +1322,7 @@ export const DOMAINS = {
       "ru": "Скрыто «{0}»: {1}",
       "es": "«{0}» oculto: {1}",
       "fr": "« {0} » masqué : {1}",
-      "ar": "\"{0}\" مخفي: {1}"
+      "ar": "\u200E\"{0}\"\u200E مخفي: \u200E{1}\u200E"
     },
     "hintMultiSel": {
       "zh-CN": "已选中 {0} 个对象 · 变换将作为整体操作",
@@ -1333,7 +1333,7 @@ export const DOMAINS = {
       "ru": "Выбрано объектов: {0} · трансформация применяется ко всем",
       "es": "{0} objetos seleccionados · la transformación se aplicará como grupo",
       "fr": "{0} objets sélectionnés · la transformation s’appliquera en groupe",
-      "ar": "{0} كائنات محددة · سيُطبَّق التحويل كمجموعة"
+      "ar": "\u200E{0}\u200E كائنات محددة · سيُطبَّق التحويل كمجموعة"
     },
     "hintSep": {
       "zh-CN": "；",
@@ -1388,7 +1388,7 @@ export const DOMAINS = {
       "ru": "Увеличить/уменьшить на 5%",
       "es": "Escalar + / − 5%",
       "fr": "Agrandir / réduire 5%",
-      "ar": "تحجيم ±5%"
+      "ar": "تحجيم \u200E±5%\u200E"
     },
     "kbdCtrlA": {
       "zh-CN": "全选",
@@ -1564,7 +1564,7 @@ export const DOMAINS = {
       "ru": "При выбранном объекте: сдвиг на 0,1 сетки (0,15 длины) / поворот на 5°<br>При невыбранном: перемещение вида на 0,1 сетки / поворот на 5°",
       "es": "Con objeto seleccionado: mover 0.1 cuadrícula (0.15 longitud) / rotar 5°{br}Sin selección: desplazar vista 0.1 cuadrícula / rotar 5°",
       "fr": "Objet sélectionné : déplacement de 0,1 grille (0,15 unité) / rotation 5°{br}Sans sélection : déplacement de la vue de 0,1 grille / rotation 5°",
-      "ar": "مع تحديد كائن: تحريك 0.1 شبكة (طول 0.15) / تدوير 5°{br}بدون تحديد: تحريك العرض 0.1 شبكة / تدوير 5°"
+      "ar": "مع تحديد كائن: تحريك \u200E0.1\u200E شبكة (طول \u200E0.15)\u200E / تدوير \u200E5°{br}بدون\u200E تحديد: تحريك العرض \u200E0.1\u200E شبكة / تدوير \u200E5°\u200E"
     },
     "kbdNoteShift": {
       "zh-CN": "选取对象时：平移1网格（1.5长度）/ 旋转90°{br}未选取时：视角平移1网格 / 旋转90°",
@@ -1575,7 +1575,7 @@ export const DOMAINS = {
       "ru": "При выбранном объекте: сдвиг на 1 сетку (1,5 длины) / поворот на 90°<br>При невыбранном: перемещение вида на 1 сетку / поворот на 90°",
       "es": "Con objeto seleccionado: mover 1 cuadrícula (1.5 longitud) / rotar 90°{br}Sin selección: desplazar vista 1 cuadrícula / rotar 90°",
       "fr": "Objet sélectionné : déplacement de 1 grille (1,5 unité) / rotation 90°{br}Sans sélection : déplacement de la vue de 1 grille / rotation 90°",
-      "ar": "مع تحديد كائن: تحريك شبكة واحدة (طول 1.5) / تدوير 90°{br}بدون تحديد: تحريك العرض شبكة واحدة / تدوير 90°"
+      "ar": "مع تحديد كائن: تحريك شبكة واحدة (طول \u200E1.5)\u200E / تدوير \u200E90°{br}بدون\u200E تحديد: تحريك العرض شبكة واحدة / تدوير \u200E90°\u200E"
     },
     "kbdNoteSlider": {
       "zh-CN": "聚焦滑动条或输入框时生效，原快捷键暂时失效",
@@ -1597,7 +1597,7 @@ export const DOMAINS = {
       "ru": "Режим линии кисти (штрих ограничен горизонталью / вертикалью / 45°)",
       "es": "Modo línea recta del pincel (trazo restringido a horizontal / vertical / 45° al dibujar)",
       "fr": "Mode ligne droite du pinceau (trait contraint à l’horizontale / verticale / 45° pendant le dessin)",
-      "ar": "وضع الخط المستقيم للفرشاة (يُقيد الضربة أفقياً/رأسياً/45° أثناء الرسم)"
+      "ar": "وضع الخط المستقيم للفرشاة (يُقيد الضربة \u200Eأفقياً/رأسياً/45°\u200E أثناء الرسم)"
     },
     "kbdSelRotX": {
       "zh-CN": "绕X轴顺/逆旋转",
@@ -1608,7 +1608,7 @@ export const DOMAINS = {
       "ru": "Поворот вокруг оси X по/против часовой",
       "es": "Rotar horario / antihorario en X",
       "fr": "Rotation horaire / antihoraire autour de X",
-      "ar": "تدوير مع/عكس عقارب الساعة حول X"
+      "ar": "تدوير مع/عكس عقارب الساعة حول \u200EX\u200E"
     },
     "kbdSelRotY": {
       "zh-CN": "绕Y轴顺/逆旋转",
@@ -1619,7 +1619,7 @@ export const DOMAINS = {
       "ru": "Поворот вокруг оси Y по/против часовой",
       "es": "Rotar horario / antihorario en Y",
       "fr": "Rotation horaire / antihoraire autour de Y",
-      "ar": "تدوير مع/عكس عقارب الساعة حول Y"
+      "ar": "تدوير مع/عكس عقارب الساعة حول \u200EY\u200E"
     },
     "kbdSelRotZ": {
       "zh-CN": "绕Z轴顺/逆旋转",
@@ -1630,7 +1630,7 @@ export const DOMAINS = {
       "ru": "Поворот вокруг оси Z по/против часовой",
       "es": "Rotar horario / antihorario en Z",
       "fr": "Rotation horaire / antihoraire autour de Z",
-      "ar": "تدوير مع/عكس عقارب الساعة حول Z"
+      "ar": "تدوير مع/عكس عقارب الساعة حول \u200EZ\u200E"
     },
     "kbdSelX": {
       "zh-CN": "沿X轴+/−平移",
@@ -1641,7 +1641,7 @@ export const DOMAINS = {
       "ru": "Сдвиг вдоль оси X +/−",
       "es": "Mover en ±X",
       "fr": "Déplacer selon ±X",
-      "ar": "التحرك على ±X"
+      "ar": "التحرك على \u200E±X\u200E"
     },
     "kbdSelY": {
       "zh-CN": "沿Y轴+/−平移",
@@ -1652,7 +1652,7 @@ export const DOMAINS = {
       "ru": "Сдвиг вдоль оси Y +/−",
       "es": "Mover en ±Y",
       "fr": "Déplacer selon ±Y",
-      "ar": "التحرك على ±Y"
+      "ar": "التحرك على \u200E±Y\u200E"
     },
     "kbdSelZ": {
       "zh-CN": "沿Z轴+/−平移",
@@ -1663,7 +1663,7 @@ export const DOMAINS = {
       "ru": "Сдвиг вдоль оси Z +/−",
       "es": "Mover en ±Z",
       "fr": "Déplacer selon ±Z",
-      "ar": "التحرك على ±Z"
+      "ar": "التحرك على \u200E±Z\u200E"
     },
     "kbdShiftClickSel": {
       "zh-CN": "加选对象（点选）",
@@ -1707,7 +1707,7 @@ export const DOMAINS = {
       "ru": "Поворот на 90°",
       "es": "Rotar 90°",
       "fr": "Rotation 90°",
-      "ar": "تدوير 90°"
+      "ar": "تدوير \u200E90°\u200E"
     },
     "kbdShiftRotUnselView": {
       "zh-CN": "视角旋转90°",
@@ -1718,7 +1718,7 @@ export const DOMAINS = {
       "ru": "Поворот вида на 90°",
       "es": "Rotar vista 90°",
       "fr": "Pivoter la vue 90°",
-      "ar": "تدوير العرض 90°"
+      "ar": "تدوير العرض \u200E90°\u200E"
     },
     "kbdShiftScaleSel": {
       "zh-CN": "放大×2/缩小×0.5",
@@ -1729,7 +1729,7 @@ export const DOMAINS = {
       "ru": "Увеличить ×2 / уменьшить ×0,5",
       "es": "Escalar ×2 / ×0.5",
       "fr": "Échelle ×2 / ×0,5",
-      "ar": "تحجيم ×2 / ×0.5"
+      "ar": "تحجيم \u200E×2\u200E / \u200E×0.5\u200E"
     },
     "kbdSliderCursor": {
       "zh-CN": "移动光标",
@@ -1883,7 +1883,7 @@ export const DOMAINS = {
       "ru": "Сочетания Ctrl",
       "es": "Combinaciones con Ctrl",
       "fr": "Combinaisons Ctrl",
-      "ar": "تركيبات Ctrl"
+      "ar": "تركيبات \u200ECtrl\u200E"
     },
     "kbdTitleShift": {
       "zh-CN": "Shift 组合键",
@@ -1894,7 +1894,7 @@ export const DOMAINS = {
       "ru": "Клавиша Shift",
       "es": "Combinaciones con Mayús",
       "fr": "Combinaisons Maj",
-      "ar": "تركيبات Shift"
+      "ar": "تركيبات \u200EShift\u200E"
     },
     "kbdTitleSingle": {
       "zh-CN": "单键操作",
@@ -2070,7 +2070,7 @@ export const DOMAINS = {
       "ru": "Удалить выбранные заметки ({0})? Действие необратимо",
       "es": "¿Eliminar {0} notas seleccionadas? No se puede deshacer",
       "fr": "Supprimer les {0} notes autocollantes sélectionnées ? Cette action est irréversible",
-      "ar": "حذف {0} ملاحظة لاصقة محددة؟ لا يمكن التراجع"
+      "ar": "حذف \u200E{0}\u200E ملاحظة لاصقة محددة؟ لا يمكن التراجع"
     },
     "manBatchDeleted": {
       "zh-CN": "已删除 {0} 条",
@@ -2081,7 +2081,7 @@ export const DOMAINS = {
       "ru": "Удалено: {0}",
       "es": "Eliminadas {0}",
       "fr": "{0} supprimé(s)",
-      "ar": "تم حذف {0}"
+      "ar": "تم حذف \u200E{0}\u200E"
     },
     "manCancel": {
       "zh-CN": "取消",
@@ -2345,7 +2345,7 @@ export const DOMAINS = {
       "ru": "Эта резервная копия заметок на языке {0}; текущее руководство — на {1}. Импорт пропущен во избежание смешения языков",
       "es": "Esta copia de seguridad de notas es en {0}; el manual actual es {1}. Importación omitida para evitar mezclar idiomas",
       "fr": "Cette sauvegarde de notes est en {0} ; le manuel actuel est en {1}. Importation ignorée pour éviter de mélanger les langues",
-      "ar": "نسخة الملاحظات اللاصقة هذه بلغة {0}؛ ودليل الاستخدام الحالي بلغة {1}. تم تخطي الاستيراد لتجنب خلط اللغات"
+      "ar": "نسخة الملاحظات اللاصقة هذه بلغة \u200E{0}؛\u200E ودليل الاستخدام الحالي بلغة \u200E{1}.\u200E تم تخطي الاستيراد لتجنب خلط اللغات"
     },
     "manImportLangUnknown": {
       "zh-CN": "该备份未携带语言标识，仅当你确认它导出自当前（{0}）说明书时才可导入",
@@ -2356,7 +2356,7 @@ export const DOMAINS = {
       "ru": "В этой резервной копии нет языковой метки. Импортируйте только если уверены, что она экспортирована из текущего ({0}) руководства",
       "es": "Esta copia de seguridad no tiene etiqueta de idioma. Impórtala solo si fue exportada del manual actual ({0})",
       "fr": "Cette sauvegarde n’a pas de balise de langue. Importez-la uniquement si vous êtes sûr qu’elle provient du manuel actuel ({0})",
-      "ar": "لا يحتوي هذا النسخ الاحتياطي على علامة لغة. استورده فقط إذا كنت متأكداً أنه صُدِر من دليل الاستخدام الحالي ({0})"
+      "ar": "لا يحتوي هذا النسخ الاحتياطي على علامة لغة. استورده فقط إذا كنت متأكداً أنه صُدِر من دليل الاستخدام الحالي \u200E({0})\u200E"
     },
     "manImportMoved": {
       "zh-CN": "其中 {0} 条引用位置已随说明书更新自动校准",
@@ -2378,7 +2378,7 @@ export const DOMAINS = {
       "ru": "В этой резервной копии не было метки версии; заметки помечены как текущая версия ({0})",
       "es": "Esta copia de seguridad no tenía etiqueta de versión; las notas se marcaron como versión actual ({0})",
       "fr": "Cette sauvegarde n’avait pas de balise de version ; les notes ont été marquées comme version actuelle ({0})",
-      "ar": "لا يحتوي هذا النسخ الاحتياطي على علامة إصدار؛ جرى وضع علامة على الملاحظات كإصدار حالي ({0})"
+      "ar": "لا يحتوي هذا النسخ الاحتياطي على علامة إصدار؛ جرى وضع علامة على الملاحظات كإصدار حالي \u200E({0})\u200E"
     },
     "manImportOldVer": {
       "zh-CN": "已导入 {0} 条便签，其中部分创建于旧版本（{1}），若说明书已更新请复核",
@@ -2389,7 +2389,7 @@ export const DOMAINS = {
       "ru": "Импортировано заметок: {0}; некоторые созданы в более старой версии ({1}). Проверьте их, если руководство изменилось",
       "es": "Importadas {0} nota(s); algunas fueron creadas en una versión anterior ({1}). Revísalas si el manual cambió",
       "fr": "{0} note(s) importée(s) ; certaines ont été créées dans une version antérieure ({1}). Vérifiez-les si le manuel a changé",
-      "ar": "تم استيراد {0} ملاحظة لاصقة؛ بَعضها أُنشئ في إصدار أقدم ({1}). راجعها إذا تغيّر الدليل"
+      "ar": "تم استيراد \u200E{0}\u200E ملاحظة لاصقة؛ بَعضها أُنشئ في إصدار أقدم \u200E({1}).\u200E راجعها إذا تغيّر الدليل"
     },
     "manImported": {
       "zh-CN": "已导入 {0} 条便签",
@@ -2400,7 +2400,7 @@ export const DOMAINS = {
       "ru": "Импортировано заметок: {0}",
       "es": "Importadas {0} notas",
       "fr": "{0} notes autocollantes importées",
-      "ar": "تم استيراد {0} ملاحظة لاصقة"
+      "ar": "تم استيراد \u200E{0}\u200E ملاحظة لاصقة"
     },
     "manJump": {
       "zh-CN": "跳转",
@@ -2455,7 +2455,7 @@ export const DOMAINS = {
       "ru": "Не удалось загрузить руководство, проверьте наличие файлов docs/ в каталоге развёртывания",
       "es": "Error al cargar el manual. Comprueba que la carpeta docs/ esté presente en la implementación.",
       "fr": "Échec du chargement du manuel. Veuillez vérifier que le dossier docs/ est présent dans le déploiement.",
-      "ar": "فشل تحميل الدليل. يرجى التأكد من وجود مجلد docs/ في النشر."
+      "ar": "فشل تحميل الدليل. يرجى التأكد من وجود مجلد \u200Edocs/\u200E في النشر."
     },
     "manLoading": {
       "zh-CN": "加载中…",
@@ -2543,7 +2543,7 @@ export const DOMAINS = {
       "ru": "Строка {0}",
       "es": "Línea {0}",
       "fr": "Ligne {0}",
-      "ar": "السطر {0}"
+      "ar": "السطر \u200E{0}\u200E"
     },
     "manNoteCount": {
       "zh-CN": "共 {0} 条",
@@ -2554,7 +2554,7 @@ export const DOMAINS = {
       "ru": "Всего: {0}",
       "es": "{0} en total",
       "fr": "{0} au total",
-      "ar": "{0} الإجمالي"
+      "ar": "\u200E{0}\u200E الإجمالي"
     },
     "manNoteDiscard": {
       "zh-CN": "不保存",
@@ -2730,7 +2730,7 @@ export const DOMAINS = {
       "ru": "Выбрано: {0}/{1}",
       "es": "{0}/{1} seleccionadas",
       "fr": "{0}/{1} sélectionné(s)",
-      "ar": "{0}/{1} محددة"
+      "ar": "\u200E{0}/{1}\u200E محددة"
     },
     "manSelectAll": {
       "zh-CN": "全选",
@@ -2873,7 +2873,7 @@ export const DOMAINS = {
       "ru": "Внутр. угол A",
       "es": "Ángulo A",
       "fr": "Angle A",
-      "ar": "الزاوية A"
+      "ar": "الزاوية \u200EA\u200E"
     },
     "pAngleB": {
       "zh-CN": "内角 B",
@@ -2884,7 +2884,7 @@ export const DOMAINS = {
       "ru": "Внутр. угол B",
       "es": "Ángulo B",
       "fr": "Angle B",
-      "ar": "الزاوية B"
+      "ar": "الزاوية \u200EB\u200E"
     },
     "pArc": {
       "zh-CN": "主扫掠角",
@@ -3005,7 +3005,7 @@ export const DOMAINS = {
       "ru": "Диагональ p",
       "es": "Diagonal p",
       "fr": "Diagonale p",
-      "ar": "القطري p"
+      "ar": "القطري \u200Ep\u200E"
     },
     "pDiagQ": {
       "zh-CN": "对角线 q",
@@ -3016,7 +3016,7 @@ export const DOMAINS = {
       "ru": "Диагональ q",
       "es": "Diagonal q",
       "fr": "Diagonale q",
-      "ar": "القطري q"
+      "ar": "القطري \u200Eq\u200E"
     },
     "pDip": {
       "zh-CN": "心尖凹陷度",
@@ -3214,7 +3214,7 @@ export const DOMAINS = {
       "ru": "Радиус X",
       "es": "Radio X",
       "fr": "Rayon X",
-      "ar": "نصف قطر X"
+      "ar": "نصف قطر \u200EX\u200E"
     },
     "pRadiusY": {
       "zh-CN": "Y 半径",
@@ -3225,7 +3225,7 @@ export const DOMAINS = {
       "ru": "Радиус Y",
       "es": "Radio Y",
       "fr": "Rayon Y",
-      "ar": "نصف قطر Y"
+      "ar": "نصف قطر \u200EY\u200E"
     },
     "pScale": {
       "zh-CN": "缩放",
@@ -3533,7 +3533,7 @@ export const DOMAINS = {
       "ru": "Коорд. X",
       "es": "Posición X",
       "fr": "Position X",
-      "ar": "الموضع X"
+      "ar": "الموضع \u200EX\u200E"
     },
     "posY": {
       "zh-CN": "竖坐标 Z",
@@ -3544,7 +3544,7 @@ export const DOMAINS = {
       "ru": "Коорд. Z",
       "es": "Posición Z",
       "fr": "Position Z",
-      "ar": "الموضع Z"
+      "ar": "الموضع \u200EZ\u200E"
     },
     "posZ": {
       "zh-CN": "纵坐标 Y",
@@ -3555,7 +3555,7 @@ export const DOMAINS = {
       "ru": "Коорд. Y",
       "es": "Posición Y",
       "fr": "Position Y",
-      "ar": "الموضع Y"
+      "ar": "الموضع \u200EY\u200E"
     },
     "presetColors": {
       "zh-CN": "预设颜色",
@@ -3577,7 +3577,7 @@ export const DOMAINS = {
       "ru": "<p>«Куб · 3D-конструктор» (далее именуемое «Программа» или «мы») — это <strong>облегчённый</strong> кроссплатформенный редактор 3D/2D-сцен, предоставляемый вам индивидуальным разработчиком <strong>Yushichadao</strong>. Мы <strong>не собираем ваши персональные данные</strong>; ваш творческий контент и локальные настройки по умолчанию сохраняются только на вашем собственном устройстве, и мы не передаём, не храним и не используем ваши персональные данные для иных целей. Используя Программу, вы соглашаетесь с настоящей Политикой.</p><h4>Статья 1. Учётные данные</h4><p><strong>В Программе нет системы учётных записей; вы можете использовать её без регистрации или входа. Мы не собираем, не храним и не связываем с вашей личностью имя пользователя, пароль, адрес электронной почты, номер телефона или иные персональные данные учётной записи.</strong></p><h4>Статья 2. Локальные творческие данные</h4><p>1. <strong>Созданные вами 3D-модели, сцены, стикеры, аннотации, текст и изображения по умолчанию сохраняются на вашем локальном устройстве (хранилище браузера, песочница приложения или экспортированный файл) и не загружаются на какие-либо серверы.</strong></p><p>2. За исключением необходимой локальной технической обработки для предоставления функций, мы не читаем, не загружаем и не передаём ваш творческий контент активно.</p><h4>Статья 3. Сторонние SDK</h4><p><strong>Программа не подключает никакие сторонние SDK, которым требуется сбор или передача ваших персональных данных (включая аналитику, отчёты о сбоях, рекламу, облачную синхронизацию, социальный обмен и т. д.). Программа использует только необходимые библиотеки открытого кода (например, Three.js и компоненты WebGL), работающие локально, которые не передают ваши персональные данные вовне.</strong></p><h4>Статья 4. Поручение обработки, передача, уступка и раскрытие</h4><p>1. Мы не продаём ваши персональные данные каким-либо третьим лицам.</p><p>2. <strong>За следующими исключениями мы не передаём, не уступаем и не раскрываем ваши персональные данные:</strong></p><p>1) для соблюдения применимых законов, судебных или регуляторных требований;</p><p>2) для защиты законных прав и интересов Программы, вас или общества;</p><p>3) при вашем предварительном явном согласии.</p><p>3. Поскольку Программа не собирает ваши персональные данные, указанные случаи в общем порядке не возникают.</p><h4>Статья 5. Безопасность данных и ваша ответственность</h4><p>1. Ваши основные творческие данные хранятся преимущественно на вашем собственном локальном устройстве; надёжно храните устройство и устанавливайте блокировку экрана, чтобы предотвратить несанкционированный доступ.</p><p>2. <strong>Регулярно экспортируйте и резервируйте важные работы; мы не гарантируем восстановление данных, утраченных из-за повреждения устройства, очистки браузера, удаления приложения, сброса системы или ошибочных действий, и соответствующие риски несёте вы.</strong></p><p>3. Если вы свяжетесь с нами по электронной почте, указанный адрес используется только для ответа на ваш вопрос и не применяется иначе.</p><h4>Статья 6. Ваши права и выход</h4><p><strong>Вы всегда контролируете свои данные: в любой момент можете очистить кэш, удалить работы, удалить приложение или прекратить использование Программы.</strong></p><h4>Статья 7. Обновление Политики</h4><p><strong>Настоящая Политика может корректироваться вместе с обновлениями Программы, и обновлённая версия публикуется в ней. Продолжение использования означает принятие; если вы не согласны, прекратите использование Программы.</strong></p><h4>Статья 8. Контакты</h4><p>Разработчик: <strong>Yushichadao</strong><br>Контактная почта: <strong>yushichadao@qq.com</strong></p><h4>Статья 9. Действие текста</h4><p>Настоящая Политика составлена на упрощённом китайском языке; при несоответствии иных языковых версий упрощённой китайской версии приоритет имеет китайская версия.</p><h4>Статья 10. Обнаружение обновлений</h4><p>1. Чтобы предоставлять вам обновления версий и исправления безопасности, Программа может автоматически проверять наличие новой версии. Такая проверка запрашивает только необходимую информацию о версии (например, текущий номер версии) и не затрагивает, не собирает и не загружает ваш творческий контент, заметки или какие-либо персональные данные.</p><p>2. Вы можете отключить автоматическую проверку обновлений в настройках либо выбрать отложить обновление и продолжить использование текущей версии.</p>",
       "es": "<h4>Política de Privacidad</h4><p>Cubo · Taller de Diseño 3D (en adelante, el «Software» o «nosotros») es un <strong>editor de escenas 3D/2D sin conexión</strong>, multiplataforma, que te proporciona <strong>Yushichadao</strong> como desarrollador individual. <strong>No recopilamos tu información personal</strong>; tu contenido creativo y tus ajustes locales se guardan por defecto solo en tu propio dispositivo, y no transmitimos, almacenamos ni usamos tu información personal para ningún otro fin. El uso del Software implica que aceptas esta Política.</p><h4>1. ¿Recopilamos información de cuenta?</h4><p><strong>El Software no tiene sistema de cuenta; puedes usarlo sin registro ni inicio de sesión. No recopilamos, almacenamos ni vinculamos tu nombre de usuario, contraseña, correo, teléfono u otra información personal de tipo cuenta a tu identidad.</strong></p><h4>2. Datos creativos almacenados localmente</h4><p>(1) <strong>Los modelos 3D, escenas, notas, anotaciones, texto e imágenes que creas se guardan por defecto en tu dispositivo local (almacenamiento del navegador, sandbox de la app o archivos que exportes) y no se suben a ningún servidor.</strong></p><p>(2) Salvo el procesamiento técnico necesario en el dispositivo para ofrecer funciones locales, no leemos, subimos ni transmitimos activamente tu contenido creativo.</p><h4>3. No integramos ningún SDK de terceros que comparta información personal</h4><p><strong>El Software no integra ningún SDK de terceros que recopile o comparta tu información personal (incluidos analítica, informes de errores, publicidad, sincronización en la nube, uso compartido social, etc.). El Software solo usa bibliotecas gráficas de código abierto necesarias (como Three.js y componentes WebGL) que se ejecutan en tu dispositivo y no transmiten tu información personal a ningún externo.</strong></p><h4>4. Tratamiento por encargo, uso compartido, transferencia y divulgación</h4><p><strong>No vendemos tu información personal a ningún tercero. Salvo en los siguientes casos, no compartiremos, transferiremos ni divulgaremos públicamente tu información personal:</strong> (1) para cumplir leyes, regulaciones, requisitos judiciales o de supervisión aplicables; (2) para proteger los derechos e intereses legítimos del Software, tuyos o del público; (3) con tu consentimiento explícito previo. Dado que el Software no recopila tu información personal, los casos anteriores generalmente no ocurren.</p><h4>5. Seguridad de datos y tu responsabilidad</h4><p>(1) Tus datos creativos centrales se almacenan principalmente en tu propio dispositivo; mantén tu dispositivo seguro y configura un bloqueo de pantalla para evitar accesos no autorizados.</p><p>(2) <strong>Exporta y haz copias de seguridad del trabajo importante con regularidad; no podemos garantizar la recuperación de datos perdidos por daño del dispositivo, limpieza del navegador, desinstalación de la app, restablecimiento del sistema o errores operativos, y los riesgos relacionados corren por tu cuenta.</strong></p><p>(3) Si nos contactas por correo, la dirección que proporciones se usa solo para responder a tu consulta y no para ningún otro fin.</p><h4>6. Tus derechos y retirada</h4><p><strong>Siempre controlas tus datos: puedes borrar la caché, eliminar obras, desinstalar la app o dejar de usar el Software en cualquier momento.</strong></p><h4>7. Actualizaciones de la Política</h4><p><strong>Esta Política puede ajustarse con las actualizaciones del software; la versión actualizada se anunciará dentro del Software. El uso continuado constituye aceptación; si no aceptas, deja de usar el Software.</strong></p><h4>8. Contáctanos</h4><p>Desarrollador: <strong>Yushichadao</strong><br>Correo de contacto: <strong>yushichadao@qq.com</strong></p><h4>9. Eficacia del texto</h4><p>Esta Política se rige por la versión en chino simplificado; si alguna versión en otro idioma difiere de la versión en chino simplificado, prevalecerá la versión en chino simplificado. Fecha de entrada en vigor de esta Política: 21 de agosto de 2026.</p><h4>10. Comprobación de actualizaciones y explicación</h4><p>(1) Para ofrecerle actualizaciones de versión y correcciones de seguridad, el Software puede comprobar automáticamente si hay una nueva versión disponible. Esta comprobación solo solicita la información de versión necesaria (como el número de versión actual) y no implica, no recopila ni sube su contenido creativo, sus notas adhesivas ni ninguna información personal.</p><p>(2) Puede desactivar la comprobación automática de actualizaciones en los ajustes, o elegir no actualizar por ahora y seguir usando la versión actual.</p>",
       "fr": "<p>Atelier de Conception 3D Cube (ci-après le « Logiciel » ou « nous ») est un éditeur de scènes 3D/2D multiplateforme <strong>léger</strong> que vous propose le développeur individuel <strong>Yushichadao</strong>. <strong>Nous ne collectons pas vos informations personnelles</strong> ; votre contenu créatif et vos paramètres locaux sont enregistrés par défaut uniquement sur votre propre appareil, et il n'existe aucun cas où nous transmettrions, stockerions ou utiliserions vos informations personnelles à d'autres fins. En utilisant le Logiciel, vous acceptez la présente Politique.</p><h4>Article 1. Informations de compte</h4><p><strong>Le Logiciel n'a pas de système de compte ; vous pouvez l'utiliser sans vous inscrire ni vous connecter. Nous ne collectons, ne stockons ni ne lions à votre identité votre nom d'utilisateur, mot de passe, adresse e-mail, numéro de téléphone ou autres informations personnelles de type compte.</strong></p><h4>Article 2. Données créatives locales</h4><p>1. <strong>Les modèles 3D, scènes, notes, annotations, texte et images que vous créez sont enregistrés par défaut sur votre appareil local (stockage du navigateur, bac à sable de l'application ou fichier exporté), et ne sont téléversés sur aucun serveur.</strong></p><p>2. Hormis le traitement technique local nécessaire à la fourniture des fonctions, nous ne lisons, ne téléversons ni ne transmettons activement votre contenu créatif.</p><h4>Article 3. SDK tiers</h4><p><strong>Le Logiciel n'intègre aucun SDK tiers nécessitant la collecte ou le partage de vos informations personnelles (analytique, rapports de crash, publicité, synchronisation cloud, partage social, etc.). Le Logiciel utilise uniquement les bibliothèques graphiques open source nécessaires (comme Three.js et composants WebGL) exécutées localement, qui ne transmettent pas vos informations personnelles à l'extérieur.</strong></p><h4>Article 4. Traitement par mandat, partage, transfert et divulgation</h4><p>1. Nous ne vendons pas vos informations personnelles à des tiers.</p><p>2. <strong>Sauf dans les cas suivants, nous ne partageons, ne transférons ni ne divulguons vos informations personnelles :</strong></p><p>1. Pour respecter les lois, exigences judiciaires ou réglementaires applicables ;</p><p>2. Pour protéger les droits et intérêts légitimes du Logiciel, de vous ou du public ;</p><p>3. Avec votre consentement explicite préalable.</p><p>3. Le Logiciel ne collectant pas vos informations personnelles, ces cas ne se produisent généralement pas.</p><h4>Article 5. Sécurité des données et votre responsabilité</h4><p>1. Vos données créatives centrales sont principalement enregistrées sur votre propre appareil local ; conservez bien votre appareil et configurez un verrouillage d'écran pour éviter tout accès non autorisé.</p><p>2. <strong>Exportez et sauvegardez régulièrement vos œuvres importantes ; nous ne garantissons pas la récupération des données perdues suite à une panne d'appareil, un nettoyage du navigateur, une désinstallation, une réinitialisation système ou une erreur de manipulation, et les risques vous incombent.</strong></p><p>3. Si vous nous contactez par e-mail, l'adresse fournie est utilisée uniquement pour répondre à votre question et ne l'est à aucune autre fin.</p><h4>Article 6. Vos droits et retrait</h4><p><strong>Vous maîtrisez toujours vos données : vous pouvez à tout moment effacer le cache, supprimer des œuvres, désinstaller l'application ou cesser d'utiliser le Logiciel.</strong></p><h4>Article 7. Mises à jour de la Politique</h4><p><strong>La présente Politique peut être ajustée avec les mises à jour du Logiciel, et la version mise à jour est annoncée dans le Logiciel. L'utilisation continue vaut acceptation ; dans le cas contraire, cessez d'utiliser le Logiciel.</strong></p><h4>Article 8. Nous contacter</h4><p>Développeur : <strong>Yushichadao</strong><br>E-mail de contact : <strong>yushichadao@qq.com</strong></p><h4>Article 9. Effet du texte</h4><p>La présente Politique est régie par sa version en chinois simplifié ; si une autre version linguistique diffère de la version en chinois simplifié, la version en chinois simplifié prévaut.</p><h4>Article 10. Détection de mises à jour</h4><p>1. Pour vous fournir des mises à jour de version et des correctifs de sécurité, le Logiciel peut détecter automatiquement si une nouvelle version est disponible. Cette détection ne demande que les informations de version nécessaires (comme le numéro de version actuel) et n'implique, ne collecte ni ne téléverse votre contenu créatif, vos notes ou aucune information personnelle.</p><p>2. Vous pouvez désactiver la détection automatique de mises à jour dans les paramètres, ou choisir de ne pas mettre à jour et de continuer à utiliser la version actuelle.</p>",
-      "ar": "<div dir=\"rtl\"><p>كيوب · ورشة تصميم ثلاثي الأبعاد (يشار إليها فيما بعد بـ «البرنامج» أو «نحن») هي محرر مشاهد ثلاثية/ثنائية الأبعاد عبر المنصات يقدّمه لك <strong>Yushichadao</strong> كمطوّر فردي بأسلوب <strong>دون اتصال أولاً</strong>. نحن <strong>لا نجمع معلوماتك الشخصية</strong>؛ ويُحفظ محتواك الإبداعي وإعداداتك المحلية افتراضياً على جهازك فقط، ولا ننقل معلوماتك الشخصية أو نخزنها أو نستخدمها لأي غرض آخر. استخدامك للبرنامج يعني موافقتك على هذه السياسة.</p><h4>1. معلومات الحساب</h4><p><strong>لا يملك البرنامج نظام حسابات؛ يمكنك استخدامه دون تسجيل أو تسجيل دخول. ولا نجمع أو نخزن أو نربط اسم المستخدم أو كلمة المرور أو البريد أو رقم الهاتف أو معلومات شخصية من نوع الحساب بهويتك.</strong></p><h4>2. البيانات الإبداعية المخزنة محلياً</h4><p>(1) <strong>تُحفظ النماذج ثلاثية الأبعاد والمشاهد والملاحظات اللاصقة والتعليقات والنصوص والصور التي تنشئها افتراضياً على جهازك المحلي (تخزين المتصفح أو صندوق التطبيق أو الملفات التي تصدرها) ولا تُرفع إلى أي خادم.</strong></p><p>(2) عدا المعالجة التقنية الضرورية على الجهاز لتقديم الوظائف المحلية، لا نقرأ محتواك الإبداعي أو نرفعه أو ننقله بنشاط.</p><h4>3. أدوات الجهات الخارجية (SDK)</h4><p><strong>لا يدمج البرنامج أي SDK لجهة خارجية يجمع معلوماتك الشخصية أو يشاركها (بما في ذلك التحليلات وتقارير الأعطال والإعلانات والمزامنة السحابية والمشاركة الاجتماعية وغيرها). ويستخدم البرنامج فقط مكتبات الرسوميات مفتوحة المصدر الضرورية (مثل Three.js ومكوّنات WebGL) التي تعمل على جهازك ولا تنقل معلوماتك الشخصية إلى أي طرف خارجي.</strong></p><h4>4. المعالجة الموكلّة والمشاركة والنقل والإفصاح العلني</h4><p><strong>لا نبيع معلوماتك الشخصية لأي طرف ثالث. عدا في الحالات التالية، لن نشارك معلوماتك الشخصية أو ننقلها أو نُفصح عنها علناً:</strong></p><p>(1) الامتثال للقوانين واللوائح والطلبات القضائية أو التنظيمية المطبقة؛</p><p>(2) حماية المصالح المشروعة للبرنامج أو لك أو للجمهور؛</p><p>(3) بموافقتك الصريحة المسبقة. وبما أن البرنامج لا يجمع معلوماتك الشخصية، فهذه الحالات عادة لا تقع.</p><h4>5. أمن البيانات ومسؤوليتك</h4><p>(1) تُخزَّن بياناتك الإبداعية الأساسية بشكل رئيسي على جهازك؛ يرجى الحفاظ على أمان جهازك وتعيين قفل شاشة لمنع وصول الآخرين إليه دون إذن.</p><p>(2) <strong>يرجى تصدير الأعمال المهمة ونسخها احتياطياً بانتظام؛ ولا يمكننا ضمان استرداد البيانات المفقودة بسبب تلف الجهاز أو تنظيف المتصفح أو إلغاء تثبيت التطبيق أو إعادة ضبط النظام أو أخطاء التشغيل، وتتحمل أنت المخاطر ذات الصلة.</strong></p><p>(3) إذا تواصلت معنا بالبريد، فإن عنوان البريد الذي تقدمه يُستخدم فقط للرد على استفسارك ولا يُستخدم لأي غرض آخر.</p><h4>6. حقوقك والانسحاب</h4><p><strong>أنت متحكم دائماً في بياناتك: يمكنك مسح ذاكرة التخزين المؤقت أو حذف الأعمال أو إلغاء تثبيت التطبيق أو التوقف عن استخدام البرنامج في أي وقت.</strong></p><h4>7. تحديثات السياسة</h4><p><strong>يجوز تعديل هذه السياسة مع تحديثات البرنامج؛ سيُعلن عن النسخة المحدثة داخل البرنامج. ويُعد الاستمرار في الاستخدام قبولاً بها؛ وإذا كنت لا توافق، يرجى التوقف عن استخدام البرنامج.</strong></p><h4>8. تواصل معنا</h4><p>المطوّر: <strong>Yushichadao</strong><br>البريد للتواصل: <strong>yushichadao@qq.com</strong></p><h4>9. النص والنفاذ</h4><p>تحكم هذه السياسة النسخة الصينية المبسطة؛ وإذا تعارضت أي نسخة بلغة أخرى مع النسخة الصينية المبسطة، فالنسخة الصينية المبسطة هي المرجع.</p><h4>10. فحص التحديث والتوضيح</h4><p>(1) لتزويدك بتحديثات الإصدار وإصلاحات الأمان، قد يفحص البرنامج تلقائياً ما إذا كان هناك إصدار جديد متاح. يطلب هذا الفحص معلومات الإصدار الضرورية فقط (مثل رقم الإصدار الحالي) ولا يشمل أو يجمع أو يرفع محتواك الإبداعي أو ملاحظاتك اللاصقة أو أي معلومات شخصية.</p><p>(2) يمكنك إيقاف فحص التحديث التلقائي في الإعدادات، أو اختيار عدم التحديث الآن والاستمرار في استخدام الإصدار الحالي.</p></div>"
+      "ar": "<div dir=\"rtl\"><p>كيوب · ورشة تصميم ثلاثي الأبعاد (يشار إليها فيما بعد بـ «البرنامج» أو «نحن») هي محرر مشاهد ثلاثية/ثنائية الأبعاد عبر المنصات يقدّمه لك <strong>\u200EYushichadao\u200E</strong> كمطوّر فردي بأسلوب <strong>دون اتصال أولاً</strong>. نحن <strong>لا نجمع معلوماتك الشخصية</strong>؛ ويُحفظ محتواك الإبداعي وإعداداتك المحلية افتراضياً على جهازك فقط، ولا ننقل معلوماتك الشخصية أو نخزنها أو نستخدمها لأي غرض آخر. استخدامك للبرنامج يعني موافقتك على هذه السياسة.</p><h4>\u200E1.\u200E معلومات الحساب</h4><p><strong>لا يملك البرنامج نظام حسابات؛ يمكنك استخدامه دون تسجيل أو تسجيل دخول. ولا نجمع أو نخزن أو نربط اسم المستخدم أو كلمة المرور أو البريد أو رقم الهاتف أو معلومات شخصية من نوع الحساب بهويتك.</strong></p><h4>\u200E2.\u200E البيانات الإبداعية المخزنة محلياً</h4><p>\u200E(1)\u200E <strong>تُحفظ النماذج ثلاثية الأبعاد والمشاهد والملاحظات اللاصقة والتعليقات والنصوص والصور التي تنشئها افتراضياً على جهازك المحلي (تخزين المتصفح أو صندوق التطبيق أو الملفات التي تصدرها) ولا تُرفع إلى أي خادم.</strong></p><p>\u200E(2)\u200E عدا المعالجة التقنية الضرورية على الجهاز لتقديم الوظائف المحلية، لا نقرأ محتواك الإبداعي أو نرفعه أو ننقله بنشاط.</p><h4>\u200E3.\u200E أدوات الجهات الخارجية \u200E(SDK)\u200E</h4><p><strong>لا يدمج البرنامج أي \u200ESDK\u200E لجهة خارجية يجمع معلوماتك الشخصية أو يشاركها (بما في ذلك التحليلات وتقارير الأعطال والإعلانات والمزامنة السحابية والمشاركة الاجتماعية وغيرها). ويستخدم البرنامج فقط مكتبات الرسوميات مفتوحة المصدر الضرورية (مثل \u200EThree.js\u200E ومكوّنات \u200EWebGL)\u200E التي تعمل على جهازك ولا تنقل معلوماتك الشخصية إلى أي طرف خارجي.</strong></p><h4>\u200E4.\u200E المعالجة الموكلّة والمشاركة والنقل والإفصاح العلني</h4><p><strong>لا نبيع معلوماتك الشخصية لأي طرف ثالث. عدا في الحالات التالية، لن نشارك معلوماتك الشخصية أو ننقلها أو نُفصح عنها علناً:</strong></p><p>\u200E(1)\u200E الامتثال للقوانين واللوائح والطلبات القضائية أو التنظيمية المطبقة؛</p><p>\u200E(2)\u200E حماية المصالح المشروعة للبرنامج أو لك أو للجمهور؛</p><p>\u200E(3)\u200E بموافقتك الصريحة المسبقة. وبما أن البرنامج لا يجمع معلوماتك الشخصية، فهذه الحالات عادة لا تقع.</p><h4>\u200E5.\u200E أمن البيانات ومسؤوليتك</h4><p>\u200E(1)\u200E تُخزَّن بياناتك الإبداعية الأساسية بشكل رئيسي على جهازك؛ يرجى الحفاظ على أمان جهازك وتعيين قفل شاشة لمنع وصول الآخرين إليه دون إذن.</p><p>\u200E(2)\u200E <strong>يرجى تصدير الأعمال المهمة ونسخها احتياطياً بانتظام؛ ولا يمكننا ضمان استرداد البيانات المفقودة بسبب تلف الجهاز أو تنظيف المتصفح أو إلغاء تثبيت التطبيق أو إعادة ضبط النظام أو أخطاء التشغيل، وتتحمل أنت المخاطر ذات الصلة.</strong></p><p>\u200E(3)\u200E إذا تواصلت معنا بالبريد، فإن عنوان البريد الذي تقدمه يُستخدم فقط للرد على استفسارك ولا يُستخدم لأي غرض آخر.</p><h4>\u200E6.\u200E حقوقك والانسحاب</h4><p><strong>أنت متحكم دائماً في بياناتك: يمكنك مسح ذاكرة التخزين المؤقت أو حذف الأعمال أو إلغاء تثبيت التطبيق أو التوقف عن استخدام البرنامج في أي وقت.</strong></p><h4>\u200E7.\u200E تحديثات السياسة</h4><p><strong>يجوز تعديل هذه السياسة مع تحديثات البرنامج؛ سيُعلن عن النسخة المحدثة داخل البرنامج. ويُعد الاستمرار في الاستخدام قبولاً بها؛ وإذا كنت لا توافق، يرجى التوقف عن استخدام البرنامج.</strong></p><h4>\u200E8.\u200E تواصل معنا</h4><p>المطوّر: <strong>\u200EYushichadao\u200E</strong><br>البريد للتواصل: <strong>\u200Eyushichadao@qq.com\u200E</strong></p><h4>\u200E9.\u200E النص والنفاذ</h4><p>تحكم هذه السياسة النسخة الصينية المبسطة؛ وإذا تعارضت أي نسخة بلغة أخرى مع النسخة الصينية المبسطة، فالنسخة الصينية المبسطة هي المرجع.</p><h4>\u200E10.\u200E فحص التحديث والتوضيح</h4><p>\u200E(1)\u200E لتزويدك بتحديثات الإصدار وإصلاحات الأمان، قد يفحص البرنامج تلقائياً ما إذا كان هناك إصدار جديد متاح. يطلب هذا الفحص معلومات الإصدار الضرورية فقط (مثل رقم الإصدار الحالي) ولا يشمل أو يجمع أو يرفع محتواك الإبداعي أو ملاحظاتك اللاصقة أو أي معلومات شخصية.</p><p>\u200E(2)\u200E يمكنك إيقاف فحص التحديث التلقائي في الإعدادات، أو اختيار عدم التحديث الآن والاستمرار في استخدام الإصدار الحالي.</p></div>"
     },
     "privacyLink": {
       "zh-CN": "隐私政策",
@@ -3599,7 +3599,7 @@ export const DOMAINS = {
       "ru": "Программа была закрыта некорректно. Восстановить автосохранённый прогресс? Всего объектов: {0}.",
       "es": "La aplicación no se cerró con normalidad la última vez. ¿Quieres restaurar el progreso autoguardado? {0} objetos actualmente.",
       "fr": "L’application ne s’est pas fermée normalement la dernière fois. Voulez-vous restaurer la progression enregistrée automatiquement ? {0} objets actuellement.",
-      "ar": "لم يُغلق التطبيق بشكل طبيعي في المرة الأخيرة. هل تريد استعادة التقدّم المحفوظ تلقائياً؟ يوجد حالياً {0} كائنات."
+      "ar": "لم يُغلق التطبيق بشكل طبيعي في المرة الأخيرة. هل تريد استعادة التقدّم المحفوظ تلقائياً؟ يوجد حالياً \u200E{0}\u200E كائنات."
     },
     "recoveryTitle": {
       "zh-CN": "检测到未保存的会话",
@@ -4446,7 +4446,7 @@ export const DOMAINS = {
       "ru": "Перетащите или нажмите на землю, чтобы добавить «{0}» · колесо — масштаб",
       "es": "Arrastra o pulsa el suelo para colocar «{0}» · Rueda para zoom",
       "fr": "Glissez ou cliquez sur le sol pour placer « {0} » · Molette pour zoomer",
-      "ar": "اسحب أو انقر الأرضي لوضع «{0}» · مرّر للتكبير"
+      "ar": "اسحب أو انقر الأرضي لوضع \u200E«{0}»\u200E · مرّر للتكبير"
     },
     "statusText": {
       "zh-CN": "点击地面位置输入文本",
@@ -4545,7 +4545,7 @@ export const DOMAINS = {
       "ru": "Enter — подтвердить · Esc — отменить · Shift+Enter — новая строка",
       "es": "Intro confirma · Esc cancela · Mayús+Intro salto de línea",
       "fr": "Entrée pour confirmer · Échap pour annuler · Maj+Entrée pour un saut de ligne",
-      "ar": "أدخل تأكيد · Esc إلغاء · Shift+Enter سطر جديد"
+      "ar": "أدخل تأكيد · \u200EEsc\u200E إلغاء · \u200EShift+Enter\u200E سطر جديد"
     },
     "textHintPlaceholder": {
       "zh-CN": "输入文本······",
@@ -4798,7 +4798,7 @@ export const DOMAINS = {
       "ru": "Клонировать (Ctrl+D)",
       "es": "Duplicar (Ctrl+D)",
       "fr": "Dupliquer (Ctrl+D)",
-      "ar": "تكرار (Ctrl+D)"
+      "ar": "تكرار \u200E(Ctrl+D)\u200E"
     },
     "titleExport": {
       "zh-CN": "导出场景 JSON (Ctrl+S)",
@@ -4809,7 +4809,7 @@ export const DOMAINS = {
       "ru": "Экспорт сцены JSON (Ctrl+S)",
       "es": "Exportar escena (Ctrl+S)",
       "fr": "Exporter la scène (Ctrl+S)",
-      "ar": "تصدير المشهد (Ctrl+S)"
+      "ar": "تصدير المشهد \u200E(Ctrl+S)\u200E"
     },
     "titleEyedropper": {
       "zh-CN": "使用屏幕取色器",
@@ -4831,7 +4831,7 @@ export const DOMAINS = {
       "ru": "Полный экран (F11 / Esc)",
       "es": "Pantalla completa (F11)",
       "fr": "Plein écran (F11)",
-      "ar": "ملء الشاشة (F11)"
+      "ar": "ملء الشاشة \u200E(F11)\u200E"
     },
     "titleGrid": {
       "zh-CN": "切换网格面显示",
@@ -4864,7 +4864,7 @@ export const DOMAINS = {
       "ru": "Импорт сцены JSON (Ctrl+O)",
       "es": "Importar escena (Ctrl+O)",
       "fr": "Importer la scène (Ctrl+O)",
-      "ar": "استيراد المشهد (Ctrl+O)"
+      "ar": "استيراد المشهد \u200E(Ctrl+O)\u200E"
     },
     "titleNew": {
       "zh-CN": "新建场景 (Ctrl+N)",
@@ -4875,7 +4875,7 @@ export const DOMAINS = {
       "ru": "Создать сцену (Ctrl+N)",
       "es": "Nueva escena (Ctrl+N)",
       "fr": "Nouvelle scène (Ctrl+N)",
-      "ar": "مشهد جديد (Ctrl+N)"
+      "ar": "مشهد جديد \u200E(Ctrl+N)\u200E"
     },
     "titlePaste": {
       "zh-CN": "粘贴 (Ctrl+V)",
@@ -4897,7 +4897,7 @@ export const DOMAINS = {
       "ru": "Повторить (Ctrl+Y)",
       "es": "Rehacer (Ctrl+Y)",
       "fr": "Rétablir (Ctrl+Y)",
-      "ar": "إعادة (Ctrl+Y)"
+      "ar": "إعادة \u200E(Ctrl+Y)\u200E"
     },
     "titleRotate": {
       "zh-CN": "旋转模式",
@@ -4963,7 +4963,7 @@ export const DOMAINS = {
       "ru": "Экспорт изображения PNG (Ctrl+P)",
       "es": "Captura (Ctrl+P)",
       "fr": "Capture (Ctrl+P)",
-      "ar": "لقطة شاشة (Ctrl+P)"
+      "ar": "لقطة شاشة \u200E(Ctrl+P)\u200E"
     },
     "titleTranslate": {
       "zh-CN": "平移模式",
@@ -4985,7 +4985,7 @@ export const DOMAINS = {
       "ru": "Отменить (Ctrl+Z)",
       "es": "Deshacer (Ctrl+Z)",
       "fr": "Annuler (Ctrl+Z)",
-      "ar": "تراجع (Ctrl+Z)"
+      "ar": "تراجع \u200E(Ctrl+Z)\u200E"
     },
     "toastAddedLabel": {
       "zh-CN": "已添加{0}",
@@ -4996,7 +4996,7 @@ export const DOMAINS = {
       "ru": "Добавлено: {0}",
       "es": "Añadido {0}",
       "fr": "{0} ajouté",
-      "ar": "تمت إضافة {0}"
+      "ar": "تمت إضافة \u200E{0}\u200E"
     },
     "toastAxesHidden": {
       "zh-CN": "坐标轴已隐藏",
@@ -5062,7 +5062,7 @@ export const DOMAINS = {
       "ru": "Выбрано рамкой объектов: {0}",
       "es": "Seleccionados {0} objetos por caja",
       "fr": "{0} objets sélectionnés par rectangle",
-      "ar": "تم تحديد {0} كائنات بالإطار"
+      "ar": "تم تحديد \u200E{0}\u200E كائنات بالإطار"
     },
     "toastBrushColorSet": {
       "zh-CN": "画笔颜色已设置为 {0}",
@@ -5073,7 +5073,7 @@ export const DOMAINS = {
       "ru": "Цвет кисти установлен: {0}",
       "es": "Color del pincel establecido en {0}",
       "fr": "Couleur du pinceau définie sur {0}",
-      "ar": "تم ضبط لون الفرشاة إلى {0}"
+      "ar": "تم ضبط لون الفرشاة إلى \u200E{0}\u200E"
     },
     "toastCantCopyTransform": {
       "zh-CN": "变换中无法复制",
@@ -5128,7 +5128,7 @@ export const DOMAINS = {
       "ru": "Применён цвет: {0}",
       "es": "Color {0} aplicado",
       "fr": "Couleur {0} appliquée",
-      "ar": "تم تطبيق اللون {0}"
+      "ar": "تم تطبيق اللون \u200E{0}\u200E"
     },
     "toastCopiedN": {
       "zh-CN": "已复制 {0} 个对象",
@@ -5139,7 +5139,7 @@ export const DOMAINS = {
       "ru": "Скопировано объектов: {0}",
       "es": "Copiados {0} objetos",
       "fr": "{0} objets copiés",
-      "ar": "تم نسخ {0} كائنات"
+      "ar": "تم نسخ \u200E{0}\u200E كائنات"
     },
     "toastDeletedN": {
       "zh-CN": "已删除 {0} 个对象",
@@ -5150,7 +5150,7 @@ export const DOMAINS = {
       "ru": "Удалено объектов: {0}",
       "es": "Eliminados {0} objetos",
       "fr": "{0} objets supprimés",
-      "ar": "تم حذف {0} كائنات"
+      "ar": "تم حذف \u200E{0}\u200E كائنات"
     },
     "toastDropOnlyScene": {
       "zh-CN": "不支持的文件类型，请拖入 .scene 场景文件",
@@ -5161,7 +5161,7 @@ export const DOMAINS = {
       "ru": "不支持的文件类型，请拖入 .scene 场景文件",
       "es": "Solo se puede soltar archivos de escena del lienzo (.json)",
       "fr": "Seuls les fichiers de scène du canevas (.json scene) peuvent être déposés",
-      "ar": "يمكن إفلات ملفات مشهد اللوحة (.json) فقط"
+      "ar": "يمكن إفلات ملفات مشهد اللوحة \u200E(.json)\u200E فقط"
     },
     "toastEraserLocalHint": {
       "zh-CN": "局部擦除：仅擦除圈内笔迹（可分节）",
@@ -5282,7 +5282,7 @@ export const DOMAINS = {
       "ru": "Изображение экспортировано ({0}×{1})",
       "es": "Imagen exportada ({0}×{1})",
       "fr": "Image exportée ({0}×{1})",
-      "ar": "تم تصدير الصورة ({0}×{1})"
+      "ar": "تم تصدير الصورة \u200E({0}×{1})\u200E"
     },
     "toastImageLoaded": {
       "zh-CN": "图片已载入，点击地面铺设",
@@ -5337,7 +5337,7 @@ export const DOMAINS = {
       "ru": "不支持的文件类型，仅支持 .scene JSON 格式的3D场景文件，是否返回空白场景？",
       "es": "Contenido de archivo no reconocido. Solo se admiten archivos de escena del lienzo (.json).",
       "fr": "Contenu de fichier non reconnu. Seuls les fichiers de scène du canevas (.json scene) sont pris en charge.",
-      "ar": "محتوى ملف غير معروف. يدعم فقط ملفات مشهد اللوحة (.json)."
+      "ar": "محتوى ملف غير معروف. يدعم فقط ملفات مشهد اللوحة \u200E(.json).\u200E"
     },
     "toastNewScene": {
       "zh-CN": "已新建空白场景",
@@ -5370,7 +5370,7 @@ export const DOMAINS = {
       "ru": "Для {0} объектов установлено «Без цвета» · непрозрачность, узор и текстура не поддерживаются",
       "es": "Sin color aplicado a {0} objetos — no admiten transparencia, patrón ni textura",
       "fr": "Couleur « aucune » appliquée à {0} objets — transparence, motif et texture non pris en charge",
-      "ar": "تم تطبيق بدون لون على {0} كائنات — الشفافية والنقش والنسيج غير مدعومة"
+      "ar": "تم تطبيق بدون لون على \u200E{0}\u200E كائنات — الشفافية والنقش والنسيج غير مدعومة"
     },
     "toastNoColorOne": {
       "zh-CN": "已设为无颜色 · 不支持不透明度、花纹与贴图",
@@ -5425,7 +5425,7 @@ export const DOMAINS = {
       "ru": "«{0}» вне допустимого диапазона, ограничено {1} ~ {2}",
       "es": "«{0}» está fuera de rango — limitado a {1} ~ {2}",
       "fr": "« {0} » hors limites — plafonné à {1} ~ {2}",
-      "ar": "\"{0}\" خارج النطاق — تم تحديده إلى {1} ~ {2}"
+      "ar": "\"{0}\" خارج النطاق — تم تحديده إلى \u200E{1}\u200E ~ \u200E{2}\u200E"
     },
     "toastPastedN": {
       "zh-CN": "已粘贴 {0} 个对象",
@@ -5436,7 +5436,7 @@ export const DOMAINS = {
       "ru": "Вставлено объектов: {0}",
       "es": "Pegados {0} objetos",
       "fr": "{0} objets collés",
-      "ar": "تم لصق {0} كائنات"
+      "ar": "تم لصق \u200E{0}\u200E كائنات"
     },
     "toastPlacedLabel": {
       "zh-CN": "已放置 {0}",
@@ -5447,7 +5447,7 @@ export const DOMAINS = {
       "ru": "Размещено: {0}",
       "es": "Colocado {0}",
       "fr": "« {0} » placé",
-      "ar": "تم وضع {0}"
+      "ar": "تم وضع \u200E{0}\u200E"
     },
     "toastPlacedScaleLabel": {
       "zh-CN": "已放置「{0}」(缩放 {1}x)",
@@ -5458,7 +5458,7 @@ export const DOMAINS = {
       "ru": "Размещено «{0}» (масштаб {1}x)",
       "es": "Colocado «{0}» (escala {1}x)",
       "fr": "« {0} » placé (échelle {1}x)",
-      "ar": "تم وضع \"{0}\" (مقياس {1}x)"
+      "ar": "تم وضع \u200E\"{0}\"\u200E (مقياس \u200E{1}x)\u200E"
     },
     "toastRedone": {
       "zh-CN": "已重做",
@@ -5480,7 +5480,7 @@ export const DOMAINS = {
       "ru": "Сцена экспортирована в JSON",
       "es": "Escena exportada como JSON",
       "fr": "Scène exportée en JSON",
-      "ar": "تم تصدير المشهد كـ JSON"
+      "ar": "تم تصدير المشهد كـ \u200EJSON\u200E"
     },
     "toastSceneImported": {
       "zh-CN": "场景已导入",
@@ -5513,7 +5513,7 @@ export const DOMAINS = {
       "ru": "Выбрано объектов: {0}",
       "es": "{0} objetos seleccionados",
       "fr": "{0} objets sélectionnés",
-      "ar": "تم تحديد {0} كائنات"
+      "ar": "تم تحديد \u200E{0}\u200E كائنات"
     },
     "toastSelOne": {
       "zh-CN": "已选中「{0}」",
@@ -5524,7 +5524,7 @@ export const DOMAINS = {
       "ru": "Выбран «{0}»",
       "es": "Seleccionado «{0}»",
       "fr": "« {0} » sélectionné",
-      "ar": "تم تحديد \"{0}\""
+      "ar": "تم تحديد \u200E\"{0}\"\u200E"
     },
     "toastSelText": {
       "zh-CN": "文本：{0}",
@@ -5535,7 +5535,7 @@ export const DOMAINS = {
       "ru": "Текст: {0}",
       "es": "Texto: {0}",
       "fr": "Texte : {0}",
-      "ar": "النص: {0}"
+      "ar": "النص: \u200E{0}\u200E"
     },
     "toastSelectAllN": {
       "zh-CN": "已全选 {0} 个对象",
@@ -5546,7 +5546,7 @@ export const DOMAINS = {
       "ru": "Выбрано объектов: {0}",
       "es": "Seleccionados {0} objetos",
       "fr": "{0} objets sélectionnés",
-      "ar": "تم تحديد {0} كائنات"
+      "ar": "تم تحديد \u200E{0}\u200E كائنات"
     },
     "toastSelectFirst": {
       "zh-CN": "请先选择对象",
@@ -5634,7 +5634,7 @@ export const DOMAINS = {
       "ru": "Режим трансформации: {0}",
       "es": "Modo de transformación: {0}",
       "fr": "Mode de transformation : {0}",
-      "ar": "وضع التحويل: {0}"
+      "ar": "وضع التحويل: \u200E{0}\u200E"
     },
     "toastTransformNoClone": {
       "zh-CN": "变换进行中，无法克隆",
@@ -5766,7 +5766,7 @@ export const DOMAINS = {
       "ru": "<p>Добро пожаловать в «Куб · 3D-конструктор» (далее именуемое «Программа»). Это инструмент для проектирования и редактирования трёхмерной графики, работающий в браузере и на локальном устройстве. <strong>Вам не нужно регистрировать учётную запись или входить в систему, чтобы напрямую использовать на своём устройстве все базовые функции.</strong> Перед загрузкой, установкой или использованием Программы внимательно прочитайте и полностью поймите все положения настоящего Соглашения, особенно выделенные жирным шрифтом разделы об отказе от ответственности и её ограничении. Начиная использовать Программу, вы считаетесь прочитавшим, понявшим и согласившимся соблюдать настоящее Соглашение.</p><h4>Статья 1. Принятие и действие Соглашения</h4><p>1. Настоящее Соглашение заключается между вами и разработчиком/оператором Программы в связи с её использованием и вместе с «Отказом от ответственности», «Политикой конфиденциальности» и соответствующими дополнениями образует полную договорённость. <strong>Если вы не согласны с любым положением любого из этих документов, не используйте Программу.</strong></p><p>2. Ваши действия по нажатию подтверждения, установке флажка согласия или фактическому использованию Программы означают принятие настоящего Соглашения, которое вступает в силу с даты начала использования.</p><p>3. <strong>Если вы несовершеннолетний, используйте Программу в сопровождении и с согласия законного представителя, который несёт соответствующую ответственность за надзор и руководство.</strong></p><h4>Статья 2. Описание Программы и услуг</h4><p>1. Программа предоставляет функции создания, редактирования, аннотирования, заметок, экспорта и импорта трёхмерной графики и в основном работает на вашем локальном устройстве (браузер, настольный или мобильный клиент). <strong>Её основные творческие данные по умолчанию сохраняются на вашем устройстве и могут использоваться без привязки к какой-либо сетевой учётной записи.</strong></p><p>2. В зависимости от плана продукта мы можем предоставлять версии с незначительно различающимися функциями на разных платформах (Web, PC, Android и др.); конкретные функции определяются используемой вами версией.</p><p>3. Программа может включать или вызывать сторонние библиотеки открытого кода (например, Three.js, компоненты WebGL); соответствующие права принадлежат их владельцам и регулируются их лицензиями.</p><h4>Статья 3. Лицензия на использование</h4><p>1. <strong>Мы предоставляем вам неисключительную, непередаваемую, отзывную ограниченную лицензию на установку, доступ и использование Программы на вашем устройстве в личных или некоммерческих целях.</strong></p><p>2. Без нашего предварительного письменного разрешения вы не вправе выполнять реверс-инжиниринг, декомпиляцию, взлом, сдачу в аренду, продажу, перелицензирование Программы или использовать её для оказания коммерческих услуг.</p><p>3. Вы понимаете и соглашаетесь, что Программа предоставляется «как есть», и мы оставляем за собой право изменять, приостанавливать или прекращать любые её функции без дополнительной ответственности перед вами.</p><h4>Статья 4. Плата за использование</h4><p>1. В текущей версии базовые функции Программы предоставляются бесплатно. <strong>Если в будущем мы взимаем плату за определённые расширенные функции, мы заранее уведомим об этом заметным образом, и плата вступит в силу только после вашего явного подтверждения; мы не будем задним числом взимать плату за ранее бесплатные функции.</strong></p><p>2. Расходы на сеть, устройство, трафик и хранение, возникающие при использовании Программы, несёте вы.</p><h4>Статья 5. Пользовательский контент и интеллектуальная собственность</h4><p>1. <strong>Весь контент, который вы создаёте, рисуете, импортируете, аннотируете или экспортируете в Программе (включая, помимо прочего, 3D-модели, сцены, заметки, текст и изображения), и права на него принадлежат вам или законно вам предоставлены.</strong></p><p>2. Вы несёте ответственность за законность и достоверность создаваемого и загружаемого контента и обязаны не нарушать авторские, товарные знаки, право на изображение, неприкосновенность частной жизни и иные права третьих лиц.</p><p>3. Вы предоставляете нам неисключительную, безвозмездную, всемирную лицензию на использование указанного контента на вашем устройстве и в пределах необходимой технической обработки исключительно для предоставления, поддержки и улучшения Программы; мы не будем использовать ваш творческий контент для какой-либо посторонней публикации или коммерческого использования.</p><h4>Статья 6. Правила использования и запрещённые действия</h4><p>1. Вы обязуетесь соблюдать законы и нормативные акты вашей страны и региона при использовании Программы и не должны создавать, копировать, публиковать или распространять незаконный, нарушающий права или противоречащий общественной морали контент.</p><p>2. <strong>Вы не вправе совершать следующие действия с помощью Программы; в противном случае мы оставляем за собой право ограничить, приостановить или прекратить использование без предварительного уведомления:</strong></p><p>a) создание или распространение контента, угрожающего национальной безопасности, разжигающего насилие, терроризм или ненавистническую речь;</p><p>b) создание или распространение порнографического, азартного, мошеннического контента или нарушающего права других лиц;</p><p>c) вмешательство, атаки или реверс-инжиниринг Программы или сторонних служб;</p><p>d) обход технических ограничений или механизмов безопасности Программы любым способом.</p><h4>Статья 7. Данные и локальное хранение</h4><p>1. <strong>Программа основана преимущественно на локальном хранении; ваши творческие данные обычно сохраняются на вашем устройстве (локальное хранилище браузера, песочница приложения или указанный вами файл экспорта). Программа не синхронизирует основные творческие данные через облачные учётные записи.</strong></p><p>2. Вы должны самостоятельно выполнять резервное копирование и экспорт важного контента. <strong>Мы не гарантируем восстановление локальных данных, утраченных из-за повреждения устройства, очистки браузера, удаления приложения, сброса системы или ошибочных действий, и соответствующие риски и убытки несёте вы.</strong></p><p>3. Файлы, которые вы самостоятельно экспортируете, хранятся вами, а их целостность и последующая пригодность зависят от вашего устройства и управления файлами.</p><h4>Статья 8. Сторонние службы и компоненты открытого кода</h4><p>1. Программа может включать или ссылаться на сторонние веб-сайты, службы, ресурсы или компоненты открытого кода. <strong>Мы не даём никаких гарантий относительно доступности, содержания, политики конфиденциальности или качества услуг третьих лиц, и риски вашего взаимодействия с ними несёте вы.</strong></p><p>2. Компоненты открытого кода предоставляются на условиях их лицензий, и использование соответствующих функций означает принятие этих лицензионных условий.</p><h4>Статья 9. Отказ от ответственности и её ограничение</h4><p>1. В максимальной степени, допустимой применимым законодательством, Программа предоставляется «как есть», и мы не несём ответственности за любые косвенные, сопутствующие, специальные или штрафные убытки, возникающие из использования или невозможности использования Программы, и не гарантируем, что она работает без перерывов, без ошибок или полностью удовлетворяет вашим конкретным потребностям.</p><p>2. <strong>Результаты трёхмерного рендеринга зависят от производительности устройства, видеокарты, драйверов, системной среды и различий браузеров, и мы не даём никаких явных или подразумеваемых гарантий относительно согласованности, точности или пригодности результатов рендеринга.</strong></p><h4>Статья 10. Изменение Соглашения</h4><p><strong>Мы можем время от времени пересматривать настоящее Соглашение в соответствии с законодательством или изменениями в деятельности. Пересмотренное Соглашение публикуется в Программе; если вы продолжаете использовать её, это означает принятие изменений; если вы не согласны, прекратите использование.</strong></p><h4>Статья 11. Прекращение</h4><p>1. Вы можете в любое время прекратить использование и удалить Программу; ваши данные на устройстве обрабатываются в соответствии с Политикой конфиденциальности и локальными настройками.</p><p>2. <strong>Если вы нарушите настоящее Соглашение, мы можем прекратить или ограничить использование Программы по обстоятельствам, и возникшие неудобства или убытки несёте вы.</strong></p><h4>Статья 12. Разрешение споров и применимое право</h4><p>1. Заключение, действительность, толкование и разрешение споров по настоящему Соглашению регулируются законодательством вашей страны и региона.</p><p>2. Споры, возникающие из настоящего Соглашения, разрешаются путём дружественных переговоров; при недостижении согласия вы соглашаетесь обратиться в компетентный народный суд.</p><h4>Статья 13. Контакты и прочее</h4><p>1. Если у вас есть вопросы по Соглашению, свяжитесь с нами через контактные данные на странице «О программе».</p><p>2. <strong>Признание какого-либо положения недействительным или неисполнимым не влияет на действительность остальных положений.</strong></p><p>3. Настоящее Соглашение составлено на упрощённом китайском языке; при наличии версий на других языках они носят справочный характер, и китайская версия имеет преимущественную силу.</p><h4>Статья 14. Обновления Программы и изменения документации</h4><p>1. Для постоянного улучшения продукта и функций Программа может периодически выпускать новые версии и уведомлять вас через внутреннее обнаружение обновлений, официальный сайт или магазины приложений. Обновления могут включать новые функции, изменения интерфейса, исправления и обновления документации.</p><p>2. Вы понимаете и соглашаетесь, что обновления обычно не удаляют ваши творческие данные, сохранённые локально; однако с обновлением версий содержимое документации, такой как руководство, может измениться. Если привязанный текст заметки, созданной на основе старой версии руководства, был изменён или удалён, переход к исходному месту станет невозможным. Такие заметки остаются в списке, и вы можете удалить или создать их заново.</p><p>3. Обновлять или нет — ваш свободный выбор. Если вы решите не обновляться и продолжите использовать старую версию, она может не получать последующие исправления и улучшения, и соответствующие риски несёте вы.</p>",
       "es": "<h4>Términos del Servicio</h4><p>Bienvenido a Cubo · Taller de Diseño 3D (el «Software»). Esta es una herramienta de diseño y edición de gráficos tridimensionales que se ejecuta en tu navegador y en tu dispositivo local. <strong>Puedes usar todas las funciones básicas directamente en tu dispositivo sin registrar una cuenta ni iniciar sesión.</strong> Antes de usar el Software, lee y comprende plenamente todos los términos de este Acuerdo, especialmente las cláusulas de exoneración de responsabilidad y limitación de responsabilidad marcadas en negrita. Al usar el Software, se considera que has leído, comprendido y aceptado quedar vinculado por este Acuerdo.</p><h4>1. Aceptación y entrada en vigor</h4><p>(1) Este Acuerdo es entre tú y el desarrollador/operador del Software en cuanto a su uso, y junto con el Aviso legal, la Política de Privacidad y los suplementos relacionados constituye los términos completos. <strong>Si no aceptas ningún término de ningún documento, no uses el Software.</strong></p><p>(2) Tu clic en confirmar, marca de aceptación o uso efectivo del Software constituye la aceptación de este Acuerdo, que entra en vigor desde la fecha en que comiences a usarlo.</p><p>(3) <strong>Si eres menor de edad, usa el Software con el acompañamiento y consentimiento de un tutor, quien asumirá las correspondientes responsabilidades de tutela y orientación.</strong></p><h4>2. Software y servicio</h4><p>(1) El Software ofrece funciones como creación 3D, edición, anotación, notas adhesivas, exportación e importación, y se ejecuta principalmente en tu dispositivo local (navegador, escritorio o móvil). <strong>Sus datos creativos centrales se guardan localmente por defecto y no dependen de ninguna cuenta en línea.</strong></p><p>(2) Podemos ofrecer versiones en distintas plataformas (Web, PC, Android, etc.) con funciones ligeramente distintas; las funciones concretas dependen de la versión que uses.</p><p>(3) El Software puede incluir o invocar bibliotecas de código abierto de terceros (como Three.js y componentes WebGL relacionados), cuyos derechos pertenecen a sus respectivos titulares y se rigen por sus propias licencias de código abierto.</p><h4>3. Concesión de licencia</h4><p>(1) <strong>Te concedemos una licencia limitada, no exclusiva, intransferible y revocable para instalar, acceder y usar el Software en tu propio dispositivo con fines personales o no comerciales.</strong></p><p>(2) Sin nuestro permiso escrito previo, no podrás realizar ingeniería inversa, descompilar, crackear, arrendar, vender, sublicenciar el Software, ni usarlo para prestar servicios comerciales.</p><p>(3) Entiendes y aceptas que el Software se proporciona «tal cual», y nos reservamos el derecho de modificar, suspender o terminar parte o todas sus funciones en cualquier momento sin responsabilidad adicional.</p><h4>4. Tarifas</h4><p>(1) En la versión actual, las funciones básicas son gratuitas. <strong>Si en el futuro cobramos por funciones avanzadas concretas, lo informaremos de antemano de forma destacada y solo entrará en vigor tras tu confirmación explícita; no cobraremos retroactivamente por funciones ya proporcionadas de forma gratuita.</strong></p><p>(2) Los costes de red, dispositivo, tráfico y almacenamiento que genere tu uso corren por tu cuenta.</p><h4>5. Contenido del usuario y propiedad intelectual</h4><p>(1) <strong>Todo el contenido que creas, dibujas, importas, anotas o exportas (incluidos modelos 3D, escenas, notas, texto e imágenes) te pertenece o has obtenido la autorización correspondiente.</strong></p><p>(2) Serás responsable de la legalidad y veracidad de tu contenido y garantizarás que no infringe los derechos de autor, marcas, retrato, privacidad u otros derechos de terceros.</p><p>(3) Nos concedes una licencia no exclusiva, mundial y libre de regalías para usar el contenido anterior únicamente para proporcionar, mantener y mejorar el Software dentro del procesamiento técnico necesario en tu dispositivo; no usaremos tu contenido creativo para divulgación externa ni uso comercial no relacionados.</p><h4>6. Normas de uso y conductas prohibidas</h4><p>(1) Aceptas cumplir las leyes aplicables y no usar el Software para crear, copiar, publicar o difundir ningún contenido ilegal, infractor o inmoral.</p><p>(2) <strong>No podrás usar el Software para lo siguiente; de lo contrario, podemos restringir, suspender o terminar tu uso sin previo aviso:</strong> a) contenido que ponga en peligro la seguridad nacional, incite a la violencia, al terrorismo o al discurso de odio; b) contenido pornográfico, de juego, fraudulento o infractor de derechos; c) interfiera, ataque o realice ingeniería inversa sobre el Software o servicios de terceros; d) evada sus restricciones técnicas o mecanismos de seguridad.</p><h4>7. Datos y almacenamiento local</h4><p>(1) <strong>El Software se basa principalmente en el almacenamiento local; tus datos creativos suelen guardarse en tu dispositivo local (almacenamiento del navegador, sandbox de la app o los archivos de exportación que indiques). No depende de una cuenta en la nube para sincronizar tus datos centrales.</strong></p><p>(2) Debes hacer copias de seguridad y exportar el contenido importante tú mismo. <strong>No podemos garantizar la recuperación de datos locales perdidos por daño del dispositivo, limpieza del navegador, desinstalación de la app, restablecimiento del sistema o errores operativos, y los riesgos relacionados corren por tu cuenta.</strong></p><p>(3) Los archivos que exportes activamente los conservas tú; su integridad y usabilidad dependen de tu dispositivo y gestión de archivos.</p><h4>8. Servicios de terceros y código abierto</h4><p>(1) El Software puede incluir o enlazar sitios web, servicios, recursos o componentes de terceros. <strong>No ofrecemos garantía sobre su disponibilidad, contenido, política de privacidad o calidad, y corres el riesgo de interactuar con terceros.</strong></p><p>(2) Los componentes de código abierto de terceros se proporcionan bajo sus propias licencias; usar funciones relacionadas implica aceptar dichas licencias.</p><h4>9. Exoneración de responsabilidad y limitación</h4><p>(1) En la medida máxima permitida por la ley, el Software se proporciona «tal cual», y no seremos responsables de ninguna pérdida indirecta, incidental, especial o punitiva derivada de su uso o imposibilidad de uso, ni garantizamos que esté libre de interrupciones, errores o que satisfaga plenamente tus necesidades.</p><p>(2) <strong>La representación 3D se ve afectada por el rendimiento del dispositivo, tarjeta gráfica, controlador, entorno del sistema y diferencias del navegador; no ofrecemos garantía expresa o implícita sobre la coherencia, exactitud o idoneidad de los resultados de representación.</strong></p><h4>10. Cambios del Acuerdo</h4><p><strong>Podemos revisar este Acuerdo ocasionalmente. La versión revisada se anunciará dentro del Software; el uso continuado constituye aceptación; si no aceptas, deja de usarlo.</strong></p><h4>11. Terminación</h4><p>(1) Puedes dejar de usar y desinstalar el Software en cualquier momento; tus datos locales se tratarán según la Política de Privacidad y los ajustes locales.</p><p>(2) <strong>Si violas este Acuerdo, podemos terminar o restringir tu uso, y la molestia o pérdida resultante corre por tu cuenta.</strong></p><h4>12. Ley aplicable y resolución de controversias</h4><p>(1) La formación, validez, interpretación y resolución de controversias de este Acuerdo se rigen por las leyes de tu país y región.</p><p>(2) Las controversias se resolverán mediante negociación amistosa; si esta falla, aceptas someterte al tribunal competente para litigio.</p><h4>13. Contacto y disposiciones varias</h4><p>(1) Para consultas, contáctanos a través de la página «Acerca de» del Software.</p><p>(2) <strong>Si alguna cláusula se considera inválida o inaplicable, no afectará la validez de las cláusulas restantes.</strong></p><p>(3) La versión en chino simplificado prevalecerá; las versiones en otros idiomas son solo de referencia.</p><h4>14. Actualizaciones del software y cambios del manual</h4><p>(1) Para mejorar continuamente el producto y sus funciones, el Software puede publicar de vez en cuando nuevas versiones y notificarle mediante la comprobación de actualizaciones en la aplicación, el sitio web oficial o las tiendas de aplicaciones. Las actualizaciones pueden incluir nuevas funciones, ajustes de interfaz, corrección de errores y actualización de la documentación.</p><p>(2) Usted comprende y acepta que las actualizaciones normalmente no eliminan sus datos creativos guardados localmente; sin embargo, a medida que se actualizan las versiones, el contenido de documentos como el manual puede cambiar. Las notas adhesivas que creó basándose en el texto de un manual anterior pueden dejar de saltar a la ubicación original si el texto vinculado ha sido modificado o eliminado; dichas notas permanecen en la lista y usted puede eliminarlas o crearlas de nuevo.</p><p>(3) Usted es libre de elegir si actualizar o no. Si elige no actualizar y seguir usando una versión anterior, es posible que esa versión no reciba las correcciones y optimizaciones posteriores; el riesgo correspondiente es suyo.</p>",
       "fr": "<p>Bienvenue dans Atelier de Conception 3D Cube (ci-après le « Logiciel »). Il s'agit d'un outil de conception et d'édition de graphiques tridimensionnels exécuté dans votre navigateur et sur votre appareil local. <strong>Vous pouvez utiliser toutes les fonctions de base directement sur votre appareil sans créer de compte ni vous connecter.</strong> Avant de télécharger, installer ou utiliser le Logiciel, lisez et comprenez pleinement toutes les dispositions du présent Accord, en particulier les clauses d'exclusion et de limitation de responsabilité en gras. En utilisant le Logiciel, vous êtes réputé en avoir lu, compris et accepté les termes.</p><h4>Article 1. Acceptation et validité de l'Accord</h4><p>1. Le présent Accord est conclu entre vous et le développeur/exploitant du Logiciel concernant son utilisation, et, avec l'Avertissement de non-responsabilité, la Politique de confidentialité et les notes complémentaires, constitue l'accord complet. <strong>Si vous n'acceptez aucune disposition de l'un de ces documents, n'utilisez pas le Logiciel.</strong></p><p>2. Votre action de cliquer sur « confirmer », de cocher « accepter » ou d'utiliser réellement le Logiciel constitue l'acceptation du présent Accord, qui prend effet à la date de votre début d'utilisation.</p><p>3. <strong>Si vous êtes mineur, utilisez le Logiciel accompagné et avec le consentement d'un tuteur, qui assume la responsabilité de surveillance et d'encadrement correspondante.</strong></p><h4>Article 2. Description du Logiciel et des services</h4><p>1. Le Logiciel propose des fonctions de création, d'édition, d'annotation, de notes, d'exportation et d'importation de graphiques tridimensionnels, et s'exécute principalement sur votre appareil local (navigateur, poste de travail ou mobile). <strong>Ses données créatives centrales sont enregistrées par défaut sur votre appareil et peuvent être utilisées sans dépendre d'un compte en ligne.</strong></p><p>2. Selon la planification du produit, nous pouvons proposer des versions aux fonctions légèrement différentes sur diverses plateformes (Web, PC, Android, etc.) ; les fonctions concrètes dépendent de la version utilisée.</p><p>3. Le Logiciel peut inclure ou invoquer des bibliothèques tierces open source (comme Three.js, composants liés à WebGL) ; les droits correspondants appartiennent à leurs titulaires et sont régis par leurs licences respectives.</p><h4>Article 3. Licence d'utilisation</h4><p>1. <strong>Nous vous accordons une licence limitée, non exclusive, intransférable et révocable pour installer, accéder et utiliser le Logiciel sur votre appareil à des fins personnelles ou non commerciales.</strong></p><p>2. Sans notre autorisation écrite préalable, vous ne devez pas procéder à de l'ingénierie inverse, décompiler, craquer, louer, vendre, sous-licencier le Logiciel ni l'utiliser pour fournir des services commerciaux.</p><p>3. Vous comprenez et acceptez que le Logiciel est fourni « en l'état », et nous nous réservons le droit de modifier, suspendre ou arrêter toute fonction, sans assumer de responsabilité supplémentaire.</p><h4>Article 4. Frais d'utilisation</h4><p>1. Dans la version actuelle, les fonctions de base du Logiciel sont fournies gratuitement. <strong>Si nous facturons à l'avenir certaines fonctions avancées, nous vous en informerons de manière proéminente et cela prendra effet après votre confirmation explicite ; nous ne facturerons pas rétroactivement les fonctions déjà gratuites.</strong></p><p>2. Les coûts de réseau, d'appareil, de trafic et de stockage résultant de l'utilisation du Logiciel sont à votre charge.</p><h4>Article 5. Contenu de l'utilisateur et propriété intellectuelle</h4><p>1. <strong>Tout contenu que vous créez, dessinez, importez, annotez ou exportez dans le Logiciel (notamment, entre autres, modèles 3D, scènes, notes, texte et images), et les droits y afférents, vous appartiennent ou sont dûment autorisés.</strong></p><p>2. Vous êtes responsable de la légalité et de l'authenticité du contenu que vous créez et téléchargez, et devez vous assurer de ne pas porter atteinte aux droits d'auteur, marques, droit à l'image, vie privée ou autres droits légitimes de tiers.</p><p>3. Vous nous accordez une licence non exclusive, gratuite et mondiale d'utiliser ledit contenu sur votre appareil et dans la limite du traitement technique nécessaire, uniquement pour fournir, maintenir et améliorer le Logiciel ; nous n'utiliserons pas votre contenu créatif pour une publication externe ou une utilisation commerciale étrangère à ce but.</p><h4>Article 6. Règles d'utilisation et comportements interdits</h4><p>1. Vous vous engagez à respecter les lois de votre pays et région en utilisant le Logiciel, et ne devez pas créer, copier, publier ou diffuser un contenu illégal, contrefaisant ou contraire à l'ordre public.</p><p>2. <strong>Vous ne devez pas commettre les comportements suivants à l'aide du Logiciel ; à défaut, nous nous réservons le droit de limiter, suspendre ou résilier votre utilisation sans préavis :</strong></p><p>a) Créer ou diffuser un contenu mettant en danger la sécurité nationale, incitant à la violence, au terrorisme ou au discours de haine ;</p><p>b) Créer ou diffuser un contenu pornographique, lié aux jeux d'argent, frauduleux ou portant atteinte aux droits d'autrui ;</p><p>c) Interférer, attaquer ou procéder à l'ingénierie inverse du Logiciel ou de services tiers ;</p><p>d) Contourner par quelque moyen que ce soit les limitations techniques ou les mécanismes de sécurité du Logiciel.</p><h4>Article 7. Données et stockage local</h4><p>1. <strong>Le Logiciel repose principalement sur le stockage local ; vos données créatives sont généralement enregistrées sur votre appareil (stockage local du navigateur, bac à sable de l'application ou fichier d'exportation). Le Logiciel ne synchronise pas les données créatives centrales via des comptes cloud.</strong></p><p>2. Vous devez vous-même sauvegarder et exporter le contenu important. <strong>Nous ne garantissons pas la récupération des données locales perdues suite à une panne d'appareil, un nettoyage du navigateur, une désinstallation, une réinitialisation système ou une erreur de manipulation, et les risques et pertes correspondants vous incombent.</strong></p><p>3. Les fichiers que vous exportez activement vous appartiennent, et leur intégrité et leur utilisabilité ultérieure dépendent de votre appareil et de votre gestion des fichiers.</p><h4>Article 8. Services tiers et composants open source</h4><p>1. Le Logiciel peut contenir ou renvoyer à des sites web, services, ressources ou composants tiers. <strong>Nous n'offrons aucune garantie sur la disponibilité, le contenu, les politiques de confidentialité ou la qualité des tiers, et les risques de votre interaction vous incombent.</strong></p><p>2. Les composants tiers open source sont fournis sous leurs licences ; l'utilisation des fonctions correspondantes implique l'acceptation de ces licences.</p><h4>Article 9. Exclusion et limitation de responsabilité</h4><p>1. Dans la mesure maximale permise par la loi applicable, le Logiciel est fourni « en l'état », et nous ne sommes pas responsables des pertes indirectes, accessoires, spéciales ou punitives découlant de l'utilisation ou de l'impossibilité d'utilisation, ni ne garantissons qu'il fonctionne sans interruption, sans erreur ou répond parfaitement à vos besoins spécifiques.</p><p>2. <strong>Les résultats de rendu tridimensionnel dépendent de la performance de l'appareil, de la carte graphique, des pilotes, de l'environnement système et des différences de navigateur, et nous n'offrons aucune garantie expresse ou implicite sur la cohérence, la précision ou l'adéquation des résultats.</strong></p><h4>Article 10. Modifications de l'Accord</h4><p><strong>Nous pouvons réviser le présent Accord selon les lois ou ajustements commerciaux. La version révisée est annoncée dans le Logiciel ; si vous continuez à l'utiliser, vous en acceptez les modifications ; dans le cas contraire, cessez de l'utiliser.</strong></p><h4>Article 11. Résiliation</h4><p>1. Vous pouvez à tout moment cesser d'utiliser et désinstaller le Logiciel ; vos données sur l'appareil sont traitées selon la Politique de confidentialité et les paramètres locaux.</p><p>2. <strong>Si vous violez le présent Accord, nous pouvons résilier ou limiter votre utilisation selon les circonstances, et les inconvénients ou pertes en résultant vous incombent.</strong></p><h4>Article 12. Règlement des litiges et loi applicable</h4><p>1. La conclusion, la validité, l'interprétation et le règlement des litiges du présent Accord sont régis par les lois de votre pays et région.</p><p>2. Les litiges découlant du présent Accord sont résolus par négociation amiable ; à défaut, vous acceptez de saisir les tribunaux compétents.</p><h4>Article 13. Contact et divers</h4><p>1. Si vous avez des questions sur l'Accord, contactez-nous via les coordonnées de la page « À propos ».</p><p>2. <strong>Si une clause est jugée invalide ou inapplicable, cela n'affecte pas la validité des autres clauses.</strong></p><p>3. Le présent Accord est régi par sa version en chinois simplifié ; si d'autres versions linguistiques sont fournies, elles sont indicatives et la version chinoise prévaut.</p><h4>Article 14. Mises à jour du Logiciel et modifications de la documentation</h4><p>1. Pour améliorer continuellement le produit, le Logiciel peut publier périodiquement de nouvelles versions et vous en informer via la détection de mises à jour, le site officiel ou les magasins d'applications. Les mises à jour peuvent inclure de nouvelles fonctions, ajustements d'interface, corrections et mises à jour de documentation.</p><p>2. Vous comprenez et acceptez que les mises à jour ne suppriment généralement pas vos données créatives locales ; toutefois, avec les mises à jour de versions, le contenu des manuels et documents peut changer. Si le texte lié d'une note créée sur l'ancien manuel a été modifié ou supprimé, le saut vers l'emplacement d'origine ne sera plus possible. Ces notes restent dans la liste et vous pouvez les supprimer ou les recréer.</p><p>3. Vous êtes libre de choisir ou non de mettre à jour. Si vous choisissez de ne pas mettre à jour et continuez à utiliser l'ancienne version, celle-ci pourrait ne plus recevoir de corrections ni d'optimisations, et les risques vous incombent.</p>",
-      "ar": "<div dir=\"rtl\"><p>مرحباً بك في كيوب · ورشة تصميم ثلاثي الأبعاد (يشار إليها بـ «البرنامج»). هذه أداة تصميم وتحرير رسوميات ثلاثية الأبعاد تعمل في متصفحك وعلى جهازك المحلي. <strong>يمكنك استخدام جميع الوظائف الأساسية مباشرة على جهازك دون تسجيل حساب أو تسجيل دخول.</strong> قبل استخدام البرنامج، يرجى قراءة وفهم جميع بنود هذه الاتفاقية بالكامل، وخاصة بنود إخلاء المسؤولية والحد من المسؤولية المكتوبة بخط عريض. باستخدامك للبرنامج، يُعتبر أنك قرأت وفهمت ووافقت على الالتزام بهذه الاتفاقية.</p><h4>1. القبول والنفاذ</h4><p>(1) هذه الاتفاقية هي بينك وبين مطوّر/مشغّل البرنامج بشأن استخدامه، وتشكّل مع إخلاء المسؤولية وسياسة الخصوصية والمكملات ذات الصلة البنود الكاملة. <strong>إذا كنت لا توافق على أي بند من أي مستند، فلا تستخدم البرنامج.</strong></p><p>(2) نقرُك للتأكيد، أو تحديدك للموافقة، أو استخدامك الفعلي للبرنامج يُعد قبولاً لهذه الاتفاقية، ويسري من تاريخ بدء استخدامك له.</p><p>(3) <strong>إذا كنت قاصراً، يرجى استخدام البرنامج برفقة ولي أمر وموافقته، الذي يتحمل مسؤولية الوصاية والتوجيه المقابلة.</strong></p><h4>2. البرنامج والخدمة</h4><p>(1) يوفر البرنامج وظائف مثل الإبداع ثلاثي الأبعاد والتحرير والتعليق والملاحظات اللاصقة والتصدير والاستيراد، ويعمل بشكل رئيسي على جهازك المحلي (المتصفح أو سطح المكتب أو الجوال). <strong>تُحفظ بياناته الإبداعية الأساسية محلياً افتراضياً ولا تعتمد على أي حساب عبر الإنترنت.</strong></p><p>(2) قد نوفر إصدارات على منصات مختلفة (الويب وPC وAndroid وغيرها) بوظائف متباينة قليلاً؛ وتخضع الوظائف المحددة للإصدار الذي تستخدمه.</p><p>(3) قد يتضمن البرنامج مكتبات مفتوحة المصدر لجهات خارجية (مثل Three.js ومكوّنات WebGL ذات الصلة)، وحقوقها تعود لأصحابها وتحكمها تراخيصها مفتوحة المصدر الخاصة.</p><h4>3. منح الترخيص</h4><p>(1) <strong>نمنحك ترخيصاً محدوداً غير حصري وغير قابل للتحويل و قابلاً للإلغاء لتثبيت البرنامج والوصول إليه واستخدامه على جهازك الخاص لأغراض شخصية أو غير تجارية.</strong></p><p>(2) دون إذن كتابي مسبق منا، لا يجوز لك الهندسة العكسية أو فك الشفرة أو التصديع أو التأجير أو البيع أو الترخيص الفرعي للبرنامج، أو استخدامه لتقديم خدمات تجارية.</p><p>(3) تفهم وتوافق على أن البرنامج يُقدم «كما هو»، ونحتفظ بالحق في تعديل أو تعليق أو إنهاء جزء من وظائفه أو كلها في أي وقت دون مسؤولية إضافية.</p><h4>4. الرسوم</h4><p>(1) في الإصدار الحالي، تُقدَّم الوظائف الأساسية مجاناً. <strong>إذا فرضنا رسوماً على وظائف متقدمة محددة في المستقبل، فسنُعلمك بارزاً مسبقاً ويسري ذلك فقط بعد تأكيدك الصريح؛ ولن نفرض رسوماً بأثر رجعي على وظائف قُدّمت مجاناً.</strong></p><p>(2) تتحمل أنت تكاليف الشبكة والجهاز والبيانات والتخزين الناتجة عن استخدامك.</p><h4>5. محتوى المستخدم وحقوق الملكية الفكرية</h4><p>(1) <strong>جميع المحتوى الذي تنشئه أو ترسمه أو تستورده أو تعلّقه أو تصدّره (بما في ذلك النماذج ثلاثية الأبعاد والمشاهد والملاحظات اللاصقة والنصوص والصور) يعود لك أو حصلت على التفويض المقابل له.</strong></p><p>(2) أنت المسؤول عن مشروعية وأصالة محتواك، وتضمن ألا ينتهك حقوق الآخرين في حقوق النشر أو العلامات التجارية أو الصور أو الخصوصية أو غيرها.</p><p>(3) تمنحنا ترخيصاً غير حصري وعالمياً ودون رسوم لاستخدام المحتوى أعلاه فقط لتقديم البرنامج وصيانته وتحسينه ضمن المعالجة التقنية الضرورية على جهازك؛ ولن نستخدم محتواك الإبداعي لأي إفصاح خارجي أو استخدام تجاري غير ذي صلة.</p><h4>6. قواعد الاستخدام والسلوك المحظور</h4><p>(1) توافق على الامتثال للقوانين المطبقة، ولا يجوز لك استخدام البرنامج لإنشاء أو نسخ أو نشر أو نشر محتوى غير قانوني أو منتهك أو غير أخلاقي.</p><p>(2) <strong>لا يجوز لك استخدام البرنامج للقيام بما يلي؛ وإلا يجوز لنا تقييد استخدامك أو تعليقه أو إنهائه دون إشعار مسبق:</strong></p><p>a) محتوى يهدد أمن الدولة أو يحرض على العنف أو الإرهاب أو خطاب الكراهية؛</p><p>b) محتوى إباحي أو قمار أو احتيالي أو منتهك للحقوق؛</p><p>c) التدخل في البرنامج أو مهاجمته أو فك شفرته العكسية أو خدمات الجهات الخارجية؛</p><p>d) التحايل على قيوده التقنية أو آلياته الأمنية.</p><h4>7. البيانات والتخزين المحلي</h4><p>(1) <strong>يعتمد البرنامج بشكل رئيسي على التخزين المحلي؛ وتُحفظ بياناتك الإبداعية عادةً على جهازك المحلي (تخزين المتصفح أو صندوق التطبيق أو ملفات التصدير التي تحددها). ولا يعتمد على حساب سحابي لمزامنة بياناتك الأساسية.</strong></p><p>(2) عليك عمل نسخة احتياطية وتصدير المحتوى المهم بنفسك. <strong>لا يمكننا ضمان استرداد البيانات المحلية المفقودة بسبب تلف الجهاز أو تنظيف المتصفح أو إلغاء تثبيت التطبيق أو إعادة ضبط النظام أو أخطاء التشغيل، وتتحمل أنت المخاطر ذات الصلة.</strong></p><p>(3) الملفات التي تصدرها بنشاط تحتفظ بها بنفسك؛ وتعتمد سلامتها وقابليتها للاستخدام على جهازك وإدارة ملفاتك.</p><h4>8. خدمات الجهات الخارجية والمصادر المفتوحة</h4><p>(1) قد يتضمن البرنامج مواقع أو خدمات أو موارد لجهات خارجية أو مكوّنات مفتوحة المصدر. <strong>لا نضمن توفرها أو محتواها أو سياسة خصوصيتها أو جودتها، وتتحمل أنت مخاطر التعامل مع الجهات الخارجية.</strong></p><p>(2) تُقدَّم مكوّنات الجهات الخارجية مفتوحة المصدر بموجب تراخيصها الخاصة؛ واستخدام الوظائف ذات الصلة يعني قبولك لتلك التراخيص.</p><h4>9. إخلاء المسؤولية والحد من المسؤولية</h4><p>(1) إلى أقصى حد يسمح به القانون، يُقدم البرنامج «كما هو»، ولا نتحمل المسؤولية عن أي خسارة غير مباشرة أو عارضة أو خاصة أو عقابية ناتجة عن استخدامه أو عدم القدرة على استخدامه، ولا نضمن أنه متواصل أو خالٍ من الأخطاء أو يلبي احتياجاتك بالكامل.</p><p>(2) <strong>يتأثر العرض ثلاثي الأبعاد بأداء الجهاز والبطاقة الرسومية والتعريفات والبيئة النظامية والاختلافات بين المتصفحات؛ ولا نضمن بأي ضمان صريح أو ضمني اتساق نتائج العرض أو دقتها أو ملاءمتها.</strong></p><h4>10. تغييرات الاتفاقية</h4><p><strong>يجوز لنا تنقيح هذه الاتفاقية من وقت لآخر. سيُعلن عن النسخة المنقحة داخل البرنامج؛ والاستمرار في الاستخدام يُعد قبولاً بها؛ وإذا كنت لا توافق، يرجى التوقف عن استخدامها.</strong></p><h4>11. الإنهاء</h4><p>(1) يجوز لك التوقف عن استخدام البرنامج وإلغاء تثبيته في أي وقت؛ وقد تُعالَج بياناتك المحلية بموجب سياسة الخصوصية والإعدادات المحلية.</p><p>(2) <strong>إذا انتهكت هذه الاتفاقية، يجوز لنا إنهاء استخدامك أو تقييده، وتتحمل أنت ما يترتب على ذلك من إزعاج أو خسارة.</strong></p><h4>12. القانون الواجب التطبيق وحل النزاعات</h4><p>(1) يخضع تكوين هذه الاتفاقية ونفاذها وتفسيرها وحل نزاعاتها لقوانين بلدك ومنطقتك.</p><p>(2) تُحل النزاعات من خلال التفاوض الودي؛ فإن تعذر ذلك، توافق على اللجوء إلى المحكمة المختصة للتقاضي.</p><h4>13. الاتصال وأحكام متفرقة</h4><p>(1) للاستفسارات، تواصل معنا عبر صفحة «حول» في البرنامج.</p><p>(2) <strong>إذا اعتُبر أي بند باطلاً أو غير قابل للتنفيذ، فلا يؤثر ذلك على صحة البنود المتبقية.</strong></p><p>(3) النسخة الصينية المبسطة هي المرجع؛ والنسخ بلغات أخرى للإرشاد فقط.</p><h4>14. تحديثات البرنامج وتغييرات الدليل</h4><p>(1) لتحسين المنتج ووظائفه باستمرار، قد يصدر البرنامج إصدارات جديدة من وقت لآخر ويخطرك من خلال فحص التحديث داخل التطبيق أو الموقع الرسمي أو متاجر التطبيقات. قد تشمل التحديثات إضافة ميزات، وتعديلات على الواجهة، وإصلاحات للأخطاء، وتحديثات للتوثيق.</p><p>(2) أنت تفهم وتوافق على أن التحديثات عادة لا تحذف بياناتك الإبداعية المحفوظة محلياً؛ ومع ذلك، مع تحديث الإصدارات، قد يتغير محتوى مستندات مثل الدليل. الملاحظات اللاصقة التي أنشأتها بناءً على نص إصدار أقدم من الدليل قد لا تعود إلى الموقع الأصلي إذا تم تعديل النص المرتبط أو حذفه؛ تبقى هذه الملاحظات في القائمة، ويمكنك حذفها أو إعادة إنشائها.</p><p>(3) أنت حر في اختيار التحديث من عدمه. إذا اخترت عدم التحديث ومواصلة استخدام إصدار أقدم، فقد لا يحصل الإصدار الأقدم على الإصلاحات والتحسينات اللاحقة، وتتحمل المخاطر ذات الصلة بنفسك.</p></div>"
+      "ar": "<div dir=\"rtl\"><p>مرحباً بك في كيوب · ورشة تصميم ثلاثي الأبعاد (يشار إليها بـ «البرنامج»). هذه أداة تصميم وتحرير رسوميات ثلاثية الأبعاد تعمل في متصفحك وعلى جهازك المحلي. <strong>يمكنك استخدام جميع الوظائف الأساسية مباشرة على جهازك دون تسجيل حساب أو تسجيل دخول.</strong> قبل استخدام البرنامج، يرجى قراءة وفهم جميع بنود هذه الاتفاقية بالكامل، وخاصة بنود إخلاء المسؤولية والحد من المسؤولية المكتوبة بخط عريض. باستخدامك للبرنامج، يُعتبر أنك قرأت وفهمت ووافقت على الالتزام بهذه الاتفاقية.</p><h4>\u200E1.\u200E القبول والنفاذ</h4><p>\u200E(1)\u200E هذه الاتفاقية هي بينك وبين مطوّر/مشغّل البرنامج بشأن استخدامه، وتشكّل مع إخلاء المسؤولية وسياسة الخصوصية والمكملات ذات الصلة البنود الكاملة. <strong>إذا كنت لا توافق على أي بند من أي مستند، فلا تستخدم البرنامج.</strong></p><p>\u200E(2)\u200E نقرُك للتأكيد، أو تحديدك للموافقة، أو استخدامك الفعلي للبرنامج يُعد قبولاً لهذه الاتفاقية، ويسري من تاريخ بدء استخدامك له.</p><p>\u200E(3)\u200E <strong>إذا كنت قاصراً، يرجى استخدام البرنامج برفقة ولي أمر وموافقته، الذي يتحمل مسؤولية الوصاية والتوجيه المقابلة.</strong></p><h4>\u200E2.\u200E البرنامج والخدمة</h4><p>\u200E(1)\u200E يوفر البرنامج وظائف مثل الإبداع ثلاثي الأبعاد والتحرير والتعليق والملاحظات اللاصقة والتصدير والاستيراد، ويعمل بشكل رئيسي على جهازك المحلي (المتصفح أو سطح المكتب أو الجوال). <strong>تُحفظ بياناته الإبداعية الأساسية محلياً افتراضياً ولا تعتمد على أي حساب عبر الإنترنت.</strong></p><p>\u200E(2)\u200E قد نوفر إصدارات على منصات مختلفة (الويب \u200EوPC\u200E \u200EوAndroid\u200E وغيرها) بوظائف متباينة قليلاً؛ وتخضع الوظائف المحددة للإصدار الذي تستخدمه.</p><p>\u200E(3)\u200E قد يتضمن البرنامج مكتبات مفتوحة المصدر لجهات خارجية (مثل \u200EThree.js\u200E ومكوّنات \u200EWebGL\u200E ذات الصلة)، وحقوقها تعود لأصحابها وتحكمها تراخيصها مفتوحة المصدر الخاصة.</p><h4>\u200E3.\u200E منح الترخيص</h4><p>\u200E(1)\u200E <strong>نمنحك ترخيصاً محدوداً غير حصري وغير قابل للتحويل و قابلاً للإلغاء لتثبيت البرنامج والوصول إليه واستخدامه على جهازك الخاص لأغراض شخصية أو غير تجارية.</strong></p><p>\u200E(2)\u200E دون إذن كتابي مسبق منا، لا يجوز لك الهندسة العكسية أو فك الشفرة أو التصديع أو التأجير أو البيع أو الترخيص الفرعي للبرنامج، أو استخدامه لتقديم خدمات تجارية.</p><p>\u200E(3)\u200E تفهم وتوافق على أن البرنامج يُقدم «كما هو»، ونحتفظ بالحق في تعديل أو تعليق أو إنهاء جزء من وظائفه أو كلها في أي وقت دون مسؤولية إضافية.</p><h4>\u200E4.\u200E الرسوم</h4><p>\u200E(1)\u200E في الإصدار الحالي، تُقدَّم الوظائف الأساسية مجاناً. <strong>إذا فرضنا رسوماً على وظائف متقدمة محددة في المستقبل، فسنُعلمك بارزاً مسبقاً ويسري ذلك فقط بعد تأكيدك الصريح؛ ولن نفرض رسوماً بأثر رجعي على وظائف قُدّمت مجاناً.</strong></p><p>\u200E(2)\u200E تتحمل أنت تكاليف الشبكة والجهاز والبيانات والتخزين الناتجة عن استخدامك.</p><h4>\u200E5.\u200E محتوى المستخدم وحقوق الملكية الفكرية</h4><p>\u200E(1)\u200E <strong>جميع المحتوى الذي تنشئه أو ترسمه أو تستورده أو تعلّقه أو تصدّره (بما في ذلك النماذج ثلاثية الأبعاد والمشاهد والملاحظات اللاصقة والنصوص والصور) يعود لك أو حصلت على التفويض المقابل له.</strong></p><p>\u200E(2)\u200E أنت المسؤول عن مشروعية وأصالة محتواك، وتضمن ألا ينتهك حقوق الآخرين في حقوق النشر أو العلامات التجارية أو الصور أو الخصوصية أو غيرها.</p><p>\u200E(3)\u200E تمنحنا ترخيصاً غير حصري وعالمياً ودون رسوم لاستخدام المحتوى أعلاه فقط لتقديم البرنامج وصيانته وتحسينه ضمن المعالجة التقنية الضرورية على جهازك؛ ولن نستخدم محتواك الإبداعي لأي إفصاح خارجي أو استخدام تجاري غير ذي صلة.</p><h4>\u200E6.\u200E قواعد الاستخدام والسلوك المحظور</h4><p>\u200E(1)\u200E توافق على الامتثال للقوانين المطبقة، ولا يجوز لك استخدام البرنامج لإنشاء أو نسخ أو نشر أو نشر محتوى غير قانوني أو منتهك أو غير أخلاقي.</p><p>\u200E(2)\u200E <strong>لا يجوز لك استخدام البرنامج للقيام بما يلي؛ وإلا يجوز لنا تقييد استخدامك أو تعليقه أو إنهائه دون إشعار مسبق:</strong></p><p>\u200Ea)\u200E محتوى يهدد أمن الدولة أو يحرض على العنف أو الإرهاب أو خطاب الكراهية؛</p><p>\u200Eb)\u200E محتوى إباحي أو قمار أو احتيالي أو منتهك للحقوق؛</p><p>\u200Ec)\u200E التدخل في البرنامج أو مهاجمته أو فك شفرته العكسية أو خدمات الجهات الخارجية؛</p><p>\u200Ed)\u200E التحايل على قيوده التقنية أو آلياته الأمنية.</p><h4>\u200E7.\u200E البيانات والتخزين المحلي</h4><p>\u200E(1)\u200E <strong>يعتمد البرنامج بشكل رئيسي على التخزين المحلي؛ وتُحفظ بياناتك الإبداعية عادةً على جهازك المحلي (تخزين المتصفح أو صندوق التطبيق أو ملفات التصدير التي تحددها). ولا يعتمد على حساب سحابي لمزامنة بياناتك الأساسية.</strong></p><p>\u200E(2)\u200E عليك عمل نسخة احتياطية وتصدير المحتوى المهم بنفسك. <strong>لا يمكننا ضمان استرداد البيانات المحلية المفقودة بسبب تلف الجهاز أو تنظيف المتصفح أو إلغاء تثبيت التطبيق أو إعادة ضبط النظام أو أخطاء التشغيل، وتتحمل أنت المخاطر ذات الصلة.</strong></p><p>\u200E(3)\u200E الملفات التي تصدرها بنشاط تحتفظ بها بنفسك؛ وتعتمد سلامتها وقابليتها للاستخدام على جهازك وإدارة ملفاتك.</p><h4>\u200E8.\u200E خدمات الجهات الخارجية والمصادر المفتوحة</h4><p>\u200E(1)\u200E قد يتضمن البرنامج مواقع أو خدمات أو موارد لجهات خارجية أو مكوّنات مفتوحة المصدر. <strong>لا نضمن توفرها أو محتواها أو سياسة خصوصيتها أو جودتها، وتتحمل أنت مخاطر التعامل مع الجهات الخارجية.</strong></p><p>\u200E(2)\u200E تُقدَّم مكوّنات الجهات الخارجية مفتوحة المصدر بموجب تراخيصها الخاصة؛ واستخدام الوظائف ذات الصلة يعني قبولك لتلك التراخيص.</p><h4>\u200E9.\u200E إخلاء المسؤولية والحد من المسؤولية</h4><p>\u200E(1)\u200E إلى أقصى حد يسمح به القانون، يُقدم البرنامج «كما هو»، ولا نتحمل المسؤولية عن أي خسارة غير مباشرة أو عارضة أو خاصة أو عقابية ناتجة عن استخدامه أو عدم القدرة على استخدامه، ولا نضمن أنه متواصل أو خالٍ من الأخطاء أو يلبي احتياجاتك بالكامل.</p><p>\u200E(2)\u200E <strong>يتأثر العرض ثلاثي الأبعاد بأداء الجهاز والبطاقة الرسومية والتعريفات والبيئة النظامية والاختلافات بين المتصفحات؛ ولا نضمن بأي ضمان صريح أو ضمني اتساق نتائج العرض أو دقتها أو ملاءمتها.</strong></p><h4>\u200E10.\u200E تغييرات الاتفاقية</h4><p><strong>يجوز لنا تنقيح هذه الاتفاقية من وقت لآخر. سيُعلن عن النسخة المنقحة داخل البرنامج؛ والاستمرار في الاستخدام يُعد قبولاً بها؛ وإذا كنت لا توافق، يرجى التوقف عن استخدامها.</strong></p><h4>\u200E11.\u200E الإنهاء</h4><p>\u200E(1)\u200E يجوز لك التوقف عن استخدام البرنامج وإلغاء تثبيته في أي وقت؛ وقد تُعالَج بياناتك المحلية بموجب سياسة الخصوصية والإعدادات المحلية.</p><p>\u200E(2)\u200E <strong>إذا انتهكت هذه الاتفاقية، يجوز لنا إنهاء استخدامك أو تقييده، وتتحمل أنت ما يترتب على ذلك من إزعاج أو خسارة.</strong></p><h4>\u200E12.\u200E القانون الواجب التطبيق وحل النزاعات</h4><p>\u200E(1)\u200E يخضع تكوين هذه الاتفاقية ونفاذها وتفسيرها وحل نزاعاتها لقوانين بلدك ومنطقتك.</p><p>\u200E(2)\u200E تُحل النزاعات من خلال التفاوض الودي؛ فإن تعذر ذلك، توافق على اللجوء إلى المحكمة المختصة للتقاضي.</p><h4>\u200E13.\u200E الاتصال وأحكام متفرقة</h4><p>\u200E(1)\u200E للاستفسارات، تواصل معنا عبر صفحة «حول» في البرنامج.</p><p>\u200E(2)\u200E <strong>إذا اعتُبر أي بند باطلاً أو غير قابل للتنفيذ، فلا يؤثر ذلك على صحة البنود المتبقية.</strong></p><p>\u200E(3)\u200E النسخة الصينية المبسطة هي المرجع؛ والنسخ بلغات أخرى للإرشاد فقط.</p><h4>\u200E14.\u200E تحديثات البرنامج وتغييرات الدليل</h4><p>\u200E(1)\u200E لتحسين المنتج ووظائفه باستمرار، قد يصدر البرنامج إصدارات جديدة من وقت لآخر ويخطرك من خلال فحص التحديث داخل التطبيق أو الموقع الرسمي أو متاجر التطبيقات. قد تشمل التحديثات إضافة ميزات، وتعديلات على الواجهة، وإصلاحات للأخطاء، وتحديثات للتوثيق.</p><p>\u200E(2)\u200E أنت تفهم وتوافق على أن التحديثات عادة لا تحذف بياناتك الإبداعية المحفوظة محلياً؛ ومع ذلك، مع تحديث الإصدارات، قد يتغير محتوى مستندات مثل الدليل. الملاحظات اللاصقة التي أنشأتها بناءً على نص إصدار أقدم من الدليل قد لا تعود إلى الموقع الأصلي إذا تم تعديل النص المرتبط أو حذفه؛ تبقى هذه الملاحظات في القائمة، ويمكنك حذفها أو إعادة إنشائها.</p><p>\u200E(3)\u200E أنت حر في اختيار التحديث من عدمه. إذا اخترت عدم التحديث ومواصلة استخدام إصدار أقدم، فقد لا يحصل الإصدار الأقدم على الإصلاحات والتحسينات اللاحقة، وتتحمل المخاطر ذات الصلة بنفسك.</p></div>"
     },
     "tosGateAccept": {
       "zh-CN": "同意并继续",
@@ -5909,7 +5909,7 @@ export const DOMAINS = {
       "ru": "Прочитано: <b id=\"tos-progress-num\">{0}</b> / 3 документа",
       "es": "Documentos leídos: <b id=\"tos-progress-num\">{0}</b> / 3",
       "fr": "Documents lus : <b id=\"tos-progress-num\">{0}</b> / 3",
-      "ar": "تمت قراءة <b>{0}</b> / 3 مستندات"
+      "ar": "تمت قراءة <b>\u200E{0}\u200E</b> / \u200E3\u200E مستندات"
     },
     "translate": {
       "zh-CN": "平移",
@@ -6041,7 +6041,7 @@ export const DOMAINS = {
       "ru": "Все {0} объектов — штрихи кисти, непрозрачность штриха фиксирована равной 1",
       "es": "los {0} objetos son trazos de pincel, cuya opacidad es fija en 1",
       "fr": "les {0} objets sont des traits de pinceau dont l’opacité est fixée à 1",
-      "ar": "جميع الكائنات {0} ضربات فرشاة، وشفافيتها ثابتة عند 1"
+      "ar": "جميع الكائنات \u200E{0}\u200E ضربات فرشاة، وشفافيتها ثابتة عند \u200E1\u200E"
     },
     "whyBrushPat": {
       "zh-CN": "画笔笔迹不支持花纹 / 贴图",
@@ -6063,7 +6063,7 @@ export const DOMAINS = {
       "ru": "Содержит {0} штрихов кисти, непрозрачность штриха фиксирована равной 1 (после исключения штрихов можно настроить)",
       "es": "contiene {0} trazo(s) de pincel con opacidad fija en 1 (deseléccionalos para editar)",
       "fr": "contient {0} trait(s) de pinceau dont l’opacité est fixée à 1 (désélectionnez-les pour modifier)",
-      "ar": "تحتوي على {0} ضربة فرشاة بشفافية ثابتة عند 1 (ألغ تحديدها للتحرير)"
+      "ar": "تحتوي على \u200E{0}\u200E ضربة فرشاة بشفافية ثابتة عند \u200E1\u200E (ألغ تحديدها للتحرير)"
     },
     "whyImageColor": {
       "zh-CN": "包含图片或带贴图图形，无法统一上色",
@@ -6107,7 +6107,7 @@ export const DOMAINS = {
       "ru": "Все {0} объектов — без цвета",
       "es": "los {0} objetos no tienen color",
       "fr": "les {0} objets n’ont aucune couleur",
-      "ar": "جميع الكائنات {0} بلا لون"
+      "ar": "جميع الكائنات \u200E{0}\u200E بلا لون"
     },
     "whyNoColorSome": {
       "zh-CN": "包含 {0} 个无颜色对象（重新上色后可调）",
@@ -6118,7 +6118,7 @@ export const DOMAINS = {
       "ru": "Содержит {0} объектов без цвета (после повторной заливки можно настроить)",
       "es": "contiene {0} objeto(s) sin color (recolóralos para editar)",
       "fr": "contient {0} objet(s) sans couleur (recolorez-les pour modifier)",
-      "ar": "تحتوي على {0} كائن بلا لون (أعد تلوينها للتحرير)"
+      "ar": "تحتوي على \u200E{0}\u200E كائن بلا لون (أعد تلوينها للتحرير)"
     },
     "whyTexShapePat": {
       "zh-CN": "带贴图的图形需先清除贴图",
@@ -6267,7 +6267,7 @@ export const DOMAINS = {
       "ru": "Создаю лёгкие, дружественные к приватности инструменты 3D/2D-творчества. Единая кодовая база охватывает Web, Windows и Android, чтобы творчество было доступно везде.",
       "es": "Me dedico a crear herramientas creativas 3D/2D ligeras y respetuosas con la privacidad. Una misma base de código cubre web, Windows y Android, para crear en cualquier momento y lugar.",
       "fr": "Nous cherchons à construire des outils créatifs 3D/2D légers et respectueux de la vie privée. Un seul code couvre le Web, Windows et Android, pour laisser la créativité circuler partout.",
-      "ar": "نسعى لبناء أدوات إبداعية 3D/2D خفيفة وصديقة للخصوصية. شفرة واحدة تغطي الويب وWindows وAndroid، لتتدفق الإبداع في أي مكان."
+      "ar": "نسعى لبناء أدوات إبداعية \u200E3D/2D\u200E خفيفة وصديقة للخصوصية. شفرة واحدة تغطي الويب \u200EوWindows\u200E \u200EوAndroid،\u200E لتتدفق الإبداع في أي مكان."
     },
     "author.donate": {
       "zh-CN": "♥ 赞助支持",
@@ -6300,7 +6300,7 @@ export const DOMAINS = {
       "ru": "Лицензия: Mulan Permissive Software License v2 (MulanPSL-2)",
       "es": "Licencia: Mulan Permissive Software License v2 (MulanPSL-2)",
       "fr": "Licence : Licence logicielle permissive Mulan v2 (MulanPSL-2)",
-      "ar": "الترخيص: رخصة مولان المتساهلة الإصدار 2 (MulanPSL-2)"
+      "ar": "الترخيص: رخصة مولان المتساهلة الإصدار \u200E2\u200E \u200E(MulanPSL-2)\u200E"
     },
     "author.name": {
       "zh-CN": "Yushichadao",
@@ -6322,7 +6322,7 @@ export const DOMAINS = {
       "ru": "⭐ Репозиторий GitHub",
       "es": "⭐ Repositorio de GitHub",
       "fr": "⭐ Dépôt GitHub",
-      "ar": "⭐ مستودع GitHub"
+      "ar": "⭐ مستودع \u200EGitHub\u200E"
     },
     "author.role": {
       "zh-CN": "独立开发者 · Cub3D Editor 作者",
@@ -6333,7 +6333,7 @@ export const DOMAINS = {
       "ru": "Независимый разработчик · Создатель Cub3D Editor",
       "es": "Desarrollador independiente · Autor de Cub3D Editor",
       "fr": "Développeur indépendant · Auteur de Cub3D Editor",
-      "ar": "مطوّر مستقل · مؤلف Cub3D Editor"
+      "ar": "مطوّر مستقل · مؤلف \u200ECub3D\u200E \u200EEditor\u200E"
     },
     "author.title": {
       "zh-CN": "关于作者与项目",
@@ -6355,7 +6355,7 @@ export const DOMAINS = {
       "ru": "Этот сайт создан при помощи ИИ инструментами TRAE и CodeBuddy",
       "es": "Este sitio fue generado con asistencia de IA usando TRAE y CodeBuddy",
       "fr": "Ce site a été généré à l'aide des outils IA TRAE et CodeBuddy",
-      "ar": "تم توليد هذا الموقع بمساعدة أدوات TRAE وCodeBuddy"
+      "ar": "تم توليد هذا الموقع بمساعدة أدوات \u200ETRAE\u200E \u200EوCodeBuddy\u200E"
     },
     "brand": {
       "zh-CN": "Cub3D Editor",
@@ -6520,7 +6520,7 @@ export const DOMAINS = {
       "ru": ["Многоплатформенный .json проект","Полная поддержка","Полная поддержка","Полная поддержка"],
       "es": ["Proyecto .json multiplataforma","Soporte completo","Soporte completo","Soporte completo"],
       "fr": ["Projet .json multiplateforme","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
-      "ar": ["مشروع .json متعدد المنصات","دعم كامل","دعم كامل","دعم كامل"]
+      "ar": ["مشروع \u200E.json\u200E متعدد المنصات","دعم كامل","دعم كامل","دعم كامل"]
     },
     "cmp.r8": {
       "zh-CN": ["九种语言界面","完全支持","完全支持","完全支持"],
@@ -6531,7 +6531,7 @@ export const DOMAINS = {
       "ru": ["Интерфейс на 9 языках","Полная поддержка","Полная поддержка","Полная поддержка"],
       "es": ["Interfaz de 9 idiomas","Soporte completo","Soporte completo","Soporte completo"],
       "fr": ["Interface neuf langues","Prise en charge complète","Prise en charge complète","Prise en charge complète"],
-      "ar": ["واجهة بـ 9 لغات","دعم كامل","دعم كامل","دعم كامل"]
+      "ar": ["واجهة بـ \u200E9\u200E لغات","دعم كامل","دعم كامل","دعم كامل"]
     },
     "cmp.r9": {
       "zh-CN": ["崩溃恢复/自动保存","不适用","完全支持","部分支持"],
@@ -6619,7 +6619,7 @@ export const DOMAINS = {
       "ru": ".json общий проект",
       "es": "Proyectos .json compartidos",
       "fr": "Projets .json partagés",
-      "ar": "توافق مشروع .json"
+      "ar": "توافق مشروع \u200E.json\u200E"
     },
     "cmp.r_lang": {
       "zh-CN": "九种语言界面（简体中文 / 繁体中文 / 英语 / 日语 / 韩语 / 俄语 / 西班牙语 / 法语 / 阿拉伯语）",
@@ -6630,7 +6630,7 @@ export const DOMAINS = {
       "ru": "Интерфейс на 9 языках (упрощённый китайский / традиционный китайский / английский / японский / корейский / русский / испанский / французский / арабский)",
       "es": "9 idiomas (chino simplificado / chino tradicional / inglés / japonés / coreano / ruso / español / francés / árabe)",
       "fr": "9 langues (chinois simplifié / chinois traditionnel / anglais / japonais / coréen / russe / espagnol / français / arabe)",
-      "ar": "واجهة بـ 9 لغات (الصينية المبسطة / الصينية التقليدية / الإنجليزية / اليابانية / الكورية / الروسية / الإسبانية / الفرنسية / العربية)"
+      "ar": "واجهة بـ \u200E9\u200E لغات (الصينية المبسطة / الصينية التقليدية / الإنجليزية / اليابانية / الكورية / الروسية / الإسبانية / الفرنسية / العربية)"
     },
     "cmp.r_material": {
       "zh-CN": "材质/纹理",
@@ -6751,7 +6751,7 @@ export const DOMAINS = {
       "ru": "Обнаружен Android — рекомендуем версию для Android.",
       "es": "Detectamos Android; se recomienda la versión móvil de Android.",
       "fr": "Android détecté — la version Android est recommandée.",
-      "ar": "تم اكتشاف Android — يوصى بإصدار Android."
+      "ar": "تم اكتشاف \u200EAndroid\u200E — يوصى بإصدار \u200EAndroid.\u200E"
     },
     "detect.default": {
       "zh-CN": "正在识别您的设备…",
@@ -6784,7 +6784,7 @@ export const DOMAINS = {
       "ru": "Обнаружена система HarmonyOS — рекомендуем веб-версию (сенсорную).",
       "es": "Detectamos HarmonyOS; se recomienda la versión web táctil.",
       "fr": "Système HarmonyOS détecté — la version Web tactile est recommandée.",
-      "ar": "تم اكتشاف HarmonyOS — يوصى بإصدار الويب اللمسي."
+      "ar": "تم اكتشاف \u200EHarmonyOS\u200E — يوصى بإصدار الويب اللمسي."
     },
     "detect.ios": {
       "zh-CN": "检测到 iOS / iPadOS 设备，推荐网页触屏版。",
@@ -6795,7 +6795,7 @@ export const DOMAINS = {
       "ru": "Обнаружено устройство iOS/iPadOS — рекомендуем веб-версию (сенсорную).",
       "es": "Detectamos un dispositivo iOS/iPadOS; se recomienda la versión web táctil.",
       "fr": "Appareil iOS/iPadOS détecté — la version Web tactile est recommandée.",
-      "ar": "تم اكتشاف جهاز iOS/iPadOS — يوصى بإصدار الويب اللمسي."
+      "ar": "تم اكتشاف جهاز \u200EiOS/iPadOS\u200E — يوصى بإصدار الويب اللمسي."
     },
     "detect.linux": {
       "zh-CN": "检测到 Linux，推荐网页版。",
@@ -6806,7 +6806,7 @@ export const DOMAINS = {
       "ru": "Обнаружен Linux — рекомендуем веб-версию.",
       "es": "Detectamos Linux; se recomienda la versión web.",
       "fr": "Linux détecté — la version Web est recommandée.",
-      "ar": "تم اكتشاف Linux — يوصى بإصدار الويب."
+      "ar": "تم اكتشاف \u200ELinux\u200E — يوصى بإصدار الويب."
     },
     "detect.macos": {
       "zh-CN": "检测到 macOS，推荐网页版。",
@@ -6817,7 +6817,7 @@ export const DOMAINS = {
       "ru": "Обнаружена система macOS — рекомендуем веб-версию.",
       "es": "Detectamos macOS; se recomienda la versión web.",
       "fr": "macOS détecté — la version Web est recommandée.",
-      "ar": "تم اكتشاف macOS — يوصى بإصدار الويب."
+      "ar": "تم اكتشاف \u200EmacOS\u200E — يوصى بإصدار الويب."
     },
     "detect.other": {
       "zh-CN": "未识别到具体系统，推荐使用网页版。",
@@ -6839,7 +6839,7 @@ export const DOMAINS = {
       "ru": "Обнаружена система Windows — рекомендуем ПК-версию.",
       "es": "Detectamos Windows; se recomienda la versión de escritorio para PC.",
       "fr": "Système Windows détecté — la version PC est recommandée.",
-      "ar": "تم اكتشاف Windows — يوصى بإصدار سطح المكتب PC."
+      "ar": "تم اكتشاف \u200EWindows\u200E — يوصى بإصدار سطح المكتب \u200EPC.\u200E"
     },
     "donate.cta": {
       "zh-CN": "♥ 赞助支持",
@@ -6883,7 +6883,7 @@ export const DOMAINS = {
       "ru": "Кисть, ластик (полностью/частично), инструменты фигур для 3D и 2D.",
       "es": "Pincel y borrador (total/parcial), herramientas de forma, en 3D y 2D.",
       "fr": "Pinceau, gomme (totale/partielle), outils de forme, prend en charge 3D et 2D.",
-      "ar": "فرشاة، ممحاة (كلي/جزئي)، أدوات الأشكال، تدعم 3D و2D."
+      "ar": "فرشاة، ممحاة (كلي/جزئي)، أدوات الأشكال، تدعم \u200E3D\u200E \u200Eو2D.\u200E"
     },
     "f1.t": {
       "zh-CN": "绘制与形状",
@@ -6993,7 +6993,7 @@ export const DOMAINS = {
       "ru": "Без аккаунта; данные сохраняются локально; .json проекты работают на всех платформах.",
       "es": "Sin cuenta, datos locales; proyectos .json compatibles en tres entornos.",
       "fr": "Sans compte ; données enregistrées localement ; projets .json fonctionnant sur toutes les plateformes.",
-      "ar": "بدون حساب؛ البيانات محفوظة محلياً؛ مشاريع .json تعمل على كل المنصات."
+      "ar": "بدون حساب؛ البيانات محفوظة محلياً؛ مشاريع \u200E.json\u200E تعمل على كل المنصات."
     },
     "f6.t": {
       "zh-CN": "轻量化",
@@ -7026,7 +7026,7 @@ export const DOMAINS = {
       "ru": "Расширения ПК",
       "es": "Mejoras de PC",
       "fr": "Optimisations PC",
-      "ar": "تحسينات PC"
+      "ar": "تحسينات \u200EPC\u200E"
     },
     "f8.d": {
       "zh-CN": "返回键确认、原生保存/打开对话框（系统文档选择器）、全屏与状态栏整合。",
@@ -7048,7 +7048,7 @@ export const DOMAINS = {
       "ru": "Расширения Android",
       "es": "Mejoras de Android",
       "fr": "Optimisations Android",
-      "ar": "تحسينات Android"
+      "ar": "تحسينات \u200EAndroid\u200E"
     },
     "f9.d": {
       "zh-CN": "简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية，切换同步更新。",
@@ -7059,7 +7059,7 @@ export const DOMAINS = {
       "ru": "Упрощённый китайский, традиционный китайский, English, 日本語, 한국어, Русский, Español и Français, العربية — синхронизация при переключении.",
       "es": "Chino simplificado, Chino tradicional, English, 日本語, 한국어, Русский, Español, Français, العربية, con sincronización al cambiar.",
       "fr": "Chinois simplifié, chinois traditionnel, English, 日本語, 한국어, Русский, Español, Français, العربية — synchronisées lors du changement.",
-      "ar": "الصينية المبسطة، الصينية التقليدية، English، 日本語، 한국어، Русский، Español، Français، العربية — متزامنة عند التبديل."
+      "ar": "الصينية المبسطة، الصينية التقليدية، \u200EEnglish،\u200E 日本語، 한국어، Русский، \u200EEspañol،\u200E \u200EFrançais،\u200E العربية — متزامنة عند التبديل."
     },
     "f9.t": {
       "zh-CN": "九语言界面",
@@ -7136,7 +7136,7 @@ export const DOMAINS = {
       "ru": "Нет. Cub3D Editor работает с офлайн-приоритетом; все данные хранятся на вашем локальном устройстве и работают без аккаунта.",
       "es": "No. Cub3D Editor funciona sin conexión; todos los datos se guardan en el dispositivo local y no necesita ninguna cuenta.",
       "fr": "Non. Cub3D Editor fonctionne hors-ligne d'abord ; toutes vos données sont stockées sur votre appareil local et fonctionnent sans compte.",
-      "ar": "لا. يعمل Cub3D Editor دون اتصال أولاً؛ كل البيانات محفوظة على جهازك المحلي ويعمل بدون أي حساب."
+      "ar": "لا. يعمل \u200ECub3D\u200E \u200EEditor\u200E دون اتصال أولاً؛ كل البيانات محفوظة على جهازك المحلي ويعمل بدون أي حساب."
     },
     "faq.a10": {
       "zh-CN": "这些系统没有原生安装包，直接使用网页版即可：iPhone / iPad / 鸿蒙手机等触屏设备会自动进入触屏布局，macOS / Linux 桌面在浏览器打开即可。工程文件仍与三端互通。",
@@ -7147,7 +7147,7 @@ export const DOMAINS = {
       "ru": "У этих систем нет нативного пакета — просто используйте веб-версию: сенсорные устройства (iPhone / iPad / смартфоны HarmonyOS) автоматически переходят в сенсорную раскладку, а macOS / Linux открываются в браузере. Проекты по-прежнему совместимы между тремя платформами.",
       "es": "Estos sistemas no tienen paquete nativo: usa directamente la versión web. Los dispositivos táctiles (iPhone / iPad / móviles HarmonyOS) entran automáticamente en el diseño táctil, y los de escritorio (macOS / Linux) se abren en el navegador. Los proyectos siguen siendo compatibles entre los tres entornos.",
       "fr": "Ces systèmes n'ont pas de paquet natif — utilisez directement la version Web : les appareils tactiles (iPhone / iPad / téléphones HarmonyOS) basculent automatiquement en disposition tactile, et les bureaux macOS / Linux s'ouvrent dans le navigateur. Les projets restent compatibles entre les trois plateformes.",
-      "ar": "هذه الأنظمة لا تحتوي على حزمة أصلية — استخدم إصدار الويب مباشرة: الأجهزة اللمسية (iPhone / iPad / هواتف HarmonyOS) تتحول تلقائيًا إلى تخطيط لمس، وأجهزة سطح المكتب macOS / Linux تُفتح في المتصفح. تظل المشاريع متوافقة بين المنصات الثلاث."
+      "ar": "هذه الأنظمة لا تحتوي على حزمة أصلية — استخدم إصدار الويب مباشرة: الأجهزة اللمسية \u200E(iPhone\u200E / \u200EiPad\u200E / هواتف \u200EHarmonyOS)\u200E تتحول تلقائيًا إلى تخطيط لمس، وأجهزة سطح المكتب \u200EmacOS\u200E / \u200ELinux\u200E تُفتح في المتصفح. تظل المشاريع متوافقة بين المنصات الثلاث."
     },
     "faq.a2": {
       "zh-CN": "绝大多数功能完全一致，共享同一套核心引擎。差异仅来自安装方式，以及 Android 的原生保存/打开对话框与返回键。Android 的「全屏」仅为贴合状态栏的视觉全屏。",
@@ -7158,7 +7158,7 @@ export const DOMAINS = {
       "ru": "Подавляющее большинство функций полностью совпадает, используя один и тот же основной движок. Различия — только в способе установки и в нативных диалогах сохранения/открытия и кнопке «Назад» Android. «Полноэкранный режим» Android — лишь визуальное совмещение со строкой состояния.",
       "es": "La gran mayoría son idénticas, con el mismo motor central. Las diferencias provienen solo del modo de instalación, y de los diálogos nativos de guardar/abrir y el botón Atrás de Android. La «pantalla completa» de Android es solo visual (ajuste a la barra de estado).",
       "fr": "La grande majorité des fonctions sont totalement identiques, utilisant le même moteur principal. Les différences concernent uniquement la méthode d'installation et les boîtes de dialogue natives d'enregistrement/ouverture et le bouton « Retour » d'Android. Le « plein écran » d'Android n'est qu'une fusion visuelle avec la barre d'état.",
-      "ar": "الغالبية العظمى من الميزات متطابقة تماماً، وتشترك في نفس المحرك الأساسي. الاختلافات تنشأ فقط من طريقة التثبيت، ومن حوارات حفظ/فتح Android الأصلية وزر الرجوع."
+      "ar": "الغالبية العظمى من الميزات متطابقة تماماً، وتشترك في نفس المحرك الأساسي. الاختلافات تنشأ فقط من طريقة التثبيت، ومن حوارات حفظ/فتح \u200EAndroid\u200E الأصلية وزر الرجوع."
     },
     "faq.a3": {
       "zh-CN": "可以。导出的 .json 工程文件在网页、Windows、Android 三端之间通用，可在手机起草、电脑精修之间自由接力。",
@@ -7169,7 +7169,7 @@ export const DOMAINS = {
       "ru": "Да. Экспортированные .json проекты работают в вебе, Windows и Android, позволяя свободно передавать работу между телефоном и компьютером.",
       "es": "Sí. Los proyectos .json exportados funcionan en web, Windows y Android; puedes bocetar en el móvil y retocar en el PC libremente.",
       "fr": "Oui. Les projets .json exportés fonctionnent sur le Web, Windows et Android, permettant de transférer librement le travail entre téléphone et ordinateur.",
-      "ar": "نعم. ملفات مشروع .json المصدّرة تعمل عبر الويب وWindows وAndroid، مما يتيح لك التسليم بحرية بين المسودة على الهاتف والصقل على الحاسوب."
+      "ar": "نعم. ملفات مشروع \u200E.json\u200E المصدّرة تعمل عبر الويب \u200EوWindows\u200E \u200EوAndroid،\u200E مما يتيح لك التسليم بحرية بين المسودة على الهاتف والصقل على الحاسوب."
     },
     "faq.a5": {
       "zh-CN": "界面支持简体中文、繁體中文、English、日本語、한국어、Русский、Español、Français、العربية 九种语言，切换时文案同步更新。",
@@ -7180,7 +7180,7 @@ export const DOMAINS = {
       "ru": "Интерфейс поддерживает девять языков — упрощённый китайский, традиционный китайский, English, 日本語, 한국어, Русский, Español и Français, العربية — с синхронизацией текста при переключении.",
       "es": "La interfaz admite nueve idiomas: chino simplificado, chino tradicional, English, 日本語, 한국어, Русский, Español y Français, العربية, con sincronización al cambiar.",
       "fr": "L'interface prend en charge neuf langues — chinois simplifié, chinois traditionnel, English, 日本語, 한국어, Русский, Español et Français, العربية — avec synchronisation du texte lors du changement.",
-      "ar": "يدعم الواجهة تسع لغات — الصينية المبسطة، الصينية التقليدية، English، 日本語، 한국어، Русский، Español، Français، العربية — مع مزامنة النص عند التبديل."
+      "ar": "يدعم الواجهة تسع لغات — الصينية المبسطة، الصينية التقليدية، \u200EEnglish،\u200E 日本語، 한국어، Русский، \u200EEspañol،\u200E \u200EFrançais،\u200E العربية — مع مزامنة النص عند التبديل."
     },
     "faq.a6": {
       "zh-CN": "不会。Cub3D Editor 完全免费，所有基础功能无需付费即可使用，目前没有付费计划。",
@@ -7191,7 +7191,7 @@ export const DOMAINS = {
       "ru": "Нет. Cub3D Editor полностью бесплатен — все основные функции доступны без оплаты, платных тарифов нет.",
       "es": "No. Cub3D Editor es totalmente gratuito: todas las funciones básicas funcionan sin pago y no hay planes de pago.",
       "fr": "Non. Cub3D Editor est entièrement gratuit : toutes les fonctionnalités de base fonctionnent sans paiement et il n'y a aucun plan payant.",
-      "ar": "لا. Cub3D Editor مجاني تماماً — جميع الميزات الأساسية تعمل دون دفع ولا توجد خطط مدفوعة."
+      "ar": "لا. \u200ECub3D\u200E \u200EEditor\u200E مجاني تماماً — جميع الميزات الأساسية تعمل دون دفع ولا توجد خطط مدفوعة."
     },
     "faq.a7": {
       "zh-CN": "不会主动上传。编辑器轻量化，默认所有数据保存在本地设备，无需登录，也不会上传你的工程文件。",
@@ -7213,7 +7213,7 @@ export const DOMAINS = {
       "ru": "Да. Проект распространяется по лицензии Mulan Permissive Software License v2 (MulanPSL-2), допускающей свободное использование, изменение и распространение, включая коммерческое.",
       "es": "Sí. El proyecto se distribuye bajo la Licencia de Software Permisiva Mulan v2 (MulanPSL-2), que permite uso, modificación y distribución libres, incluido el uso comercial.",
       "fr": "Oui. Ce projet est sous Licence de logiciel permissive Mulan v2 (MulanPSL-2), autorisant l'usage, la modification et la distribution libres, y compris commercial.",
-      "ar": "نعم. هذا المشروع مرخّص بموجب رخصة Mulan البرمجية المتساهلة الإصدار 2 (MulanPSL-2)، التي تسمح بالاستخدام والتعديل والتوزيع بحرية بما في ذلك الاستخدام التجاري."
+      "ar": "نعم. هذا المشروع مرخّص بموجب رخصة \u200EMulan\u200E البرمجية المتساهلة الإصدار \u200E2\u200E \u200E(MulanPSL-2)،\u200E التي تسمح بالاستخدام والتعديل والتوزيع بحرية بما في ذلك الاستخدام التجاري."
     },
     "faq.a9": {
       "zh-CN": "Windows 桌面版需 Windows 10 及以上；Android 版需 Android 7.0 及以上；网页版只需现代浏览器，无需安装。",
@@ -7224,7 +7224,7 @@ export const DOMAINS = {
       "ru": "Для Windows-версии нужна Windows 10 и выше; для Android — Android 7.0 и выше; веб-версия требует только современный браузер без установки.",
       "es": "La versión de escritorio Windows requiere Windows 10 o superior; Android requiere Android 7.0 o superior; la versión web solo necesita un navegador moderno, sin instalar.",
       "fr": "La version Windows nécessite Windows 10 ou plus ; Android nécessite Android 7.0 ou plus ; la version Web nécessite seulement un navigateur moderne, sans installation.",
-      "ar": "نسخة سطح المكتب Windows تتطلب Windows 10 أو أحدث؛ نسخة Android تتطلب Android 7.0 أو أحدث؛ نسخة الويب تحتاج فقط إلى متصفح حديث دون تثبيت."
+      "ar": "نسخة سطح المكتب \u200EWindows\u200E تتطلب \u200EWindows\u200E \u200E10\u200E أو أحدث؛ نسخة \u200EAndroid\u200E تتطلب \u200EAndroid\u200E \u200E7.0\u200E أو أحدث؛ نسخة الويب تحتاج فقط إلى متصفح حديث دون تثبيت."
     },
     "faq.eyebrow": {
       "zh-CN": "常见问题",
@@ -7510,7 +7510,7 @@ export const DOMAINS = {
       "ru": "Легковесный · Кроссплатформенный 3D/2D редактор сцен",
       "es": "Ligero · Editor de escenas 3D/2D multiplataforma",
       "fr": "Éditeur de scènes 3D/2D multiplateforme, léger",
-      "ar": "محرر مشاهد 3D/2D عبر المنصات خفيف الوزن"
+      "ar": "محرر مشاهد \u200E3D/2D\u200E عبر المنصات خفيف الوزن"
     },
     "hero.sub": {
       "zh-CN": "轻量化的跨平台 3D/2D 场景编辑器",
@@ -7521,7 +7521,7 @@ export const DOMAINS = {
       "ru": "Легкий кроссплатформенный 3D/2D редактор сцен",
       "es": "Editor de escenas 3D/2D multiplataforma, ligero",
       "fr": "Éditeur de scènes 3D/2D multiplateforme, léger",
-      "ar": "محرر مشاهد 3D/2D خفيف عبر المنصات"
+      "ar": "محرر مشاهد \u200E3D/2D\u200E خفيف عبر المنصات"
     },
     "hero.tag": {
       "zh-CN": "同一套代码，覆盖网页、Windows、Android 三端，四种使用形态。",
@@ -7532,7 +7532,7 @@ export const DOMAINS = {
       "ru": "Единая кодовая база для Web, Windows и Android — всего четыре режима использования.",
       "es": "Una misma base de código para web, Windows y Android, en cuatro formas de uso.",
       "fr": "Un seul code couvre le Web, Windows et Android, sur trois plateformes et quatre modes d'utilisation.",
-      "ar": "شفرة واحدة تغطي الويب وWindows وAndroid عبر ثلاث منصات وأربعة أشكال استخدام."
+      "ar": "شفرة واحدة تغطي الويب \u200EوWindows\u200E \u200EوAndroid\u200E عبر ثلاث منصات وأربعة أشكال استخدام."
     },
     "hero.title": {
       "zh-CN": "立方·3D设计工坊",
@@ -7587,7 +7587,7 @@ export const DOMAINS = {
       "ru": "Веб (мышь/сенсор), Windows-десктоп и Android-мобайл — все три платформы готовы",
       "es": "Las tres plataformas listas: web (ratón/táctil), escritorio Windows y móvil Android",
       "fr": "Web (souris/tactile), bureau Windows et mobile Android — les trois plateformes sont prêtes",
-      "ar": "الويب (ماوس/لمس) وسطح مكتب Windows وموبايل Android — المنصات الثلاث متاحة"
+      "ar": "الويب (ماوس/لمس) وسطح مكتب \u200EWindows\u200E وموبايل \u200EAndroid\u200E — المنصات الثلاث متاحة"
     },
     "log.v1.2": {
       "zh-CN": "绘制/形状、对象变换、材质、文字框、视图辅助等核心能力",
@@ -7609,7 +7609,7 @@ export const DOMAINS = {
       "ru": "Офлайн-приоритет, локальное хранилище, совместимость .json проектов на трёх платформах",
       "es": "Prioridad sin conexión, almacenamiento local, proyectos .json en tres entornos",
       "fr": "Hors-ligne d'abord, stockage local, compatibilité des projets .json sur trois plateformes",
-      "ar": "دون اتصال أولاً، تخزين محلي، توافق مشاريع .json عبر ثلاث منصات"
+      "ar": "دون اتصال أولاً، تخزين محلي، توافق مشاريع \u200E.json\u200E عبر ثلاث منصات"
     },
     "log.v1.4": {
       "zh-CN": "九语言界面与崩溃恢复 / 自动保存",
@@ -7631,7 +7631,7 @@ export const DOMAINS = {
       "ru": "2026 · Первый выпуск",
       "es": "2026 · Primera versión",
       "fr": "2026 · Première version",
-      "ar": "2026 · الإصدار الأول"
+      "ar": "\u200E2026\u200E · الإصدار الأول"
     },
     "nav.author": {
       "zh-CN": "关于作者",
@@ -7884,7 +7884,7 @@ export const DOMAINS = {
       "ru": "Телефоны/планшеты или добавьте ?touch к URL для сенсорной раскладки.",
       "es": "Navegador de móvil/tableta, o añade ?touch a la URL para el diseño táctil.",
       "fr": "Téléphones/tablettes, ou ajoutez ?touch au lien pour basculer en disposition tactile.",
-      "ar": "هواتف/أجهزة لوحية، أو أضف ?touch إلى الرابط لتبديل تخطيط اللمس."
+      "ar": "هواتف/أجهزة لوحية، أو أضف \u200E?touch\u200E إلى الرابط لتبديل تخطيط اللمس."
     },
     "plat2.name": {
       "zh-CN": "网页版 · 触屏",
@@ -7906,7 +7906,7 @@ export const DOMAINS = {
       "ru": "Установщик Windows / портативная версия (без установки). Восстановление после сбоя, автосохранение и др.",
       "es": "Versión de instalación / portátil (sin instalar) de Windows. Con recuperación tras bloqueo y autoguardado.",
       "fr": "Version d'installation Windows / version portable (sans installation). Récupération après crash, auto-sauvegarde, etc.",
-      "ar": "نسخة تثبيت Windows / نسخة محمولة (بدون تثبيت). استرداد من الانهيار وحفظ تلقائي وغيرها."
+      "ar": "نسخة تثبيت \u200EWindows\u200E / نسخة محمولة (بدون تثبيت). استرداد من الانهيار وحفظ تلقائي وغيرها."
     },
     "plat3.name": {
       "zh-CN": "PC 桌面版 · Windows",
@@ -7917,7 +7917,7 @@ export const DOMAINS = {
       "ru": "ПК · Windows",
       "es": "PC de escritorio · Windows",
       "fr": "Bureau PC · Windows",
-      "ar": "سطح المكتب PC · Windows"
+      "ar": "سطح المكتب \u200EPC\u200E · \u200EWindows\u200E"
     },
     "plat3.portable": {
       "zh-CN": "下载便携版",
@@ -7961,7 +7961,7 @@ export const DOMAINS = {
       "ru": "Скачать .apk",
       "es": "Descargar .apk",
       "fr": "Télécharger .apk",
-      "ar": "تنزيل .apk"
+      "ar": "تنزيل \u200E.apk\u200E"
     },
     "plat.nodl": {
       "zh-CN": "暂无可用下载",
@@ -7983,7 +7983,7 @@ export const DOMAINS = {
       "ru": "Пакет для телефона/планшета Android (подпись release). Полноэкранный режим, экспорт через «Поделиться» и др.",
       "es": "Paquete de instalación para móvil/tableta Android (firma release). Con pantalla completa, compartir y exportar.",
       "fr": "Paquet pour téléphone/tablette Android (signé). Plein écran, partage, export, etc.",
-      "ar": "حزمة هاتف/جهاز لوحي Android (موقّعة بإصدار). ملء الشاشة والمشاركة والتصدير وغيرها."
+      "ar": "حزمة هاتف/جهاز لوحي \u200EAndroid\u200E (موقّعة بإصدار). ملء الشاشة والمشاركة والتصدير وغيرها."
     },
     "plat4.name": {
       "zh-CN": "Android 移动版",
@@ -8104,7 +8104,7 @@ export const DOMAINS = {
       "ru": "Запустите веб-версию или установите версию для ПК/Android — вход на холст без аккаунта.",
       "es": "Abre la web o instala las versiones de escritorio/Android; entra al lienzo sin cuenta.",
       "fr": "Lancez la version Web ou installez la version PC/Android — accès au canevas sans compte.",
-      "ar": "افتح الويب أو ثبّت إصدار سطح المكتب/Android، دون حساب للدخول إلى اللوحة."
+      "ar": "افتح الويب أو ثبّت إصدار سطح \u200Eالمكتب/Android،\u200E دون حساب للدخول إلى اللوحة."
     },
     "qs1.t": {
       "zh-CN": "打开编辑器",
@@ -8148,7 +8148,7 @@ export const DOMAINS = {
       "ru": "Экспортируйте .json проект и легко продолжайте работу на телефоне, ПК и Android.",
       "es": "Exporta el proyecto .json y continúa libremente entre móvil, PC y Android.",
       "fr": "Exportez le projet .json et poursuivez facilement sur téléphone, PC et Android.",
-      "ar": "صدّر مشروع .json وتابع بسلاسة بين الهاتف والحاسوب وAndroid."
+      "ar": "صدّر مشروع \u200E.json\u200E وتابع بسلاسة بين الهاتف والحاسوب \u200EوAndroid.\u200E"
     },
     "qs3.t": {
       "zh-CN": "保存与接力",
@@ -8236,7 +8236,7 @@ export const DOMAINS = {
       "ru": "Веб (мышь/сенсор), Windows-десктоп и Android-мобайл доступны, с общим основным движком и совместимостью .json проектов.",
       "es": "Web (ratón/táctil), escritorio Windows y móvil Android listos, compartiendo el mismo motor central y proyectos .json.",
       "fr": "Web (souris/tactile), bureau Windows et mobile Android sont disponibles, avec un moteur principal commun et la compatibilité des projets .json.",
-      "ar": "الويب (ماوس/لمس) وسطح مكتب Windows وموبايل Android متاحة، تشترك في نفس المحرك الأساسي مع توافق مشاريع .json."
+      "ar": "الويب (ماوس/لمس) وسطح مكتب \u200EWindows\u200E وموبايل \u200EAndroid\u200E متاحة، تشترك في نفس المحرك الأساسي مع توافق مشاريع \u200E.json.\u200E"
     },
     "road.rel.t": {
       "zh-CN": "已发布：三端覆盖",
@@ -8335,7 +8335,7 @@ export const DOMAINS = {
       "ru": "Набросайте 3D-эскиз на телефоне по дороге и доработайте на компьютере дома.",
       "es": "Boceta un croquis 3D con el móvil en el trayecto y retócalo en el ordenador al llegar a casa.",
       "fr": "Esquissez un 3D sur votre téléphone en déplacement, puis affinez-le sur l'ordinateur à la maison.",
-      "ar": "ارسم مسودة 3D على هاتفك أثناء التنقل، ثم صقلها على الحاسوب في المنزل."
+      "ar": "ارسم مسودة \u200E3D\u200E على هاتفك أثناء التنقل، ثم صقلها على الحاسوب في المنزل."
     },
     "scn1.t": {
       "zh-CN": "灵感速记",
@@ -8379,7 +8379,7 @@ export const DOMAINS = {
       "ru": "Быстро соберите уровни, предметы или UI-прототипы и экспортируйте .json для итераций в любое время.",
       "es": "Monta niveles, props o prototipos de interfaz rápidamente y exporta .json para iterar.",
       "fr": "Assemblez rapidement des niveaux, des objets ou des prototypes d'interface, et exportez en .json pour itérer à tout moment.",
-      "ar": "اجمع المستويات والعناصر أو نماذج الواجهة بسرعة، وصدّر .json للتكرار في أي وقت."
+      "ar": "اجمع المستويات والعناصر أو نماذج الواجهة بسرعة، وصدّر \u200E.json\u200E للتكرار في أي وقت."
     },
     "scn3.t": {
       "zh-CN": "游戏与原型",
@@ -8533,7 +8533,7 @@ export const DOMAINS = {
       "ru": "Все три платформы используют один и тот же основной движок, поэтому большинство функций идентичны. Различия — только в способе установки и в нативных диалогах сохранения/открытия и кнопке «Назад» в Android.",
       "es": "Los tres entornos comparten el mismo motor central; la gran mayoría de funciones son idénticas. Las diferencias provienen solo del modo de instalación, y de los diálogos nativos de guardar/abrir y el botón Atrás de Android.",
       "fr": "Les trois plateformes partagent le même moteur principal, donc la plupart des fonctions sont identiques. Les différences ne viennent que de la méthode d'installation, ainsi que des boîtes de dialogue enregistrer/ouvrir natives d'Android et du bouton retour.",
-      "ar": "المنصات الثلاث تشترك في نفس المحرك الأساسي، لذا فمعظم الميزات متطابقة. الاختلافات تنشأ فقط من طريقة التثبيت، بالإضافة إلى حوارات حفظ/فتح Android الأصلية وزر الرجوع."
+      "ar": "المنصات الثلاث تشترك في نفس المحرك الأساسي، لذا فمعظم الميزات متطابقة. الاختلافات تنشأ فقط من طريقة التثبيت، بالإضافة إلى حوارات حفظ/فتح \u200EAndroid\u200E الأصلية وزر الرجوع."
     },
     "versions.title": {
       "zh-CN": "各版本能力一览",

@@ -163,7 +163,8 @@
   html[dir="rtl"] .settings-tabs { border-right: none; border-left: 1px solid var(--border); }
   /* RTL 品牌：标志与标题互换后，防止长阿拉伯语标题侵入操作按钮区 */
   html[dir="rtl"] .brand .logo { direction: ltr; }
-  html[dir="rtl"] .brand span[data-i18n] { unicode-bidi: isolate; display: inline-block; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: min(240px, 34vw); }
+  html[dir="rtl"] .brand { flex-shrink: 0; min-width: 0; }
+  html[dir="rtl"] .brand span[data-i18n] { unicode-bidi: isolate; display: inline-block; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
   html[dir="rtl"] .topbar { column-gap: 14px; }
   /* RTL：按钮区滚动到最左端时，最左按钮前保留一点空隙，避免贴住视口边缘被截断/遮挡 */
   html[dir="rtl"] .top-actions { padding-left: 10px; }
@@ -384,17 +385,17 @@
   .kbd-table th:last-child { border-right: none; }
   .kbd-table td { padding: 1px 2px; border-bottom: 1px solid rgba(128,128,128,0.1); border-right: 1px solid rgba(128,128,128,0.18); vertical-align: top; word-break: break-all; }
   .kbd-table td:first-child { color: var(--accent); font-weight: 600; text-align: center; }
-  .kbd-table td:not(:first-child) { color: var(--text-dim); text-align: center; }
+  .kbd-table td:not(:first-child) { color: var(--text); text-align: center; }
   .kbd-table td:last-child { border-right: none; }
-  .kbd-key { display: inline-block; background: var(--control-bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; margin: 0 1px; font-family: ui-monospace, Menlo, Consolas, monospace; color: var(--accent); white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.35; }
-  .kbd-note { font-size: 9px; color: var(--text-dim); line-height: 1.4; padding: 1px 2px 3px; }
+  .kbd-key { display: inline-block; background: var(--control-bg); border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; margin: 0 1px; font-family: ui-monospace, Menlo, Consolas, monospace; color: var(--text); white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.35; }
+  .kbd-note { font-size: 9px; color: var(--text); line-height: 1.4; padding: 1px 2px 3px; }
   .kbd-help-table { width: 100%; border-collapse: collapse; font-size: 9px; margin: 2px 0 6px; table-layout: fixed; }
   .kbd-help-table th { color: var(--accent-2); font-weight: 700; padding: 2px 4px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(128,128,128,0.18); text-align: center; white-space: nowrap; overflow: hidden; }
   .kbd-help-table th:last-child { border-right: none; }
   .kbd-help-table td { padding: 1px 4px; border-bottom: 1px solid rgba(128,128,128,0.1); border-right: 1px solid rgba(128,128,128,0.18); vertical-align: top; word-break: break-all; }
   .kbd-help-table td:last-child { border-right: none; }
   .kbd-help-table td:first-child { color: var(--accent); font-weight: 600; text-align: center; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
-  .kbd-help-table td:not(:first-child) { color: var(--text-dim); text-align: left; }
+  .kbd-help-table td:not(:first-child) { color: var(--text); text-align: left; }
 
   /* 底部状态条 */
   .bottombar {
@@ -838,7 +839,7 @@
 
 /* 说明框 */
 .guide-doc .kbd-note {
-  font-size:12.5px; color:var(--text-dim); line-height:1.6;
+  font-size:12.5px; color:var(--text); line-height:1.6;
   background:var(--control-bg); border:1px solid var(--border);
   border-left:3px solid var(--accent-2);
   border-radius:6px; padding:7px 12px; margin:0 0 10px;
@@ -858,7 +859,7 @@
 .guide-doc .kbd-table th:first-child, .guide-doc .kbd-help-table th:first-child { border-top-left-radius:8px; }
 .guide-doc .kbd-table th:last-child, .guide-doc .kbd-help-table th:last-child { border-top-right-radius:8px; }
 .guide-doc .kbd-table td, .guide-doc .kbd-help-table td {
-  padding:9px 12px; font-size:13px; color:var(--text-dim); vertical-align:middle;
+padding:9px 12px; font-size:13px; color:var(--text); vertical-align:middle;
   border-bottom:1px solid rgba(110,231,255,0.28);
   border-right:1px solid rgba(110,231,255,0.28);
   border-left:1px solid rgba(110,231,255,0.28);
@@ -903,7 +904,7 @@
 .manual-toolbar.search-open { display:flex; }
 .manual-input { background:var(--input-bg); border:1px solid var(--border); color:var(--text); border-radius:7px; padding:5px 8px; font-size:12px; font-family:inherit; }
 .manual-input[type=number] { width:84px; }
-.manual-input[type=text] { flex:1; min-width:120px; }
+.manual-input[type=text] { flex:1; min-width:120px; direction:ltr; text-align:left; }
 .manual-doc { flex:1; overflow-y:auto; padding:18px 26px; line-height:1.85; font-size:15px; user-select:text; -webkit-user-select:text; }
 .md-block { scroll-margin-top: 12px; border-radius:6px; padding:1px 4px; }
 .md-block:hover { background: color-mix(in srgb, var(--accent) 5%, transparent); }
@@ -932,9 +933,10 @@
 .manual-doc h3 { font-size:1.15em; }
 .manual-doc p { margin:0.45em 0; }
 .manual-doc a { color:var(--accent); text-decoration:none; }
+.manual-doc a[href^="http"] { unicode-bidi:isolate; direction:ltr; overflow-wrap:anywhere; word-break:break-word; }
 .manual-doc a:hover { text-decoration:underline; }
 .manual-doc hr { border:none; border-top:1px solid var(--border); margin:1em 0; }
-.manual-doc code { background:var(--control-bg); padding:1px 5px; border-radius:4px; font-size:0.92em; font-family:ui-monospace,Menlo,Consolas,monospace; }
+.manual-doc code { background:var(--control-bg); padding:1px 5px; border-radius:4px; font-size:0.92em; font-family:ui-monospace,Menlo,Consolas,monospace; unicode-bidi:isolate; direction:ltr; }
 .manual-doc pre.md-code { background:var(--control-bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; overflow-x:auto; line-height:1.6; }
 .manual-doc pre.md-code code { background:transparent; padding:0; }
 /* 教材/说明类引用卡片（> 类型）：暗色下不再是刺眼白框，跟随主题且文字清晰 */
@@ -2143,25 +2145,9 @@ setTimeout(function () {
   }
 }, 20000);
 
-// 版本记录 + 远端版本探测：
-// 1) 记录本次版本号，供后续版本变化检测；
-// 2) 对比 version.txt 的远端版本，若当前 HTML 是浏览器缓存下来的旧版，则带版本号跳转强制更新。
+// 单机版：不进行远端版本探测，仅记录本地版本号供诊断使用。
 (function () {
   try { localStorage.setItem('cub3d_bootv', BOOTV); } catch (e) {}
-  if (location.protocol !== 'http:' && location.protocol !== 'https:') return; // file://（PC/本地）跳过
-  fetch('version.txt?v=' + Date.now(), { cache: 'no-store' })
-    .then(function (r) { return r.ok ? r.text() : ''; }) // 404/失败视为无版本文件，静默跳过，避免错误页文本被当版本号触发无限跳转
-    .then(function (t) {
-      const v = String(t || '').trim();
-      if (v && v !== BOOTV) { // 当前 HTML 是旧缓存 -> 显示提示并强制刷新为新版本
-        const stale = document.getElementById('loader-stale');
-        if (stale) stale.style.display = 'block';
-        setTimeout(function () {
-          location.replace(location.pathname + '?bootv=' + encodeURIComponent(v) + (location.hash || ''));
-        }, 300);
-      }
-    })
-    .catch(function () {}); // 探测失败静默（如纯静态托管无 version.txt）
 })();
 </script>
 
@@ -2411,7 +2397,7 @@ setTimeout(function () {
         termsModalTitle.style.display = tt ? '' : 'none';
         termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
         // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
-        const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月20日';
+        const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月25日';
         termsModalBody.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
         termsModalBody.setAttribute('data-term', key);
         termsModal.classList.add('show');
@@ -2521,7 +2507,7 @@ setTimeout(function () {
         termsModalTitle.style.display = tt ? '' : 'none';
         termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
         // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
-        const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月20日';
+        const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月25日';
         termsModalBody.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
         termsModalBody.setAttribute('data-term', key);
         var foot = document.getElementById('terms-foot'); if(foot) foot.style.display = 'none';
