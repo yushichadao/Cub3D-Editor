@@ -2400,7 +2400,7 @@ setTimeout(function () {
         var tt = T(m.title);
         termsModalTitle.textContent = tt;
         termsModalTitle.style.display = tt ? '' : 'none';
-        termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
+        termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/, '');
         // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
         const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月25日';
         termsModalBody.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
@@ -2510,7 +2510,7 @@ setTimeout(function () {
         var tt = T(m.title);
         termsModalTitle.textContent = tt;
         termsModalTitle.style.display = tt ? '' : 'none';
-        termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/g, '');
+        termsModalBody.innerHTML = T(m.body).replace(/<h4>[\s\S]*?<\/h4>/, '');
         // 追加生效日期脚注（字典 effectiveDate，缺省用简体）
         const _effTxt = T('effectiveDate') || '本文件生效日期：2026年8月25日';
         termsModalBody.insertAdjacentHTML('beforeend', '<p class="eff-date">'+_effTxt+'</p>');
