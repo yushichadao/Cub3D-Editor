@@ -200,7 +200,7 @@ npm run apk:debug       # 调试包
    - `.nojekyll`（如使用 GitHub Pages 产物则已包含）
 3. **配置 HTTPS**：为 `cub3d-editor.cn` 签发免费证书（如 Let's Encrypt 或云厂商免费证书）。
 
-> 注：下载按钮与版本信息统一从 GitHub Releases 拉取，境内站不再维护 `downloads/` 安装包镜像。
+> 注：境外站下载/版本信息从 GitHub Releases 拉取；境内站由境内服务器托管安装包于站点 `/downloads/`（清单 `/downloads/versions.json`），两侧宣传页各自直连本端源。
 
 本地预览（从仓库根启动静态服务器即可同时看到宣传页与编辑器）：
 

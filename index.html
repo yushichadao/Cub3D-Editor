@@ -930,7 +930,9 @@
 <script>
 /* ============ 境内外双站配置（唯一入口：备案号取得后填 SITE.cn.icp） ============ */
 const SITE = {
-  cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/', icp:'' },
+  /* 境内站：安装包由境内服务器托管于站点根 /downloads/ 下（versions.json 为清单源，体积/版本/下载同源） */
+  cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/',
+         downloadBase:'downloads/', metaUrl:'downloads/versions.json', icp:'' },
   ovs: { host:'yushichadao.github.io', home:'https://yushichadao.github.io/Cub3D-Editor/',
          releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
          apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }
@@ -943,7 +945,8 @@ const CN_ENTRY = 'https://139.196.104.56/';
 /* 境内站当前基址：IP/域名访问均以当前 origin 为准，域名解析后自动生效，无需改码 */
 const cnBase = isCnHost ? location.origin + '/' : CN_ENTRY;
 const curSite = isCnHost ? SITE.cn : SITE.ovs;
-const dl = f => SITE.ovs.releaseBase + f;
+/* 下载直链按站分流：境内 → 本服务器 /downloads/；境外 → GitHub Releases */
+const dl = f => isCnHost ? (cnBase + SITE.cn.downloadBase + f) : (SITE.ovs.releaseBase + f);
 
 /* ============ 下载文件名兜底与“当前站”动态解析结果（key：setup/portable/apk） ============ */
 /* 兜底：动态解析完成前/失败时使用（与 HTML 内 data-dl 一致） */
@@ -954,11 +957,14 @@ const FALLBACK_DL = {
 };
 /* 解析结果：{ key: {file, tag} }，由下方动态拉取按“当前站源”填充（tag 供境外缺失 key 回退历史 Release 用） */
 const LATEST_DL = { setup:null, portable:null, apk:null };
+/* 下载清单是否已成功解析：false（未解析/失败）时下载按钮保留兜底直链可点，避免拉取失败导致误禁用 */
+let dlResolved = false;
 const GITHUB_RELEASE = 'https://github.com/yushichadao/Cub3D-Editor/releases/';
-/* 当前站下载直链：统一走 GitHub Releases（回退到历史 tag 时用 releases/download/<tag>/<file>） */
+/* 当前站下载直链：境内恒走服务器 /downloads/；境外统一走 GitHub Releases（回退历史 tag 用 releases/download/<tag>/<file>） */
 const dlHref = key => {
   const hit = LATEST_DL[key];
   const f = (hit && hit.file) || FALLBACK_DL[key];
+  if(isCnHost) return cnBase + SITE.cn.downloadBase + f;
   return (hit && hit.tag) ? (GITHUB_RELEASE + 'download/' + hit.tag + '/' + f) : (SITE.ovs.releaseBase + f);
 };
 
@@ -1796,7 +1802,8 @@ function detectDevice(){
   /* 首屏主 CTA 与推荐按钮：windows/android 指向下载包，其 key 无可用源时置灰避免死链；其余平台指向网页入口恒可用 */
   const dlKey = (type==='windows' ? 'setup' : (type==='android' ? 'apk' : ''));
   heroCta.dataset.dlKey = dlKey; cta.dataset.dlKey = dlKey;
-  if(dlKey && !LATEST_DL[dlKey]){
+  /* 仅“已成功解析清单且确认该 key 缺失”时禁用；解析失败/进行中保留兜底直链可点 */
+  if(dlKey && dlResolved && !LATEST_DL[dlKey]){
     const nodl = nodlText();
     heroCta.classList.add('is-disabled'); heroCta.removeAttribute('href'); heroText.textContent = nodl;
     cta.classList.add('is-disabled'); cta.removeAttribute('href');
@@ -1959,6 +1966,7 @@ buildLangBars();
   }
 
   function render(ver, assets, tag){
+    dlResolved = true;
     const list = Array.isArray(assets) ? assets : Object.keys(assets||{}).map(n=>({name:n, size:assets[n]}));
     const { byName, found, maxVer } = pickLatest(list, tag);
     /* 版本文字与下载一致：显示解析到的各包最高版本；无资产时回退元数据 version */
@@ -1978,7 +1986,10 @@ buildLangBars();
   function renderFail(){
     document.querySelectorAll('[data-size-ver]').forEach(el=>el.textContent='—');
     document.querySelectorAll('[data-size-for]').forEach(el=>el.textContent='—');
-    disableDownloads();   // 拉取失败：禁用下载按钮并提示
+    dlResolved = false;
+    /* 拉取失败 ≠ 没有下载：以兜底文件名重建直链（境内→/downloads/，境外→GitHub Releases），保留按钮可点 */
+    ['setup','portable','apk'].forEach(k=>{ if(!LATEST_DL[k]) LATEST_DL[k] = { file:FALLBACK_DL[k], tag:null }; });
+    rewriteLinks();
   }
 
   /* 境外：latest 缺失的 key 回退到含该文件的最新历史 Release（releases/download/<tag>/<file>） */
@@ -2010,8 +2021,16 @@ buildLangBars();
       .catch(renderFail);
   }
 
-  /* 统一从 GitHub Release 拉取最新版本（撤除 downloads/ 镜像与 update-doc 后所有站点共用此源） */
-  fromGitHub();
+  /* 境内站：清单源为服务器 /downloads/versions.json（{version, files:{name:size}}），体积/版本与下载同源 */
+  function fromCn(){
+    fetch(cnBase + SITE.cn.metaUrl, { cache:'no-store' })
+      .then(r=>r.ok?r.json():Promise.reject(new Error('meta fetch failed')))
+      .then(data=>render((data&&data.version)||'', (data&&data.files)||{}, null))
+      .catch(renderFail);
+  }
+
+  /* 统一从站点源拉取：境内 → 服务器 versions.json；境外 → GitHub Release */
+  if(isCnHost) fromCn(); else fromGitHub();
 })();
 
 /* ============ 境内外双站：链接/ICP 自适应（备案号取得后填 SITE.cn.icp 即自动生效） ============ */
