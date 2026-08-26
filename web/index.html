@@ -11062,25 +11062,31 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
       }
     }
   });
-  // 等待所有异步加载完成后再统一选中并附加变换控件
-  Promise.all(asyncPromises).then(() => {
-    selectOnly(null);
-    state.selectedList = newOnes;
-    // 为每个新对象应用选中态
-    newOnes.forEach(o => {
+  // 统一收尾：先彻底清空旧选中（含蓝色选中框），再选中新对象并记录历史。
+  // 同步创建的对象（画笔克隆/普通形状）立即收尾，避免 pushHistory 落在异步
+  // 微任务里与撤销/重做产生竞态，导致"无法重做"或选中蓝框残留。
+  const finalizePaste = () => {
+    clearSelectionBoxes();
+    state.selectedList.forEach(o => applySelectionVisual(o, false));
+    state.selectedList = [];
+    transformCtrl.detach();
+    const valid = newOnes.filter(o => o && o.mesh);
+    state.selectedList = valid;
+    valid.forEach(o => {
       applySelectionVisual(o, true);
       addSelBox(o);
       updateObjectRenderOrder(o);
     });
-    attachMultiTransform();
     rebuildSelBoxes();
+    attachMultiTransform();
+    if (valid.length > 0) setTransformMode('translate', true);
     refreshProps();
-    if (newOnes.length > 0) {
-      setTransformMode('translate', true);
-    }
     pushHistory();
-    toast(_t('toastPastedN', newOnes.length));
-  });
+    updateUndoRedoUI();
+    toast(_t('toastPastedN', valid.length));
+  };
+  if (asyncPromises.length === 0) finalizePaste();
+  else Promise.all(asyncPromises).then(finalizePaste);
 }
 function cloneSelected() {
   copySelected();
