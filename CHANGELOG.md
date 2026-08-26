@@ -1,5 +1,12 @@
 # 更新记录 / Changelog
 
+## v1.0.0（2026-08-26）—— 重发：阿拉伯语显示修复
+
+- 修复 3D 文字对象保存后阿拉伯语（RTL）显示异常（Web / PC / Android 三端）。
+  - 根因：文字纹理（`textTexture`）横排绘制未设置 `ctx.direction`，在 LTR 画布上阿拉伯语布局 / 连写异常；文本对象若选用非阿拉伯字体，阿拉伯字形 fallback 失败。
+  - 修复：三端横排绘制检测 RTL 文本（阿拉伯语 / 希伯来语 Unicode 区段），设置 `ctx.direction='rtl'` 并追加阿拉伯字体 fallback（`Noto Kufi Arabic` / `Noto Sans Arabic`）。
+- 重新打包并覆盖 GitHub Releases v1.0.0：Windows 安装版 / 便携版、Android 通用安装包。
+
 ## v1.0.0（2026-08-25）—— 立方3D 正式发布
 
 立方3D（Cub3D Editor，全称「立方·3D设计工坊」）v1.0.0 正式发布：一款完全免费、无广告、可离线使用的轻量化跨平台 3D / 2D 场景编辑器，同一套代码覆盖网页、Windows 桌面与 Android 三端，支持九种语言。
