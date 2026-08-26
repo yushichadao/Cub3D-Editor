@@ -1875,6 +1875,10 @@ function snapshot() {
           snap.curvePoints = o.data.curvePoints;
         }
       }
+      // 保存局部中心线（相对 group 原点），撤销/重做重建后局部擦除才能正确命中
+      if (o.mesh.userData.brushLocalCenterline) {
+        snap.brushLocalCenterline = o.mesh.userData.brushLocalCenterline.map(p => [p.x, p.y, p.z]);
+      }
       // 保存子网格结构（含几何体参数，确保精确重建）
       if (o.mesh.isGroup) {
         snap.children = o.mesh.children.map(child => {
@@ -2112,7 +2116,7 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
         const points = seg.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
         const segR = seg.brushRadius || r;
         // 2D 笔画用扁平带状网格；3D 笔画用连续 CatmullRom 圆管 + 两端球头
-        const built = (s.type === 'brush2d')
+        const built = (s.brushType === 'brush2d')
           ? build2DTubeMeshes(points, segR, mat)
           : build3DTubeMeshes(points, segR, mat, { live: false });
         built.forEach(m => {
@@ -2125,7 +2129,7 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
       const finalPos = new THREE.Vector3(s.pos[0], s.pos[1], s.pos[2]);
       if (s.worldPos) finalPos.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
       // 同样走"连续圆管/扁平带"，与实时绘制一致，避免楔形空隙
-      const built = (s.type === 'brush2d')
+      const built = (s.brushType === 'brush2d')
         ? build2DTubeMeshes(points, r, mat)
         : build3DTubeMeshes(points, r, mat, { live: false });
       built.forEach(m => {
@@ -2173,15 +2177,23 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
       sphere.castShadow = true; sphere.receiveShadow = true;
       group.add(sphere);
     }
-    group.position.set(s.pos[0], s.pos[1], s.pos[2]);
-    group.scale.setScalar(s.scale || 1);
+    if (s.brushType === 'brush2d') {
+      // 2D笔迹：curvePoints 已是旋转/缩放后的世界坐标，build2DTubeMeshes 输出即世界几何，
+      // 子mesh.position 已 sub(finalPos=worldPos)。仅需把 group 原点设到 worldPos，
+      // 不要再套 worldQuat/worldScale，否则几何被二次变换而错位（撤销无法恢复原状）。
+      group.position.set(s.pos[0], s.pos[1], s.pos[2]);
+      if (s.worldPos) group.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+    } else {
+      // 3D笔迹：保持原逻辑
+      group.position.set(s.pos[0], s.pos[1], s.pos[2]);
+      group.scale.setScalar(s.scale || 1);
+      // 应用完整3D变换（覆盖默认的pos/scale）
+      if (s.worldPos) group.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+      if (s.worldQuat) group.quaternion.set(s.worldQuat[0], s.worldQuat[1], s.worldQuat[2], s.worldQuat[3]);
+      if (s.worldScale) group.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
+    }
 
-    // 应用完整3D变换（覆盖默认的pos/scale）
-    if (s.worldPos) group.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
-    if (s.worldQuat) group.quaternion.set(s.worldQuat[0], s.worldQuat[1], s.worldQuat[2], s.worldQuat[3]);
-    if (s.worldScale) group.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
-
-    if (s.type === 'brush2d' || s.isBrush) {
+    if (s.brushType === 'brush2d' || s.isBrush) {
       const order = getNextRenderOrder();
       group.children.forEach(child => {
         if (child.isMesh) {
@@ -5784,14 +5796,14 @@ function build2DTubeMeshes(worldPoints, r, mat) {
       const dist = Math.sqrt(dx * dx + dz * dz);
       if (dist > 0.001) {
         const nx = -dz / dist, nz = dx / dist;
-        const v1x = p1.x + nx * r, v1z = p1.z + nz * r;
-        const v2x = p2.x + nx * r, v2z = p2.z + nz * r;
-        const v3x = p2.x - nx * r, v3z = p2.z - nz * r;
-        const v4x = p1.x - nx * r, v4z = p1.z - nz * r;
+        const v1x = p1.x + nx * r, v1y = p1.y, v1z = p1.z + nz * r;
+        const v2x = p2.x + nx * r, v2y = p2.y, v2z = p2.z + nz * r;
+        const v3x = p2.x - nx * r, v3y = p2.y, v3z = p2.z - nz * r;
+        const v4x = p1.x - nx * r, v4y = p1.y, v4z = p1.z - nz * r;
         const g = new THREE.BufferGeometry();
         g.setAttribute('position', new THREE.Float32BufferAttribute([
-          v1x, 0, v1z, v2x, 0, v2z, v3x, 0, v3z,
-          v1x, 0, v1z, v3x, 0, v3z, v4x, 0, v4z
+          v1x, v1y, v1z, v2x, v2y, v2z, v3x, v3y, v3z,
+          v1x, v1y, v1z, v3x, v3y, v3z, v4x, v4y, v4z
         ], 3));
         g.setAttribute('normal', new THREE.Float32BufferAttribute([0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0],3));
         meshes.push(new THREE.Mesh(g, m.clone()));
@@ -5807,7 +5819,7 @@ function build2DTubeMeshes(worldPoints, r, mat) {
 }
 
 // 将网格（世界坐标）打包为对象条目并加入场景与 state.objects
-function groupAndCommitBrush(data, worldPoints, r, meshes) {
+function groupAndCommitBrush(data, worldPoints, r, meshes, transform) {
   let minX = Infinity, minY = Infinity, minZ = Infinity, maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
   const size = r * 2;
   meshes.forEach(m => {
@@ -5830,6 +5842,15 @@ function groupAndCommitBrush(data, worldPoints, r, meshes) {
   meshes.forEach(m => { m.position.sub(center); scene.remove(m); group.add(m); });
   // 中心线的组内局部坐标：高亮/擦除命中判定时乘 matrixWorld 即得当前世界中心线
   group.userData.brushLocalCenterline = worldPoints.map(p => p.clone().sub(center));
+  // 局部擦除重建时继承原对象的旋转/缩放：把"以几何中心为原点"的局部几何重新套回原 transform，
+  // 使倾斜/缩放过的笔迹擦除后姿态与原件一致（否则方片/圆片会被压回未变换姿态）
+  if (transform && transform.quaternion) {
+    group.quaternion.copy(transform.quaternion);
+    group.scale.copy(transform.scale || new THREE.Vector3(1, 1, 1));
+    const off = (transform.scale ? transform.scale.clone().multiply(center) : center.clone());
+    off.applyQuaternion(transform.quaternion);
+    group.position.copy(transform.position).add(off);
+  }
   if (data.type === 'brush2d') {
     const order = getNextRenderOrder();
     group.children.forEach(c => { if (c.isMesh) { c.renderOrder = order; if (c.material) { c.material.depthWrite = false; c.material.depthTest = true; } } });
@@ -5956,11 +5977,28 @@ function eraseBrushLocal(allPoints3D, allPoints2D, brushObjects) {
       // 丢弃比笔尖还短的碎渣：它们只会渲染成一颗孤立的球，视觉上是噪点
       if (rp.length < 2 && runs.length > 1) continue;
       if (rp.length >= 2 && polylineLength(rp) < r * 0.75) continue;
-      const meshes = is2D
-        ? build2DTubeMeshes(rp, r, createBrushMaterialForSnapshot(o.data))
-        : build3DTubeMeshes(rp, r, createBrushMaterialForSnapshot(o.data), { live: false });
-      if (!meshes.length) continue;
-      created.push(groupAndCommitBrush(o.data, rp, r, meshes));
+      if (is2D) {
+        // 2D 笔迹（可能已被整体旋转/缩放）局部擦除：先把世界中心线反变换回原笔迹局部坐标，
+        // 在局部空间重建（水平带状），再整段套回原 transform，保证倾斜/缩放笔迹擦除后
+        // 方片与圆片姿态与原件一致（否则方片会被压回未变换的水平面）。
+        o.mesh.updateMatrixWorld(true);
+        const inv = o.mesh.matrixWorld.clone().invert();
+        const localRp = rp.map(p => p.clone().applyMatrix4(inv));
+        const meshes = build2DTubeMeshes(localRp, r, createBrushMaterialForSnapshot(o.data));
+        if (!meshes.length) continue;
+        const committed = groupAndCommitBrush(o.data, localRp, r, meshes, {
+          position: o.mesh.position.clone(),
+          quaternion: o.mesh.quaternion.clone(),
+          scale: o.mesh.scale.clone()
+        });
+        // data.curvePoints 存世界坐标（与正常绘制的 2D 笔迹一致），便于后续再擦除/快照
+        committed.data.curvePoints = rp.map(p => [p.x, p.y, p.z]);
+        created.push(committed);
+      } else {
+        const meshes = build3DTubeMeshes(rp, r, createBrushMaterialForSnapshot(o.data), { live: false });
+        if (!meshes.length) continue;
+        created.push(groupAndCommitBrush(o.data, rp, r, meshes));
+      }
     }
     toRemove.push(o);
   }
@@ -8397,6 +8435,9 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
           opacity: data.opacity,
           thickness: data.thickness,
           isBrush: true,
+          // 补齐 id，否则 restore() 用 o.data.id 匹配快照时找不到克隆体，
+          // 导致撤销/重做无法识别该对象
+          id: idCounter++,
           // 补齐笔迹中心线点与半径，使克隆对象可被橡皮擦局部/整体擦除（原 getBrushWorldCenterline 依赖此字段）
           // 注意：curvePoints 必须保持为 [[x,y,z]] 数组格式（与原始画笔一致），
           // 否则 getBrushLocalCenterline 用 p[0]/p[1]/p[2] 取值会得到 undefined → 中心线坐标全 NaN → 局部擦除永不命中。
@@ -8404,6 +8445,7 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
           brushRadius: item.brushRadius || (data.thickness ? data.thickness / 2 : 0.3)
         }
       };
+      entry.mesh.userData.id = entry.data.id;
       state.objects.push(entry);
       newOnes.push(entry);
     } else {
