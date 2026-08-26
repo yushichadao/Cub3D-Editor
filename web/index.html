@@ -970,6 +970,7 @@ html[dir="rtl"] .manual-input{direction:rtl; text-align:right; unicode-bidi:plai
 /* 说明书内容排版适配亮色/暗色 */
 .manual-doc h1,.manual-doc h2,.manual-doc h3,.manual-doc h4,.manual-doc h5,.manual-doc h6 { color:var(--text); margin:0.65em 0 0.35em; line-height:1.35; unicode-bidi:isolate; }
 .bidi-ltr { direction:ltr; unicode-bidi:isolate; display:inline-block; }
+.bidi-emoji { direction:ltr; unicode-bidi:isolate; display:inline-block; vertical-align:baseline; }
 .manual-doc h1 { font-size:1.7em; border-bottom:1px solid var(--border); padding-bottom:0.3em; }
 .manual-doc h2 { font-size:1.35em; border-bottom:1px solid var(--border); padding-bottom:0.25em; }
 .manual-doc h3 { font-size:1.15em; }
@@ -11946,6 +11947,14 @@ function bidiWrap(s){
     return '<span dir="ltr" class="bidi-ltr">'+m+'</span>';
   });
 }
+// 在 RTL 文档（阿拉伯语）中，emoji（💡✏️🖥️📱💻🤖❓ 等）是方向中性字符，会被 bidi 算法当作 LTR 锚点，
+// 把后续的阿拉伯文“吸”到它前面，造成视觉乱序（看起来像后文被挤走/缺失），复制时也会乱窜。
+// 这里把每个 emoji 包成 dir="ltr" 的隔离岛屿，使其稳定停留在原位置，不再打乱周围 RTL 文字流。
+function emojiWrap(s){
+  if(manualLang!=='ar') return s; // 仅 RTL 语言需要
+  // 匹配一个 emoji（含变体选择符 U+FE0F 与 ZWJ 组合 U+200D）；\p{Extended_Pictographic} 覆盖绝大多数绘文字
+  return String(s).replace(/(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)/gu, '<span class="bidi-emoji" dir="ltr">$1</span>');
+}
 function slugify(s){ return String(s).normalize('NFKC').replace(/\s+/g,'').replace(/["']/g,''); }
 // 解码 HTML 实体：data-goto 由 mdEscape 生成（" → &quot;），某些浏览器下 dataset 取值未自动还原，
 // 导致 slugify 匹配时引号实体残留、与标题 slug 不一致，交叉引用无法跳转。这里统一解码。
@@ -11964,6 +11973,7 @@ function mdInline(text){
   s = s.replace(/\[([^\]]+)\]\((#[^)\s]+)\)/g, (m,t,a)=>'<a href="'+a+'" class="md-anchor">'+t+'</a>');
   s = s.replace(/\[([^\]]+)\]\((jump:(?:[^()\n]|\([^()\n]*\))*)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
   s = s.replace(/\uE000(\d+)\uE001/g, (m,idx)=>'<code>'+codes[+idx]+'</code>');
+  s = emojiWrap(s); // RTL 下隔离 emoji，避免与阿拉伯文乱序
   return s;
 }
 function splitRow(line){ return line.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(x=>x.trim()); }
