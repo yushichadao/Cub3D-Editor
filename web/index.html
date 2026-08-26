@@ -4187,6 +4187,10 @@ function snapshot() {
           snap.curvePoints = o.data.curvePoints;
         }
       }
+      // 保存局部中心线（相对 group 原点），撤销/重做重建后局部擦除才能正确命中
+      if (o.mesh.userData.brushLocalCenterline) {
+        snap.brushLocalCenterline = o.mesh.userData.brushLocalCenterline.map(p => [p.x, p.y, p.z]);
+      }
       // 保存子网格结构（含几何体参数，确保精确重建）
       if (o.mesh.isGroup) {
         snap.children = o.mesh.children.map(child => {
@@ -4424,7 +4428,7 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
         const points = seg.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
         const segR = seg.brushRadius || r;
         // 2D 笔画用扁平带状网格；3D 笔画用连续 CatmullRom 圆管 + 两端球头
-        const built = (s.type === 'brush2d')
+        const built = (s.brushType === 'brush2d')
           ? build2DTubeMeshes(points, segR, mat)
           : build3DTubeMeshes(points, segR, mat, { live: false });
         built.forEach(m => {
@@ -4437,7 +4441,7 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
       const finalPos = new THREE.Vector3(s.pos[0], s.pos[1], s.pos[2]);
       if (s.worldPos) finalPos.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
       // 同样走"连续圆管/扁平带"，与实时绘制一致，避免楔形空隙
-      const built = (s.type === 'brush2d')
+      const built = (s.brushType === 'brush2d')
         ? build2DTubeMeshes(points, r, mat)
         : build3DTubeMeshes(points, r, mat, { live: false });
       built.forEach(m => {
@@ -4485,13 +4489,21 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
       sphere.castShadow = true; sphere.receiveShadow = true;
       group.add(sphere);
     }
-    group.position.set(s.pos[0], s.pos[1], s.pos[2]);
-    group.scale.setScalar(s.scale || 1);
-
-    // 应用完整3D变换（覆盖默认的pos/scale）
-    if (s.worldPos) group.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
-    if (s.worldQuat) group.quaternion.set(s.worldQuat[0], s.worldQuat[1], s.worldQuat[2], s.worldQuat[3]);
-    if (s.worldScale) group.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
+    if (s.brushType === 'brush2d') {
+      // 2D笔迹：curvePoints 已是旋转/缩放后的世界坐标，build2DTubeMeshes 输出即世界几何，
+      // 子mesh.position 已 sub(finalPos=worldPos)。仅需把 group 原点设到 worldPos，
+      // 不要再套 worldQuat/worldScale，否则几何被二次变换而错位（撤销无法恢复原状）。
+      group.position.set(s.pos[0], s.pos[1], s.pos[2]);
+      if (s.worldPos) group.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+    } else {
+      // 3D笔迹：保持原逻辑
+      group.position.set(s.pos[0], s.pos[1], s.pos[2]);
+      group.scale.setScalar(s.scale || 1);
+      // 应用完整3D变换（覆盖默认的pos/scale）
+      if (s.worldPos) group.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+      if (s.worldQuat) group.quaternion.set(s.worldQuat[0], s.worldQuat[1], s.worldQuat[2], s.worldQuat[3]);
+      if (s.worldScale) group.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
+    }
 
     if (s.type === 'brush2d' || s.isBrush) {
       const order = getNextRenderOrder();
