@@ -12444,8 +12444,17 @@ function openManual(){
       return t || s.toString();
     }catch(e){ return s.toString(); }
   }
+  function embedBidi(text){
+    if(manualLang!=='ar') return text;
+    // 用 FSI(U+2068)/PDI(U+2069) 把每个 emoji 隔离成独立 LTR 单元。
+    // 阿拉伯语(RTL)下，emoji 是 LTR 字符，纯文本复制后粘贴到 RTL 环境会被双向算法(Bidi)重排、
+    // 视觉位置“乱飞”。FSI/PDI 隔离后 emoji 作为独立方向单元，位置稳定。
+    // 注意：FSI/PDI 不在 copyText 的零宽字符清理名单内，不会被误删。
+    return String(text).replace(/(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)/gu,'\u2068$1\u2069');
+  }
   function copyText(text){
     text = text.replace(/[​\u200B‏\u200E‎\u200F\uFEFF]/g, ''); // 去除零宽方向字符，避免阿拉伯语复制文本被 LRM 等污染
+    if(manualLang==='ar') text = embedBidi(text); // 仅 RTL：隔离 emoji，防止复制粘贴后乱飞
     function fb(t){ const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); toast(T('manCopied'));}catch(e){} document.body.removeChild(ta); }
     try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>toast(T('manCopied')), ()=>fb(text)); } else fb(text); }catch(e){ fb(text); }
   }
