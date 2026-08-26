@@ -4187,10 +4187,6 @@ function snapshot() {
           snap.curvePoints = o.data.curvePoints;
         }
       }
-      // 保存局部中心线，供撤销重建后精确还原局部擦除能力
-      if (o.mesh.userData.brushLocalCenterline) {
-        snap.brushLocalCenterline = o.mesh.userData.brushLocalCenterline.map(p => [p.x, p.y, p.z]);
-      }
       // 保存子网格结构（含几何体参数，确保精确重建）
       if (o.mesh.isGroup) {
         snap.children = o.mesh.children.map(child => {
@@ -4512,10 +4508,6 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
     }
 
     scene.add(group);
-    group.userData.id = s.id;
-    if (s.brushLocalCenterline) {
-      group.userData.brushLocalCenterline = s.brushLocalCenterline.map(p => new THREE.Vector3(p[0], p[1], p[2]));
-    }
     const entry = { mesh: group, data: { ...s, isBrush: true, kind: 'brush' } };
     // 与绘制提交一致：用 applyAppearance 按 data 重新生成材质（颜色/花纹/不透明度/光照），确保导入后外观一致
     applyAppearance(entry);
@@ -10795,17 +10787,23 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
     const data = JSON.parse(JSON.stringify(item.data));
     delete data.id;
     if (item.isBrush || data.isBrush) {
-      // 优先：直接深拷贝原画笔对象的 mesh，保证克隆体与原件 100% 一致
-      // （几何结构、材质光影、userData、可交互、可被局部擦除/撤销重建都与原对象相同）。
+      // 优先：直接深拷贝原画笔 mesh，保证克隆体与原件 100% 一致
+      // （几何/材质/userData/可交互/可局部擦除/可撤销重建均与原对象相同）。
       // 旧逻辑用独立 TubeGeometry 重建，与实时绘制的 buildXDTubeMeshes 产物不一致，
-      // 导致克隆体局部擦除异常、交互异常、撤销后无法精确重建。
+      // 且重建出的对象 entry.data 缺少 id，导致局部擦除渲染异常、撤销重做无法识别。
       if (item.origMesh) {
         const src = item.origMesh;
         const group = src.clone(true);
-        // 克隆材质，避免与原对象共享材质实例（改一个颜色影响另一个）
+        // 必须深拷贝 geometry 与材质，不能与原对象共享实例：
+        // 否则 2D 笔迹的 BufferGeometry 被原件/克隆体共用，局部擦除或撤销时
+        // disposeObject 会释放共享几何，导致渲染异常、撤销重做状态串扰。
         group.traverse(c => {
-          if (c.isMesh && c.material) {
-            c.material = Array.isArray(c.material) ? c.material.map(m => m.clone()) : c.material.clone();
+          if (c.isMesh) {
+            if (c.geometry) c.geometry = c.geometry.clone();
+            if (c.material) c.material = Array.isArray(c.material) ? c.material.map(m => m.clone()) : c.material.clone();
+            if (Array.isArray(c.userData.brushCurvePoints)) {
+              c.userData.brushCurvePoints = c.userData.brushCurvePoints.map(p => p.clone ? p.clone() : new THREE.Vector3(p[0], p[1], p[2]));
+            }
           }
         });
         const basePos = (item.worldPos && item.worldPos.length === 3) ? item.worldPos
@@ -10813,7 +10811,6 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
         group.position.set(basePos[0] + pasteDelta.x, basePos[1], basePos[2] + pasteDelta.z);
         if (item.worldQuat) group.quaternion.set(item.worldQuat[0], item.worldQuat[1], item.worldQuat[2], item.worldQuat[3]);
         if (item.worldScale) group.scale.set(item.worldScale[0], item.worldScale[1], item.worldScale[2]);
-        // 迁移局部中心线（深拷贝，避免与原对象共享引用）
         if (src.userData.brushLocalCenterline) {
           group.userData.brushLocalCenterline = src.userData.brushLocalCenterline.map(p => p.clone ? p.clone() : new THREE.Vector3(p[0], p[1], p[2]));
         }
