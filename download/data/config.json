@@ -1,11 +1,11 @@
 {
   "window": {
-    "width": 1607,
+    "width": 1610,
     "height": 959,
-    "maximized": true,
-    "ratioSynced": true,
     "x": 50,
-    "y": 30
+    "y": 30,
+    "maximized": true,
+    "ratioSynced": true
   },
   "ui": {
     "theme": "neon",

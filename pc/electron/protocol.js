@@ -160,13 +160,18 @@ async function handleOne(request, R) {
   } catch (_) {
     return new Response('Bad path encoding: ' + url.pathname, { status: 400, headers: { 'content-type': 'text/plain; charset=utf-8' } });
   }
-  // ASCII 校验中间件（F）：非 ASCII 资源路径显式报错，不静默卡加载页
-  const bad = assertAscii(rel);
-  if (bad) {
-    const msg = '[app://] 非 ASCII 资源路径被拦截: ' + rel + ' (非法字符: ' + bad + ')\n' +
-      '工程资源路径必须全 ASCII（见 docs/STANDARDS.md）。请检查资源命名或路径拼接。';
-    console.error(msg);
-    return new Response(msg, { status: 400, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  // ASCII 校验中间件（F）：工程资源路径应全 ASCII，但 docs/ 下的说明书为多语言文件
+  // （中文 / 日文 / 韩文文件名），属合理例外，予以豁免。否则所有说明书面板都会被拦截而无法打开。
+  const normRel = rel.replace(/^([/\\])+/, '');
+  const isDocs = normRel === 'docs' || normRel.startsWith('docs' + path.sep) || normRel.startsWith('docs/');
+  if (!isDocs) {
+    const bad = assertAscii(rel);
+    if (bad) {
+      const msg = '[app://] 非 ASCII 资源路径被拦截: ' + rel + ' (非法字符: ' + bad + ')\n' +
+        '工程资源路径必须全 ASCII（见 docs/STANDARDS.md）。请检查资源命名或路径拼接。';
+      console.error(msg);
+      return new Response(msg, { status: 400, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+    }
   }
   if (rel === '/' || rel === '') rel = '/index.html';
   // 归一化，杜绝 ../ 穿越
