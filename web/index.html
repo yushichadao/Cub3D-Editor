@@ -10715,6 +10715,7 @@ function copySelected() {
       }
       // 保留原 mesh 引用，粘贴时直接深拷贝，保证克隆体与原件完全一致
       item.origMesh = o.mesh;
+      item.origEntry = o; // 用于取原始（未高亮）材质，避免克隆到选中态的蓝色材质
       return item;
     }
     return {
@@ -10797,15 +10798,23 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
         // 必须深拷贝 geometry 与材质，不能与原对象共享实例：
         // 否则 2D 笔迹的 BufferGeometry 被原件/克隆体共用，局部擦除或撤销时
         // disposeObject 会释放共享几何，导致渲染异常、撤销重做状态串扰。
+        // 用原对象的“原始材质”(未被选中高亮)重建每个子 mesh 材质：
+        // 若原对象复制时正处于选中态，其当前子 mesh 材质是蓝色高亮，直接克隆会让
+        // 复制品把蓝色误记为“原始材质”，导致取消选中后表面蓝色残留。
+        const _origMats = (item.origEntry && item.origEntry._selectionOrigMaterials) || null;
+        let _mi = 0;
         group.traverse(c => {
           if (c.isMesh) {
             if (c.geometry) c.geometry = c.geometry.clone();
-            if (c.material) c.material = Array.isArray(c.material) ? c.material.map(m => m.clone()) : c.material.clone();
+            const baseMat = (_origMats && _origMats[_mi]) ? _origMats[_mi] : c.material;
+            if (baseMat) c.material = Array.isArray(baseMat) ? baseMat.map(m => m.clone()) : baseMat.clone();
             if (Array.isArray(c.userData.brushCurvePoints)) {
               c.userData.brushCurvePoints = c.userData.brushCurvePoints.map(p => p.clone ? p.clone() : new THREE.Vector3(p[0], p[1], p[2]));
             }
+            _mi++;
           }
         });
+        group.userData._selectionOrigMaterials = null;
         const basePos = (item.worldPos && item.worldPos.length === 3) ? item.worldPos
                       : (item.pos && item.pos.length === 3) ? item.pos : [0, 0, 0];
         group.position.set(basePos[0] + pasteDelta.x, basePos[1], basePos[2] + pasteDelta.z);
