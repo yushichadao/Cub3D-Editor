@@ -10838,9 +10838,13 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
         const r2 = data.brushRadius || (data.thickness ? data.thickness / 2 : 0.3);
         const meshes = build2DTubeMeshes(pts, r2, createBrushMaterialForSnapshot(data));
         const committed = groupAndCommitBrush(data, pts, r2, meshes);
-        // 应用粘贴偏移（groupAndCommitBrush 已把 group 置于几何中心并设好局部中心线/材质/entry）
-        committed.mesh.position.x += pasteDelta.x;
-        committed.mesh.position.z += pasteDelta.z;
+        // 应用原对象的旋转/缩放/位置变换 + 粘贴偏移，使复制品与原件姿态完全一致。
+        // 否则复制粘贴品丢失旋转/缩放，导致平移/旋转/缩放/擦除/撤销全部异常。
+        const wp = (item.worldPos && item.worldPos.length === 3) ? item.worldPos
+                 : (item.pos && item.pos.length === 3) ? item.pos : [0, 0, 0];
+        committed.mesh.position.set(wp[0] + pasteDelta.x, wp[1] + (pasteDelta.y || 0), wp[2] + pasteDelta.z);
+        if (item.worldQuat) committed.mesh.quaternion.set(item.worldQuat[0], item.worldQuat[1], item.worldQuat[2], item.worldQuat[3]);
+        if (item.worldScale) committed.mesh.scale.set(item.worldScale[0], item.worldScale[1], item.worldScale[2]);
         newOnes.push(committed);
         return; // 跳过下方 3D / 子部件重建逻辑
       }
