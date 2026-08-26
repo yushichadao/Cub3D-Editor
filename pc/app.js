@@ -8112,7 +8112,8 @@ function copySelected() {
         childMeshes: [],
         // 保存笔迹中心线点/半径，供橡皮擦（getBrushWorldCenterline/eraseBrushLocal）使用，
         // 否则克隆对象因缺失 curvePoints 而无法被橡皮擦局部或整体擦除
-        curvePoints: o.data.curvePoints ? o.data.curvePoints.map(p => [p.x, p.y, p.z]) : null,
+        // 兼容 [[x,y,z]] 与 Vector3[] 两种来源，统一存为 [[x,y,z]]，否则对数组元素取 .x 会得到 undefined
+        curvePoints: o.data.curvePoints ? o.data.curvePoints.map(p => Array.isArray(p) ? [p[0], p[1], p[2]] : [p.x, p.y, p.z]) : null,
         brushRadius: o.data.brushRadius || (o.data.thickness ? o.data.thickness / 2 : 0.3)
       };
       if (o.mesh.isGroup) {

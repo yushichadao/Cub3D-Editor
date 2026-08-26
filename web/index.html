@@ -10658,7 +10658,8 @@ function copySelected() {
         childMeshes: [],
         // 保存笔迹中心线点/半径，供橡皮擦（getBrushWorldCenterline/eraseBrushLocal）使用，
         // 否则克隆对象因缺失 curvePoints 而无法被橡皮擦局部或整体擦除
-        curvePoints: o.data.curvePoints ? o.data.curvePoints.map(p => [p.x, p.y, p.z]) : null,
+        // 兼容 [[x,y,z]] 与 Vector3[] 两种来源，统一存为 [[x,y,z]]，否则对数组元素取 .x 会得到 undefined
+        curvePoints: o.data.curvePoints ? o.data.curvePoints.map(p => Array.isArray(p) ? [p[0], p[1], p[2]] : [p.x, p.y, p.z]) : null,
         brushRadius: o.data.brushRadius || (o.data.thickness ? o.data.thickness / 2 : 0.3)
       };
       if (o.mesh.isGroup) {
@@ -10934,7 +10935,9 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
           thickness: data.thickness,
           isBrush: true,
           // 补齐笔迹中心线点与半径，使克隆对象可被橡皮擦局部/整体擦除（原 getBrushWorldCenterline 依赖此字段）
-          curvePoints: item.curvePoints ? item.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2])) : null,
+          // 必须与原始画笔一致：curvePoints 存为 [[x,y,z]] 数组，getBrushLocalCenterline 用 p[0]/p[1]/p[2] 取值；
+          // 若存成 Vector3[]，则 p[0] 为 undefined → 中心线坐标全 NaN → 局部擦除永不命中
+          curvePoints: item.curvePoints ? item.curvePoints.map(p => Array.isArray(p) ? [p[0], p[1], p[2]] : [p.x, p.y, p.z]) : null,
           brushRadius: item.brushRadius || (data.thickness ? data.thickness / 2 : 0.3)
         }
       };
@@ -12434,9 +12437,6 @@ function openManual(){
   }
   function copyText(text){
     text = text.replace(/[​\u200B‏\u200E‎\u200F\uFEFF]/g, ''); // 去除零宽方向字符，避免阿拉伯语复制文本被 LRM 等污染
-    // 阿拉伯语(RTL)文本复制到 LTR 环境(微信/记事本)时，emoji 会因方向重排而乱窜。
-    // 用 RLE/PDF 方向隔离字符包裹，强制任意粘贴目标按 RTL 显示，emoji 稳定不位移。
-    if(manualLang==='ar' && text){ text='\u202B'+text+'\u202C'; }
     function fb(t){ const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); toast(T('manCopied'));}catch(e){} document.body.removeChild(ta); }
     try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>toast(T('manCopied')), ()=>fb(text)); } else fb(text); }catch(e){ fb(text); }
   }
