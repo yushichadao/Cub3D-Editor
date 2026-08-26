@@ -8388,7 +8388,9 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
           thickness: data.thickness,
           isBrush: true,
           // 补齐笔迹中心线点与半径，使克隆对象可被橡皮擦局部/整体擦除（原 getBrushWorldCenterline 依赖此字段）
-          curvePoints: item.curvePoints ? item.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2])) : null,
+          // 注意：curvePoints 必须保持为 [[x,y,z]] 数组格式（与原始画笔一致），
+          // 否则 getBrushLocalCenterline 用 p[0]/p[1]/p[2] 取值会得到 undefined → 中心线坐标全 NaN → 局部擦除永不命中。
+          curvePoints: item.curvePoints ? item.curvePoints.map(p => Array.isArray(p) ? [p[0], p[1], p[2]] : [p.x, p.y, p.z]) : null,
           brushRadius: item.brushRadius || (data.thickness ? data.thickness / 2 : 0.3)
         }
       };
@@ -9401,7 +9403,12 @@ function renderBlock(b){
   switch(b.type){
     case 'heading': { const l=b.level; const id=slugify(b.text); return '<div class="md-block" data-type="heading" data-level="'+l+'" data-line="'+line+'"><h'+l+' id="'+id+'">'+mdInline(b.text)+'</h'+l+'></div>'; }
     case 'para': return '<div class="md-block" data-type="para" data-line="'+line+'"><p>'+b.lines.map(mdInline).join('<br>')+'</p></div>';
-    case 'code': return '<div class="md-block" data-type="code" data-line="'+line+'"><pre class="md-code"><code>'+mdEscape(b.lines.join('\n'))+'</code></pre></div>';
+    case 'code': {
+      // 代码围栏信息串若为 left/right/both，则标记为带“开口方向”的代码框（左侧/右侧/两侧开口）。
+      // 阿拉伯语(RTL)下由 CSS 自动翻转左右开口（右↔左），两侧开口不变。
+      const openCls = (/^(left|right|both)$/.test(b.lang) ? ' open-'+b.lang : '');
+      return '<div class="md-block" data-type="code" data-line="'+line+'"><pre class="md-code'+openCls+'"><code>'+mdEscape(b.lines.join('\n'))+'</code></pre></div>';
+    }
     case 'quote': return '<div class="md-block" data-type="quote" data-line="'+line+'"><blockquote>'+b.lines.map(l=>'<p>'+mdInline(l)+'</p>').join('')+'</blockquote></div>';
     case 'hr': return '<div class="md-block" data-type="hr" data-line="'+line+'"><hr></div>';
     case 'table': { const rtl=(manualLang==='ar'); const da=rtl?' dir="rtl"':''; let h='<div class="md-block" data-type="table" data-line="'+line+'"><table class="md-table"'+da+'><thead><tr>'; b.header.forEach((c,idx)=>{ h+='<th'+tableAlignAttr(b.aligns[idx],rtl)+'>'+mdInline(c)+'</th>'; }); h+='</tr></thead><tbody>'; b.rows.forEach(r=>{ h+='<tr>'; r.forEach((c,idx)=>{ h+='<td'+tableAlignAttr(b.aligns[idx],rtl)+'>'+mdInline(c)+'</td>'; }); h+='</tr>'; }); h+='</tbody></table></div>'; return h; }

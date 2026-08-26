@@ -182,6 +182,12 @@
   html[dir="rtl"] #btn-undo .ic,
   html[dir="rtl"] #btn-redo .ic,
   html[dir="rtl"] #mode-translate span:first-child { display: inline-block; transform: scaleX(-1); }
+  /* RTL：说明书底部栏上一章/下一章图标互换（◀↔▶），符合从右向左翻页直觉；按钮文字不变 */
+  html[dir="rtl"] .mb-btn[data-act="prev"] .mb-ic,
+  html[dir="rtl"] .mb-btn[data-act="next"] .mb-ic { display: inline-block; transform: scaleX(-1); }
+  /* RTL：带开口方向代码框的左右开口翻转（右↔左），两侧开口(open-both)保持不变 */
+  html[dir="rtl"] .manual-doc pre.md-code.open-left  { border-left:1px solid var(--border); border-right:none; }
+  html[dir="rtl"] .manual-doc pre.md-code.open-right { border-right:1px solid var(--border); border-left:none; }
 
   /* ===== RTL：使用说明书卡片 UI 左右镜像 =====
      .manual-body 是 flex 行，RTL 下主轴已反转（目录→右、阅读→中、笔记→左），
@@ -962,6 +968,11 @@ html[dir="rtl"] .manual-input{direction:rtl; text-align:right; unicode-bidi:plai
 .manual-doc code { background:var(--control-bg); padding:1px 5px; border-radius:4px; font-size:0.92em; font-family:ui-monospace,Menlo,Consolas,monospace; unicode-bidi:isolate; direction:ltr; }
 .manual-doc pre.md-code { background:var(--control-bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; overflow-x:auto; line-height:1.6; }
 .manual-doc pre.md-code code { background:transparent; padding:0; }
+/* 带“开口方向”的代码框：left/right 单侧开口（去掉对应侧边框），both 两侧开口。
+   用于长代码因换行分段、多段代码框上下拼接时表达连接方向；RTL 下左右开口自动翻转（见 RTL 段）。 */
+.manual-doc pre.md-code.open-left  { border-left:none; }
+.manual-doc pre.md-code.open-right { border-right:none; }
+.manual-doc pre.md-code.open-both  { border-left:none; border-right:none; }
 /* 教材/说明类引用卡片（> 类型）：暗色下不再是刺眼白框，跟随主题且文字清晰 */
 .manual-doc blockquote,
 .guide-doc blockquote {
@@ -11401,7 +11412,12 @@ function renderBlock(b){
   switch(b.type){
     case 'heading': { const l=b.level; const id=slugify(b.text); return '<div class="md-block" data-type="heading" data-level="'+l+'" data-line="'+line+'"><h'+l+' id="'+id+'">'+mdInline(b.text)+'</h'+l+'></div>'; }
     case 'para': return '<div class="md-block" data-type="para" data-line="'+line+'"><p>'+b.lines.map(mdInline).join('<br>')+'</p></div>';
-    case 'code': return '<div class="md-block" data-type="code" data-line="'+line+'"><pre class="md-code"><code>'+mdEscape(b.lines.join('\n'))+'</code></pre></div>';
+    case 'code': {
+      // 代码围栏信息串若为 left/right/both，则标记为带“开口方向”的代码框（左侧/右侧/两侧开口）。
+      // 阿拉伯语(RTL)下由 CSS 自动翻转左右开口（右↔左），两侧开口不变。
+      const openCls = (/^(left|right|both)$/.test(b.lang) ? ' open-'+b.lang : '');
+      return '<div class="md-block" data-type="code" data-line="'+line+'"><pre class="md-code'+openCls+'"><code>'+mdEscape(b.lines.join('\n'))+'</code></pre></div>';
+    }
     case 'quote': return '<div class="md-block" data-type="quote" data-line="'+line+'"><blockquote>'+b.lines.map(l=>'<p>'+mdInline(l)+'</p>').join('')+'</blockquote></div>';
     case 'hr': return '<div class="md-block" data-type="hr" data-line="'+line+'"><hr></div>';
     case 'table': { const rtl=(manualLang==='ar'); const da=rtl?' dir="rtl"':''; let h='<div class="md-block" data-type="table" data-line="'+line+'"><table class="md-table"'+da+'><thead><tr>'; b.header.forEach((c,idx)=>{ h+='<th'+tableAlignAttr(b.aligns[idx],rtl)+'>'+mdInline(c)+'</th>'; }); h+='</tr></thead><tbody>'; b.rows.forEach(r=>{ h+='<tr>'; r.forEach((c,idx)=>{ h+='<td'+tableAlignAttr(b.aligns[idx],rtl)+'>'+mdInline(c)+'</td>'; }); h+='</tr>'; }); h+='</tbody></table></div>'; return h; }
