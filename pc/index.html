@@ -948,11 +948,6 @@ html[dir="rtl"] .manual-input{direction:rtl; text-align:right; unicode-bidi:plai
 .manual-doc code { background:var(--control-bg); padding:1px 5px; border-radius:4px; font-size:0.92em; font-family:ui-monospace,Menlo,Consolas,monospace; unicode-bidi:isolate; direction:ltr; }
 .manual-doc pre.md-code { background:var(--control-bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; overflow-x:auto; line-height:1.6; }
 .manual-doc pre.md-code code { background:transparent; padding:0; }
-/* 带“开口方向”的代码框：left/right 单侧开口（去掉对应侧边框），both 两侧开口。
-   用于长代码因换行分段、多段代码框上下拼接时表达连接方向；RTL 下左右开口自动翻转（见 RTL 段）。 */
-.manual-doc pre.md-code.open-left  { border-left:none; }
-.manual-doc pre.md-code.open-right { border-right:none; }
-.manual-doc pre.md-code.open-both  { border-left:none; border-right:none; }
 /* 教材/说明类引用卡片（> 类型）：暗色下不再是刺眼白框，跟随主题且文字清晰 */
 .manual-doc blockquote,
 .guide-doc blockquote {
