@@ -19,7 +19,7 @@ files:
   - three/**/*
   - language/**/*
   - fonts/**/*
-  - docs/**/*
+  - docs
   - shell/**/*
   - electron/**/*
   - "!**/.userdata/**"

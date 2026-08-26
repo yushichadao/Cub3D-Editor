@@ -1,0 +1,23 @@
+{
+  "window": {
+    "width": 1607,
+    "height": 959,
+    "maximized": true,
+    "ratioSynced": true,
+    "x": 50,
+    "y": 30
+  },
+  "ui": {
+    "theme": "neon",
+    "lang": "zh-CN",
+    "frameless": true,
+    "mica": true,
+    "zoom": 1
+  },
+  "editor": {
+    "autosaveEnabled": true,
+    "autosaveInterval": 120,
+    "restoreLastSession": true
+  },
+  "offlineMode": false
+}
