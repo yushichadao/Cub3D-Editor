@@ -1148,6 +1148,8 @@ html[dir="rtl"] .manual-input{direction:rtl; text-align:right; unicode-bidi:plai
 }
 .touch-device .manual-drawer-mask.open { opacity:1; pointer-events:auto; }
 .touch-device .manual-toolbar { display:none; }
+/* 触屏版：头部搜索按钮与底栏搜索（data-act=search）重复，隐藏头部搜索按钮 */
+.touch-device #manual-search-toggle { display:none; }
 .touch-device .manual-toolbar.search-open { display:flex; gap:6px; padding:8px 10px; border-bottom:1px solid var(--border); }
 .touch-device .manual-doc {
   padding:14px 16px calc(96px + env(safe-area-inset-bottom)); font-size:16px; line-height:1.72;
