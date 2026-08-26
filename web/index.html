@@ -10643,7 +10643,11 @@ function copySelected() {
         worldScale: [o.mesh.scale.x, o.mesh.scale.y, o.mesh.scale.z],
         tubeSegments: [],
         // 保存2D画笔子部件数据
-        childMeshes: []
+        childMeshes: [],
+        // 保存笔迹中心线点/半径，供橡皮擦（getBrushWorldCenterline/eraseBrushLocal）使用，
+        // 否则克隆对象因缺失 curvePoints 而无法被橡皮擦局部或整体擦除
+        curvePoints: o.data.curvePoints ? o.data.curvePoints.map(p => [p.x, p.y, p.z]) : null,
+        brushRadius: o.data.brushRadius || (o.data.thickness ? o.data.thickness / 2 : 0.3)
       };
       if (o.mesh.isGroup) {
         // 3D画笔：保存TubeGeometry子段
@@ -10656,8 +10660,10 @@ function copySelected() {
             // 用于clone时正确恢复位置（避免对象移动后clone位置错误）
             meshPos: [c.position.x, c.position.y, c.position.z]
           }));
-        } else if (o.data.curvePoints && o.data.curvePoints.length >= 2) {
+        } else if (o.data.type !== 'brush2d' && o.data.curvePoints && o.data.curvePoints.length >= 2) {
           // 3D画笔实时段未携带 brushCurvePoints：回退用整条曲线点重建连续管
+          // 注意：2D画笔（brush2d）一律走 childMeshes 分支重建，禁止用曲线点回退成 3D 管，
+          // 否则复制/粘贴/克隆后会被误渲染成 3D 画笔对象
           item.tubeSegments = [{
             curvePoints: o.data.curvePoints,
             brushRadius: o.data.brushRadius || (o.data.thickness ? o.data.thickness / 2 : 0.3),
@@ -10769,13 +10775,9 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
       // 画笔对象：使用curvePoints精确重建
       const group = new THREE.Group();
       const r = (data.thickness || 0.5) / 2;
-      // 使用 MeshBasicMaterial 不受光照影响，颜色与所选颜色完全一致（与文本框行为相同）
-      const mat = new THREE.MeshBasicMaterial({
-        color: data.color !== undefined ? data.color : 0x000000,
-        transparent: (data.opacity || 1) < 1,
-        opacity: data.opacity || 1,
-        depthWrite: true, // 画笔子对象重叠时不透明度不叠加
-      });
+      // 使用标准材质（createBrushMaterialForSnapshot）保留光影明暗，与原始画笔对象一致；
+      // 2D画笔自动使用 DoubleSide。修复：克隆/复制的画笔此前用 MeshBasicMaterial 导致缺失光影
+      const mat = createBrushMaterialForSnapshot(data);
       if (data.pattern && data.pattern !== '纯色') {
         const patColor = (data.color !== undefined && data.color !== NO_COLOR) ? data.color : 0xffffff;
         mat.map = patternTexture(data.pattern, patColor);
@@ -10918,7 +10920,10 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
           pattern: data.pattern,
           opacity: data.opacity,
           thickness: data.thickness,
-          isBrush: true
+          isBrush: true,
+          // 补齐笔迹中心线点与半径，使克隆对象可被橡皮擦局部/整体擦除（原 getBrushWorldCenterline 依赖此字段）
+          curvePoints: item.curvePoints ? item.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2])) : null,
+          brushRadius: item.brushRadius || (data.thickness ? data.thickness / 2 : 0.3)
         }
       };
       state.objects.push(entry);
@@ -12385,7 +12390,22 @@ function openManual(){
   else { restoreScroll(); docEl.querySelectorAll('.md-block').forEach(b=>b.classList.remove('flash')); }
 
   function getPlainDoc(){ return docEl.innerText || docEl.textContent; }
-  function getSelectionText(){ const s=window.getSelection(); return s?s.toString():''; }
+  function getSelectionText(){
+    // 优先使用自定义选区的文本（来自 mark.md-sel 的 textContent，对 emoji/代理对安全）
+    if(openManual._sel && openManual._sel.text!=null) return openManual._sel.text;
+    const s=window.getSelection();
+    if(!s || s.rangeCount===0) return '';
+    try{
+      // 用 Range.cloneContents().textContent 替代 Selection.toString()
+      // 避免阿拉伯语(RTL)下浏览器 toString() 对 emoji(代理对) 的截断 bug
+      const r=s.getRangeAt(0);
+      const frag=r.cloneContents();
+      const tmp=document.createElement('div'); tmp.appendChild(frag);
+      const t=tmp.textContent||'';
+      // 若 cloneContents 结果为空（某些 RTL 边界），回退到 toString()
+      return t || s.toString();
+    }catch(e){ return s.toString(); }
+  }
   function copyText(text){
     text = text.replace(/[​\u200B‏\u200E‎\u200F\uFEFF]/g, ''); // 去除零宽方向字符，避免阿拉伯语复制文本被 LRM 等污染
     function fb(t){ const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); toast(T('manCopied'));}catch(e){} document.body.removeChild(ta); }
