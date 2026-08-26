@@ -3381,8 +3381,17 @@ function textTexture(text, opts) {
   } else {
     const tw = tmp.measureText(text).width;
     w = Math.max(64, Math.ceil(tw) + 40); h = Math.ceil(fontSize * 1.4) + 20;
+    // 检测 RTL 文本（阿拉伯语/希伯来语等）：避免 3D 文字对象保存后阿拉伯语显示异常
+    const isRTLText = /[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(text);
+    // 文本含 RTL 字符时：1) 追加阿拉伯字形 fallback，防止所选字体无阿拉伯字形而显示方块；
+    // 2) 显式设置 ctx.direction='rtl'，确保 canvas 在 ltr 画布上按 RTL 正确布局（否则方向/对齐异常）
+    let drawFont = fontStr;
+    if (isRTLText && !/Noto Kufi Arabic|Noto Sans Arabic|Traditional Arabic|Arabic/i.test(font)) {
+      drawFont = fontStr + ', "Noto Kufi Arabic", "Noto Sans Arabic", sans-serif';
+    }
     draw = (ctx) => {
-      ctx.font = fontStr; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = col;
+      ctx.font = drawFont; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = col;
+      if (isRTLText) ctx.direction = 'rtl';
       ctx.fillText(text, w / 2, h / 2);
     };
   }
@@ -4899,6 +4908,7 @@ function showInlineTextInput(worldPos, defaultText = '') {
     input.value = defaultText;
     input.placeholder = _t('textHintPlaceholder');
     input.rows = 1;
+    input.setAttribute('dir','auto'); // 阿拉伯语等 RTL 文本自动右→左，避免非阿拉伯语界面下输入 RTL 文本时显示/光标异常
 
     const hint = document.createElement('div');
     hint.className = 'inline-text-hint';
@@ -12164,6 +12174,14 @@ function openManual(){
     document.getElementById('manual-note-batchdel').addEventListener('click', batchDeleteNotes);
     document.getElementById('manual-float-hi').addEventListener('click', addHlFromSelection);
     document.getElementById('manual-float-copy').addEventListener('click', ()=>{ const s=openManual._sel; copyText(s?s.text:getSelectionText()); floatEl.style.display='none'; });
+    // 说明书内 Ctrl/Cmd+C：统一走 copyText 清理 RTL 控制字符，避免原生复制携带方向字符导致阿拉伯语粘贴异常
+    docEl.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && (e.key==='c'||e.key==='C')){
+        const t=e.target; if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA')) return;
+        const sel=window.getSelection();
+        if(sel && !sel.isCollapsed && sel.toString().trim()){ e.preventDefault(); copyText(getSelectionText()); floatEl.style.display='none'; }
+      }
+    });
     document.getElementById('manual-float-hicancel').addEventListener('click', cancelHlInSelection);
     document.getElementById('manual-float-hiexpand').addEventListener('click', expandHl);
     docEl.addEventListener('mousedown', e=>{ if(e.button===2){ const s=window.getSelection(); if(s && !s.isCollapsed) e.preventDefault(); } });
@@ -12690,7 +12708,7 @@ function openManual(){
     }
     layer.appendChild(el);
     const area=el.querySelector('.sticky-area');
-    if(area){ area.value=n.note||''; area.placeholder=T('manNotePh'); }
+    if(area){ area.value=n.note||''; area.placeholder=T('manNotePh'); area.setAttribute('dir','auto'); }
     bindSticky(el); bringFront(el); el.dataset.mode=forceEdit && !n.lost ?'edit':'ro'; applyStickyMode(el); syncStickyVisibility();
     if(area) setTimeout(()=>area.focus(), 30);
   }

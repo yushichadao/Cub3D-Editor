@@ -1306,7 +1306,12 @@ html[dir="rtl"] .manual-input{direction:rtl; text-align:right; unicode-bidi:plai
   <style>
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/noto-kufi-arabic-400.woff2') format('woff2');}
 @font-face{font-family:'Noto Kufi Arabic';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/noto-kufi-arabic-700.woff2') format('woff2');}
+/* 阿拉伯语界面（lang=ar）强制优先使用 Noto Kufi Arabic，确保 RTL 界面字体绝对正常 */
 html[lang="ar"] body,html[lang="ar"] button,html[lang="ar"] input,html[lang="ar"] select,html[lang="ar"] textarea{font-family:'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif;}
+/* 其他语言界面也保留 Noto Kufi Arabic。注意：必须放在中文字体(PingFang/YaHei)之前，
+   否则中文字体若含阿拉伯区段占位字形会"截胡"阿拉伯字符显示成方块，且不再回退。
+   阿拉伯字符优先由 Noto Kufi 处理(下载成功后用)，中文仍由后面的中文字体处理。 */
+html body,html button,html input,html select,html textarea{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Kufi Arabic","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
 html[dir="rtl"]{direction:rtl}
 /* 阿拉伯语输入框：整体右→左（继承 RTL），但输入英文/数字等弱方向字符时局部按内容自动切换为左→右 */
 html[dir="rtl"] input:not(.num-field),html[dir="rtl"] textarea{direction:rtl;unicode-bidi:plaintext}
@@ -1364,6 +1369,8 @@ html[dir="rtl"] .num-field{ direction:rtl; }
   <script src="lang-override.js?v=20260815" onload="window.__bootProgress&&window.__bootProgress('lang');window.__bootStage&&window.__bootStage('bootLangReady')"></script>
 </head>
 <body draggable="false" oncontextmenu="return false" ondragstart="return false">
+<!-- 隐藏的阿拉伯字符：强制 WebView 下载 Noto Kufi Arabic 字体，使非阿拉伯语界面（如阅读阿拉伯语说明书）也能正确显示阿拉伯字体，否则字体不被触发下载而回退系统字体 -->
+<span aria-hidden="true" style="position:absolute;left:-100000px;top:-100000px;width:1px;height:1px;overflow:hidden;font-family:'Noto Kufi Arabic';font-size:16px;">ا</span>
 
 <div class="loader" id="loader">
   <div class="loader-inner">
@@ -3172,8 +3179,17 @@ function textTexture(text, opts) {
   } else {
     const tw = tmp.measureText(text).width;
     w = Math.max(64, Math.ceil(tw) + 40); h = Math.ceil(fontSize * 1.4) + 20;
+    // 检测 RTL 文本（阿拉伯语/希伯来语等）：避免 3D 文字对象保存后阿拉伯语显示异常
+    const isRTLText = /[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(text);
+    // 文本含 RTL 字符时：1) 追加阿拉伯字形 fallback，防止所选字体无阿拉伯字形而显示方块；
+    // 2) 显式设置 ctx.direction='rtl'，确保 canvas 在 ltr 画布上按 RTL 正确布局（否则方向/对齐异常）
+    let drawFont = fontStr;
+    if (isRTLText && !/Noto Kufi Arabic|Noto Sans Arabic|Traditional Arabic|Arabic/i.test(font)) {
+      drawFont = fontStr + ', "Noto Kufi Arabic", "Noto Sans Arabic", sans-serif';
+    }
     draw = (ctx) => {
-      ctx.font = fontStr; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = col;
+      ctx.font = drawFont; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = col;
+      if (isRTLText) ctx.direction = 'rtl';
       ctx.fillText(text, w / 2, h / 2);
     };
   }
@@ -4690,6 +4706,7 @@ function showInlineTextInput(worldPos, defaultText = '') {
     input.value = defaultText;
     input.placeholder = _t('textHintPlaceholder');
     input.rows = 1;
+    input.setAttribute('dir','auto'); // 阿拉伯语等 RTL 文本自动右→左，避免非阿拉伯语界面下输入 RTL 文本时显示/光标异常
 
     const hint = document.createElement('div');
     hint.className = 'inline-text-hint';
@@ -7022,6 +7039,17 @@ function applyLang() {
     if (v !== undefined) el.placeholder = v;
   });
   document.documentElement.lang = currentLang;
+  // 预加载阿拉伯字体：确保即使在非阿拉伯语界面下，阿拉伯文本也能用 Noto Kufi Arabic 渲染。
+  // 用 try/catch 包裹，避免个别 WebView 的 document.fonts.load 实现差异导致语言切换中断。
+  if (!window.__arFontPreloaded) {
+    window.__arFontPreloaded = true;
+    try {
+      if (document.fonts && document.fonts.load) {
+        document.fonts.load('400 16px "Noto Kufi Arabic"');
+        document.fonts.load('700 16px "Noto Kufi Arabic"');
+      }
+    } catch (e) {}
+  }
   populateFontSelect();
   // 语言切换瞬间立即刷新选中文本的跨语言锁定状态与字体下拉
   const _p = getPrimary();
@@ -11323,7 +11351,9 @@ function mdInline(text){
   s = s.replace(/(^|[^_])_([^_\s][^_]*?)_/g, '$1<em>$2</em>');
   s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, (m,t,u)=>'<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a>');
   s = s.replace(/\[([^\]]+)\]\((#[^)\s]+)\)/g, (m,t,a)=>'<a href="'+a+'" class="md-anchor">'+t+'</a>');
-  s = s.replace(/\[([^\]]+)\]\((jump:[^)\n]+)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
+  // jump 目标允许含一层嵌套圆括号（如阿拉伯语目录 «... (كيفية تصنيف 20 نوعاً)»），
+  // 否则 [^)\n]+ 在遇到内层 ')' 时提前截断，导致含括号的目录项链接解析错乱、整段显示异常。
+  s = s.replace(/\[([^\]]+)\]\((jump:(?:[^()\n]|\([^()\n]*\))*)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
   s = s.replace(/\uE000(\d+)\uE001/g, (m,idx)=>'<code>'+codes[+idx]+'</code>');
   return s;
 }
@@ -11543,6 +11573,15 @@ function openManual(){
     document.getElementById('manual-note-batchdel').addEventListener('click', batchDeleteNotes);
     document.getElementById('manual-float-hi').addEventListener('click', addHlFromSelection);
     document.getElementById('manual-float-copy').addEventListener('click', ()=>{ const s=openManual._sel; copyText(s?s.text:getSelectionText()); clearCustomSel(); });
+    // 说明书内 Ctrl/Cmd+C：统一走 copyText 清理 RTL 控制字符，避免原生复制携带方向字符导致阿拉伯语粘贴异常
+    // （浮窗“复制”按钮已用 copyText，此处补齐快捷键路径，否则非 ar 界面下 Ctrl+C 复制的阿拉伯语会残留 LRM/RLM 等控制字符）
+    docEl.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && (e.key==='c'||e.key==='C')){
+        const t=e.target; if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA')) return; // 输入框内原生复制不受影响
+        const sel=window.getSelection();
+        if(sel && !sel.isCollapsed && sel.toString().trim()){ e.preventDefault(); copyText(getSelectionText()); floatEl.style.display='none'; }
+      }
+    });
     document.getElementById('manual-float-hicancel').addEventListener('click', cancelHlInSelection);
     document.getElementById('manual-float-hiexpand').addEventListener('click', expandHl);
     // 移动端长按选词 → 弹出 便签/高亮/复制 浮层
@@ -12079,7 +12118,7 @@ function openManual(){
     }
     layer.appendChild(el);
     const area=el.querySelector('.sticky-area');
-    if(area){ area.value=n.note||''; area.placeholder=T('manNotePh'); }
+    if(area){ area.value=n.note||''; area.placeholder=T('manNotePh'); area.setAttribute('dir','auto'); }
     bindSticky(el); bringFront(el); el.dataset.mode=forceEdit && !n.lost ?'edit':'ro'; applyStickyMode(el); syncStickyVisibility();
     if(area) setTimeout(()=>area.focus(), 30);
   }
