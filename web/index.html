@@ -10790,7 +10790,20 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
     const data = JSON.parse(JSON.stringify(item.data));
     delete data.id;
     if (item.isBrush || data.isBrush) {
-      // 画笔对象：使用curvePoints精确重建（原版逻辑，局部擦除/撤销/重做表现正确）
+      // 2D 画笔：直接复用正常 2D 笔迹的全部逻辑（build2DTubeMeshes + groupAndCommitBrush），
+      // 保证复制粘贴品与正常绘制的 2D 笔迹完全一致，橡皮局部擦除/撤销/重做表现完全相同。
+      if (data.type === 'brush2d' && data.curvePoints && data.curvePoints.length) {
+        const pts = data.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
+        const r2 = data.brushRadius || (data.thickness ? data.thickness / 2 : 0.3);
+        const meshes = build2DTubeMeshes(pts, r2, createBrushMaterialForSnapshot(data));
+        const committed = groupAndCommitBrush(data, pts, r2, meshes);
+        // 应用粘贴偏移（groupAndCommitBrush 已把 group 置于几何中心并设好局部中心线/材质/entry）
+        committed.mesh.position.x += pasteDelta.x;
+        committed.mesh.position.z += pasteDelta.z;
+        newOnes.push(committed);
+        return; // 跳过下方 3D / 子部件重建逻辑
+      }
+      // 3D 画笔：使用curvePoints精确重建（原版逻辑，局部擦除/撤销/重做表现正确）
       const group = new THREE.Group();
       const r = (data.thickness || 0.5) / 2;
       // 使用标准材质（createBrushMaterialForSnapshot）保留光影明暗，与原始画笔对象一致；
@@ -10928,12 +10941,13 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
         group.add(sphere);
       }
 
-      // 修复：克隆画笔必须像 groupAndCommitBrush 那样设置局部中心线缓存，基准必须是当前
-      // group.position（已含粘贴偏移 pasteDelta），而非原始 item.pos。否则局部中心线与
-      // 渲染几何错开一个 pasteDelta，导致橡皮擦局部擦除命中区域整体偏移、渲染异常。
+      // 修复：克隆画笔必须像 groupAndCommitBrush 那样设置局部中心线缓存（以原始几何中心 brushPos 为基准，
+      // 不含 pasteDelta），否则擦除时 getBrushLocalCenterline 会走错误的"世界坐标+子mesh偏移"计算，
+      // 导致 2D 画笔克隆体局部擦除位置错乱（效果与原本完全不同）。
       if (item.curvePoints && item.curvePoints.length) {
+        const _c = new THREE.Vector3(brushPos[0], brushPos[1], brushPos[2]);
         group.userData.brushLocalCenterline =
-          item.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]).sub(group.position));
+          item.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]).sub(_c));
       }
 
       scene.add(group);
