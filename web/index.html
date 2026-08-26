@@ -10928,13 +10928,12 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
         group.add(sphere);
       }
 
-      // 修复：克隆画笔必须像 groupAndCommitBrush 那样设置局部中心线缓存（以原始几何中心 brushPos 为基准，
-      // 不含 pasteDelta），否则擦除时 getBrushLocalCenterline 会走错误的"世界坐标+子mesh偏移"计算，
-      // 导致 2D 画笔克隆体局部擦除位置错乱（效果与原本完全不同）。
+      // 修复：克隆画笔必须像 groupAndCommitBrush 那样设置局部中心线缓存，基准必须是当前
+      // group.position（已含粘贴偏移 pasteDelta），而非原始 item.pos。否则局部中心线与
+      // 渲染几何错开一个 pasteDelta，导致橡皮擦局部擦除命中区域整体偏移、渲染异常。
       if (item.curvePoints && item.curvePoints.length) {
-        const _c = new THREE.Vector3(brushPos[0], brushPos[1], brushPos[2]);
         group.userData.brushLocalCenterline =
-          item.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]).sub(_c));
+          item.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]).sub(group.position));
       }
 
       scene.add(group);
