@@ -26,6 +26,17 @@ copyFileSync(wikiSrc, wikiDst);
 
 const run = (cmd) => execSync(cmd, { cwd: wikiTmp, stdio: 'inherit' });
 
+// Wiki 仓库是独立克隆仓库，可能未继承全局 git 身份，导致 commit 失败。
+// 若 wiki-tmp 内未配置 user.name/email，则回退到主仓库的身份。
+try {
+  execSync('git config user.name', { cwd: wikiTmp, stdio: 'ignore' });
+} catch {
+  const name = execSync('git config user.name', { cwd: root }).toString().trim();
+  const email = execSync('git config user.email', { cwd: root }).toString().trim();
+  if (name) execSync(`git config user.name "${name}"`, { cwd: wikiTmp, stdio: 'ignore' });
+  if (email) execSync(`git config user.email "${email}"`, { cwd: wikiTmp, stdio: 'ignore' });
+}
+
 // GitHub Wiki 默认分支为 master
 run('git checkout master');
 run('git pull origin master');
