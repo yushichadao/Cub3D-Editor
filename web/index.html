@@ -4508,6 +4508,11 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
     }
 
     scene.add(group);
+    // 恢复与原件一致的关键 userData：id 用于交互/命中，brushLocalCenterline 用于局部擦除
+    group.userData.id = s.id;
+    if (s.brushLocalCenterline) {
+      group.userData.brushLocalCenterline = s.brushLocalCenterline.map(p => new THREE.Vector3(p[0], p[1], p[2]));
+    }
     const entry = { mesh: group, data: { ...s, isBrush: true, kind: 'brush' } };
     // 与绘制提交一致：用 applyAppearance 按 data 重新生成材质（颜色/花纹/不透明度/光照），确保导入后外观一致
     applyAppearance(entry);
@@ -10713,9 +10718,6 @@ function copySelected() {
           });
         }
       }
-      // 保留原 mesh 引用，粘贴时直接深拷贝，保证克隆体与原件完全一致
-      item.origMesh = o.mesh;
-      item.origEntry = o; // 用于取原始（未高亮）材质，避免克隆到选中态的蓝色材质
       return item;
     }
     return {
@@ -10788,53 +10790,7 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
     const data = JSON.parse(JSON.stringify(item.data));
     delete data.id;
     if (item.isBrush || data.isBrush) {
-      // 优先：直接深拷贝原画笔 mesh，保证克隆体与原件 100% 一致
-      // （几何/材质/userData/可交互/可局部擦除/可撤销重建均与原对象相同）。
-      // 旧逻辑用独立 TubeGeometry 重建，与实时绘制的 buildXDTubeMeshes 产物不一致，
-      // 且重建出的对象 entry.data 缺少 id，导致局部擦除渲染异常、撤销重做无法识别。
-      if (item.origMesh) {
-        const src = item.origMesh;
-        const group = src.clone(true);
-        // 必须深拷贝 geometry 与材质，不能与原对象共享实例：
-        // 否则 2D 笔迹的 BufferGeometry 被原件/克隆体共用，局部擦除或撤销时
-        // disposeObject 会释放共享几何，导致渲染异常、撤销重做状态串扰。
-        // 用原对象的“原始材质”(未被选中高亮)重建每个子 mesh 材质：
-        // 若原对象复制时正处于选中态，其当前子 mesh 材质是蓝色高亮，直接克隆会让
-        // 复制品把蓝色误记为“原始材质”，导致取消选中后表面蓝色残留。
-        const _origMats = (item.origEntry && item.origEntry._selectionOrigMaterials) || null;
-        let _mi = 0;
-        group.traverse(c => {
-          if (c.isMesh) {
-            if (c.geometry) c.geometry = c.geometry.clone();
-            const baseMat = (_origMats && _origMats[_mi]) ? _origMats[_mi] : c.material;
-            if (baseMat) c.material = Array.isArray(baseMat) ? baseMat.map(m => m.clone()) : baseMat.clone();
-            if (Array.isArray(c.userData.brushCurvePoints)) {
-              c.userData.brushCurvePoints = c.userData.brushCurvePoints.map(p => p.clone ? p.clone() : new THREE.Vector3(p[0], p[1], p[2]));
-            }
-            _mi++;
-          }
-        });
-        group.userData._selectionOrigMaterials = null;
-        const basePos = (item.worldPos && item.worldPos.length === 3) ? item.worldPos
-                      : (item.pos && item.pos.length === 3) ? item.pos : [0, 0, 0];
-        group.position.set(basePos[0] + pasteDelta.x, basePos[1], basePos[2] + pasteDelta.z);
-        if (item.worldQuat) group.quaternion.set(item.worldQuat[0], item.worldQuat[1], item.worldQuat[2], item.worldQuat[3]);
-        if (item.worldScale) group.scale.set(item.worldScale[0], item.worldScale[1], item.worldScale[2]);
-        if (src.userData.brushLocalCenterline) {
-          group.userData.brushLocalCenterline = src.userData.brushLocalCenterline.map(p => p.clone ? p.clone() : new THREE.Vector3(p[0], p[1], p[2]));
-        }
-        scene.add(group);
-        const newId = idCounter++;
-        group.userData.id = newId;
-        group.traverse(c => { if (c.isMesh) c.userData.id = newId; });
-        const cEntry = { mesh: group, data: JSON.parse(JSON.stringify(item.data)) };
-        cEntry.data.id = newId;
-        state.objects.push(cEntry);
-        newOnes.push(cEntry);
-        return; // 跳过下方旧重建逻辑
-      }
-      // 兜底（无原 mesh 引用时）：用 curvePoints 重建
-      // 画笔对象：使用curvePoints精确重建
+      // 画笔对象：使用curvePoints精确重建（原版逻辑，局部擦除/撤销/重做表现正确）
       const group = new THREE.Group();
       const r = (data.thickness || 0.5) / 2;
       // 使用标准材质（createBrushMaterialForSnapshot）保留光影明暗，与原始画笔对象一致；
@@ -10992,6 +10948,9 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
           opacity: data.opacity,
           thickness: data.thickness,
           isBrush: true,
+          // 补齐 id，否则 restore() 用 o.data.id 匹配快照时找不到克隆体，
+          // 导致撤销/重做无法识别该对象
+          id: idCounter++,
           // 补齐笔迹中心线点与半径，使克隆对象可被橡皮擦局部/整体擦除（原 getBrushWorldCenterline 依赖此字段）
           // 必须与原始画笔一致：curvePoints 存为 [[x,y,z]] 数组，getBrushLocalCenterline 用 p[0]/p[1]/p[2] 取值；
           // 若存成 Vector3[]，则 p[0] 为 undefined → 中心线坐标全 NaN → 局部擦除永不命中
