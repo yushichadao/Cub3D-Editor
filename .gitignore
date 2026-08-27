@@ -189,8 +189,12 @@ pc/dist/
 **/out/
 **/dist/
 
-# ===== 安装包产物不入库（经 GitHub Releases 分发）=====
-downloads/
+# ===== 安装包产物不入库（经 GitHub Releases 分发）；清单照常入库供境内站读取 =====
+downloads/*.exe
+downloads/*.apk
+downloads/*.blockmap
+# downloads/data/ 为运行时用户数据（autosave/langpacks/logs/projects/config），不入库
+downloads/data/
 # 单数 download/ 下的安装包（exe/apk/blockmap）不入库（走 Releases 分发，且 GitHub 单文件硬限 100MB）；
 # 附属物清单 SHA256SUMS.txt / versions.json 体积小，照常入库。
 download/*.exe
