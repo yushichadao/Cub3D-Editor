@@ -3220,6 +3220,26 @@ function textTexture(text, opts) {
   return { tex, w, h };
 }
 
+// 生成"青蓝版"纹理：保留原纹理的 alpha 形状，把 RGB 填为青蓝(0x6ee7ff)。
+// 用于文本/图片选中高亮（与 3D 笔迹选中表面青蓝一致）；改 color 相乘对黑字无效，故用此法。
+function blueTintTexture(srcTex) {
+  if (!srcTex || !srcTex.image) return srcTex;
+  const img = srcTex.image;
+  const w = img.width || img.naturalWidth || 64;
+  const h = img.height || img.naturalHeight || 64;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  try { ctx.drawImage(img, 0, 0, w, h); } catch (e) { return srcTex; }
+  ctx.globalCompositeOperation = 'source-in';
+  ctx.fillStyle = '#6ee7ff';
+  ctx.fillRect(0, 0, w, h);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.needsUpdate = true;
+  return t;
+}
+
 // 图片 dataURL -> Texture（返回纹理和原始宽高比）
 // 贴图缓存（避免重复加载相同图片）
 const _textureCache = new Map(); // dataURL -> { tex, aspectRatio }
@@ -3457,20 +3477,11 @@ function applySelectionVisual(obj, selected) {
         // 改用 opacity 降低 + emissive 高亮（BasicMaterial 无 emissive，故仅用 opacity）
         const isTexturedBasic = hlMat.isMeshBasicMaterial && hlMat.map;
         if (isTexturedBasic) {
-          // 文本/图片（MeshBasicMaterial 带 map）：与 3D 笔迹选中一致，使用 emissive 青蓝发光。
-          // 用 color 相乘对黑色/深色文字无效（黑×青蓝仍黑），故改用 MeshStandardMaterial +
-          // emissiveMap(map)：仅文字/图形区域发青蓝，不受原文字颜色影响，与 3D 表面高亮一致。
-          hlMat = new THREE.MeshStandardMaterial({
-            map: hlMat.map,
-            transparent: m.material.transparent,
-            alphaTest: m.material.alphaTest || 0,
-            depthWrite: m.material.depthWrite,
-            side: hlMat.side,
-            roughness: 1, metalness: 0,
-            emissive: new THREE.Color(0x6ee7ff),
-            emissiveMap: hlMat.map,
-            emissiveIntensity: 0.7
-          });
+          // 文本/图片：与 3D 笔迹选中一致——表面染青蓝高亮。
+          // 不能改 color（黑字×青蓝仍黑），也不用 emissive（BasicMaterial 无 / Standard 受光照弱），
+          // 故生成"青蓝版纹理"（保留 alpha 形状、RGB 填青蓝）替换 map，文字/图标整体发青蓝。
+          hlMat.map = blueTintTexture(hlMat.map);
+          hlMat.needsUpdate = true;
         } else {
           // 2D 笔迹等无贴图的 MeshBasicMaterial：与 3D 笔迹选中渲染一致——
           // 先按相同灰度公式去饱和（保留明暗/形状），再向青蓝(0x6ee7ff)混合模拟 emissive 高亮，
@@ -4358,31 +4369,46 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
     // 与绘制提交一致：用 applyAppearance 按 data 重新生成材质（颜色/花纹/不透明度/光照），确保导入后外观一致
     applyAppearance(entry);
     return entry;
-  } else if (s.kind === 'image' && s.image) {
-    promises.push(imageTexture(s.image).then(({ tex, aspectRatio }) => {
-      let w = s.w || 4;
-      let h = s.h || 4;
-      if (!s.w || !s.h) {
-        if (aspectRatio >= 1) { w = 4; h = 4 / aspectRatio; }
-        else { w = 4 * aspectRatio; h = 4; }
-      }
-      // 不传 pos/scale，用默认值初始化后再用 worldPos/worldQuat/worldScale 精确覆盖，防止移位
-      const obj = createObject({ ...s, _tex: tex, w, h, pos: [0, 0, 0], scale: 1, rotX: 0, rotY: 0, rotZ: 0 });
-      if (obj) {
-        if (s.worldScale) obj.mesh.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
-        else if (s.scale !== undefined) obj.mesh.scale.setScalar(s.scale);
-        if (s.worldQuat) obj.mesh.quaternion.set(s.worldQuat[0], s.worldQuat[1], s.worldQuat[2], s.worldQuat[3]);
-        else if (s.rotY !== undefined) { obj.mesh.quaternion.identity(); obj.mesh.rotation.y = s.rotY * Math.PI / 180; }
-        if (s.worldPos) obj.mesh.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
-        else if (s.pos) {
-          const halfH = obj.data.halfH || 0;
-          const y = (obj.data.kind === 'image') ? s.pos[1] : (s.pos[1] + halfH * obj.mesh.scale.y);
-          obj.mesh.position.set(s.pos[0], y, s.pos[2]);
+  } else if (s.kind === 'image') {
+    // 始终走图片分支（无论是否带贴图），避免无贴图 image 落入通用分支生成白板参数错误
+    if (s.image) {
+      promises.push(imageTexture(s.image).then(({ tex, aspectRatio }) => {
+        let w = s.w || 4;
+        let h = s.h || 4;
+        if (!s.w || !s.h) {
+          if (aspectRatio >= 1) { w = 4; h = 4 / aspectRatio; }
+          else { w = 4 * aspectRatio; h = 4; }
         }
-        obj.mesh.updateMatrixWorld(true);
-      }
-    }));
-    return null;
+        // 不传 pos/scale，用默认值初始化后再用 worldPos/worldQuat/worldScale 精确覆盖，防止移位
+        const obj = createObject({ ...s, _tex: tex, w, h, pos: [0, 0, 0], scale: 1, rotX: 0, rotY: 0, rotZ: 0 });
+        if (obj) {
+          if (s.worldScale) obj.mesh.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
+          else if (s.scale !== undefined) obj.mesh.scale.setScalar(s.scale);
+          if (s.worldQuat) obj.mesh.quaternion.set(s.worldQuat[0], s.worldQuat[1], s.worldQuat[2], s.worldQuat[3]);
+          else if (s.rotY !== undefined) { obj.mesh.quaternion.identity(); obj.mesh.rotation.y = s.rotY * Math.PI / 180; }
+          if (s.worldPos) obj.mesh.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+          else if (s.pos) {
+            const halfH = obj.data.halfH || 0;
+            const y = (obj.data.kind === 'image') ? s.pos[1] : (s.pos[1] + halfH * obj.mesh.scale.y);
+            obj.mesh.position.set(s.pos[0], y, s.pos[2]);
+          }
+          obj.mesh.updateMatrixWorld(true);
+        }
+      }));
+      return null;
+    }
+    // 无贴图的图片对象（用户已清除贴图）：直接创建空 image，并精确应用变换（含 image 固定的 -90° x 旋转）
+    const obj = createObject({ ...s, _tex: null, w: s.w || 4, h: s.h || 4, pos: [0, 0, 0], scale: 1, rotX: 0, rotY: 0, rotZ: 0 });
+    if (obj) {
+      if (s.worldScale) obj.mesh.scale.set(s.worldScale[0], s.worldScale[1], s.worldScale[2]);
+      else if (s.scale !== undefined) obj.mesh.scale.setScalar(s.scale);
+      if (s.worldQuat) obj.mesh.quaternion.set(s.worldQuat[0], s.worldQuat[1], s.worldQuat[2], s.worldQuat[3]);
+      else if (s.rotY !== undefined) { obj.mesh.quaternion.identity(); obj.mesh.rotation.y = s.rotY * Math.PI / 180; }
+      if (s.worldPos) obj.mesh.position.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
+      else if (s.pos) obj.mesh.position.set(s.pos[0], s.pos[1], s.pos[2]);
+      obj.mesh.updateMatrixWorld(true);
+    }
+    return obj;
   } else if ((s.kind === '3d' || s.kind === '2d') && s.image) {
     promises.push(imageTexture(s.image).then(({ tex }) => {
       // 不传 pos/scale，用默认值初始化后再精确覆盖，防止 baseY + halfH 两次计算偏差
@@ -7381,8 +7407,8 @@ function applyImportedJson(text){
   try {
     const json = JSON.parse(text);
     if (!json.objects) throw new Error('格式错误');
-    // 停止对连版本号都无法比较的旧格式工程的支持：无 longVersion 则拒绝导入
-    if (!json.longVersion) throw new Error(_t('manImportNoVer'));
+    // 停止对连版本号都无法比较的旧格式工程的支持：无 longVersion 则拒绝导入（场景专用提示，避免误显示"便签"文案）
+    if (!json.longVersion) throw new Error(_t('manImportSceneNoVer') || '该场景文件无法识别版本号（旧格式），无法导入。请使用新版导出的场景');
     // 直接 restore 并重置历史
     state.objects.forEach(disposeObject);
     state.objects = [];
@@ -12491,11 +12517,17 @@ async function offerRestore(){
   const ok = await showConfirm(msg, T('recoveryTitle') || '检测到未保存的会话');
   if (ok) {
     const text = JSON.stringify(scene);
+    const n = objCount;
     try {
-      if (typeof applyImportedJson === 'function') applyImportedJson(text);
-      else if (typeof applySceneText === 'function') applySceneText(text);
-      if (typeof toast === 'function') toast(T('toastSceneImported') || '场景已导入');
-    } catch(err){ if (typeof toast === 'function') toast((T('toastImportFailed')||'导入失败')+': '+(err&&err.message||err)); }
+      let res;
+      if (typeof applyImportedJson === 'function') res = applyImportedJson(text);
+      else if (typeof applySceneText === 'function') res = applySceneText(text);
+      if (res && res.ok) {
+        if (typeof toast === 'function') toast((T('recoverySuccess') || '已从自动保存恢复进度，共 {0} 个对象').replace('{0}', n));
+      } else {
+        if (typeof toast === 'function') toast((T('recoveryFail') || '恢复失败') + (res && res.message ? '：' + res.message : ''));
+      }
+    } catch(err){ if (typeof toast === 'function') toast((T('recoveryFail')||'恢复失败')+': '+(err&&err.message||err)); }
   } else {
     clearLastSession();
   }
