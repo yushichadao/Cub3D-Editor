@@ -165,6 +165,10 @@ kbdSliderPgSel:'大幅增/减',
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
+// 补充崩溃恢复 / 场景导入提示的翻译键（中文回退）
+ZH_CN.recoverySuccess = ZH_CN.recoverySuccess || '已从自动保存恢复进度，共 {0} 个对象';
+ZH_CN.recoveryFail = ZH_CN.recoveryFail || '恢复失败';
+ZH_CN.manImportSceneNoVer = ZH_CN.manImportSceneNoVer || '该场景文件无法识别版本号（旧格式），无法导入。请使用新版导出的场景';
 const I18N = { 'zh-CN': ZH_CN };
 Object.keys(__packs).forEach(code => { if (__packs[code]) I18N[code] = __packs[code].dict || __packs[code]; });
 const THEMES = {
