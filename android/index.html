@@ -3477,37 +3477,54 @@ function applySelectionVisual(obj, selected) {
       meshes.forEach(m => {
         obj._selectionOrigMaterials.push(m.material);
         let hlMat = m.material.clone();
-        // 统一选中高亮：所有对象表面呈现一致的青蓝(0x6ee7ff)高亮
+        // 文本/图片对象（MeshBasicMaterial 带 map）：不改 color（会与 map 相乘导致文字消失），
+        // 改用 opacity 降低 + emissive 高亮（BasicMaterial 无 emissive，故仅用 opacity）
         const isTexturedBasic = hlMat.isMeshBasicMaterial && hlMat.map;
-        const isText = obj.data && obj.data.kind === 'text';
-        if (isTexturedBasic && isText) {
-          // 文本框：黑字与 map 相乘无效，用 blueTintTexture 仅将文字笔画染青蓝，保留透明背景
-          hlMat.map = blueTintTexture(hlMat.map);
-        } else if (isTexturedBasic) {
-          // 图片（矩形不透明贴图）：color 与 map 相乘 → 整体偏青蓝并保留原图内容（避免整块纯蓝剪影的异常观感）
-          hlMat.color.setHex(0x6ee7ff);
-        } else if (hlMat.isMeshBasicMaterial) {
-          // 2D 笔迹（无 map 的 BasicMaterial）：明显染青蓝，保留明暗
-          hlMat.color.lerp(new THREE.Color(0x6ee7ff), 0.6);
+        if (isTexturedBasic) {
+          const kind = obj.data && obj.data.kind;
+          if (kind === 'text') {
+            // 文本框：背景透明、文字常为黑/深色，color×map 对黑字无效，
+            // 故重绘纹理为“青蓝字”（保留 alpha 形状、RGB 填青蓝），使字变蓝，与笔迹选中一致。
+            hlMat.map = blueTintTexture(hlMat.map);
+            hlMat.needsUpdate = true;
+          } else {
+            // 图片 / 带贴图的 3D·2D 形状：保留原内容，整体偏青蓝（color 乘 map），
+            // 避免整张变蓝剪影（那样不像笔迹的“灰度+青蓝发光”）。
+            hlMat.color.setHex(0x6ee7ff);
+          }
         } else {
-          // 3D 笔迹（带光照 StandardMaterial 等）：轻度灰度 + 青蓝 emissive 发光
-          if (hlMat.color) {
+          // 3D 笔迹 / 3D·2D 图形 / 2D 笔迹：灰度去饱和 + 青蓝高亮，与笔迹选中表面一致
+          if (hlMat.isMeshBasicMaterial) {
+            // 2D 笔迹 / 2D 图形（无贴图 BasicMaterial）：灰度后向青蓝混合，保留明暗形状
             const c = hlMat.color.clone();
             const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
-            hlMat.color.setRGB(
+            const gcol = new THREE.Color(
               c.r * 0.5 + gray * 0.5,
               c.g * 0.5 + gray * 0.5,
               c.b * 0.5 + gray * 0.5
             );
+            gcol.lerp(new THREE.Color(0x6ee7ff), 0.45);
+            hlMat.color.copy(gcol);
+          } else {
+            // 普通带光照对象（StandardMaterial）：灰度 + 青蓝 emissive 发光
+            if (hlMat.color) {
+              const c = hlMat.color.clone();
+              const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
+              hlMat.color.setRGB(
+                c.r * 0.5 + gray * 0.5,
+                c.g * 0.5 + gray * 0.5,
+                c.b * 0.5 + gray * 0.5
+              );
+            }
+            if ('emissive' in hlMat) {
+              hlMat.emissive = new THREE.Color(0x6ee7ff);
+              hlMat.emissiveIntensity = 0.35;
+            }
           }
-          if ('emissive' in hlMat) {
-            hlMat.emissive.setHex(0x6ee7ff);
-            hlMat.emissiveIntensity = 0.7;
-          }
+          // 不透明对象保持不透明，靠深度缓冲正确遮挡
+          hlMat.transparent = m.material.transparent;
+          hlMat.depthWrite = m.material.depthWrite;
         }
-        // 不透明对象保持不透明，靠深度缓冲正确遮挡
-        hlMat.transparent = m.material.transparent;
-        hlMat.depthWrite = m.material.depthWrite;
         hlMat.needsUpdate = true;
         m.material = hlMat;
       });
