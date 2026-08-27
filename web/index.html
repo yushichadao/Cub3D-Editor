@@ -3438,8 +3438,9 @@ function textTexture(text, opts) {
   return { tex, w, h };
 }
 
-// 生成"青蓝版"纹理：保留原纹理的 alpha 形状，把 RGB 填为青蓝(0x6ee7ff)。
-// 用于文本/图片选中高亮（与 3D 笔迹选中表面青蓝一致）；改 color 相乘对黑字无效，故用此法。
+// 生成"青蓝高亮版"纹理：保留原文字的 RGB 颜色（仅形状用原 alpha），
+// 在原色基础上向青蓝(0x6ee7ff)混合并轻微提亮，使其与 3D 对象选中
+// （保留原色 + 青蓝高亮叠加）逻辑一致，从而更换文字颜色时选中态仍可见效果。
 function blueTintTexture(srcTex) {
   if (!srcTex || !srcTex.image) return srcTex;
   const img = srcTex.image;
@@ -3449,9 +3450,20 @@ function blueTintTexture(srcTex) {
   c.width = w; c.height = h;
   const ctx = c.getContext('2d');
   try { ctx.drawImage(img, 0, 0, w, h); } catch (e) { return srcTex; }
-  ctx.globalCompositeOperation = 'source-in';
-  ctx.fillStyle = '#6ee7ff';
+  // 1) 在原色上叠加青蓝高亮（保留原 RGB 颜色，仅叠青蓝调）
+  ctx.globalCompositeOperation = 'source-atop';
+  ctx.fillStyle = 'rgba(110,231,255,0.55)';
   ctx.fillRect(0, 0, w, h);
+  // 2) 整体轻微提亮，呼应 3D 选中时的发光感
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const d = imgData.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i + 3] === 0) continue;
+    d[i] = Math.min(255, d[i] * 1.12);
+    d[i + 1] = Math.min(255, d[i + 1] * 1.12);
+    d[i + 2] = Math.min(255, d[i + 2] * 1.12);
+  }
+  ctx.putImageData(imgData, 0, 0);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   t.needsUpdate = true;
@@ -3697,7 +3709,8 @@ function applySelectionVisual(obj, selected) {
           const kind = obj.data && obj.data.kind;
           if (kind === 'text') {
             // 文本框：背景透明、文字常为黑/深色，color×map 对黑字无效，
-            // 故重绘纹理为“青蓝字”（保留 alpha 形状、RGB 填青蓝），使字变蓝，与笔迹选中一致。
+            // 故在纹理上叠加青蓝高亮（blueTintTexture 保留文字原色 + 叠青蓝 + 提亮），
+            // 与 3D 对象“保留原色 + 青蓝高亮叠加”的选中逻辑一致，换文字色仍可见。
             hlMat.map = blueTintTexture(hlMat.map);
             hlMat.needsUpdate = true;
           } else {
@@ -4245,12 +4258,14 @@ function snapshot() {
           // 3D画笔：实时绘制逐段生成管段，子网格未携带 brushCurvePoints，
           // 导出时无法命中 tubeChildren，故回退用整条曲线点重建为连续管，
           // 同时保留 curvePoints 供橡皮局部擦除（1:1 还原绘制结果）。
-          const _wp = [o.mesh.position.x, o.mesh.position.y, o.mesh.position.z];
+          // 注意：curvePoints 保存为原始世界坐标（与主流 tubeSegments 分支一致），
+          // 移动后的偏移由 group.position(worldPos) 在 restore 时承载，故此处不转局部坐标，
+          // 否则会与 group.position 叠加导致移动被抵消/错位。
           snap.tubeSegments = [{
-            curvePoints: o.data.curvePoints.map(p => [p[0]-_wp[0], p[1]-_wp[1], p[2]-_wp[2]]),
+            curvePoints: o.data.curvePoints,
             brushRadius: o.data.brushRadius || (o.data.thickness ? o.data.thickness / 2 : 0.3)
           }];
-          snap.curvePoints = o.data.curvePoints.map(p => [p[0]-_wp[0], p[1]-_wp[1], p[2]-_wp[2]]);
+          snap.curvePoints = o.data.curvePoints;
         }
       }
       // 保存局部中心线（相对 group 原点），撤销/重做重建后局部擦除才能正确命中
@@ -4495,27 +4510,31 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
       for (const seg of s.tubeSegments) {
         const points = seg.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
         const segR = seg.brushRadius || r;
+        // 计算笔迹中心（与实时绘制一致）：实时绘制时 group.position=center、子mesh.position=-center，
+        // 故世界坐标几何需先减 center 局部化，再由 group.position(=worldPos) 整体平移到移动后位置。
+        const _box = new THREE.Box3();
+        points.forEach(p => _box.expandByPoint(p));
+        const center = _box.getCenter(new THREE.Vector3());
         // 2D 笔画用扁平带状网格；3D 笔画用连续 CatmullRom 圆管 + 两端球头
         const built = (s.brushType === 'brush2d')
           ? build2DTubeMeshes(points, segR, mat)
           : build3DTubeMeshes(points, segR, mat, { live: false });
         built.forEach(m => {
-          m.position.sub(finalPos);   // 转入 group 局部坐标（group.position 稍后设为 finalPos）
-          group.add(m);
+          m.position.sub(center);   // 重现实时绘制的局部化：几何世界坐标 - center
+          group.add(m);             // group.position 稍后设为 worldPos，整体承载移动偏移
         });
       }
     } else if (s.curvePoints && s.curvePoints.length >= 2) {
       const points = s.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
-      const finalPos = new THREE.Vector3(s.pos[0], s.pos[1], s.pos[2]);
-      if (s.worldPos) finalPos.set(s.worldPos[0], s.worldPos[1], s.worldPos[2]);
       // 同样走"连续圆管/扁平带"，与实时绘制一致，避免楔形空隙
       const built = (s.brushType === 'brush2d')
         ? build2DTubeMeshes(points, r, mat)
         : build3DTubeMeshes(points, r, mat, { live: false });
       built.forEach(m => {
-        // 2D 笔迹的 curvePoints 已在 snapshot 中转存为相对 group 的局部坐标，
-        // 此处不再 sub(finalPos)，否则会被二次偏移导致移动被抵消。
-        if (s.brushType !== 'brush2d') m.position.sub(finalPos);
+        // 与 tubeSegments 分支一致：几何是世界坐标，按笔迹中心局部化后由 group.position(worldPos) 承载移动
+        const _box = new THREE.Box3();
+        points.forEach(p => _box.expandByPoint(p));
+        m.position.sub(_box.getCenter(new THREE.Vector3()));
         group.add(m);
       });
     } else if (s.children && s.children.length > 0) {
@@ -11586,8 +11605,8 @@ function showConfirm(msg, title = _t('confirm')) {
     const cancel = document.getElementById('confirm-modal-cancel');
     titleEl.textContent = title;
     msgEl.textContent = msg;
-    if (ok) ok.textContent = (typeof T === 'function' ? (T('confirmOk') || '确定') : '确定');
-    if (cancel) cancel.textContent = (typeof T === 'function' ? (T('confirmCancel') || '取消') : '取消');
+    if (ok) ok.textContent = (typeof _t === 'function' ? (_t('confirmOk') || '确定') : '确定');
+    if (cancel) cancel.textContent = (typeof _t === 'function' ? (_t('confirmCancel') || '取消') : '取消');
     mask.classList.add('show');
     function done(val) {
       mask.classList.remove('show');

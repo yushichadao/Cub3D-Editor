@@ -197,3 +197,11 @@ download/*.exe
 download/*.apk
 download/*.blockmap
 
+# ===== 本地自签名证书（绝不可入库，公开仓库；Windows 大小写不敏感使 !PC/build/ 例外误放行 pc/build/）=====
+pc/build/*.pfx
+pc/build/*.cer
+pc/build/codesign.*
+# 本地诊断/验证临时脚本（排查用，不入库）
+_diag*.ps1
+_diag*.ps1.bak
+
