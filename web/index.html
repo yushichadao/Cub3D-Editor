@@ -182,6 +182,13 @@
   /* RTL 品牌：标志与标题互换后，防止长阿拉伯语标题侵入操作按钮区 */
   html[dir="rtl"] .brand .logo { direction: ltr; }
   html[dir="rtl"] .brand span[data-i18n] { unicode-bidi: isolate; display: inline-block; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: min(240px, 34vw); }
+  /* RTL：数值 / 角度（含 ° 度符号）整体按 LTR 显示，避免弱方向字符 ° 在阿拉伯语段落中被错误重排 */
+  html[dir="rtl"] [id^="v-"],
+  html[dir="rtl"] .ctrl-value,
+  html[dir="rtl"] .kbd-note,
+  html[dir="rtl"] .kbd-table,
+  html[dir="rtl"] .kbd-table td,
+  html[dir="rtl"] .kbd-table th { direction: ltr; unicode-bidi: isolate; }
   html[dir="rtl"] .topbar { column-gap: 14px; }
   /* RTL：按钮区滚动到最左端时，最左按钮前保留一点空隙，避免贴住视口边缘被截断/遮挡 */
   html[dir="rtl"] .top-actions { padding-left: 10px; }
@@ -7272,8 +7279,7 @@ function applyLang() {
     const k = el.dataset.i18n;
     const v = dict[k] !== undefined ? dict[k] : fallback[k];
     if (v !== undefined) {
-      if (v.indexOf('{br}') !== -1) el.innerHTML = v.replace(/\{br\}/g, '<br>');
-      else el.textContent = v;
+      el.innerHTML = fmtAngles(v).replace(/\{br\}/g, '<br>');
     }
   });
   // title 属性替换
@@ -11470,6 +11476,10 @@ function _t(key, ...args) {
   return tpl;
 }
 window._t = _t;
+// 阿拉伯语(RTL)下：把 "数字°" 包成 LTR span，避免弱方向字符 ° 被 bidi 算法错误重排（如显示成 °5）
+function fmtAngles(s) {
+  return String(s).replace(/(\d+(?:\.\d+)?)°/g, '<span dir="ltr">$1°</span>');
+}
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -12095,6 +12105,7 @@ function mdInline(text){
   s = s.replace(/\[([^\]]+)\]\((jump:(?:[^()\n]|\([^()\n]*\))*)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
   s = s.replace(/\uE000(\d+)\uE001/g, (m,idx)=>'<code>'+codes[+idx]+'</code>');
   s = emojiWrap(s); // RTL 下隔离 emoji，避免与阿拉伯文乱序
+  s = fmtAngles(s); // RTL 下把 "数字°" 隔离为 LTR，避免度符号 ° 错排
   return s;
 }
 function splitRow(line){ return line.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(x=>x.trim()); }
@@ -13032,8 +13043,7 @@ function openGuide(){
       const k = el.dataset.i18n;
       const v = dict[k] !== undefined ? dict[k] : fb[k];
       if (v !== undefined) {
-        if (v.indexOf('{br}') !== -1) el.innerHTML = v.replace(/\{br\}/g, '<br>');
-        else el.textContent = v;
+        el.innerHTML = fmtAngles(v).replace(/\{br\}/g, '<br>');
       }
     });
     docEl.querySelectorAll('[data-i18n-title]').forEach(el => {
