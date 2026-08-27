@@ -113,6 +113,7 @@ function createMainWindow() {
       console.warn('[load] ready-to-show 超时，强制显示窗口', (Date.now() - t0) + 'ms');
       win.show();
       win.maximize();
+      notifyState();
     }
   }, 8000);
 
@@ -122,6 +123,7 @@ function createMainWindow() {
     // 开屏最大化：先 show 再 maximize，确保启动即全屏加载页（show 前调用 maximize 部分平台不生效）
     win.show();
     win.maximize();
+    notifyState();
     if (P.isDev) win.webContents.openDevTools({ mode: 'detach' });
   });
 

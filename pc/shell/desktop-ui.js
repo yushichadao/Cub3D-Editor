@@ -159,7 +159,8 @@
       }
     });
 
-    D.window.onState(function (st) {
+    function applyWinState(st) {
+      if (!st) return;
       document.body.classList.toggle('maximized', !!st.maximized);
       document.body.classList.toggle('fullscreen', !!st.fullScreen);
       document.body.classList.toggle('win-blur', !st.focused);
@@ -177,7 +178,10 @@
           maxBtn.disabled = false;
         }
       }
-    });
+    }
+    D.window.onState(applyWinState);
+    // 主动拉取一次当前真实窗口状态，纠正启动即最大化时初始状态竞态丢失导致的按钮图标错误
+    D.window.state().then(applyWinState).catch(function () {});
   }
 
   /* ------------------------------- 文件操作 ------------------------------- */
