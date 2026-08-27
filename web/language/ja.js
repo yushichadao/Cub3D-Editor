@@ -137,6 +137,8 @@ window.__packs['ja'] = {
   "colorPickerTitle": "カラーピッカー",
   "colorPreview": "色プレビュー",
   "confirm": "確認",
+  "confirmOk": "OK",
+  "confirmCancel": "キャンセル",
   "confirmClearScene": "シーンを消去しますか？この操作は取り消せます。",
   "confirmNewScene": "新規シーンを作成しますか？現在の内容は消去されます。",
   "copy": "コピー",

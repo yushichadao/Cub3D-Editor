@@ -137,6 +137,8 @@ window.__packs['es'] = {
   "colorPickerTitle": "Selector de color",
   "colorPreview": "Vista previa",
   "confirm": "Confirmar",
+  "confirmOk": "Aceptar",
+  "confirmCancel": "Cancelar",
   "confirmClearScene": "¿Borrar la escena? Esta acción se puede deshacer.",
   "confirmNewScene": "¿Iniciar una escena nueva? El contenido actual se borrará.",
   "copy": "Copiar",

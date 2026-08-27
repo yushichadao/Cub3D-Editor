@@ -137,6 +137,8 @@ window.__packs['ar'] = {
   "colorPickerTitle": "منتقي الألوان",
   "colorPreview": "معاينة اللون",
   "confirm": "تأكيد",
+  "confirmOk": "موافق",
+  "confirmCancel": "إلغاء",
   "confirmClearScene": "مسح المشهد؟ يمكن التراجع عن هذا الإجراء.",
   "confirmNewScene": "بدء مشهد جديد؟ سيتم مسح المحتوى الحالي.",
   "copy": "نسخ",

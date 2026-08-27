@@ -137,6 +137,8 @@ window.__packs['zh-TW'] = {
   "colorPickerTitle": "顏色選取器",
   "colorPreview": "顏色預覽",
   "confirm": "確認",
+  "confirmOk": "確定",
+  "confirmCancel": "取消",
   "confirmClearScene": "確定清空場景？此操作可撤銷。",
   "confirmNewScene": "確定新建場景？當前場景將被清空。",
   "copy": "複製",

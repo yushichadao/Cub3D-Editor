@@ -137,6 +137,8 @@ window.__packs['fr'] = {
   "colorPickerTitle": "Sélecteur de couleur",
   "colorPreview": "Aperçu de la couleur",
   "confirm": "Confirmer",
+  "confirmOk": "OK",
+  "confirmCancel": "Annuler",
   "confirmClearScene": "Effacer la scène ? Cette action peut être annulée.",
   "confirmNewScene": "Démarrer une nouvelle scène ? Le contenu actuel sera effacé.",
   "copy": "Copier",

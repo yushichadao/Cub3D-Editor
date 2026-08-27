@@ -137,6 +137,8 @@ window.__packs['ko'] = {
   "colorPickerTitle": "색상 선택기",
   "colorPreview": "색상 미리보기",
   "confirm": "확인",
+  "confirmOk": "확인",
+  "confirmCancel": "취소",
   "confirmClearScene": "장면을 지우시겠습니까? 이 작업은 실행 취소할 수 있습니다.",
   "confirmNewScene": "새 장면을 시작하시겠습니까? 현재 내용이 지워집니다.",
   "copy": "복사",

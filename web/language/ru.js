@@ -137,6 +137,8 @@ window.__packs['ru'] = {
   "colorPickerTitle": "Выбор цвета",
   "colorPreview": "Предпросмотр цвета",
   "confirm": "Подтвердить",
+  "confirmOk": "OK",
+  "confirmCancel": "Отмена",
   "confirmClearScene": "Очистить сцену? Действие можно отменить.",
   "confirmNewScene": "Создать новую сцену? Текущая сцена будет очищена.",
   "copy": "Копировать",

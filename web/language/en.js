@@ -137,6 +137,8 @@ window.__packs['en'] = {
   "colorPickerTitle": "Color Picker",
   "colorPreview": "Color Preview",
   "confirm": "Confirm",
+  "confirmOk": "OK",
+  "confirmCancel": "Cancel",
   "confirmClearScene": "Clear the scene? This action can be undone.",
   "confirmNewScene": "Start a new scene? Current content will be cleared.",
   "copy": "Copy",

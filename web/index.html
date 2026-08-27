@@ -2423,6 +2423,12 @@ bootLoading:'正在加载…', bootLangReady:'界面语言已就绪', bootEngine
 };
 
 const __packs = window.I18N_PACKS || window.__packs || {};
+// 补充崩溃恢复 / 场景导入 / 确认弹窗 的翻译键（中文回退）
+ZH_CN.recoverySuccess = ZH_CN.recoverySuccess || '已从自动保存恢复进度，共 {0} 个对象';
+ZH_CN.recoveryFail = ZH_CN.recoveryFail || '恢复失败';
+ZH_CN.manImportSceneNoVer = ZH_CN.manImportSceneNoVer || '该场景文件无法识别版本号（旧格式），无法导入。请使用新版导出的场景';
+ZH_CN.confirmOk = ZH_CN.confirmOk || '确定';
+ZH_CN.confirmCancel = ZH_CN.confirmCancel || '取消';
 const I18N = { 'zh-CN': ZH_CN };
 Object.keys(__packs).forEach(code => { if (__packs[code]) I18N[code] = __packs[code].dict || __packs[code]; });
 const THEMES = {
@@ -7579,15 +7585,16 @@ function classifyImport(data) {
   return 'unknown';
 }
 
-// 解析文本并尝试作为场景导入；返回 {ok, reason, message}
-function applySceneText(text) {
+// 解析文本并尝试作为场景导入；allowNoVersion=true 时跳过 longVersion 校验（用于可信的自动保存恢复）
+function applySceneText(text, allowNoVersion) {
   let json;
   try { json = JSON.parse(text); } catch (e) { return { ok: false, reason: 'unrecognized', message: _t('toastImportUnsupported') }; }
   const kind = classifyImport(json);
   if (kind === 'sticky') return { ok: false, reason: 'sticky', message: _t('toastImportSticky') };
   if (kind !== 'scene') return { ok: false, reason: 'unrecognized', message: _t('toastImportUnsupported') };
   // 停止对连版本号都无法比较的旧格式工程的支持：无 longVersion 则拒绝导入（场景专用提示，避免误显示"便签"文案）
-  if (!json.longVersion) return { ok: false, reason: 'no-version', message: _t('manImportSceneNoVer') || '该场景文件无法识别版本号（旧格式），无法导入。请使用新版导出的场景' };
+  // 但自动保存恢复（allowNoVersion）的场景始终为本应用当前版本生成，无需版本号即可安全还原。
+  if (!json.longVersion && !allowNoVersion) return { ok: false, reason: 'no-version', message: _t('manImportSceneNoVer') || '该场景文件无法识别版本号（旧格式），无法导入。请使用新版导出的场景' };
   try {
     // 直接 restore 并重置历史
     state.objects.forEach(disposeObject);
@@ -11567,6 +11574,8 @@ function showConfirm(msg, title = _t('confirm')) {
     const cancel = document.getElementById('confirm-modal-cancel');
     titleEl.textContent = title;
     msgEl.textContent = msg;
+    if (ok) ok.textContent = (typeof T === 'function' ? (T('confirmOk') || '确定') : '确定');
+    if (cancel) cancel.textContent = (typeof T === 'function' ? (T('confirmCancel') || '取消') : '取消');
     mask.classList.add('show');
     function done(val) {
       mask.classList.remove('show');
@@ -13209,15 +13218,16 @@ function openGuide(){
       const text = JSON.stringify(scene);
       const n = objCount;
       try {
-        let res;
-        if (typeof applyImportedJson === 'function') res = applyImportedJson(text);
-        else if (typeof applySceneText === 'function') res = applySceneText(text);
+        // 自动保存为本应用生成的可信场景，直接还原并跳过旧格式版本号校验；不走 applyImportedJson（其为文件导入路径）
+        const res = applySceneText(text, true);
         if (res && res.ok) {
+          clearLastSession();
           if (typeof toast === 'function') toast((T('recoverySuccess') || '已从自动保存恢复进度，共 {0} 个对象').replace('{0}', n));
         } else {
+          clearLastSession();
           if (typeof toast === 'function') toast((T('recoveryFail') || '恢复失败') + (res && res.message ? '：' + res.message : ''));
         }
-      } catch(err){ if (typeof toast === 'function') toast((T('recoveryFail')||'恢复失败')+': '+(err&&err.message||err)); }
+      } catch(err){ clearLastSession(); if (typeof toast === 'function') toast((T('recoveryFail')||'恢复失败')+': '+(err&&err.message||err)); }
     } else {
       clearLastSession();
     }
