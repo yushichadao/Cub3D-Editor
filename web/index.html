@@ -3702,7 +3702,9 @@ function applySelectionVisual(obj, selected) {
         } else {
           // 3D 笔迹 / 3D·2D 图形 / 2D 笔迹：灰度去饱和 + 青蓝高亮，与笔迹选中表面一致
           if (hlMat.isMeshBasicMaterial) {
-            // 2D 笔迹 / 2D 图形（无贴图 BasicMaterial）：灰度后向青蓝混合，保留明暗形状
+            // 2D 笔迹 / 2D 图形（无贴图 BasicMaterial）：灰度后向青蓝混合，保留明暗形状。
+            // BasicMaterial 无光照、无 emissive，无法像 3D 那样发光，故提高青蓝混合比例并轻微提亮，
+            // 使选中表面呈现与 3D 一致的青蓝高亮（视觉统一）。
             const c = hlMat.color.clone();
             const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
             const gcol = new THREE.Color(
@@ -3710,7 +3712,8 @@ function applySelectionVisual(obj, selected) {
               c.g * 0.5 + gray * 0.5,
               c.b * 0.5 + gray * 0.5
             );
-            gcol.lerp(new THREE.Color(0x6ee7ff), 0.45);
+            gcol.lerp(new THREE.Color(0x6ee7ff), 0.6);
+            gcol.multiplyScalar(1.08);
             hlMat.color.copy(gcol);
           } else {
             // 普通带光照对象（StandardMaterial）：灰度 + 青蓝 emissive 发光

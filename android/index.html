@@ -3497,7 +3497,9 @@ function applySelectionVisual(obj, selected) {
         } else {
           // 3D 笔迹 / 3D·2D 图形 / 2D 笔迹：灰度去饱和 + 青蓝高亮，与笔迹选中表面一致
           if (hlMat.isMeshBasicMaterial) {
-            // 2D 笔迹 / 2D 图形（无贴图 BasicMaterial）：灰度后向青蓝混合，保留明暗形状
+            // 2D 笔迹 / 2D 图形（无贴图 BasicMaterial）：灰度后向青蓝混合，保留明暗形状。
+            // BasicMaterial 无光照、无 emissive，无法像 3D 那样发光，故提高青蓝混合比例并轻微提亮，
+            // 使选中表面呈现与 3D 一致的青蓝高亮（视觉统一）。
             const c = hlMat.color.clone();
             const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
             const gcol = new THREE.Color(
@@ -3505,7 +3507,8 @@ function applySelectionVisual(obj, selected) {
               c.g * 0.5 + gray * 0.5,
               c.b * 0.5 + gray * 0.5
             );
-            gcol.lerp(new THREE.Color(0x6ee7ff), 0.45);
+            gcol.lerp(new THREE.Color(0x6ee7ff), 0.6);
+            gcol.multiplyScalar(1.08);
             hlMat.color.copy(gcol);
           } else {
             // 普通带光照对象（StandardMaterial）：灰度 + 青蓝 emissive 发光
@@ -10661,6 +10664,21 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
     delete data.id;
     if (item.isBrush || data.isBrush) {
       // 画笔对象：使用curvePoints精确重建
+      if (data.type === 'brush2d' && data.curvePoints && data.curvePoints.length) {
+        // 2D 笔迹：走与正常绘制一致的 build2DTubeMeshes + groupAndCommitBrush，
+        // 保证曲线点/中心线/渲染顺序正确，可被橡皮擦整体/局部擦除，且进入撤销重做历史。
+        const pts = data.curvePoints.map(p => new THREE.Vector3(p[0], p[1], p[2]));
+        const r2 = data.brushRadius || (data.thickness ? data.thickness / 2 : 0.3);
+        const meshes = build2DTubeMeshes(pts, r2, createBrushMaterialForSnapshot(data));
+        const committed = groupAndCommitBrush(data, pts, r2, meshes);
+        const wp = (item.worldPos && item.worldPos.length === 3) ? item.worldPos
+                 : (item.pos && item.pos.length === 3) ? item.pos : [0, 0, 0];
+        committed.mesh.position.set(wp[0] + pasteDelta.x, wp[1] + (pasteDelta.y || 0), wp[2] + pasteDelta.z);
+        if (item.worldQuat) committed.mesh.quaternion.set(item.worldQuat[0], item.worldQuat[1], item.worldQuat[2], item.worldQuat[3]);
+        if (item.worldScale) committed.mesh.scale.set(item.worldScale[0], item.worldScale[1], item.worldScale[2]);
+        newOnes.push(committed);
+        return;
+      }
       const group = new THREE.Group();
       const r = (data.thickness || 0.5) / 2;
       // 使用标准材质（createBrushMaterialForSnapshot）保留光影明暗，与原始画笔对象一致；
