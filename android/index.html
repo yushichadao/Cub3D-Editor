@@ -2712,7 +2712,13 @@ transformCtrl.addEventListener('dragging-changed', (e) => {
     }
   } else {
     // 拖拽结束时记录历史（用于撤销/重做）
-    const p = getPrimary();
+    let p = getPrimary();
+    if (!p && transformCtrl.object) {
+      // 兜底：选中列表异常为空（如画笔笔迹）时，仍用当前拖拽对象找回 entry 记录历史，
+      // 避免移动操作未被 pushHistory 捕获，导致撤销/重做重建异常。
+      const obj = transformCtrl.object;
+      p = state.objects.find(o => o.mesh === obj || (obj.parent && o.mesh === obj.parent)) || p;
+    }
     if (p) pushHistory();
     _multiDragStart = null;
     _multiObjStart = [];
