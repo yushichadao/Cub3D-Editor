@@ -1,3 +1,0 @@
-aa8979ddd0a697d054390891cd7faefb9156bc8777ac0b06101e639f491c494d  Cub3D-Editor-Setup-1.0.0-x64.exe
-371e5359e08b40df367a529e4b911ad357581529d9d1fd2d1c834c7fb25123e9  Cub3D-Editor-Portable-1.0.0-x64.exe
-de2f7b04b5b3f2beb02815a547d081ccde9ce6d44ab5b4bc526e8df61d5645a3  Cub3D-Editor-release-1.0.0-universal.apk

@@ -161,13 +161,17 @@ PC/_probe.html
 secrets/.env
 secrets/**/.env
 !secrets/.env.example
-# Android 签名密钥库（真实不入库，路径指向仓库内 toolchain/）
+# Android 签名密钥库（真实不入库，路径指向仓库内 toolchain/ 或 android/android/）
 toolchain/android/release.keystore
 toolchain/android/keystore.properties
+android/android/release.keystore
+android/android/keystore.properties
 # Android 工具链（JDK/SDK 收敛仓库内，体积大不入库）
 toolchain/jdk*/
 toolchain/android-sdk/
 toolchain/**/*.zip
+# 实际工具链位置（JDK/SDK 在工程内 dev-tools/，体积大不入库）
+dev-tools/
 
 # ===== 治理新增：实验隔离区（论证 demo + 截图，不进产品面）=====
 lab/_tmp/

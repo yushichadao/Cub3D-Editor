@@ -580,6 +580,8 @@
   }
   .modal-box textarea:focus { border-color: var(--accent); }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+  /* 确认浮窗按钮：窄屏与宽屏保持一致（右对齐、不换行、尺寸不变） */
+  .modal-actions .top-btn { padding: 0 9px; }
 
   /* 设置弹窗 */
   .settings-head { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); }
@@ -802,6 +804,7 @@
     .view-btn { padding: 0 7px; font-size: 10.5px; }
     .top-actions { -webkit-overflow-scrolling: touch; }
   }
+
 
   /* 隐藏文件输入 */
   .hidden-input { display:none; }
@@ -7838,19 +7841,29 @@ let ghostPlaceScale = 1;
 // ============ 画笔绘制 ============
 function createBrushMaterial() {
   const effectiveColor = brush.color === NO_COLOR ? 0xffffff : brush.color;
-  // 使用 MeshStandardMaterial 光滑材质，受光照影响产生明暗层次
-  // roughness=0.5 使圆柱形笔迹表面有明显的明暗渐变（0.85太哑光，曲面明暗不明显）
-  const mat = new THREE.MeshStandardMaterial({
-    color: effectiveColor,
-    transparent: brush.opacity < 1,
-    opacity: brush.opacity,
-    depthWrite: true,
-    depthTest: true,
-    side: THREE.FrontSide,
-    roughness: 0.5,
-    metalness: 0.05,
-    flatShading: false
-  });
+  const is2D = state.tool === 'brush2d';
+  // 2D 画笔为平面笔迹，使用 MeshBasicMaterial 不受光照影响（无明暗反光，颜色即所见）
+  // 3D 画笔保持 MeshStandardMaterial 受光照以体现立体明暗层次
+  const mat = is2D
+    ? new THREE.MeshBasicMaterial({
+        color: effectiveColor,
+        transparent: brush.opacity < 1,
+        opacity: brush.opacity,
+        depthWrite: true,
+        depthTest: true,
+        side: THREE.DoubleSide
+      })
+    : new THREE.MeshStandardMaterial({
+        color: effectiveColor,
+        transparent: brush.opacity < 1,
+        opacity: brush.opacity,
+        depthWrite: true,
+        depthTest: true,
+        side: THREE.FrontSide,
+        roughness: 0.5,
+        metalness: 0.05,
+        flatShading: false
+      });
   if (brush.pattern > 0) {
     const tex = patternTexture(PATTERNS[brush.pattern], effectiveColor);
     mat.map = tex;
@@ -7869,19 +7882,27 @@ function createBrushMaterialForSnapshot(s) {
   const opacity = s.opacity || 1;
   // 2D画笔需双面可见（与 addBrushPoint2D 中 mat.side = THREE.DoubleSide 保持一致）
   const is2D = s.type === 'brush2d';
-  // 使用 MeshStandardMaterial 光滑材质，受光照影响产生明暗层次
-  // roughness=0.5 使圆柱形笔迹表面有明显的明暗渐变
-  const mat = new THREE.MeshStandardMaterial({
-    color: brushColor,
-    transparent: opacity < 1,
-    opacity: opacity,
-    depthWrite: true,
-    depthTest: true,
-    side: is2D ? THREE.DoubleSide : THREE.FrontSide,
-    roughness: 0.5,
-    metalness: 0.05,
-    flatShading: false
-  });
+  // 2D 画笔为平面笔迹，使用 MeshBasicMaterial 不受光照影响；3D 保持 Standard 立体明暗
+  const mat = is2D
+    ? new THREE.MeshBasicMaterial({
+        color: brushColor,
+        transparent: opacity < 1,
+        opacity: opacity,
+        depthWrite: true,
+        depthTest: true,
+        side: THREE.DoubleSide
+      })
+    : new THREE.MeshStandardMaterial({
+        color: brushColor,
+        transparent: opacity < 1,
+        opacity: opacity,
+        depthWrite: true,
+        depthTest: true,
+        side: THREE.FrontSide,
+        roughness: 0.5,
+        metalness: 0.05,
+        flatShading: false
+      });
   // 处理花纹
   if (s.pattern && s.pattern !== '纯色') {
     const patColor = (s.color !== undefined && s.color !== NO_COLOR) ? s.color : 0xffffff;
@@ -8234,9 +8255,14 @@ function build3DTubeMeshes(worldPoints, r, mat, opts) {
 // 构建 2D 扁平带状笔迹网格
 function build2DTubeMeshes(worldPoints, r, mat) {
   const meshes = [];
-  const m = mat.clone();
-  m.side = THREE.DoubleSide;
-  m.depthTest = true;
+  // 2D 画笔为平面笔迹：使用 MeshBasicMaterial 不受光照影响（无明暗层次，颜色即所见）
+  const m = new THREE.MeshBasicMaterial({
+    color: (mat && mat.color) ? mat.color.clone() : new THREE.Color(0xffffff),
+    transparent: !!(mat && (mat.transparent || (mat.opacity !== undefined && mat.opacity < 1))),
+    opacity: (mat && mat.opacity !== undefined) ? mat.opacity : 1,
+    side: THREE.DoubleSide,
+    depthTest: true
+  });
   for (let i = 0; i < worldPoints.length; i++) {
     if (i < worldPoints.length - 1) {
       const p1 = worldPoints[i], p2 = worldPoints[i + 1];

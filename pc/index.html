@@ -559,6 +559,8 @@
   }
   .modal-box textarea:focus { border-color: var(--accent); }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+  /* 确认浮窗按钮：窄屏与宽屏保持一致（右对齐、不换行、尺寸不变） */
+  .modal-actions .top-btn { padding: 0 9px; }
 
   /* 设置弹窗 */
   .settings-head { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); }
@@ -2307,8 +2309,7 @@ setTimeout(function () {
   .terms-foot{ flex-wrap:nowrap; gap:8px; justify-content:space-between; align-items:center; }
   .read-badge{ flex:1 1 auto; white-space:normal; min-width:0; }
   .terms-read-done{ white-space:nowrap; flex:0 0 auto; }
-  .modal-actions{ flex-wrap:wrap; }
-  .modal-actions .top-btn{ flex:0 1 auto; white-space:nowrap; margin-left:auto; }
+
   .tos-gate-actions{ flex-wrap:wrap; }
   .tos-gate-btn{ flex:1 1 100%; white-space:nowrap; }
 }
