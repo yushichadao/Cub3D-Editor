@@ -1336,15 +1336,25 @@ function applySelectionVisual(obj, selected) {
       obj._selectionOrigMaterials = [];
       meshes.forEach(m => {
         obj._selectionOrigMaterials.push(m.material);
-        const hlMat = m.material.clone();
+        let hlMat = m.material.clone();
         // 文本/图片对象（MeshBasicMaterial 带 map）：不改 color（会与 map 相乘导致文字消失），
         // 改用 opacity 降低 + emissive 高亮（BasicMaterial 无 emissive，故仅用 opacity）
         const isTexturedBasic = hlMat.isMeshBasicMaterial && hlMat.map;
         if (isTexturedBasic) {
-          // 文本/图片（MeshBasicMaterial 带 map）：与 3D 笔迹选中一致——
-          // 用青蓝 color 与 map 相乘，使表面整体染青蓝高亮（原 color 为白，染青蓝即选中反馈）；
-          // 保持原 opacity/depthWrite，避免半透明或遮挡异常。
-          hlMat.color.setHex(0x6ee7ff);
+          // 文本/图片（MeshBasicMaterial 带 map）：与 3D 笔迹选中一致，使用 emissive 青蓝发光。
+          // 用 color 相乘对黑色/深色文字无效（黑×青蓝仍黑），故改用 MeshStandardMaterial +
+          // emissiveMap(map)：仅文字/图形区域发青蓝，不受原文字颜色影响，与 3D 表面高亮一致。
+          hlMat = new THREE.MeshStandardMaterial({
+            map: hlMat.map,
+            transparent: m.material.transparent,
+            alphaTest: m.material.alphaTest || 0,
+            depthWrite: m.material.depthWrite,
+            side: hlMat.side,
+            roughness: 1, metalness: 0,
+            emissive: new THREE.Color(0x6ee7ff),
+            emissiveMap: hlMat.map,
+            emissiveIntensity: 0.7
+          });
         } else {
           // 2D 笔迹等无贴图的 MeshBasicMaterial：与 3D 笔迹选中渲染一致——
           // 先按相同灰度公式去饱和（保留明暗/形状），再向青蓝(0x6ee7ff)混合模拟 emissive 高亮，
