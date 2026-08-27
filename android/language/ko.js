@@ -137,8 +137,10 @@ window.__packs['ko'] = {
   "colorPickerTitle": "색상 선택기",
   "colorPreview": "색상 미리보기",
   "confirm": "확인",
+  "confirmCancel": "취소",
   "confirmClearScene": "장면을 지우시겠습니까? 이 작업은 실행 취소할 수 있습니다.",
   "confirmNewScene": "새 장면을 시작하시겠습니까? 현재 내용이 지워집니다.",
+  "confirmOk": "확인",
   "copy": "복사",
   "ctlColor": "색상",
   "ctlOpacity": "불투명도",
@@ -504,7 +506,9 @@ window.__packs['ko'] = {
   "quickstart.eyebrow": "3단계 시작",
   "quickstart.sub": "가입 불필요, 인터넷 불필요. 열기만 하면 그릴 수 있습니다.",
   "quickstart.title": "몇 분 만에 창작 시작",
+  "recoveryFail": "복원 실패",
   "recoveryMsg": "지난번에 앱이 정상적으로 종료되지 않았습니다. 자동 저장된 진행 상황을 복원하시겠습니까? 현재 {0}개 객체입니다.",
+  "recoverySuccess": "자동 저장된 진행 상황을 복원했습니다. 개체 {0}개 복원됨.",
   "recoveryTime": "복구 시간",
   "recoveryTitle": "저장되지 않은 세션 감지",
   "redo": "다시 실행",
@@ -772,9 +776,5 @@ window.__packs['ko'] = {
   "whyNoColorSome": "색상이 없는 객체가 {0}개 포함되어 있습니다(색상을 다시 지정하여 편집 가능)",
   "whyTexShapePat": "텍스처가 적용된 도형은 먼저 텍스처를 지워야 합니다",
   "whyTextPat": "텍스트는 패턴 / 텍스처를 지원하지 않습니다",
-  "wireframe": "와이어프레임",
-  "confirmOk": "확인",
-  "confirmCancel": "취소",
-  "recoverySuccess": "자동 저장된 진행 상황을 복원했습니다. 개체 {0}개 복원됨.",
-  "recoveryFail": "복원 실패"
+  "wireframe": "와이어프레임"
 };

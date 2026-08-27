@@ -411,6 +411,28 @@ export const DOMAINS = {
       "fr": "Confirmer",
       "ar": "تأكيد"
     },
+    "confirmOk": {
+      "zh-CN": "确定",
+      "en": "OK",
+      "ja": "OK",
+      "zh-TW": "確定",
+      "ko": "확인",
+      "ru": "OK",
+      "es": "Aceptar",
+      "fr": "OK",
+      "ar": "موافق"
+    },
+    "confirmCancel": {
+      "zh-CN": "取消",
+      "en": "Cancel",
+      "ja": "キャンセル",
+      "zh-TW": "取消",
+      "ko": "취소",
+      "ru": "Отмена",
+      "es": "Cancelar",
+      "fr": "Annuler",
+      "ar": "إلغاء"
+    },
     "confirmClearScene": {
       "zh-CN": "确定清空场景？此操作可撤销。",
       "en": "Clear the scene? This action can be undone.",
@@ -3611,6 +3633,28 @@ export const DOMAINS = {
       "es": "Sesión sin guardar detectada",
       "fr": "Session non enregistrée détectée",
       "ar": "تم رصد جلسة غير محفوظة"
+    },
+    "recoverySuccess": {
+      "zh-CN": "已从自动保存恢复进度，共 {0} 个对象。",
+      "en": "Auto-saved progress restored. {0} objects recovered.",
+      "ja": "自動保存された進行状況を復元しました。{0} 個のオブジェクトを復元。",
+      "zh-TW": "已從自動保存恢復進度，共 {0} 個物件。",
+      "ko": "자동 저장된 진행 상황을 복원했습니다. 개체 {0}개 복원됨.",
+      "ru": "Автосохранённый прогресс восстановлен. Восстановлено объектов: {0}.",
+      "es": "Progreso autoguardado restaurado. {0} objetos recuperados.",
+      "fr": "Progression auto-enregistrée restaurée. {0} objets récupérés.",
+      "ar": "تمت استعادة التقدّم المحفوظ تلقائياً. تم استعادة ‎{0}‎ كائنات."
+    },
+    "recoveryFail": {
+      "zh-CN": "恢复失败",
+      "en": "Restore failed",
+      "ja": "復元に失敗しました",
+      "zh-TW": "恢復失敗",
+      "ko": "복원 실패",
+      "ru": "Не удалось восстановить",
+      "es": "Error al restaurar",
+      "fr": "Échec de la restauration",
+      "ar": "فشلت الاستعادة"
     },
     "redo": {
       "zh-CN": "重做",

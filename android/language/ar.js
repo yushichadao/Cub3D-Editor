@@ -137,8 +137,10 @@ window.__packs['ar'] = {
   "colorPickerTitle": "منتقي الألوان",
   "colorPreview": "معاينة اللون",
   "confirm": "تأكيد",
+  "confirmCancel": "إلغاء",
   "confirmClearScene": "مسح المشهد؟ يمكن التراجع عن هذا الإجراء.",
   "confirmNewScene": "بدء مشهد جديد؟ سيتم مسح المحتوى الحالي.",
+  "confirmOk": "موافق",
   "copy": "نسخ",
   "ctlColor": "اللون",
   "ctlOpacity": "الشفافية",
@@ -504,7 +506,9 @@ window.__packs['ar'] = {
   "quickstart.eyebrow": "ثلاث خطوات للبدء",
   "quickstart.sub": "بدون تسجيل، بدون إنترنت، افتح وارسم.",
   "quickstart.title": "ابدأ الإبداع في دقائق",
+  "recoveryFail": "فشلت الاستعادة",
   "recoveryMsg": "لم يُغلق التطبيق بشكل طبيعي في المرة الأخيرة. هل تريد استعادة التقدّم المحفوظ تلقائياً؟ يوجد حالياً ‎{0}‎ كائنات.",
+  "recoverySuccess": "تمت استعادة التقدّم المحفوظ تلقائياً. تم استعادة ‎{0}‎ كائنات.",
   "recoveryTime": "وقت الاستعادة",
   "recoveryTitle": "تم رصد جلسة غير محفوظة",
   "redo": "إعادة",
@@ -772,9 +776,5 @@ window.__packs['ar'] = {
   "whyNoColorSome": "تحتوي على ‎{0}‎ كائن بلا لون (أعد تلوينها للتحرير)",
   "whyTexShapePat": "يجب مسح نسيج الأشكال ذات النسيج أولاً",
   "whyTextPat": "النص لا يدعم النقش / النسيج",
-  "wireframe": "الإطار السلكي",
-  "confirmOk": "موافق",
-  "confirmCancel": "إلغاء",
-  "recoverySuccess": "تمت استعادة التقدّم المحفوظ تلقائياً. تم استعادة ‎{0}‎ كائنات.",
-  "recoveryFail": "فشلت الاستعادة"
+  "wireframe": "الإطار السلكي"
 };

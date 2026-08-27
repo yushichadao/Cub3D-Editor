@@ -137,8 +137,10 @@ window.__packs['en'] = {
   "colorPickerTitle": "Color Picker",
   "colorPreview": "Color Preview",
   "confirm": "Confirm",
+  "confirmCancel": "Cancel",
   "confirmClearScene": "Clear the scene? This action can be undone.",
   "confirmNewScene": "Start a new scene? Current content will be cleared.",
+  "confirmOk": "OK",
   "copy": "Copy",
   "ctlColor": "Color",
   "ctlOpacity": "Opacity",
@@ -504,7 +506,9 @@ window.__packs['en'] = {
   "quickstart.eyebrow": "Three steps to start",
   "quickstart.sub": "No registration, no internet needed — just open and draw.",
   "quickstart.title": "Start creating in minutes",
+  "recoveryFail": "Restore failed",
   "recoveryMsg": "The app did not close normally last time. Do you want to restore the auto-saved progress? {0} objects currently.",
+  "recoverySuccess": "Auto-saved progress restored. {0} objects recovered.",
   "recoveryTime": "Recovery time",
   "recoveryTitle": "Unsaved Session Detected",
   "redo": "Redo",
@@ -772,9 +776,5 @@ window.__packs['en'] = {
   "whyNoColorSome": "contains {0} colorless object(s) (recolor them to edit)",
   "whyTexShapePat": "textured shapes must clear their texture first",
   "whyTextPat": "text does not support pattern / texture",
-  "wireframe": "Wireframe",
-  "confirmOk": "OK",
-  "confirmCancel": "Cancel",
-  "recoverySuccess": "Auto-saved progress restored. {0} objects recovered.",
-  "recoveryFail": "Restore failed"
+  "wireframe": "Wireframe"
 };

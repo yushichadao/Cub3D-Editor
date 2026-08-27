@@ -137,8 +137,10 @@ window.__packs['ja'] = {
   "colorPickerTitle": "カラーピッカー",
   "colorPreview": "色プレビュー",
   "confirm": "確認",
+  "confirmCancel": "キャンセル",
   "confirmClearScene": "シーンを消去しますか？この操作は取り消せます。",
   "confirmNewScene": "新規シーンを作成しますか？現在の内容は消去されます。",
+  "confirmOk": "OK",
   "copy": "コピー",
   "ctlColor": "カラー",
   "ctlOpacity": "透明度",
@@ -558,7 +560,9 @@ window.__packs['ja'] = {
   "quickstart.eyebrow": "3ステップ",
   "quickstart.sub": "登録不要、通信不要。開くだけで描ける。",
   "quickstart.title": "数分で創作開始",
+  "recoveryFail": "復元に失敗しました",
   "recoveryMsg": "前回の終了が正常ではありませんでした。自動保存された進捗を復元しますか？現在 {0} 個のオブジェクトがあります。",
+  "recoverySuccess": "自動保存された進行状況を復元しました。{0} 個のオブジェクトを復元。",
   "recoveryTime": "復旧時間",
   "recoveryTitle": "未保存のセッションが検出されました",
   "redo": "やり直す",
@@ -826,9 +830,5 @@ window.__packs['ja'] = {
   "whyNoColorSome": "無色オブジェクトを {0} 個含む（着色すると調整可）",
   "whyTexShapePat": "テクスチャ付き図形は先にテクスチャをクリアしてください",
   "whyTextPat": "テキストはパターン / テクスチャ非対応",
-  "wireframe": "ワイヤーフレーム",
-  "confirmOk": "OK",
-  "confirmCancel": "キャンセル",
-  "recoverySuccess": "自動保存された進行状況を復元しました。{0} 個のオブジェクトを復元。",
-  "recoveryFail": "復元に失敗しました"
+  "wireframe": "ワイヤーフレーム"
 };

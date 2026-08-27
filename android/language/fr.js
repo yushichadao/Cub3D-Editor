@@ -137,8 +137,10 @@ window.__packs['fr'] = {
   "colorPickerTitle": "Sélecteur de couleur",
   "colorPreview": "Aperçu de la couleur",
   "confirm": "Confirmer",
+  "confirmCancel": "Annuler",
   "confirmClearScene": "Effacer la scène ? Cette action peut être annulée.",
   "confirmNewScene": "Démarrer une nouvelle scène ? Le contenu actuel sera effacé.",
+  "confirmOk": "OK",
   "copy": "Copier",
   "ctlColor": "Couleur",
   "ctlOpacity": "Opacité",
@@ -504,7 +506,9 @@ window.__packs['fr'] = {
   "quickstart.eyebrow": "Trois étapes pour démarrer",
   "quickstart.sub": "Sans inscription ni internet — ouvrez et dessinez.",
   "quickstart.title": "Commencez à créer en quelques minutes",
+  "recoveryFail": "Échec de la restauration",
   "recoveryMsg": "L’application ne s’est pas fermée normalement la dernière fois. Voulez-vous restaurer la progression enregistrée automatiquement ? {0} objets actuellement.",
+  "recoverySuccess": "Progression auto-enregistrée restaurée. {0} objets récupérés.",
   "recoveryTime": "Temps de récupération",
   "recoveryTitle": "Session non enregistrée détectée",
   "redo": "Rétablir",
@@ -772,9 +776,5 @@ window.__packs['fr'] = {
   "whyNoColorSome": "contient {0} objet(s) sans couleur (recolorez-les pour modifier)",
   "whyTexShapePat": "les formes texturées doivent d’abord effacer leur texture",
   "whyTextPat": "le texte ne prend pas en charge le motif / la texture",
-  "wireframe": "Fil de fer",
-  "confirmOk": "OK",
-  "confirmCancel": "Annuler",
-  "recoverySuccess": "Progression auto-enregistrée restaurée. {0} objets récupérés.",
-  "recoveryFail": "Échec de la restauration"
+  "wireframe": "Fil de fer"
 };

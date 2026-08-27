@@ -137,8 +137,10 @@ window.__packs['es'] = {
   "colorPickerTitle": "Selector de color",
   "colorPreview": "Vista previa",
   "confirm": "Confirmar",
+  "confirmCancel": "Cancelar",
   "confirmClearScene": "¿Borrar la escena? Esta acción se puede deshacer.",
   "confirmNewScene": "¿Iniciar una escena nueva? El contenido actual se borrará.",
+  "confirmOk": "Aceptar",
   "copy": "Copiar",
   "ctlColor": "Color",
   "ctlOpacity": "Opacidad",
@@ -558,7 +560,9 @@ window.__packs['es'] = {
   "quickstart.eyebrow": "Tres pasos",
   "quickstart.sub": "Sin registro ni conexión; abre y dibuja.",
   "quickstart.title": "Empieza en minutos",
+  "recoveryFail": "Error al restaurar",
   "recoveryMsg": "La aplicación no se cerró con normalidad la última vez. ¿Quieres restaurar el progreso autoguardado? {0} objetos actualmente.",
+  "recoverySuccess": "Progreso autoguardado restaurado. {0} objetos recuperados.",
   "recoveryTime": "Tiempo de recuperación",
   "recoveryTitle": "Sesión sin guardar detectada",
   "redo": "Rehacer",
@@ -826,9 +830,5 @@ window.__packs['es'] = {
   "whyNoColorSome": "contiene {0} objeto(s) sin color (recolóralos para editar)",
   "whyTexShapePat": "las formas con textura deben quitar su textura primero",
   "whyTextPat": "el texto no admite patrón / textura",
-  "wireframe": "Malla de alambre",
-  "confirmOk": "Aceptar",
-  "confirmCancel": "Cancelar",
-  "recoverySuccess": "Progreso autoguardado restaurado. {0} objetos recuperados.",
-  "recoveryFail": "Error al restaurar"
+  "wireframe": "Malla de alambre"
 };

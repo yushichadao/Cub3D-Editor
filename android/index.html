@@ -4040,11 +4040,12 @@ function snapshot() {
           // 3D画笔：实时绘制逐段生成管段，子网格未携带 brushCurvePoints，
           // 导出时无法命中 tubeChildren，故回退用整条曲线点重建为连续管，
           // 同时保留 curvePoints 供橡皮局部擦除（1:1 还原绘制结果）。
+          const _wp = [o.mesh.position.x, o.mesh.position.y, o.mesh.position.z];
           snap.tubeSegments = [{
-            curvePoints: o.data.curvePoints,
+            curvePoints: o.data.curvePoints.map(p => [p[0]-_wp[0], p[1]-_wp[1], p[2]-_wp[2]]),
             brushRadius: o.data.brushRadius || (o.data.thickness ? o.data.thickness / 2 : 0.3)
           }];
-          snap.curvePoints = o.data.curvePoints;
+          snap.curvePoints = o.data.curvePoints.map(p => [p[0]-_wp[0], p[1]-_wp[1], p[2]-_wp[2]]);
         }
       }
       // 保存子网格结构（含几何体参数，确保精确重建）
@@ -4303,7 +4304,9 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
         ? build2DTubeMeshes(points, r, mat)
         : build3DTubeMeshes(points, r, mat, { live: false });
       built.forEach(m => {
-        m.position.sub(finalPos);
+        // 2D 笔迹的 curvePoints 已在 snapshot 中转存为相对 group 的局部坐标，
+        // 此处不再 sub(finalPos)，否则会被二次偏移导致移动被抵消。
+        if (s.brushType !== 'brush2d') m.position.sub(finalPos);
         group.add(m);
       });
     } else if (s.children && s.children.length > 0) {

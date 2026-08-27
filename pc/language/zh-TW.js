@@ -137,8 +137,10 @@ window.__packs['zh-TW'] = {
   "colorPickerTitle": "顏色選取器",
   "colorPreview": "顏色預覽",
   "confirm": "確認",
+  "confirmCancel": "取消",
   "confirmClearScene": "確定清空場景？此操作可撤銷。",
   "confirmNewScene": "確定新建場景？當前場景將被清空。",
+  "confirmOk": "確定",
   "copy": "複製",
   "ctlColor": "顏色欄",
   "ctlOpacity": "不透明度",
@@ -558,7 +560,9 @@ window.__packs['zh-TW'] = {
   "quickstart.eyebrow": "三步上手",
   "quickstart.sub": "無需註冊、無需聯網，打開就能畫。",
   "quickstart.title": "幾分鐘開始創作",
+  "recoveryFail": "恢復失敗",
   "recoveryMsg": "上次程序未正常關閉，是否恢復自動保存的進度？當前共 {0} 個對象。",
+  "recoverySuccess": "已從自動保存恢復進度，共 {0} 個物件。",
   "recoveryTime": "恢復時間",
   "recoveryTitle": "檢測到未保存的會話",
   "redo": "重做",
@@ -826,9 +830,5 @@ window.__packs['zh-TW'] = {
   "whyNoColorSome": "包含 {0} 個無顏色對象（重新上色後可調）",
   "whyTexShapePat": "帶貼圖的圖形需先清除貼圖",
   "whyTextPat": "文本不支持花紋 / 貼圖",
-  "wireframe": "線框",
-  "confirmOk": "確定",
-  "confirmCancel": "取消",
-  "recoverySuccess": "已從自動保存恢復進度，共 {0} 個物件。",
-  "recoveryFail": "恢復失敗"
+  "wireframe": "線框"
 };
