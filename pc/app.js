@@ -1341,10 +1341,10 @@ function applySelectionVisual(obj, selected) {
         // 改用 opacity 降低 + emissive 高亮（BasicMaterial 无 emissive，故仅用 opacity）
         const isTexturedBasic = hlMat.isMeshBasicMaterial && hlMat.map;
         if (isTexturedBasic) {
-          // 文本/图片：保持 map，仅降低 opacity 制造"选中"反馈
-          hlMat.opacity = Math.max(0.5, (hlMat.opacity ?? 1) * 0.7);
-          hlMat.transparent = true;
-          hlMat.depthWrite = false;
+          // 文本/图片（MeshBasicMaterial 带 map）：与 3D 笔迹选中一致——
+          // 用青蓝 color 与 map 相乘，使表面整体染青蓝高亮（原 color 为白，染青蓝即选中反馈）；
+          // 保持原 opacity/depthWrite，避免半透明或遮挡异常。
+          hlMat.color.setHex(0x6ee7ff);
         } else {
           // 2D 笔迹等无贴图的 MeshBasicMaterial：与 3D 笔迹选中渲染一致——
           // 先按相同灰度公式去饱和（保留明暗/形状），再向青蓝(0x6ee7ff)混合模拟 emissive 高亮，
