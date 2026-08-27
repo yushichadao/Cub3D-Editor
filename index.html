@@ -5,6 +5,9 @@
      程序自身通过 remove()/removeChild() 等方法删除的节点会被豁免，不弹提示、不干预。 -->
 <script>
 (function(){ 'use strict';
+  // 手机端（触屏或窄屏）不启用反篡改守护：避免强行恢复桌面专属常驻元素导致移动端显示错乱/报错
+  var IS_MOBILE = (window.matchMedia && (matchMedia('(pointer:coarse)').matches || matchMedia('(max-width:768px)').matches)) || (typeof window.innerWidth === 'number' && window.innerWidth <= 768);
+  if(IS_MOBILE) return;
   var __skip = (typeof WeakSet === 'function') ? new WeakSet() : null;
   try{
     var _r = Element.prototype.remove;
