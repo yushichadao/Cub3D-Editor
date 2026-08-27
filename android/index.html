@@ -3477,49 +3477,37 @@ function applySelectionVisual(obj, selected) {
       meshes.forEach(m => {
         obj._selectionOrigMaterials.push(m.material);
         let hlMat = m.material.clone();
-        // 文本/图片对象（MeshBasicMaterial 带 map）：不改 color（会与 map 相乘导致文字消失），
-        // 改用 opacity 降低 + emissive 高亮（BasicMaterial 无 emissive，故仅用 opacity）
+        // 统一选中高亮：所有对象表面呈现一致的青蓝(0x6ee7ff)高亮
         const isTexturedBasic = hlMat.isMeshBasicMaterial && hlMat.map;
-        if (isTexturedBasic) {
-          // 文本/图片：与 3D 笔迹选中一致——表面染青蓝高亮。
-          // 不能改 color（黑字×青蓝仍黑），也不用 emissive（BasicMaterial 无 / Standard 受光照弱），
-          // 故生成"青蓝版纹理"（保留 alpha 形状、RGB 填青蓝）替换 map，文字/图标整体发青蓝。
+        const isText = obj.data && obj.data.kind === 'text';
+        if (isTexturedBasic && isText) {
+          // 文本框：黑字与 map 相乘无效，用 blueTintTexture 仅将文字笔画染青蓝，保留透明背景
           hlMat.map = blueTintTexture(hlMat.map);
-          hlMat.needsUpdate = true;
+        } else if (isTexturedBasic) {
+          // 图片（矩形不透明贴图）：color 与 map 相乘 → 整体偏青蓝并保留原图内容（避免整块纯蓝剪影的异常观感）
+          hlMat.color.setHex(0x6ee7ff);
+        } else if (hlMat.isMeshBasicMaterial) {
+          // 2D 笔迹（无 map 的 BasicMaterial）：明显染青蓝，保留明暗
+          hlMat.color.lerp(new THREE.Color(0x6ee7ff), 0.6);
         } else {
-          // 2D 笔迹等无贴图的 MeshBasicMaterial：与 3D 笔迹选中渲染一致——
-          // 先按相同灰度公式去饱和（保留明暗/形状），再向青蓝(0x6ee7ff)混合模拟 emissive 高亮，
-          // 避免纯色覆盖导致"表面渲染异常"且观感与 3D 不一致。
-          if (hlMat.isMeshBasicMaterial) {
+          // 3D 笔迹（带光照 StandardMaterial 等）：轻度灰度 + 青蓝 emissive 发光
+          if (hlMat.color) {
             const c = hlMat.color.clone();
             const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
-            const gcol = new THREE.Color(
+            hlMat.color.setRGB(
               c.r * 0.5 + gray * 0.5,
               c.g * 0.5 + gray * 0.5,
               c.b * 0.5 + gray * 0.5
             );
-            gcol.lerp(new THREE.Color(0x6ee7ff), 0.35);
-            hlMat.color.copy(gcol);
-          } else {
-            // 普通带光照对象：灰度 + 青蓝 emissive 高亮
-            if (hlMat.color) {
-              const c = hlMat.color.clone();
-              const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
-              hlMat.color.setRGB(
-                c.r * 0.5 + gray * 0.5,
-                c.g * 0.5 + gray * 0.5,
-                c.b * 0.5 + gray * 0.5
-              );
-            }
-            if ('emissive' in hlMat) {
-              hlMat.emissive = new THREE.Color(0x6ee7ff);
-              hlMat.emissiveIntensity = 0.2;
-            }
           }
-          // 不透明对象保持不透明，靠深度缓冲正确遮挡
-          hlMat.transparent = m.material.transparent;
-          hlMat.depthWrite = m.material.depthWrite;
+          if ('emissive' in hlMat) {
+            hlMat.emissive.setHex(0x6ee7ff);
+            hlMat.emissiveIntensity = 0.7;
+          }
         }
+        // 不透明对象保持不透明，靠深度缓冲正确遮挡
+        hlMat.transparent = m.material.transparent;
+        hlMat.depthWrite = m.material.depthWrite;
         hlMat.needsUpdate = true;
         m.material = hlMat;
       });
