@@ -1346,19 +1346,24 @@ function applySelectionVisual(obj, selected) {
           hlMat.transparent = true;
           hlMat.depthWrite = false;
         } else {
-          // 普通 3D/2D 对象：灰度效果
-          if (hlMat.color) {
-            const c = hlMat.color.clone();
-            const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
-            hlMat.color.setRGB(
-              c.r * 0.5 + gray * 0.5,
-              c.g * 0.5 + gray * 0.5,
-              c.b * 0.5 + gray * 0.5
-            );
-          }
-          if ('emissive' in hlMat) {
-            hlMat.emissive = new THREE.Color(0x6ee7ff);
-            hlMat.emissiveIntensity = 0.2;
+          // 2D 笔迹等无贴图的 MeshBasicMaterial：直接以高亮青蓝显示选中反馈（无 emissive，发光方案无效）
+          if (hlMat.isMeshBasicMaterial) {
+            hlMat.color.setHex(0x6ee7ff);
+          } else {
+            // 普通带光照对象：灰度 + 青蓝 emissive 高亮
+            if (hlMat.color) {
+              const c = hlMat.color.clone();
+              const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
+              hlMat.color.setRGB(
+                c.r * 0.5 + gray * 0.5,
+                c.g * 0.5 + gray * 0.5,
+                c.b * 0.5 + gray * 0.5
+              );
+            }
+            if ('emissive' in hlMat) {
+              hlMat.emissive = new THREE.Color(0x6ee7ff);
+              hlMat.emissiveIntensity = 0.2;
+            }
           }
           // 不透明对象保持不透明，靠深度缓冲正确遮挡
           hlMat.transparent = m.material.transparent;
@@ -1880,7 +1885,9 @@ function snapshot() {
         snap.brushLocalCenterline = o.mesh.userData.brushLocalCenterline.map(p => [p.x, p.y, p.z]);
       }
       // 保存子网格结构（含几何体参数，确保精确重建）
-      if (o.mesh.isGroup) {
+      // 笔迹对象(isBrush)已由 tubeSegments/curvePoints 完整描述；若保存 children，
+      // 撤销/重做时可能退化走 children 重建分支，只重建出平面圆。故笔迹不保存 children。
+      if (o.mesh.isGroup && !o.data.isBrush) {
         snap.children = o.mesh.children.map(child => {
           const geoType = child.geometry ? (child.geometry.type || '') : '';
           const childData = {
@@ -2209,6 +2216,13 @@ function rebuildFromSnapshot(s, promises, metaLocale) {
 
     scene.add(group);
     const entry = { mesh: group, data: { ...s, isBrush: true, kind: 'brush' } };
+    // 修复：重做后把曲线数据写回 data，并移除 children，避免后续快照退化（只重建出平面圆）
+    if (s.tubeSegments && s.tubeSegments.length && s.tubeSegments[0] && s.tubeSegments[0].curvePoints) {
+      entry.data.curvePoints = s.tubeSegments[0].curvePoints;
+    } else if (s.curvePoints) {
+      entry.data.curvePoints = s.curvePoints;
+    }
+    delete entry.data.children;
     // 与绘制提交一致：用 applyAppearance 按 data 重新生成材质（颜色/花纹/不透明度/光照），确保导入后外观一致
     applyAppearance(entry);
     return entry;
