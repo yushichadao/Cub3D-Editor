@@ -772,5 +772,9 @@ window.__packs['ko'] = {
   "whyNoColorSome": "색상이 없는 객체가 {0}개 포함되어 있습니다(색상을 다시 지정하여 편집 가능)",
   "whyTexShapePat": "텍스처가 적용된 도형은 먼저 텍스처를 지워야 합니다",
   "whyTextPat": "텍스트는 패턴 / 텍스처를 지원하지 않습니다",
-  "wireframe": "와이어프레임"
+  "wireframe": "와이어프레임",
+  "confirmOk": "확인",
+  "confirmCancel": "취소",
+  "recoverySuccess": "자동 저장된 진행 상황을 복원했습니다. 개체 {0}개 복원됨.",
+  "recoveryFail": "복원 실패"
 };

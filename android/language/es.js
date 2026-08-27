@@ -772,5 +772,9 @@ window.__packs['es'] = {
   "whyNoColorSome": "contiene {0} objeto(s) sin color (recolóralos para editar)",
   "whyTexShapePat": "las formas con textura deben quitar su textura primero",
   "whyTextPat": "el texto no admite patrón / textura",
-  "wireframe": "Malla de alambre"
+  "wireframe": "Malla de alambre",
+  "confirmOk": "Aceptar",
+  "confirmCancel": "Cancelar",
+  "recoverySuccess": "Progreso autoguardado restaurado. {0} objetos recuperados.",
+  "recoveryFail": "Error al restaurar"
 };

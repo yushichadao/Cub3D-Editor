@@ -772,5 +772,9 @@ window.__packs['en'] = {
   "whyNoColorSome": "contains {0} colorless object(s) (recolor them to edit)",
   "whyTexShapePat": "textured shapes must clear their texture first",
   "whyTextPat": "text does not support pattern / texture",
-  "wireframe": "Wireframe"
+  "wireframe": "Wireframe",
+  "confirmOk": "OK",
+  "confirmCancel": "Cancel",
+  "recoverySuccess": "Auto-saved progress restored. {0} objects recovered.",
+  "recoveryFail": "Restore failed"
 };

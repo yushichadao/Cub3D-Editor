@@ -772,5 +772,9 @@ window.__packs['fr'] = {
   "whyNoColorSome": "contient {0} objet(s) sans couleur (recolorez-les pour modifier)",
   "whyTexShapePat": "les formes texturées doivent d’abord effacer leur texture",
   "whyTextPat": "le texte ne prend pas en charge le motif / la texture",
-  "wireframe": "Fil de fer"
+  "wireframe": "Fil de fer",
+  "confirmOk": "OK",
+  "confirmCancel": "Annuler",
+  "recoverySuccess": "Progression auto-enregistrée restaurée. {0} objets récupérés.",
+  "recoveryFail": "Échec de la restauration"
 };

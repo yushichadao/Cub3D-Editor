@@ -826,5 +826,9 @@ window.__packs['zh-TW'] = {
   "whyNoColorSome": "包含 {0} 個無顏色對象（重新上色後可調）",
   "whyTexShapePat": "帶貼圖的圖形需先清除貼圖",
   "whyTextPat": "文本不支持花紋 / 貼圖",
-  "wireframe": "線框"
+  "wireframe": "線框",
+  "confirmOk": "確定",
+  "confirmCancel": "取消",
+  "recoverySuccess": "已從自動保存恢復進度，共 {0} 個物件。",
+  "recoveryFail": "恢復失敗"
 };

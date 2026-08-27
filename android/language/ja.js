@@ -772,5 +772,9 @@ window.__packs['ja'] = {
   "whyNoColorSome": "無色オブジェクトを {0} 個含む（着色すると調整可）",
   "whyTexShapePat": "テクスチャ付き図形は先にテクスチャをクリアしてください",
   "whyTextPat": "テキストはパターン / テクスチャ非対応",
-  "wireframe": "ワイヤーフレーム"
+  "wireframe": "ワイヤーフレーム",
+  "confirmOk": "OK",
+  "confirmCancel": "キャンセル",
+  "recoverySuccess": "自動保存された進行状況を復元しました。{0} 個のオブジェクトを復元。",
+  "recoveryFail": "復元に失敗しました"
 };
