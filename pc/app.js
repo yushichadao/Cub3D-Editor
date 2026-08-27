@@ -1346,9 +1346,19 @@ function applySelectionVisual(obj, selected) {
           hlMat.transparent = true;
           hlMat.depthWrite = false;
         } else {
-          // 2D 笔迹等无贴图的 MeshBasicMaterial：直接以高亮青蓝显示选中反馈（无 emissive，发光方案无效）
+          // 2D 笔迹等无贴图的 MeshBasicMaterial：与 3D 笔迹选中渲染一致——
+          // 先按相同灰度公式去饱和（保留明暗/形状），再向青蓝(0x6ee7ff)混合模拟 emissive 高亮，
+          // 避免纯色覆盖导致"表面渲染异常"且观感与 3D 不一致。
           if (hlMat.isMeshBasicMaterial) {
-            hlMat.color.setHex(0x6ee7ff);
+            const c = hlMat.color.clone();
+            const gray = c.r * 0.3 + c.g * 0.59 + c.b * 0.11;
+            const gcol = new THREE.Color(
+              c.r * 0.5 + gray * 0.5,
+              c.g * 0.5 + gray * 0.5,
+              c.b * 0.5 + gray * 0.5
+            );
+            gcol.lerp(new THREE.Color(0x6ee7ff), 0.35);
+            hlMat.color.copy(gcol);
           } else {
             // 普通带光照对象：灰度 + 青蓝 emissive 高亮
             if (hlMat.color) {
