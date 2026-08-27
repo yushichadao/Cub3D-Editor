@@ -4869,8 +4869,7 @@ function applyLang() {
     const k = el.dataset.i18n;
     const v = dict[k] !== undefined ? dict[k] : fallback[k];
     if (v !== undefined) {
-      if (v.indexOf('{br}') !== -1) el.innerHTML = v.replace(/\{br\}/g, '<br>');
-      else el.textContent = v;
+      el.innerHTML = fmtAngles(v).replace(/\{br\}/g, '<br>');
     }
   });
   // title 属性替换
@@ -8871,6 +8870,10 @@ function _t(key, ...args) {
   for (let i = 0; i < args.length; i++) tpl = tpl.replace('{' + i + '}', args[i] !== undefined ? args[i] : '');
   return tpl;
 }
+// 阿拉伯语(RTL)下：把 "数字°" 包成 LTR span，避免弱方向字符 ° 被 bidi 算法错误重排（如显示成 °5）
+function fmtAngles(s) {
+  return String(s).replace(/(\d+(?:\.\d+)?)°/g, '<span dir="ltr">$1°</span>');
+}
 window._t = _t;
 function toast(msg) {
   const t = document.getElementById('toast');
@@ -9437,6 +9440,7 @@ function mdInline(text){
   s = s.replace(/\[([^\]]+)\]\((#[^)\s]+)\)/g, (m,t,a)=>'<a href="'+a+'" class="md-anchor">'+t+'</a>');
   s = s.replace(/\[([^\]]+)\]\((jump:(?:[^()\n]|\([^()\n]*\))*)\)/g, (m,t,a)=>'<a class="md-jump" data-goto="'+mdEscape(a.slice(5))+'">'+t+'</a>');
   s = s.replace(/\uE000(\d+)\uE001/g, (m,idx)=>'<code>'+codes[+idx]+'</code>');
+  s = fmtAngles(s); // RTL 下把 "数字°" 隔离为 LTR，避免度符号 ° 错排
   return s;
 }
 function splitRow(line){ return line.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(x=>x.trim()); }
@@ -10165,8 +10169,7 @@ function openGuide(){
       const k = el.dataset.i18n;
       const v = dict[k] !== undefined ? dict[k] : fb[k];
       if (v !== undefined) {
-        if (v.indexOf('{br}') !== -1) el.innerHTML = v.replace(/\{br\}/g, '<br>');
-        else el.textContent = v;
+        el.innerHTML = fmtAngles(v).replace(/\{br\}/g, '<br>');
       }
     });
     docEl.querySelectorAll('[data-i18n-title]').forEach(el => {

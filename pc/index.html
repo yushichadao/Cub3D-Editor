@@ -165,6 +165,13 @@
   html[dir="rtl"] .brand .logo { direction: ltr; }
   html[dir="rtl"] .brand { flex-shrink: 0; min-width: 0; }
   html[dir="rtl"] .brand span[data-i18n] { unicode-bidi: isolate; display: inline-block; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+  /* RTL：数值 / 角度（含 ° 度符号）整体按 LTR 显示，避免弱方向字符 ° 在阿拉伯语段落中被错误重排 */
+  html[dir="rtl"] [id^="v-"],
+  html[dir="rtl"] .ctrl-value,
+  html[dir="rtl"] .kbd-note,
+  html[dir="rtl"] .kbd-table,
+  html[dir="rtl"] .kbd-table td,
+  html[dir="rtl"] .kbd-table th { direction: ltr; unicode-bidi: isolate; }
   html[dir="rtl"] .topbar { column-gap: 14px; }
   /* RTL：按钮区滚动到最左端时，最左按钮前保留一点空隙，避免贴住视口边缘被截断/遮挡 */
   html[dir="rtl"] .top-actions { padding-left: 10px; }
