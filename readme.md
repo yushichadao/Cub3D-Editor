@@ -263,6 +263,14 @@ Cub3D Editor 由独立开发者维护，**完全免费、无广告、离线可�
   - 修复：新增 `decodeHtmlEntities()`，在 md-jump 点击逻辑中对 `data-goto` 先做实体解码再 `slugify`，与标题侧解码后的值对齐。三端 `index.html` 同步修改并通过 `_check_syntax.mjs` 语法校验。
   - 验证：以简体中文说明书为例，含引号的 13 个跳转在修复前 10 个失败，修复后 0 失败（playwright 真实浏览器复现）。
 
+### v1.0.0（2026-08-26 重发）
+
+- **3D 文字对象保存后阿拉伯语（RTL）显示异常（Web / PC / Android 三端）**
+  - 现象：文本工具输入框中输入正常阿拉伯语（`dir="auto"` 正确），但保存为 3D 文字对象后，场景中渲染的阿拉伯语方向 / 连写异常。
+  - 根因：文字纹理（`textTexture`）横排绘制未设置 `ctx.direction`，LTR 画布上阿拉伯语布局异常；文本对象若选用非阿拉伯字体，阿拉伯字形 fallback 失败。
+  - 修复：三端横排绘制检测 RTL 文本（阿拉伯语 / 希伯来语 Unicode 区段），设置 `ctx.direction='rtl'` 并追加阿拉伯字体 fallback（`Noto Kufi Arabic` / `Noto Sans Arabic`）。
+  - 随包重发：覆盖 GitHub Releases v1.0.0（Windows 安装版 / 便携版、Android 通用安装包）。
+
 ---
 
 项目仓库：<https://github.com/yushichadao/Cub3D-Editor>
