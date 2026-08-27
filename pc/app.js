@@ -5964,7 +5964,11 @@ function groupAndCommitBrush(data, worldPoints, r, meshes, transform) {
       thickness: r * 2,
       isBrush: true,
       curvePoints: worldPoints.map(p => [p.x, p.y, p.z]),
-      brushRadius: r
+      brushRadius: r,
+      // 记录最终变换，供撤销恢复时精确还原位置/姿态（2D 笔迹复制品也走此路径）
+      worldPos: [group.position.x, group.position.y, group.position.z],
+      worldQuat: [group.quaternion.x, group.quaternion.y, group.quaternion.z, group.quaternion.w],
+      worldScale: [group.scale.x, group.scale.y, group.scale.z]
     }
   };
   entry.mesh.userData.id = entry.data.id;
@@ -8536,6 +8540,13 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
       }
 
       scene.add(group);
+      // 计算笔迹整体局部中心线（相对 group 原点），供橡皮擦局部擦除命中；
+      // 必须在 group 的旋转/缩放/recenter 均已应用后计算，否则局部擦除中心线基准错乱
+      group.updateMatrixWorld(true);
+      const allCurvePts = [];
+      if (item.tubeSegments) for (const seg of item.tubeSegments) for (const p of seg.curvePoints) allCurvePts.push(new THREE.Vector3(p[0], p[1], p[2]));
+      if (!allCurvePts.length && item.curvePoints) for (const p of item.curvePoints) allCurvePts.push(new THREE.Vector3(p[0], p[1], p[2]));
+      group.userData.brushLocalCenterline = allCurvePts.map(p => group.worldToLocal(p.clone()));
       const entry = {
         mesh: group,
         data: {
@@ -8546,14 +8557,14 @@ function pasteClipboard(offset = 0.2, useViewCenter = false) {
           opacity: data.opacity,
           thickness: data.thickness,
           isBrush: true,
-          // 补齐 id，否则 restore() 用 o.data.id 匹配快照时找不到克隆体，
-          // 导致撤销/重做无法识别该对象
           id: idCounter++,
-          // 补齐笔迹中心线点与半径，使克隆对象可被橡皮擦局部/整体擦除（原 getBrushWorldCenterline 依赖此字段）
-          // 注意：curvePoints 必须保持为 [[x,y,z]] 数组格式（与原始画笔一致），
-          // 否则 getBrushLocalCenterline 用 p[0]/p[1]/p[2] 取值会得到 undefined → 中心线坐标全 NaN → 局部擦除永不命中。
-          curvePoints: item.curvePoints ? item.curvePoints.map(p => Array.isArray(p) ? [p[0], p[1], p[2]] : [p.x, p.y, p.z]) : null,
-          brushRadius: item.brushRadius || (data.thickness ? data.thickness / 2 : 0.3)
+          // 笔迹中心线点（[[x,y,z]] 数组格式）与半径，使克隆对象可被橡皮擦局部/整体擦除
+          curvePoints: allCurvePts.map(p => [p.x, p.y, p.z]),
+          brushRadius: item.brushRadius || (data.thickness ? data.thickness / 2 : 0.3),
+          // 记录最终变换，供撤销恢复时精确还原位置/姿态
+          worldPos: [group.position.x, group.position.y, group.position.z],
+          worldQuat: [group.quaternion.x, group.quaternion.y, group.quaternion.z, group.quaternion.w],
+          worldScale: [group.scale.x, group.scale.y, group.scale.z]
         }
       };
       entry.mesh.userData.id = entry.data.id;
