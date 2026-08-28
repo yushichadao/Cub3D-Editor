@@ -1,6 +1,6 @@
 # 第三方开源组件许可证清单（THIRD-PARTY LICENSES）
 
-> 生成日期：2026-08-26 ｜ 工程：Cub3D Editor（立方·3D设计工坊）
+> 生成日期：2026-08-28 ｜ 工程：Cub3D Editor（立方·3D设计工坊）
 > 本清单由仓库治理整改后重新统计生成。工程自身许可证：**木兰宽松许可证 v2（MulanPSL-2）**。
 > 用途：合规归档，供三端 LICENSE / 关于页引用。
 
@@ -14,9 +14,6 @@
 | @capacitor/core | ^6.2.0 | MIT | Android 跨端桥接核心 | `android/package.json` dependencies | © 2017-2024 Drifty Co. / Ionic，MIT |
 | @capacitor/android | ^6.2.0 | MIT | Android 原生桥接 | `android/package.json` dependencies | MIT（同上） |
 | @capacitor/app | ^6.0.2 | MIT | 应用生命周期 | `android/package.json` dependencies | MIT |
-| @capacitor/filesystem | ^6.0.2 | MIT | 文件系统 | `android/package.json` dependencies | MIT |
-| @capacitor/preferences | ^6.0.3 | MIT | 偏好存储 | `android/package.json` dependencies | MIT |
-| @capacitor/share | ^6.0.3 | MIT | 系统分享 | `android/package.json` dependencies | MIT |
 | @capacitor/splash-screen | ^6.0.3 | MIT | 启动屏 | `android/package.json` dependencies | MIT |
 | @capacitor/status-bar | ^6.0.2 | MIT | 状态栏控制 | `android/package.json` dependencies | MIT |
 | @capacitor/cli | ^6.2.0 | MIT | Capacitor 构建 CLI | `android/package.json` devDependencies | MIT |
@@ -47,3 +44,13 @@
 - 已移除的废弃模块（含管理端 Express / Multer 及百度翻译调用）不再计入本清单，相关代码已从仓库剔除。
 - 若后续引入 GPL/AGPL 等强 Copyleft 许可证组件，需另行评估并单独标注。
 - 密钥（GitHub Token、签名密钥）集中管理于 `secrets/.env`（不入库）。
+
+## 6. 数据制品（离线 IP 归属数据库）
+
+| 制品 | 许可证 | 用途 | 备注 |
+|------|--------|------|------|
+| GeoLite2-Country（MaxMind） | GeoLite2 EULA | 境内外分流所需的 IP 国家归属判定 | 离线 mmdb 文件仅部署于境内服务器本地，判定全程不向 MaxMind 或任何第三方传输访客数据 |
+
+按 GeoLite2 EULA 要求的署名：
+
+> This product includes GeoLite2 data created by MaxMind, available from <https://www.maxmind.com>.

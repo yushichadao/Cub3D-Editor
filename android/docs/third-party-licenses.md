@@ -14,9 +14,6 @@
 | Capacitor Core | ^6.2.0 | MIT | Android 跨端桥接 | `android/package.json` dependencies | © 2017-2024 Drifty Co. / Ionic，MIT |
 | @capacitor/android | ^6.2.0 | MIT | Android 原生桥接 | `android/package.json` dependencies | MIT（同上） |
 | @capacitor/app | ^6.0.2 | MIT | 应用生命周期 | `android/package.json` dependencies | MIT |
-| @capacitor/filesystem | ^6.0.2 | MIT | 文件系统 | `android/package.json` dependencies | MIT |
-| @capacitor/preferences | ^6.0.3 | MIT | 偏好存储 | `android/package.json` dependencies | MIT |
-| @capacitor/share | ^6.0.3 | MIT | 系统分享 | `android/package.json` dependencies | MIT |
 | @capacitor/splash-screen | ^6.0.3 | MIT | 启动屏 | `android/package.json` dependencies | MIT |
 | @capacitor/status-bar | ^6.0.2 | MIT | 状态栏控制 | `android/package.json` dependencies | MIT |
 | @capacitor/cli | ^6.2.0 | MIT | Capacitor 构建 CLI | `android/package.json` devDependencies | MIT |

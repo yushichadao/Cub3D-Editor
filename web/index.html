@@ -13297,38 +13297,14 @@ function openGuide(){
       .then(()=>{ clearTimeout(t); return true; })
       .catch(()=>{ clearTimeout(t); return false; });
   }
-  function jget(url, pick){
+  // 内部消化：只请求第一方接口（本站自己的服务器），不再触碰任何第三方
+  function classify(){
     const c = new AbortController();
     const t = setTimeout(()=>c.abort(), 2500);
-    return fetch(url, { signal:c.signal, cache:'no-store' })
-      .then(r=>r.ok?r.json():null).then(d=>{ clearTimeout(t); return pick?pick(d):d; })
-      .catch(()=>{ clearTimeout(t); return null; });
-  }
-  function jsp(urlTpl){
-    return new Promise(res=>{
-      const cb = '__geo'+Date.now()+Math.random().toString(36).slice(2,7);
-      const s = document.createElement('script');
-      const t = setTimeout(()=>{ cleanup(); res(null); }, 2500);
-      function cleanup(){ clearTimeout(t); delete window[cb]; if(s.parentNode) s.parentNode.removeChild(s); }
-      window[cb] = function(d){ cleanup(); res(d && (d.country || d.address) ? 'CN' : null); };
-      s.src = urlTpl.replace('{cb}', cb);
-      s.onerror = ()=>{ cleanup(); res(null); };
-      document.head.appendChild(s);
-    });
-  }
-  async function classify(){
-    if(isCnHost){ // 境内站：国内接口优先
-      let r = await jget('https://qifu-api.baidubce.com/ip/geo/v1/district', d=>{ const c=d&&d.data&&d.data.country; return c?(c==='中国'?'CN':'OVS'):null; });
-      if(r!==null) return r;
-      r = await jsp('https://whois.pconline.com.cn/ipJson.jsp?callback={cb}');
-      if(r!==null) return r;
-    } else {      // 境外站：国外接口优先
-      let r = await jget('https://ip-api.com/json/?lang=zh-CN', d=>d&&d.countryCode?(d.countryCode==='CN'?'CN':'OVS'):null);
-      if(r!==null) return r;
-      r = await jget('https://ipwho.is/', d=>d&&d.country_code?(d.country_code==='CN'?'CN':'OVS'):null);
-      if(r!==null) return r;
-    }
-    return null;
+    return fetch('https://cub3d-editor.cn/api/geo.php', { signal:c.signal, cache:'no-store' })
+      .then(r=>r.ok?r.json():null)
+      .then(d=>{ clearTimeout(t); const cc = d && d.country; return cc ? (cc==='CN'?'CN':'OVS') : null; })
+      .catch(()=>{ clearTimeout(t); return null; });   // 查询失败 → 静默留在当前站
   }
   // 来自本站（宣传页 / 法律页 / 同源）进入时不探活跳转，避免打断用户从落地页进入的会话
   try {

@@ -2155,38 +2155,11 @@ window.__refillIcp = function(){
   const controller = new AbortController();
   const timer = setTimeout(()=>controller.abort(), 2500);      // 2.5s 超时，不阻塞首屏
   const opt = { signal:controller.signal, cache:'no-store' };
-  function jget(url, pick){
-    return fetch(url, opt).then(r=>r.ok?r.json():Promise.reject()).then(pick)
-      .then(v=>v==='CN'||v==='OVS'?v:null).catch(()=>null);
-  }
-  function jsp(url){                                           // JSONP 回退（接口防跳链/HTTPS 受限时静默失败）
-    return new Promise(res=>{
-      const cb = 'ipcb' + Date.now();
-      const s = document.createElement('script');
-      const done = v=>{ clearTimeout(t2); try{delete window[cb]}catch(e){} s.remove(); res(v); };
-      const t2 = setTimeout(()=>done(null), 3000);
-      window[cb] = d=>done((d && (d.pro || d.province)) ? 'CN' : null);
-      s.src = url.replace('{cb}', cb) + '&_t=' + Date.now();
-      s.onerror = ()=>{ clearTimeout(t2); s.remove(); res(null); };
-      document.head.appendChild(s);
-    });
-  }
-  async   function classify(){
-    if(me==='cn'){  // 境内站：国内接口优先
-      let r = await jget('https://qifu-api.baidubce.com/ip/geo/v1/district', d=>{
-        const c = d && d.data && d.data.country;
-        return c ? (c==='中国' ? 'CN' : 'OVS') : null;
-      });
-      if(r!==null) return r;
-      r = await jsp('https://whois.pconline.com.cn/ipJson.jsp?callback={cb}');
-      if(r!==null) return r;
-    } else {        // 境外站：国外接口优先
-      let r = await jget('https://ip-api.com/json/?lang=zh-CN', d=>d&&d.countryCode ? (d.countryCode==='CN'?'CN':'OVS') : null);
-      if(r!==null) return r;
-      r = await jget('https://ipwho.is/', d=>d&&d.country_code ? (d.country_code==='CN'?'CN':'OVS') : null);
-      if(r!==null) return r;
-    }
-    return null;    // 全部失败 → 静默留在当前站
+  // 内部消化：只请求第一方接口（本站自己的服务器），不再触碰任何第三方
+  function classify(){
+    return fetch('https://cub3d-editor.cn/api/geo.php', opt).then(r=>r.ok?r.json():Promise.reject())
+      .then(d=>{ const c = d && d.country; return c ? (c==='CN'?'CN':'OVS') : null; })
+      .catch(()=>null);   // 查询失败 → 静默留在当前站
   }
   // 目标站可达性预检：避免盲跳到未建站/被墙的域名导致白屏（比"慢"更糟）
   function reachable(url){
