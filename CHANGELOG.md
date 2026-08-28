@@ -5,6 +5,7 @@
 - 三端（Web / PC / Android）撤除全部与业务无关的第三方 SDK 与依赖，仅保留运行必需的官方组件（Electron / Capacitor 官方插件），符合隐私政策声明与应用商店审核要求。
 - IP 境内外分流不再调用任何第三方归属地接口（百度 / 太平洋 / ip-api / ipwho.is），改为本站第一方接口 `api/geo.php`（境内服务器本地 GeoLite2 离线库判定），访客 IP 不向任何第三方传输；境外站（GitHub Pages）跨域复用同一接口。
 - 第三方许可清单新增 MaxMind GeoLite2 数据制品署名。
+- 境外站宣传页版本检查由 GitHub API 改为同源静态清单（CI 同步 downloads/versions.json），Web 全站零第三方请求。
 - Android 重新打包（versionCode 20260828），覆盖 GitHub Releases 与 downloads/ 下载。
 
 ## v1.0.0（2026-08-28）—— 重发：文本框选中高亮与换色修复

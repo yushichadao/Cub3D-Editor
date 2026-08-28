@@ -1002,8 +1002,7 @@ const SITE = {
   cn:  { host:'cub3d-editor.cn', home:'https://cub3d-editor.cn/',
          downloadBase:'downloads/', metaUrl:'downloads/versions.json', icp:'浙ICP备2026068891号-1' },
   ovs: { host:'yushichadao.github.io', home:'https://yushichadao.github.io/Cub3D-Editor/',
-         releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/',
-         apiUrl:'https://api.github.com/repos/yushichadao/Cub3D-Editor/releases/latest', icp:'' }
+         releaseBase:'https://github.com/yushichadao/Cub3D-Editor/releases/latest/download/', icp:'' }
 };
 /* 境内判定：正式域名 cub3d-editor.cn */
 const CN_HOST_RE = /(^|\.)cub3d-editor\.cn$/i;
@@ -2060,45 +2059,16 @@ buildLangBars();
     rewriteLinks();
   }
 
-  /* 境外：latest 缺失的 key 回退到含该文件的最新历史 Release（releases/download/<tag>/<file>） */
-  function githubFallback(missing){
-    return fetch('https://api.github.com/repos/yushichadao/Cub3D-Editor/releases?per_page=10', { cache:'no-store' })
-      .then(r=>r.ok?r.json():Promise.reject(new Error('releases list failed')))
-      .then(list=>{
-        const want = {};   // key -> {file, tag, v}
-        list.forEach(rel=>(rel.assets||[]).forEach(a=>{
-          const k = keyOf(a.name); if(!k || !missing.includes(k) || want[k]) return;
-          const v = verOf(a.name);
-          if(!LATEST_DL[k] && (!want[k] || cmpVer(v, want[k].v) > 0)) want[k] = { file:a.name, tag:rel.tag_name, v };
-        }));
-        if(!Object.keys(want).length) return;
-        Object.keys(want).forEach(k=>{ LATEST_DL[k] = { file:want[k].file, tag:want[k].tag }; });
-        rewriteLinks();
-      })
-      .catch(()=>{});
-  }
-
-  function fromGitHub(){
-    fetch(SITE.ovs.apiUrl, { cache:'no-store' })
-      .then(r=>r.ok?r.json():Promise.reject(new Error('release fetch failed')))
-      .then(data=>{
-        render(data.tag_name, data.assets||[]);
-        const missing = ['setup','portable','apk'].filter(k=>!LATEST_DL[k]);
-        if(missing.length) return githubFallback(missing);
-      })
-      .catch(renderFail);
-  }
-
-  /* 境内站：清单源为服务器 /downloads/versions.json（{version, files:{name:size}}），体积/版本与下载同源 */
+  /* 站点统一走同源清单 downloads/versions.json（{version, files:{name:size}}）：
+     境内 → 服务器 /downloads/；境外 → GitHub Pages 同源副本（CI 同步），零第三方请求 */
   function fromCn(){
-    fetch(cnBase + SITE.cn.metaUrl, { cache:'no-store' })
+    fetch(SITE.cn.metaUrl, { cache:'no-store' })
       .then(r=>r.ok?r.json():Promise.reject(new Error('meta fetch failed')))
       .then(data=>render((data&&data.version)||'', (data&&data.files)||{}, null))
       .catch(renderFail);
   }
 
-  /* 统一从站点源拉取：境内 → 服务器 versions.json；境外 → GitHub Release */
-  if(isCnHost) fromCn(); else fromGitHub();
+  fromCn();
 })();
 
 /* ============ 境内外双站：链接/ICP 自适应（备案号取得后填 SITE.cn.icp 即自动生效） ============ */

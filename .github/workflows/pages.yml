@@ -10,6 +10,7 @@ on:
       - 'web/**'
       - 'shared/**'
       - 'tools/**'
+      - 'downloads/**'
       - '.nojekyll'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
@@ -50,6 +51,8 @@ jobs:
           cp -r assets _site/assets
           cp -r shared _site/shared
           cp legal-*.html _site/ 2>/dev/null || true
+          mkdir -p _site/downloads
+          cp downloads/versions.json _site/downloads/versions.json
           cp .nojekyll _site/
 
       - name: Upload artifact
