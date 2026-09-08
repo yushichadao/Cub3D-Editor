@@ -9853,8 +9853,22 @@ function openManual(){
     if(isTouchMode()) saveStore('manualMobileFontSize', next); else saveStore('zoom', next); }
   function blocks(){ return Array.from(docEl.querySelectorAll('.md-block')); }
   function blockLineOf(node){ let el=node.nodeType===3?node.parentElement:node; while(el && el!==docEl){ if(el.classList && el.classList.contains('md-block')) return parseInt(el.dataset.line,10); el=el.parentElement; } return 0; }
-  function scrollToBlock(block, instant){ if(!block) return; const baseTop=docEl.getBoundingClientRect().top; const top=block.getBoundingClientRect().top-baseTop+docEl.scrollTop-8; docEl.scrollTo({top:Math.max(0,top), behavior: instant?'auto':'smooth'}); flash(block); }
-  function jumpToLine(n){ const bs=blocks(); let target=null; for(const b of bs){ const d=parseInt(b.dataset.line,10); if(!isNaN(d) && d<=n) target=b; } if(target){ scrollToBlock(target); } }
+  // 滚动到指定块（顶部留 8px 呼吸空间）。
+  // 说明书正文高达数万像素：跨章跳转若走平滑滚动，动画要 1.5s 以上，期间任何滚轮/触摸/触摸板
+  // 输入都会打断动画、把人留在半路，表现为「点了目录却跳到别处」。因此跨屏长距离直接定位，
+  // 只有一屏内的近距离才保留平滑过渡。
+  function scrollToBlock(block, instant){
+    if(!block) return;
+    const baseTop=docEl.getBoundingClientRect().top;
+    const to=Math.max(0, Math.round(block.getBoundingClientRect().top-baseTop+docEl.scrollTop-8));
+    const far=Math.abs(to-docEl.scrollTop) > docEl.clientHeight*1.2;
+    const smooth=!instant && !far;
+    docEl.scrollTo({top:to, behavior: smooth?'smooth':'auto'});
+    // 高亮延后到真正落位：平滑滚动时长可能超过高亮动画时长，否则「高亮播完了，人还没滚到」
+    if(smooth) waitForScrollEnd(docEl, ()=>flash(block));
+    else requestAnimationFrame(()=>flash(block));
+  }
+  function jumpToLine(n){ const bs=blocks(); let target=bs.find(b=>parseInt(b.dataset.line,10)===n)||null; if(!target){ for(const b of bs){ const d=parseInt(b.dataset.line,10); if(!isNaN(d) && d<=n) target=b; } } if(target){ scrollToBlock(target); } }
   function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function clearSearchHits(){
     docEl.querySelectorAll('mark.search-hit').forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); });
@@ -10234,7 +10248,7 @@ function expandHl(){ const s=openManual._sel; if(!s) return; let arr=hilites(); 
     return all.filter((h,i)=>i>start);
   }
   function updateTocActive(){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=null; heads.forEach(h=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=parseInt(h.dataset.line,10); }); tocEl.querySelectorAll('a').forEach(a=>a.classList.toggle('active', parseInt(a.dataset.line,10)===cur)); }
-  function goChapter(dir){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=-1; heads.forEach((h,i)=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=i; }); let idx = dir>0 ? Math.min(heads.length-1, cur+1) : Math.max(0, cur-1); if(cur<0) idx = 0; const target=heads[idx]; const top=target.getBoundingClientRect().top-base+docEl.scrollTop; docEl.scrollTo({top:Math.max(0, top-8), behavior:'smooth'}); flash(target); closeDrawers(); }
+  function goChapter(dir){ const heads=chapterHeads(); if(!heads.length) return; const base=docEl.getBoundingClientRect().top; let cur=-1; heads.forEach((h,i)=>{ const top=h.getBoundingClientRect().top-base+docEl.scrollTop; if(top<=docEl.scrollTop+10) cur=i; }); let idx = dir>0 ? Math.min(heads.length-1, cur+1) : Math.max(0, cur-1); if(cur<0) idx = 0; const target=heads[idx]; scrollToBlock(target); closeDrawers(); }
   async function loadManual(lang){
     manualLang = lang;
     const file=fileMap[lang]||fileMap['zh-CN'];
