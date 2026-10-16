@@ -249,19 +249,11 @@ Cub3D Editor 由独立开发者维护，**完全免费、无广告、离线可�
 
 ## 许可证
 
-木兰宽松许可证第 2 版（Mulan Permissive Software License v2，MulanPSL-2）。见各端 `LICENSE` 文件，或仓库根 `LICENSE`。
+木兰宽松许可证第 2 版（Mulan Permissive Software License v2，MulanPSL-2.0）。见各端 `LICENSE` 文件，或仓库根 `LICENSE`。
 
 ---
 
 ## 已知问题与修复记录
-
-### v1.1.0
-
-- **说明书全景目录带引号的条目点击后无法跳转（Web / PC / Android 三端）**
-  - 现象：多语言正文说明书的「全景目录」中，凡是标题含直引号（`"` 或 `'`）的条目（如 `"立方体"工具` 之类），点击后定位失败、页面不滚动。
-  - 根因：交叉引用（md-jump）的 `data-goto` 在生成时经 HTML 转义为 `&quot;`，但点击跳转时 `dataset.goto` 仍是字面实体字符串；而标题 `textContent` 中的 `&quot;` 已被浏览器解码为 `"`，两侧 `slugify` 结果不一致，导致目标 slug 匹配不上。
-  - 修复：新增 `decodeHtmlEntities()`，在 md-jump 点击逻辑中对 `data-goto` 先做实体解码再 `slugify`，与标题侧解码后的值对齐。三端 `index.html` 同步修改并通过 `_check_syntax.mjs` 语法校验。
-  - 验证：以简体中文说明书为例，含引号的 13 个跳转在修复前 10 个失败，修复后 0 失败（playwright 真实浏览器复现）。
 
 ### v1.0.0（2026-08-26 重发）
 
@@ -270,6 +262,11 @@ Cub3D Editor 由独立开发者维护，**完全免费、无广告、离线可�
   - 根因：文字纹理（`textTexture`）横排绘制未设置 `ctx.direction`，LTR 画布上阿拉伯语布局异常；文本对象若选用非阿拉伯字体，阿拉伯字形 fallback 失败。
   - 修复：三端横排绘制检测 RTL 文本（阿拉伯语 / 希伯来语 Unicode 区段），设置 `ctx.direction='rtl'` 并追加阿拉伯字体 fallback（`Noto Kufi Arabic` / `Noto Sans Arabic`）。
   - 随包重发：覆盖 GitHub Releases v1.0.0（Windows 安装版 / 便携版、Android 通用安装包）。
+- **说明书全景目录带引号的条目点击后无法跳转（Web / PC / Android 三端）**
+  - 现象：多语言正文说明书的「全景目录」中，凡是标题含直引号（`"` 或 `'`）的条目（如 `"立方体"工具` 之类），点击后定位失败、页面不滚动。
+  - 根因：交叉引用（md-jump）的 `data-goto` 在生成时经 HTML 转义为 `&quot;`，但点击跳转时 `dataset.goto` 仍是字面实体字符串；而标题 `textContent` 中的 `&quot;` 已被浏览器解码为 `"`，两侧 `slugify` 结果不一致，导致目标 slug 匹配不上。
+  - 修复：新增 `decodeHtmlEntities()`，在 md-jump 点击逻辑中对 `data-goto` 先做实体解码再 `slugify`，与标题侧解码后的值对齐。三端 `index.html` 同步修改并通过 `_check_syntax.mjs` 语法校验。
+  - 验证：以简体中文说明书为例，含引号的 13 个跳转在修复前 10 个失败，修复后 0 失败（playwright 真实浏览器复现）。
 
 ---
 
